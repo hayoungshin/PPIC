@@ -1,4 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="noticeMapper">
+
+	<resultMap id="noticeResult" type="Notice">
+		<id column="notice_no" property="noticeNo"/>
+		<result column="notice_title" property="noticeTitle"/>
+		<result column="create_date" property="createDate"/>
+		<result column="user_name" property="noticeWriter"/>
+		<result column="notice_content" property="noticeContent"/>
+		<result column="important" property="important"/>
+		<result column="count" property="count"/>
+		<collection property="attList" resultMap="attachmentResult" />
+	</resultMap>
+	
+	<resultMap id="attachmentResult" type="Attachment">
+		<id column="attachment_no" property="attachmentNo"/>
+		<result column="origin_name" property="originName"/>
+	</resultMap>
+
+	<select id="selectListCount" resultType="_int">
+		select
+		       count(*)
+		  from notice
+		 where status = 'Y'
+	</select>
+	
+	<select id="selectList" resultMap="noticeResult">
+		select
+		       notice_no
+		     , notice_title
+		     , user_name
+		     , count
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		     , important
+		     , (select 
+		               origin_name
+		          from attachment
+		         where category_no = 1
+		           and ref_no = notice_no) "origin_name"
+		  from notice n
+          join member on (notice_writer = user_no)
+		 where n.status = 'Y'
+		 order
+		    by notice_no desc
+	</select>
+	
 </mapper>

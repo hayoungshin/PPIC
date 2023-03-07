@@ -29,27 +29,35 @@
 	        <thead class="thead-light">
 	          <tr>
 	            <th style="width:50px;">번호</th>
-	            <th style="width:500px;">제목</th>
+	            <th style="width:900px;">제목</th>
 	            <th>작성자</th>
 	            <th>작성일</th>
 	            <th style="width:70px;">조회수</th>
 	          </tr>
 	        </thead>
 	        <tbody>
-	          <tr>
-	            <td>10</td>
-	            <td><b>📢 중요 공지사항 제목 <img src="resources/icons/clip.png" height="15px" width="15px"></b></td>
-	            <td>김은숙 팀장</td>
-	            <td>2023-02-16</td>
-	            <td>100</td>
-	          </tr>
-	          <tr>
-	            <td>9</td>
-	            <td>공지사항 제목</td>
-	            <td>문동은 팀장</td> 
-	            <td>2023-02-15</td>
-	            <td>50</td>
-	          </tr>
+	        	<c:forEach var="n" items="${ list }">
+                    <tr>
+                        <td class="no">${ n.noticeNo }</td>
+                        <td>
+                        	<c:choose>
+	                        	<c:when test="${ n.important eq 'Y' }">
+	                        		📢
+	                        		<b> ${ n.noticeTitle } </b>
+	                        	</c:when>
+	                        	<c:otherwise>
+	                        		${ n.noticeTitle }
+	                        	</c:otherwise>
+                        	</c:choose>
+                        	<c:if test="${ not empty n.attList }">
+                        		<img src="resources/icons/clip.png" height="15px" width="15px">
+                        	</c:if>
+                        </td>
+                        <td>${ n.noticeWriter }</td>
+                        <td>${ n.createDate }</td>
+                        <td>${ n.count }</td>
+                    </tr>
+                   </c:forEach>
 	        </tbody>
 	    </table>
 	
@@ -71,15 +79,26 @@
             </div>
         </form>
         <div id="paging">
-            <ul>
-                <li><a href="#"><</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">></a></li>
-            </ul>
+	       	<ul>
+          		<c:if test="${ pi.currentPage ne 1 }">
+              		<li><a href="list.no?cpage=${ p } - 1"><</a></li>
+              	</c:if>
+	            
+	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+	            	<c:choose>
+	            		<c:when test="${ empty condition }">
+		            		<li><a href="list.no?cpage=${ p }">${ p }</a></li>
+		            	</c:when>
+		            	<c:otherwise>
+		            		<li><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+		            	</c:otherwise>
+	            	</c:choose>
+				</c:forEach>
+				
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
+	            	<li><a href="list.no?cpage=${ pi.currentPage + 1 }">></a></li>
+				</c:if>
+           </ul>
         </div>
 	</div>
 </body>
