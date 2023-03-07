@@ -58,18 +58,17 @@ COMMENT ON COLUMN "member"."conn_sta" IS '접속상태(0온라인/1오프라인/
 
 CREATE TABLE "approval" (
 	"approval_no"	number		NULL,
-	"complete_no"	varchar2(20)		NULL,
+	"complete_no"	varchar2(20)	UNIQUE	NULL,
 	"user_no"	number		NULL,
 	"department_no"	number		NULL,
 	"position_no"	number		NULL,
 	"form"	varchar2(30)		NOT NULL,
 	"title"	varchar2(100)		NOT NULL,
-	"bookmark"	number	DEFAULT 0	NULL,
-	"create_date"	date	DEFAULT SYSDATE	NULL,
-	"complete_date"	date		NULL,
-	"current_order"	number	DEFAULT 1	NULL,
+	"create_date"	varchar2(20)	DEFAULT SYSDATE	NULL,
+	"complete_date"	varchar2(20)		NULL,
+	"current_order"	number	DEFAULT 0	NULL,
 	"final_order"	number		NOT NULL,
-	"approval_status"	varchar2(20)	DEFAULT '진행중'	NULL,
+	"approval_status"	varchar2(20)	DEFAULT '대기'	NULL,
 	"status"	varchar2(1)	DEFAULT 'Y'	NULL
 );
 
@@ -86,8 +85,6 @@ COMMENT ON COLUMN "approval"."position_no" IS '직급번호';
 COMMENT ON COLUMN "approval"."form" IS '문서양식';
 
 COMMENT ON COLUMN "approval"."title" IS '제목';
-
-COMMENT ON COLUMN "approval"."bookmark" IS '중요';
 
 COMMENT ON COLUMN "approval"."create_date" IS '작성일';
 
@@ -118,7 +115,7 @@ COMMENT ON COLUMN "form_draft"."content" IS '내용';
 
 CREATE TABLE "form_transfer" (
 	"approval_no"	number		NULL,
-	"effective_date"	date		NOT NULL,
+	"effective_date"	varchar2(20)		NOT NULL,
 	"user_name"	varchar2(20)		NOT NULL,
 	"department_name"	varchar2(20)		NOT NULL,
 	"current_position"	varchar2(20)		NOT NULL,
@@ -189,7 +186,8 @@ CREATE TABLE "app_change" (
 	"approval_no"	number		NULL,
 	"user_no"	number		NULL,
 	"content"	varchar2(200)		NOT NULL,
-	"create_date"	date	DEFAULT SYSDATE	NULL,
+	"create_date"	varchar2(20)	DEFAULT SYSDATE	NULL,
+	"role"	varchar2(10)		NOT NULL,
 	"status"	varchar2(1)	DEFAULT 'Y'	NULL
 );
 
@@ -203,6 +201,8 @@ COMMENT ON COLUMN "app_change"."content" IS '내용';
 
 COMMENT ON COLUMN "app_change"."create_date" IS '등록일';
 
+COMMENT ON COLUMN "app_change"."role" IS '역할';
+
 COMMENT ON COLUMN "app_change"."status" IS '상태';
 
 CREATE TABLE "app_process" (
@@ -211,7 +211,8 @@ CREATE TABLE "app_process" (
 	"order"	number		NOT NULL,
 	"approval_role"	varchar2(10)		NOT NULL,
 	"status"	varchar2(10)		NULL,
-	"approval_date"	date		NULL
+	"approval_date"	varchar2(20)		NULL,
+	"bookmark"	varchar2(1)	DEFAULT 'Y'	NULL
 );
 
 COMMENT ON COLUMN "app_process"."approval_no" IS '전자결재번호';
@@ -225,6 +226,8 @@ COMMENT ON COLUMN "app_process"."approval_role" IS '결재역할';
 COMMENT ON COLUMN "app_process"."status" IS '상태';
 
 COMMENT ON COLUMN "app_process"."approval_date" IS '결재일';
+
+COMMENT ON COLUMN "app_process"."bookmark" IS '중요';
 
 CREATE TABLE "attachment" (
 	"attachment_no"	number		NULL,
@@ -715,7 +718,7 @@ CREATE TABLE "mail_status" (
 
 COMMENT ON COLUMN "mail_status"."Field2" IS '보낸메일일 경우 NULL';
 
-COMMENT ON COLUMN "mail_status"."Field5" IS '1보낸메일/2받은메일/3참조메일/4숨은참조메일';
+COMMENT ON COLUMN "mail_status"."Field5" IS '1받은메일/2보낸메일/3참조메일/4숨은참조메일';
 
 COMMENT ON COLUMN "mail_status"."Field3" IS '이걸로 읽음여부는 판단가능';
 
@@ -763,6 +766,51 @@ COMMENT ON COLUMN "CHAT_LIKE"."MYUSER_NO" IS '기준회원번호';
 COMMENT ON COLUMN "CHAT_LIKE"."LIKEUSER_NO" IS '즐겨찾는회원번호';
 
 COMMENT ON COLUMN "CHAT_LIKE"."LIKE_DATE" IS '즐겨찾기추가일';
+
+CREATE TABLE "COMPANY_SCH" (
+	"SCH_NO"	NUMBER		NOT NULL,
+	"SCH_KIND"	VARCHAR2(1)		NOT NULL,
+	"RESTDAY_KIND"	VARCHAR2(1)		NULL,
+	"SCH_NAME"	VARCHAR2(500)		NOT NULL,
+	"SCH_CONTENT"	VARCHAR2(2000)		NULL,
+	"SCH_LOCATION"	VARCHAR2(1000)		NULL,
+	"LUNAR_SOLAR"	VARCHAR2(1)		NULL,
+	"START_DATE"	VARCHAR2(100)		NULL,
+	"END_DATE"	VARCHAR2(100)		NULL,
+	"ANNUAL"	VARCHAR2(1)		NULL,
+	"START_TIME"	VARCHAR2(100)		NULL,
+	"END_TIME"	VARCHAR2(100)		NULL,
+	"ALLDAY"	VARCHAR2(1)		NULL,
+	"LEGALHOLLIDAY"	VARCHAR2(1)		NULL
+);
+
+COMMENT ON COLUMN "COMPANY_SCH"."SCH_NO" IS '일정번호';
+
+COMMENT ON COLUMN "COMPANY_SCH"."SCH_KIND" IS '일정종류(0:쉬는날,1:회사일정)';
+
+COMMENT ON COLUMN "COMPANY_SCH"."RESTDAY_KIND" IS '쉬는날종류(0:휴일,1:기념일)';
+
+COMMENT ON COLUMN "COMPANY_SCH"."SCH_NAME" IS '이름';
+
+COMMENT ON COLUMN "COMPANY_SCH"."SCH_CONTENT" IS '내용';
+
+COMMENT ON COLUMN "COMPANY_SCH"."SCH_LOCATION" IS '장소';
+
+COMMENT ON COLUMN "COMPANY_SCH"."LUNAR_SOLAR" IS '양음력(0:양력,1:음력)';
+
+COMMENT ON COLUMN "COMPANY_SCH"."START_DATE" IS '시작날짜';
+
+COMMENT ON COLUMN "COMPANY_SCH"."END_DATE" IS '종료날짜';
+
+COMMENT ON COLUMN "COMPANY_SCH"."ANNUAL" IS '매년반복여부';
+
+COMMENT ON COLUMN "COMPANY_SCH"."START_TIME" IS '시작시간';
+
+COMMENT ON COLUMN "COMPANY_SCH"."END_TIME" IS '종료시간';
+
+COMMENT ON COLUMN "COMPANY_SCH"."ALLDAY" IS '종일여부';
+
+COMMENT ON COLUMN "COMPANY_SCH"."LEGALHOLLIDAY" IS '법정공휴일여부';
 
 ALTER TABLE "dept" ADD CONSTRAINT "PK_DEPT" PRIMARY KEY (
 	"department_no"
@@ -876,239 +924,12 @@ ALTER TABLE "holiday" ADD CONSTRAINT "PK_HOLIDAY" PRIMARY KEY (
 	"holi_no"
 );
 
-ALTER TABLE "member" ADD CONSTRAINT "FK_position_TO_member_1" FOREIGN KEY (
-	"position"
-)
-REFERENCES "position" (
-	"position_no"
-);
-
-ALTER TABLE "member" ADD CONSTRAINT "FK_dept_TO_member_1" FOREIGN KEY (
-	"department"
-)
-REFERENCES "dept" (
-	"department_no"
-);
-
-ALTER TABLE "member" ADD CONSTRAINT "FK_authority_TO_member_1" FOREIGN KEY (
-	"authority_no"
-)
-REFERENCES "authority" (
-	"authority_no"
-);
-
-ALTER TABLE "approval" ADD CONSTRAINT "FK_member_TO_approval_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "approval" ADD CONSTRAINT "FK_dept_TO_approval_1" FOREIGN KEY (
-	"department_no"
-)
-REFERENCES "dept" (
-	"department_no"
-);
-
-ALTER TABLE "approval" ADD CONSTRAINT "FK_position_TO_approval_1" FOREIGN KEY (
-	"position_no"
-)
-REFERENCES "position" (
-	"position_no"
-);
-
-ALTER TABLE "form_draft" ADD CONSTRAINT "FK_approval_TO_form_draft_1" FOREIGN KEY (
-	"approval_no"
-)
-REFERENCES "approval" (
-	"approval_no"
-);
-
-ALTER TABLE "form_draft" ADD CONSTRAINT "FK_dept_TO_form_draft_1" FOREIGN KEY (
-	"department_no"
-)
-REFERENCES "dept" (
-	"department_no"
-);
-
-ALTER TABLE "form_transfer" ADD CONSTRAINT "FK_approval_TO_form_transfer_1" FOREIGN KEY (
-	"approval_no"
-)
-REFERENCES "approval" (
-	"approval_no"
-);
-
-ALTER TABLE "form_consume" ADD CONSTRAINT "FK_approval_TO_form_consume_1" FOREIGN KEY (
-	"approval_no"
-)
-REFERENCES "approval" (
-	"approval_no"
-);
-
-ALTER TABLE "form_cash" ADD CONSTRAINT "FK_approval_TO_form_cash_1" FOREIGN KEY (
-	"approval_no"
-)
-REFERENCES "approval" (
-	"approval_no"
-);
-
-ALTER TABLE "app_change" ADD CONSTRAINT "FK_approval_TO_app_change_1" FOREIGN KEY (
-	"approval_no"
-)
-REFERENCES "approval" (
-	"approval_no"
-);
-
-ALTER TABLE "app_change" ADD CONSTRAINT "FK_member_TO_app_change_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "app_process" ADD CONSTRAINT "FK_approval_TO_app_process_1" FOREIGN KEY (
-	"approval_no"
-)
-REFERENCES "approval" (
-	"approval_no"
-);
-
-ALTER TABLE "app_process" ADD CONSTRAINT "FK_member_TO_app_process_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "DOCUMENT" ADD CONSTRAINT "FK_member_TO_DOCUMENT_1" FOREIGN KEY (
-	"create_user"
-)
-REFERENCES "member" (
-	"user_no"
+ALTER TABLE "COMPANY_SCH" ADD CONSTRAINT "PK_COMPANY_SCH" PRIMARY KEY (
+	"SCH_NO"
 );
 
 ALTER TABLE "holiday_apply" ADD CONSTRAINT "FK_member_TO_holiday_apply_1" FOREIGN KEY (
 	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "ROOM" ADD CONSTRAINT "FK_member_TO_ROOM_1" FOREIGN KEY (
-	"create_user"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "work" ADD CONSTRAINT "FK_member_TO_work_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "CAR" ADD CONSTRAINT "FK_member_TO_CAR_1" FOREIGN KEY (
-	"create_user"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "RES_ROOM" ADD CONSTRAINT "FK_ROOM_TO_RES_ROOM_1" FOREIGN KEY (
-	"room_no"
-)
-REFERENCES "ROOM" (
-	"room_no"
-);
-
-ALTER TABLE "RES_ROOM" ADD CONSTRAINT "FK_member_TO_RES_ROOM_1" FOREIGN KEY (
-	"res_user"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "RES_CAR" ADD CONSTRAINT "FK_CAR_TO_RES_CAR_1" FOREIGN KEY (
-	"car_code"
-)
-REFERENCES "CAR" (
-	"car_code"
-);
-
-ALTER TABLE "RES_CAR" ADD CONSTRAINT "FK_member_TO_RES_CAR_1" FOREIGN KEY (
-	"res_user"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "PROJECT" ADD CONSTRAINT "FK_member_TO_PROJECT_1" FOREIGN KEY (
-	"project_manager"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "mail_attachment" ADD CONSTRAINT "FK_mail_TO_mail_attachment_1" FOREIGN KEY (
-	"mail_no"
-)
-REFERENCES "mail" (
-	"mail_no"
-);
-
-ALTER TABLE "TASK" ADD CONSTRAINT "FK_PROJECT_TO_TASK_1" FOREIGN KEY (
-	"project_no"
-)
-REFERENCES "PROJECT" (
-	"project_no"
-);
-
-ALTER TABLE "TASK" ADD CONSTRAINT "FK_member_TO_TASK_1" FOREIGN KEY (
-	"assing_user"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "address_like" ADD CONSTRAINT "FK_member_TO_address_like_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "NOTICE" ADD CONSTRAINT "FK_member_TO_NOTICE_1" FOREIGN KEY (
-	"NOTICE_WRITER"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "BOARD" ADD CONSTRAINT "FK_member_TO_BOARD_1" FOREIGN KEY (
-	"BOARD_WRITER"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "CHAT" ADD CONSTRAINT "FK_CHATROOM_TO_CHAT_1" FOREIGN KEY (
-	"ROOM_NO"
-)
-REFERENCES "CHATROOM" (
-	"ROOM_NO"
-);
-
-ALTER TABLE "CHAT" ADD CONSTRAINT "FK_member_TO_CHAT_1" FOREIGN KEY (
-	"SEND_NO"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "NOTIFICATION" ADD CONSTRAINT "FK_member_TO_NOTIFICATION_1" FOREIGN KEY (
-	"SEND_NO"
 )
 REFERENCES "member" (
 	"user_no"
@@ -1156,83 +977,6 @@ REFERENCES "member" (
 	"user_no"
 );
 
-ALTER TABLE "mail" ADD CONSTRAINT "FK_member_TO_mail_1" FOREIGN KEY (
-	"sender"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "mail_status" ADD CONSTRAINT "FK_mail_TO_mail_status_1" FOREIGN KEY (
-	"mail_no"
-)
-REFERENCES "mail" (
-	"mail_no"
-);
-
-ALTER TABLE "holiday" ADD CONSTRAINT "FK_member_TO_holiday_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "R_PARTICIPANT" ADD CONSTRAINT "FK_RES_ROOM_TO_R_PARTICIPANT_1" FOREIGN KEY (
-	"res_no"
-)
-REFERENCES "RES_ROOM" (
-	"res_no"
-);
-
-ALTER TABLE "R_PARTICIPANT" ADD CONSTRAINT "FK_member_TO_R_PARTICIPANT_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "P_PARTICIPANT" ADD CONSTRAINT "FK_PROJECT_TO_P_PARTICIPANT_1" FOREIGN KEY (
-	"project_no"
-)
-REFERENCES "PROJECT" (
-	"project_no"
-);
-
-ALTER TABLE "P_PARTICIPANT" ADD CONSTRAINT "FK_TASK_TO_P_PARTICIPANT_1" FOREIGN KEY (
-	"task_no"
-)
-REFERENCES "TASK" (
-	"task_no"
-);
-
-ALTER TABLE "P_PARTICIPANT" ADD CONSTRAINT "FK_dept_TO_P_PARTICIPANT_1" FOREIGN KEY (
-	"department_no"
-)
-REFERENCES "dept" (
-	"department_no"
-);
-
-ALTER TABLE "P_PARTICIPANT" ADD CONSTRAINT "FK_member_TO_P_PARTICIPANT_1" FOREIGN KEY (
-	"user_no"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "CHAT_LIKE" ADD CONSTRAINT "FK_member_TO_CHAT_LIKE_1" FOREIGN KEY (
-	"MYUSER_NO"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
-ALTER TABLE "CHAT_LIKE" ADD CONSTRAINT "FK_member_TO_CHAT_LIKE_2" FOREIGN KEY (
-	"LIKEUSER_NO"
-)
-REFERENCES "member" (
-	"user_no"
-);
-
 -- 시퀀스
 CREATE SEQUENCE SEQ_CHATROOMNO
 NOCACHE; -- 채팅방
@@ -1248,6 +992,9 @@ NOCACHE; -- 익명게시판
 
 CREATE SEQUENCE SEQ_NNO
 NOCACHE; -- 공지사항
+
+CREATE SEQUENCE SEQ_SCHNO
+NOCACHE; -- 회사일정
 
 create sequence seq_atno
 NOCACHE; -- 첨부파일(전자결재/공지)
@@ -1307,4 +1054,5 @@ create sequence seq_rscno
 NOCACHE; -- 차량예약
 
 create sequence seq_docno
+
 NOCACHE; -- 문서번호
