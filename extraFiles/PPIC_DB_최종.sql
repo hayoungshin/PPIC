@@ -212,7 +212,7 @@ CREATE TABLE "app_process" (
 	"approval_role"	varchar2(10)		NOT NULL,
 	"status"	varchar2(10)		NULL,
 	"approval_date"	varchar2(20)		NULL,
-	"bookmark"	varchar2(1)	DEFAULT 'Y'	NULL
+	"bookmark"	varchar2(1)	DEFAULT 'N'	NULL
 );
 
 COMMENT ON COLUMN "app_process"."approval_no" IS '전자결재번호';
