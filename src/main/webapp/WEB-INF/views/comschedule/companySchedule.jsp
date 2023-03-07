@@ -469,7 +469,7 @@
                 </div>
             </div>
         </div>
-    </div>
+   	</div>
     <script>
         // datePicker
         $(function() {
