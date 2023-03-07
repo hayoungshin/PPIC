@@ -49,16 +49,17 @@
     </script>
     <div class="boardOuter">
         <br><h5><b>게시글 수정</b></h5><br>
-        <form action="ddd" method="post" enctype="">
+        <form action="update.bo" method="post">
+        <input type="hidden" name="boardNo" value="${ b.boardNo }">
             <table>
                 <tr>
                     <td width="100">제목</td>
-                    <td width="800"><input type="text" id="boardTitle" name="" value="개발팀 차은우 대리 여자친구 있나요?" required></td>
+                    <td width="800"><input type="text" id="boardTitle" name="boardTitle" value="${ b.boardTitle }" required></td>
                 </tr>
                 <tr>
                     <td style="vertical-align:top;">내용</td>
                     <td>
-                        <textarea name="" style="resize:none" required>제발 알려주세요</textarea>
+                        <textarea name="boardContent" style="resize:none" required>${ b.boardContent }</textarea>
                     </td>
                 </tr>
             </table>

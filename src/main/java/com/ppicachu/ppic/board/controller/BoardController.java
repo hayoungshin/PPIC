@@ -2,6 +2,8 @@ package com.ppicachu.ppic.board.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,10 +40,11 @@ public class BoardController {
 	}
 	
 	@RequestMapping("insert.bo")
-	public String insertBoard(Board b, Model m) {
+	public String insertBoard(Board b, Model m, HttpSession session) {
 		int result = bService.insertBoard(b);
 		
 		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 게시글 등록 되었습니다.");
 			return "redirect:list.bo";
 		} else {
 			m.addAttribute("errorMsg", "익명게시글 등록 실패");
@@ -64,15 +67,36 @@ public class BoardController {
 	}
 	
 	@RequestMapping("delete.bo")
-	public String deleteBoard(int no, Model m) {
+	public String deleteBoard(int no, Model m, HttpSession session) {
 		int result = bService.deleteBoard(no);
 		
 		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 게시글 삭제 되었습니다.");
 			return "redirect:list.bo";
 		}else {
 			m.addAttribute("errorMsg", "익명게시글 삭제 실패");
 			return "common/errorPage";
 		}
+	}
+	
+	@RequestMapping("updateForm.bo")
+	public String updateForm(int no, Model model) {
+		model.addAttribute("b", bService.selectBoard(no));
+		return "board/boardUpdateForm";
+	}
+	
+	@RequestMapping("update.bo")
+	public String updateBoard(Board b, HttpSession session, Model model) {
+		int result = bService.updateBoard(b);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 게시글 수정 되었습니다.");
+			return "redirect:detail.bo?no=" + b.getBoardNo();
+		} else {
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			return "common/errorPage";
+		}
+		
 	}
 	
 	@RequestMapping("myList.bo")

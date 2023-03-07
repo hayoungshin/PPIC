@@ -90,4 +90,13 @@
 		   set status = 'N'
 		 where board_no = #{boardNo}
 	</update>
+	
+	<update id="updateBoard">
+		update 
+		       board
+		   set board_title = #{boardTitle}
+		     , board_content = #{boardContent}
+		     , modify_date = sysdate
+		 where board_no = #{boardNo}
+	</update>
 </mapper>
