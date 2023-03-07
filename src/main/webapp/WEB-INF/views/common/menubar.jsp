@@ -225,6 +225,7 @@
 
         <script>
             function toMyPage(){
+            	location.href="myPage.me"
                 /* 마이페이지 url로 이동 */
             }
             
