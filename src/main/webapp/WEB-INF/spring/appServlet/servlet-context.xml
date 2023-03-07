@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />	<!-- 접두어 -->
+		<beans:property name="suffix" value=".jsp" />	<!-- 접미어 -->
+	</beans:bean>
+	<!-- Controller 측에서 return되는 문자열에 접두어, 접미어가 붙은 뷰를 찾아 사용자에게 보여줌 -->
+	
+	<context:component-scan base-package="com.ppicachu.ppic" />
+	
+	<!-- 인터셉터 등록, 빈으로 등록 -->
+	<!--
+	<interceptors>
+		<interceptor>
+			<mapping path="/myPage.me" />
+			<beans:bean class="com.ppicachu.ppic.common.interceptor.LoginInterceptor" id="loginInterceptor" />
+		</interceptor>
+	</interceptors>
+	-->
+	
+	<!-- websocket 관련 구문 추가 -->
+	<!-- 
+	<beans:bean id="chatEchoHandler" class="com.ppicachu.ppic." />
+	<websocket:handlers>
+		<websocket:mapping handler="chatEchoHandler" path="/chat" />
+		
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		
+		<websocket:sockjs />
+	</websocket:handlers>
+	-->
+	
+	
+	<!-- 스케줄링 관련 구문 추가 -->
+	<task:scheduler id="myScheduler" pool-size="10" />
+									<!-- pool-size : 스레드(하나의 일을 처리하기 위한 단위, 소위 일꾼)를 이용해 수행 -->
+									<!-- 기본값 1 -->
+	<task:annotation-driven scheduler="myScheduler"/>
+	<!-- 어노테이션이 붙은 스케줄러들을 스캔하며 수행 -->
+	
+</beans:beans>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/spring-security.xml
+		</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<!-- servlet도 등록 가능 : spring에서 이미 제공하고 있는 servlet클래스 / servlet태그랑 servlet-mapping태그 세트 -->
+	<!-- 
+		* DispatcherServlet
+		  사용자의 요청을 받아주는 용도의 객체
+	-->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--
+			어떤 url로 요청하든간에 DispatcherServlet이 구동
+			Controller측 클래스는 만들어야 함!
+			
+			* DispatcherServlet객체 생성시 읽어들여지는 문서 (/WEB-INF/spring/appServlet/servlet-context.xml 파일에)
+			- 각 요청에 따라 처리해야되는 해당 Controller를 지정하는 "HandlerMapping" 등록되어있어야 함
+			- 요청 처리 후 뷰를 지정하는  "ViewResolver" 등록되어있어야 함
+		-->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+		
+		<!-- websocket 관련구문 : 비동기 작업이 가능하게끔 추가, 웹소켓에 클라이언트가 다수일 경우 동시에 데이터 전송할 때 제어하기 위해 -->
+		<async-supported>true</async-supported>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>	<!-- 모든 url 요청시 -->
+	</filter-mapping>
+
+</web-app>
