@@ -49,6 +49,32 @@ public class BoardController {
 		}
 	}
 	
+	@RequestMapping("detail.bo")
+	public String selectBoard(int no, Model m) {
+		int result = bService.increaseCount(no);
+		
+		if(result > 0) {
+			Board b = bService.selectBoard(no);
+			m.addAttribute("b", b);
+			return "board/boardDetailView";
+		}else {
+			m.addAttribute("errorMsg", "게시글 조회 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("delete.bo")
+	public String deleteBoard(int no, Model m) {
+		int result = bService.deleteBoard(no);
+		
+		if(result > 0) {
+			return "redirect:list.bo";
+		}else {
+			m.addAttribute("errorMsg", "익명게시글 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
 	@RequestMapping("myList.bo")
 	public String selectmyPostList() {
 		return "board/myPostListView";

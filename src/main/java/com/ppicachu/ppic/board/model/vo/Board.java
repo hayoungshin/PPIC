@@ -20,4 +20,6 @@ public class Board {
 	private String modifyDate;
 	private String status;
 	private String blindSta;
+	private int likeCount;
+	private int hateCount;
 }

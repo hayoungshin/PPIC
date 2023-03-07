@@ -22,7 +22,7 @@
             <a href="enrollForm.bo" class="btn" id="write">글쓰기</a>
         </div>
         <br>
-        <table class="table">
+        <table class="table" id="boardList">
             <thead class="thead-light">
               <tr>
                 <th style="width:50px;">번호</th>
@@ -42,6 +42,14 @@
                    </c:forEach>
             </tbody>
         </table>
+        
+        <script>
+        	$(function(){
+        		$("#boardList>tbody>tr").click(function(){
+        			location.href = 'detail.bo?no=' + $(this).children(".no").text();
+        		})
+        	})
+        </script>
         
 		<form id="searchForm" action="" method="Get">
             <div class="select">
