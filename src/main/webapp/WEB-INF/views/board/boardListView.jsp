@@ -60,7 +60,7 @@
                     <input type="text" name="keyword" placeholder="&nbsp;검색어를 입력하세요">
                 </div>
                 <div id="search-btn">
-                    <button type="submit"><img src="resources/icons/search.png" height="25px" width="25px"></button>
+                    <button type="submit"><img src="resources/icons/search.png" height="23px" width="23px"></button>
                 </div>
             </div>
         </form>

@@ -247,6 +247,5 @@
             }
         </script>
 		
-		<div id="content">
 </body>
 </html>

@@ -696,7 +696,7 @@ CREATE TABLE "mail" (
 	"mail_title"	VARCHAR2(100)	DEFAULT '제목없음'	NULL,
 	"mail_content"	CLOB		NULL,
 	"sent_date"	DATE	DEFAULT SYSDATE	NULL,
-	"Field3"	VARCHAR2(1)	DEFAULT 'N'	NOT NULL
+	"temp_status"	VARCHAR2(1)	DEFAULT 'N'	NOT NULL
 );
 
 COMMENT ON COLUMN "mail"."recipient_mail" IS '이메일,이메일,이메일..';
@@ -707,22 +707,22 @@ COMMENT ON COLUMN "mail"."hidden_reference_mail" IS '이메일,이메일,이메�
 
 CREATE TABLE "mail_status" (
 	"mail_no"	NUMBER		NOT NULL,
-	"Field"	VARCHAR2(40)		NOT NULL,
-	"Field2"	VARCHAR2(40)		NULL,
-	"Field5"	NUMBER		NULL,
-	"Field3"	DATE		NULL,
-	"Field4"	VARCHAR2(1)	DEFAULT 'N'	NOT NULL,
-	"Field6"	VARCHAR2(1)	DEFAULT 'N'	NOT NULL,
-	"Field7"	DATE		NULL
+	"sender_mail"	VARCHAR2(40)		NOT NULL,
+	"recipient_mail"	VARCHAR2(40)		NULL,
+	"mail_type"	NUMBER		NULL,
+	"read_date"	DATE		NULL,
+	"bin_status"	VARCHAR2(1)	DEFAULT 'N'	NOT NULL,
+	"important_status"	VARCHAR2(1)	DEFAULT 'N'	NOT NULL,
+	"delete_date"	DATE		NULL
 );
 
-COMMENT ON COLUMN "mail_status"."Field2" IS '보낸메일일 경우 NULL';
+COMMENT ON COLUMN "mail_status"."recipient_mail" IS '보낸메일일 경우 NULL';
 
-COMMENT ON COLUMN "mail_status"."Field5" IS '1받은메일/2보낸메일/3참조메일/4숨은참조메일';
+COMMENT ON COLUMN "mail_status"."mail_type" IS '1받은메일/2보낸메일/3참조메일/4숨은참조메일';
 
-COMMENT ON COLUMN "mail_status"."Field3" IS '이걸로 읽음여부는 판단가능';
+COMMENT ON COLUMN "mail_status"."read_date" IS '이걸로 읽음여부는 판단가능';
 
-COMMENT ON COLUMN "mail_status"."Field7" IS '스케줄링을 위해서 필요';
+COMMENT ON COLUMN "mail_status"."delete_date" IS '스케줄링을 위해서 필요';
 
 CREATE TABLE "holiday" (
 	"holi_no"	NUMBER		NOT NULL,

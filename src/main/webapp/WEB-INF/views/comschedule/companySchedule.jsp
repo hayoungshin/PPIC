@@ -168,8 +168,8 @@
                 <td width="700px" class="schedule" style="text-align: right;">
                     <span style="background:rgb(204, 228, 244);">매년</span>
                     <span style="background:rgb(224, 224, 224);">휴일</span>
-                    <img src="resource/images/modify.png" width="20px" height="20px" class="modify-img">
-                    <img src="resource/images/bin.png" width="20px" height="25px" class="delete-img">
+                    <img src="resources/icons/modify.png" width="20px" height="20px" class="modify-img">
+                    <img src="resources/icons/bin.png" width="20px" height="25px" class="delete-img">
                 </td>
               </tr>
             </tbody>
@@ -469,7 +469,7 @@
                 </div>
             </div>
         </div>
-    </div>
+   	</div>
     <script>
         // datePicker
         $(function() {

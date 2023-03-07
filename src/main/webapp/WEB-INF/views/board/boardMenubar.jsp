@@ -99,18 +99,20 @@
 <body>
 
 	<jsp:include page="../common/menubar.jsp"/>
+	<div class="outer">
+		<div id="content">
+			<div class="boardMenu"> 
+		        <h4><b>회사소식</b></h4>
+		        <div class="menu">
+		            <div class="menus" onclick="location.href='list.no'">공지사항</div>
+		            <div class="menus" onclick="location.href='list.bo'">익명게시판</div>
+		            <div class="menus" onclick="location.href='myList.bo'">나의 게시글</div>
+		            <!-- 관리자일 경우 보여짐 -->
+		            <div class="menus" onclick="location.href='manage.bo'">익명게시판 관리</div>
+		            <div class="menus" onclick="location.href='schedule.bo'">회사 일정 관리</div>
+		        </div>
+		    </div>
 
-	<div class="boardMenu"> 
-        <h4><b>회사소식</b></h4>
-        <div class="menu">
-            <div class="menus" onclick="location.href='list.no'">공지사항</div>
-            <div class="menus" onclick="location.href='list.bo'">익명게시판</div>
-            <div class="menus" onclick="location.href='myList.bo'">나의 게시글</div>
-            <!-- 관리자일 경우 보여짐 -->
-            <div class="menus" onclick="location.href='manage.bo'">익명게시판 관리</div>
-            <div class="menus" onclick="location.href='schedule.ad'">회사 일정 관리</div>
-        </div>
-    </div>
     
     
 </body>
