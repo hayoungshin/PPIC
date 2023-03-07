@@ -17,6 +17,7 @@
 		<typeAlias type="com.ppicachu.ppic.notice.model.vo.Notice" alias="Notice"/>
 		<typeAlias type="com.ppicachu.ppic.notification.model.vo.Notification" alias="Notification"/>
 		<typeAlias type="com.ppicachu.ppic.common.model.vo.Attachment" alias="Attachment"/>
+		<typeAlias type="com.ppicachu.ppic.work.model.vo.Work" alias="Work" />
 	</typeAliases>
 
 	
@@ -30,6 +31,7 @@
 		<mapper resource="/mappers/comschedule-mapper.xml" />
 		<mapper resource="/mappers/notice-mapper.xml" />
 		<mapper resource="/mappers/notification-mapper.xml" />
+		<mapper resource="/mappers/work-mapper.xml" />
 	</mappers>
 	
 	
