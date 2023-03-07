@@ -19,31 +19,27 @@
     </script>
     <div class="boardOuter"> 
         <div align="right">
-            <a href="" class="btn" id="write">글쓰기</a>
+            <a href="enrollForm.bo" class="btn" id="write">글쓰기</a>
         </div>
         <br>
         <table class="table">
             <thead class="thead-light">
               <tr>
                 <th style="width:50px;">번호</th>
-                <th style="width:500px;">제목</th>
+                <th style="width:1000px;">제목</th>
                 <th>작성일</th>
                 <th style="width:70px;">조회수</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>10</td>
-                <td>익명게시판 제목</td>
-                <td>2023-02-16</td>
-                <td>100</td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>익명게시판 제목</td>
-                <td>2023-02-15</td>
-                <td>50</td>
-              </tr>
+              <c:forEach var="b" items="${ list }">
+                    <tr>
+                        <td class="no">${ b.boardNo }</td>
+                        <td>${ b.boardTitle }</td>
+                        <td>${ b.createDate }</td>
+                        <td>${ b.count }</td>
+                    </tr>
+                   </c:forEach>
             </tbody>
         </table>
         
@@ -66,14 +62,40 @@
         </form>
         <div id="paging">
             <ul>
-                <li><a href="#"><</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">></a></li>
-            </ul>
+          		<c:if test="${ pi.currentPage ne 1 }">
+              		<li><a href="list.no?cpage=${ p } - 1"><</a></li>
+              	</c:if>
+	            
+	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+	            	<c:choose>
+	            		<c:when test="${ pi.currentPage eq p }">
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li class="on"><a href="list.no?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li class="on"><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+	            			</c:choose>
+	            		</c:when>
+	            		<c:otherwise>
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li><a href="list.no?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+			            	</c:choose>
+	            		</c:otherwise>
+	            	</c:choose>
+	            	
+				</c:forEach>
+				
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
+	            	<li><a href="list.no?cpage=${ pi.currentPage + 1 }">></a></li>
+				</c:if>
+           </ul>
         </div>
     </div>
 

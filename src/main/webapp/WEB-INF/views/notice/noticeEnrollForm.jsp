@@ -77,11 +77,11 @@
     
     <div class="boardOuter">
         <br><h5><b>공지사항 작성</b></h5><br>
-        <form action="" method="post" enctype="">
+        <form action="insert.no" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
                     <td width="100">제목</td>
-                    <td><input type="text" id="noticeTitle" name="" placeholder="제목을 입력해주세요." required></td>
+                    <td><input type="text" id="noticeTitle" name="noticeTitle" placeholder="제목을 입력해주세요." required></td>
                 </tr>
                 <tr>
                     <td>
@@ -103,13 +103,13 @@
                 <tr>
                     <td style="vertical-align:top;">내용</td>
                     <td>
-                        <textarea id="summernote" name="" class="require" required></textarea>
+                        <textarea id="summernote" name="noticeContent" class="require" required></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
-                        <input type="checkbox" id="important" name="">
+                        <input type="checkbox" id="important" name="important">
                         <label for="important">중요</label>
                     </td>
                 </tr>
@@ -131,6 +131,7 @@
 	      });
 	  });
 	</script>
+	
     <script>
 	    (function() {
 	        var $file = document.getElementById("upfile")
@@ -201,8 +202,6 @@
 	            }
 	        })
 	    })();
-	
-	    
 	</script>
 
 </body>

@@ -51,19 +51,20 @@
     </script>
 	<div class="boardOuter">
         <br><h5><b>익명게시판 작성</b></h5><br>
-        <form action="" method="post" enctype="">
+        <form action="insert.bo" method="post">
             <table>
                 <tr>
                     <td width="100">제목</td>
-                    <td><input type="text" id="boardTitle" name="" placeholder="제목을 입력해주세요." required></td>
+                    <td><input type="text" id="boardTitle" name="boardTitle" placeholder="제목을 입력해주세요." required></td>
                 </tr>
                 <tr>
                     <td style="vertical-align:top;">내용</td>
                     <td>
-                        <textarea name="" placeholder="내용을 입력해주세요." style="resize:none" required></textarea>
+                        <textarea name="boardContent" placeholder="내용을 입력해주세요." style="resize:none" required></textarea>
                     </td>
                 </tr>
             </table>
+            <!-- <input type="hidden" name="boardWriter" value="${ loginUser.userNo }"> -->
             <div align="center">
                 <button type="button" class="btn" id="cancel-btn">취소</button>
                 <button type="submit" class="btn" id="enroll-btn">작성</button>
