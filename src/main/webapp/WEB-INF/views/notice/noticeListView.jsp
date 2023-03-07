@@ -22,7 +22,7 @@
     <div class="boardOuter">
 		<!-- 글쓰기 버튼 관리자만 보여짐 -->
 	    <div align="right">
-	        <a href="" class="btn" id="write">글쓰기</a>
+	        <a href="enrollForm.no" class="btn" id="write">글쓰기</a>
 	    </div>
 	    <br>
 	    <table class="table">
@@ -86,13 +86,28 @@
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 	            	<c:choose>
-	            		<c:when test="${ empty condition }">
-		            		<li><a href="list.no?cpage=${ p }">${ p }</a></li>
-		            	</c:when>
-		            	<c:otherwise>
-		            		<li><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
-		            	</c:otherwise>
+	            		<c:when test="${ pi.currentPage eq p }">
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li class="on"><a href="list.no?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li class="on"><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+	            			</c:choose>
+	            		</c:when>
+	            		<c:otherwise>
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li><a href="list.no?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+			            	</c:choose>
+	            		</c:otherwise>
 	            	</c:choose>
+	            	
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage ne pi.maxPage }">

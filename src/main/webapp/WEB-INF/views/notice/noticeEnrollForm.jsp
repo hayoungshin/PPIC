@@ -83,25 +83,21 @@
                         <img src="resources/icons/down-arrow.png" height="15px" width="15px" class="fileView" data-toggle="collapse" data-target="#upfileList">
                     </td>
                     <td>
-                        <button type="button" id="upfile-btn">파일 첨부</button>
+                        <button type="button" id="upfile-btn" onclick="$('#upfile').click();">파일 첨부</button>
+                        <input multiple type="file" id="upfile" name="upfile" style="display:none;" onchange="output(this)"/>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <div id="upfileList" class="collapse">
-                            noticeFile.pdf <br>
-                            noticeFile2.pdf
-                        </div> 
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td style="vertical-align:top;">내용</td>
                     <td>
-                        
                         <textarea id="summernote" name="" class="require" required></textarea>
-                    
-                    
                     </td>
                 </tr>
                 <tr>
@@ -137,6 +133,22 @@
                 $(this).attr("src", "resources/icons/down-arrow.png");
             }
         })
+    </script>
+    <script>
+   
+    	function output(inputFile){
+			if(inputFile.files.length != 0){ 
+				const reader = new FileReader();
+                reader.readAsDataURL(inputFile.files[0]);
+                reader.onload = function(e){
+                	let value = "";
+                	for(let i=0; i<inputFile.files.length; i++){
+                		value += inputFile.files[i].name + "<br>";
+                	}
+                	$("#upfileList").html(value);
+                }
+		    }
+    	}
     </script>
 
 </body>

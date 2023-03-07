@@ -30,7 +30,12 @@ public class NoticeController {
 		
 		m.addAttribute("pi", pi);
 		m.addAttribute("list", list);
-		System.out.println(list);
+		
 		return "notice/noticeListView";
+	}
+	
+	@RequestMapping("enrollForm.no")
+	public String selectNotice() {
+		return "notice/noticeEnrollForm";
 	}
 }
