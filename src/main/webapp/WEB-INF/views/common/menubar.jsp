@@ -8,10 +8,12 @@
 <title>Insert title here</title>
 <!-- jQuery 라이브러리 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!-- 부트스트랩에서 제공하고 있는 스타일 -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-<!-- 부트스트랩에서 제공하고 있는 스크립트 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<!-- Popper JS -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Alertify 쓸 건지..? 아무도 안쓰면 나중에 삭제하기 -->
 <!-- JavaScript -->
@@ -153,12 +155,12 @@
                             <span class="nametag-name" style="font-size:12px;">이름</span>
                         </td>
                         <td id="side-my-name" style="" onclick="toMyPage();">김이름</td>
-                        <td><a href=""><img src="resources/icons/messenger.png" style="width:25px;"></a></td>
+                        <td style="cursor:pointer"><img src="resources/icons/messenger.png" style="width:25px;" onclick="chatPopup();"></td>
                     </tr>
                 </table>
             </div>
 
-            <div class="side-menu" onclick="location.href=''" style="margin-top:20px;">
+            <div class="side-menu" onclick="alarmPopup();" style="margin-top:20px;">
                 <img src="resources/icons/bell.png" style="margin:5px 10px; width:23px;">
                 <span style="left:50px;">새로운 알림</span>
             </div>
@@ -217,10 +219,31 @@
                 <span>설정</span>
             </div>
         </div>
+        
+        <jsp:include page="../chat/chat.jsp"/>
+		<jsp:include page="../alarm/alarmPopup.jsp"/>
 
         <script>
             function toMyPage(){
                 /* 마이페이지 url로 이동 */
+            }
+            
+            /* 새로운 알람 클릭 */
+            function alarmPopup(){
+            	if($("#alarm-popup").css("display") == "none"){
+            		$("#alarm-popup").css("display", "block");
+            	}else{
+            		$("#alarm-popup").css("display", "none");
+            	}
+            }
+            
+            /* 채팅 아이콘 클릭 */
+            function chatPopup(){
+            	if($("#chat").css("display") == "none"){
+            		$("#chat").css("display", "block");
+            	}else{
+            		$("#chat").css("display", "none");
+            	}
             }
         </script>
 
