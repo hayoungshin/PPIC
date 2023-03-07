@@ -177,7 +177,7 @@
                 <span>메일</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='workMain.wo'">
                 <img src="resources/icons/time.png">
                 <span>근무</span>
             </div>
