@@ -132,7 +132,7 @@
 </head>
 <body>
 
-	<jsp:include page="boardMenubar.jsp"/>
+	<jsp:include page="../board/boardMenubar.jsp"/>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
 	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/datepicker-ko.js"></script>

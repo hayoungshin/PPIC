@@ -11,6 +11,11 @@
 	<typeAliases>
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Member" alias="Member" />
 		<typeAlias type="com.ppicachu.ppic.mail.model.vo.Mail" alias="Mail"/>
+		<typeAlias type="com.ppicachu.ppic.board.model.vo.Board" alias="Board"/>
+		<typeAlias type="com.ppicachu.ppic.chat.model.vo.Chat" alias="Chat"/>
+		<typeAlias type="com.ppicachu.ppic.comschedule.model.vo.Comschedule" alias="Comschedule"/>
+		<typeAlias type="com.ppicachu.ppic.notice.model.vo.Notice" alias="Notice"/>
+		<typeAlias type="com.ppicachu.ppic.notification.model.vo.Notification" alias="Notification"/>
 	</typeAliases>
 
 	
@@ -19,6 +24,11 @@
 	<mappers>
 		<mapper resource="/mappers/member-mapper.xml" />
 		<mapper resource="/mappers/mail-mapper.xml" />
+		<mapper resource="/mappers/board-mapper.xml" />
+		<mapper resource="/mappers/chat-mapper.xml" />
+		<mapper resource="/mappers/comschedule-mapper.xml" />
+		<mapper resource="/mappers/notice-mapper.xml" />
+		<mapper resource="/mappers/notification-mapper.xml" />
 	</mappers>
 	
 	

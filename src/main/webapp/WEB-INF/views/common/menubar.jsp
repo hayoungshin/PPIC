@@ -182,7 +182,7 @@
                 <span>근무</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='list.no'">
                 <img src="resources/icons/office.png">
                 <span>회사소식</span>
             </div>
@@ -246,8 +246,7 @@
             	}
             }
         </script>
-
-
-    </div>
+		
+		<div id="content">
 </body>
 </html>
