@@ -64,7 +64,7 @@
                 </tr>
             </table>
             <div align="center">
-                <button type="button" class="btn" id="cancel-btn">취소</button>
+                <button type="button" class="btn" id="cancel-btn" onclick="javascript:history.go(-1);">취소</button>
                 <button type="button" class="btn" id="modal-btn" data-toggle="modal" data-target="#modifyModal">수정</button>
             </div>
             <div class="modal" id="modifyModal" data-backdrop='static' data-keyboard='false'>

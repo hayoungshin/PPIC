@@ -16,6 +16,7 @@
 	<resultMap id="attachmentResult" type="Attachment">
 		<id column="attachment_no" property="attachmentNo"/>
 		<result column="origin_name" property="originName"/>
+		<result column="change_name" property="changeName"/>
 	</resultMap>
 
 	<select id="selectListCount" resultType="_int">
@@ -44,5 +45,41 @@
 		 order
 		    by notice_no desc
 	</select>
+	
+	<update id="increaseCount">
+		update 
+		       notice
+		   set count = count + 1
+		 where notice_no = #{noticeNo}
+		   and status = 'Y'
+	</update>
+	
+	<select id="selectNotice" resultMap="noticeResult">
+		select
+		       notice_no
+		     , notice_title
+		     , user_name
+		     , count
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		     , important
+		     , (select 
+		               origin_name
+		          from attachment
+		         where category_no = 1
+		           and ref_no = #{noticeNo}) "origin_name"
+		     , (select 
+		               change_name
+		          from attachment
+		         where category_no = 1
+		           and ref_no = #{noticeNo}) "change_name"
+		  from notice n
+          join member on (notice_writer = user_no)
+		 where n.status = 'Y'
+		   and notice_no = #{noticeNo}
+		 order
+		    by notice_no desc
+	</select>
+	
+	
 	
 </mapper>

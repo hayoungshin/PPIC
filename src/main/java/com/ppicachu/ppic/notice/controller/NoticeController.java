@@ -43,5 +43,19 @@ public class NoticeController {
 		return "notice/noticeEnrollForm";
 	}
 	
+	@RequestMapping("detail.no")
+	public String selectNotice(int no, Model m) {
+		int result = nService.increaseCount(no);
+		
+		if(result > 0) {
+			Notice n = nService.selectNotice(no);
+			m.addAttribute("n", n);
+			return "notice/noticeDetailView";
+		} else {
+			m.addAttribute("errorMsg", "공지사항 조회 실패");
+			return "common/errorPage";
+		}
+	}
+	
 	
 }
