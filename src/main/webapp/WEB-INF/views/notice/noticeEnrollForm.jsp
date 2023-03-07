@@ -14,7 +14,7 @@
     .boardOuter td{padding-bottom:10px;}
 
     /* input 스타일 */
-    input[type=text], #upfileList{
+    input[type=text], .drop-zone{
         width: 1200px;
         border: 1px solid rgb(202, 199, 199);
         border-radius: 5px;
@@ -27,10 +27,16 @@
     }
 
     /* upfile 스타일 */
-    #upfileList{
+    .drop-zone{
         height: 70px;
         padding:5px;
         overflow: auto;
+    }
+    .drop-zone-dragenter, .drop-zone-dragover {
+        background:lightgray;
+    }
+    .uploadfile{
+    	margin:0px;
     }
 
     /* button 스타일 */
@@ -80,17 +86,17 @@
                 <tr>
                     <td>
                         첨부파일
-                        <img src="resources/icons/down-arrow.png" height="15px" width="15px" class="fileView" data-toggle="collapse" data-target="#upfileList">
                     </td>
                     <td>
                         <button type="button" id="upfile-btn" onclick="$('#upfile').click();">파일 첨부</button>
-                        <input multiple type="file" id="upfile" name="upfile" style="display:none;" onchange="output(this)"/>
+                        <input multiple type="file" id="upfile" name="upfile" style="display:none;"/>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
-                        <div id="upfileList" class="collapse">
+                        <div class="drop-zone">
+                        또는 파일을 여기로 드래그 하세요.
                         </div>
                     </td>
                 </tr>
@@ -126,30 +132,78 @@
 	  });
 	</script>
     <script>
-        $(".fileView").click(function(){
-            if($(this).attr("src") == "resources/icons/down-arrow.png"){
-                $(this).attr("src", "resources/icons/up-arrow.png");
-            } else{
-                $(this).attr("src", "resources/icons/down-arrow.png");
-            }
-        })
-    </script>
-    <script>
-   
-    	function output(inputFile){
-			if(inputFile.files.length != 0){ 
-				const reader = new FileReader();
-                reader.readAsDataURL(inputFile.files[0]);
-                reader.onload = function(e){
-                	let value = "";
-                	for(let i=0; i<inputFile.files.length; i++){
-                		value += inputFile.files[i].name + "<br>";
-                	}
-                	$("#upfileList").html(value);
-                }
-		    }
-    	}
-    </script>
+	    (function() {
+	        var $file = document.getElementById("upfile")
+	        var dropZone = document.querySelector(".drop-zone")
+	        var toggleClass = function(className) {
+	
+	            var list = ["dragenter", "dragleave", "dragover", "drop"]
+	
+	            for (var i = 0; i < list.length; i++) {
+	                if (className === list[i]) {
+	                    dropZone.classList.add("drop-zone-" + list[i])
+	                } else {
+	                    dropZone.classList.remove("drop-zone-" + list[i])
+	                }
+	            }
+	        }
+	        var showFiles = function(files) {
+	            dropZone.innerHTML = ""
+	            for(var i = 0, len = files.length; i < len; i++) {
+	                dropZone.innerHTML += "<p class='uploadfile'>" + files[i].name + "</p>"
+	            }
+	        }
+	        var selectFile = function(files) {
+	            // input file 영역에 드랍된 파일들로 대체
+	            $file.files = files
+	            showFiles($file.files)
+	        }
+	        $file.addEventListener("change", function(e) {
+	            showFiles(e.target.files)
+	        })
+	        // 드래그한 파일이 최초로 진입했을 때
+	        dropZone.addEventListener("dragenter", function(e) {
+	            e.stopPropagation()
+	            e.preventDefault()
+	            toggleClass("dragenter")
+	        })
+	
+	        // 드래그한 파일이 dropZone 영역을 벗어났을 때
+	        dropZone.addEventListener("dragleave", function(e) {
+	            e.stopPropagation()
+	            e.preventDefault()
+	            toggleClass("dragleave")
+	        })
+	
+	        // 드래그한 파일이 dropZone 영역에 머물러 있을 때
+	        dropZone.addEventListener("dragover", function(e) {
+	            e.stopPropagation()
+	            e.preventDefault()
+	            toggleClass("dragover")
+	        })
+	
+	        // 드래그한 파일이 드랍되었을 때
+	        dropZone.addEventListener("drop", function(e) {
+	            e.preventDefault()
+	
+	            toggleClass("drop")
+	
+	            var files = e.dataTransfer && e.dataTransfer.files
+	
+	            if (files != null) {
+	                if (files.length < 1) {
+	                    alert("폴더 업로드 불가")
+	                    return
+	                }
+	                selectFile(files)
+	            } else {
+	                alert("ERROR")
+	            }
+	        })
+	    })();
+	
+	    
+	</script>
 
 </body>
 </html>
