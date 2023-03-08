@@ -7,6 +7,17 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+
+	table th{
+		font-weight:600;
+		padding:3px 0px;
+		text-align:left;
+	}
+	table td{
+		font-size:13px;
+		color:gray;
+	}
+
 	#attachment-area{
 		padding:7px 10px;
 		font-size:13px;
@@ -50,7 +61,9 @@
 		opacity: 1;
 	}
 
-
+	.dropdown-menu.show{
+    left: -210%;
+	}
 </style>
 </head>
 <body>
@@ -61,35 +74,43 @@
 	</div>
 
 
-	<table border="1" style="font-size:14px;">
+	<table style="font-size:14px;">
 		<tr>
-			<td colspan="6" style="font-size:18px;">
+			<td colspan="6" style="font-size:18px; font-weight:600; padding:5px 0px; color:rgb(60,60,60);">
 				메일제목입니다 안녕하세요안녕하세여~~~~
 			</td>
 		</tr>
 		<tr>
-			<td style="width:100px;">보낸 사람</td>
-			<td style="width:900px;" style="color:gray;">박사원</td>
+			<th style="width:100px;">보낸 사람</th>
+			<td style="width:1000px;">박사원</td>
 		</tr>
 		<tr>
-			<td>받는 사람</td>
+			<th>받는 사람</th>
 			<td>나, 이이름, 박이름 에게</td>
 		</tr>
 		<tr>
-			<td>참조</td>
+			<th>참조</th>
 			<td>최뭐뭐</td>
-			<td>23-03-08 11:50</td>
-			<td>
+			<td style="width:120px; text-align:center;">23-03-08 11:50</td>
+			<td style="width:35px; text-align:center;">
 				<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
 			</td>
-			<td>
+			<td style="width:35px; text-align:center;">
 				<div class="tool-tip">
 					<img src="resources/icons/reply.png" style="cursor:pointer; width:20px;">	
 					<span class="tooltiptext" style="font-size:12px;">답장</span>
 				  </div>
 			</td>
-			<td>
-				<img src="resources/icons/dots.png" style="width:18px; cursor:pointer; opacity:0.7;">
+			<td style="width:35px; text-align:center;">
+				<div class="dropdown" id="dropdown">
+					<img src="resources/icons/dots.png" style="width:18px; cursor:pointer; opacity:0.7;" class="dropdown-toggle" data-toggle="dropdown">
+					<div class="dropdown-menu" style="font-size:13px; padding:0; left:-120px;">
+						<a class="dropdown-item" style="padding:5px 10px;" href="#">답장</a>
+						<a class="dropdown-item" style="padding:5px 10px;" href="#">전달</a>
+						<a class="dropdown-item" style="padding:5px 10px;" href="#">삭제</a>
+						<a class="dropdown-item" style="padding:5px 10px;" href="#">안읽음으로표시</a>
+					</div>
+				</div>
 			</td>
 		</tr>
 	</table>
@@ -107,8 +128,5 @@
 		어떤팀 신하영입니다.<br><br>
 		안녕히계세요.
 	</div>
-
-	
-
 </body>
 </html>
