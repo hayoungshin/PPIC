@@ -50,7 +50,7 @@
        
        <form id="searchForm" action="searchMy.bo" method="Get">
       	   <input type="hidden" name="cpage" value="1">
-      	   <input type="hidden" name="userNo" value="1">
+      	   <input type="hidden" name="userNo" value="1"><!-- userNo바꾸기 -->
            <div class="select">
                <select name="condition">
                    <option value="all">전체</option>
@@ -75,7 +75,7 @@
        <div id="paging">
             <ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="myList.bo?cpage=${ p } - 1"><</a></li>
+              		<li><a href="myList.bo?cpage=${ pi.currentPage - 1 }&userNo=1"><</a></li><!-- userNo바꾸기 -->
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
@@ -83,20 +83,20 @@
 	            		<c:when test="${ pi.currentPage eq p }">
 	            			<c:choose>
 			            		<c:when test="${ empty condition }">
-				            		<li class="on"><a href="myList.bo?cpage=${ p }">${ p }</a></li>
+				            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<li class="on"><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li class="on"><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}&userNo=1">${ p }</a></li>
 				            	</c:otherwise>
 	            			</c:choose>
 	            		</c:when>
 	            		<c:otherwise>
 	            			<c:choose>
 			            		<c:when test="${ empty condition }">
-				            		<li><a href="myList.bo?cpage=${ p }">${ p }</a></li>
+				            		<li><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<li><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}&userNo=1">${ p }</a></li>
 				            	</c:otherwise>
 			            	</c:choose>
 	            		</c:otherwise>
@@ -105,7 +105,7 @@
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage lt pi.maxPage }">
-	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }">></a></li>
+	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }&userNo=1">></a></li><!-- userNo바꾸기 -->
 				</c:if>
            </ul>
         </div>

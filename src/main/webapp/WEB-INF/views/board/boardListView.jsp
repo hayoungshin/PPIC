@@ -77,7 +77,7 @@
         <div id="paging">
             <ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="list.bo?cpage=${ p } - 1"><</a></li>
+              		<li><a href="list.bo?cpage=${ pi.currentPage - 1 } "><</a></li>
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
