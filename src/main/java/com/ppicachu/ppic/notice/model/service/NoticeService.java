@@ -1,7 +1,9 @@
 package com.ppicachu.ppic.notice.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import com.ppicachu.ppic.board.model.vo.Board;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.notice.model.vo.Notice;
 
@@ -23,5 +25,9 @@ public interface NoticeService {
 	
 	// 5. 공지사항 수정용 서비스
 	int updateNotice(Notice n);
+	
+	// 6. 공지사항 검색용 서비스
+	int selectSearchCount(HashMap<String, String> map);
+	ArrayList<Notice> selectSearchList(HashMap<String, String> map, PageInfo pi);
 
 }

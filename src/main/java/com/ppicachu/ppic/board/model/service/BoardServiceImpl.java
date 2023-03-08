@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,16 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int updateBoard(Board b) {
 		return bDao.updateBoard(sqlSession, b);
+	}
+
+	@Override
+	public int selectSearchCount(HashMap<String, String> map) {
+		return bDao.selectSearchCount(sqlSession, map);
+	}
+
+	@Override
+	public ArrayList<Board> selectSearchList(HashMap<String, String> map, PageInfo pi) {
+		return bDao.selectSearchList(sqlSession, map, pi);
 	}
 
 }

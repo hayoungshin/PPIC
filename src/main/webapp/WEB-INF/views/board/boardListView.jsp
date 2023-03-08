@@ -51,7 +51,8 @@
         	})
         </script>
         
-		<form id="searchForm" action="" method="Get">
+		<form id="searchForm" action="search.bo" method="Get">
+			<input type="hidden" name="cpage" value="1">
             <div class="select">
                 <select name="condition">
                     <option value="all">전체</option>
@@ -61,13 +62,18 @@
             </div>
             <div class="text">
                 <div id="search-text">
-                    <input type="text" name="keyword" placeholder="&nbsp;검색어를 입력하세요">
+                    <input type="text" name="keyword" value="${ keyword }" placeholder="&nbsp;검색어를 입력하세요">
                 </div>
                 <div id="search-btn">
                     <button type="submit"><img src="resources/icons/search.png" height="23px" width="23px"></button>
                 </div>
             </div>
         </form>
+        
+        <script>
+        	document.querySelector("#searchForm option[value=${condition}]").selected = true;
+        </script>
+        
         <div id="paging">
             <ul>
           		<c:if test="${ pi.currentPage ne 1 }">

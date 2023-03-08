@@ -99,4 +99,48 @@
 		     , modify_date = sysdate
 		 where board_no = #{boardNo}
 	</update>
+	
+	<select id="selectSearchCount" resultType="_int">
+		select
+		       count(*)
+		  from board 	
+		 where status = 'Y'
+		   <if test="condition == 'all'">
+		   	and board_title like '%' || #{keyword} || '%'
+		   	or status = 'Y' and board_content 
+		   </if>
+		   <if test="condition == 'title'">
+		   	and board_title 
+		   </if>
+		   <if test="condition == 'content'">
+		  	and board_content 
+		   </if>
+		   like '%' || #{keyword} || '%'
+	</select>
+	
+	<select id="selectSearchList" resultMap="boardResult">
+  		select 
+		       board_no
+		     , board_title
+		     , count
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		     , board_writer
+		  from board
+		 where status = 'Y'
+		   <choose>
+			   <when test="condition == 'all'">
+	          	 and board_title like '%' || #{keyword} || '%'
+		   		 or status = 'Y' and board_content
+	           </when>
+	           <when test="condition == 'title'">
+	           	 and board_title
+	           </when>
+	           <otherwise>
+	          	 and board_content
+	           </otherwise>
+           </choose>
+           like '%' || #{keyword} || '%'
+		 order
+		    by board_no desc
+  	</select>
 </mapper>

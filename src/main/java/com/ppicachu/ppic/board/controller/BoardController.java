@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.board.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -97,6 +98,25 @@ public class BoardController {
 			return "common/errorPage";
 		}
 		
+	}
+	
+	@RequestMapping("search.bo")
+	public String searchBoard(String condition, String keyword, int cpage, Model m) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		int searchCount = bService.selectSearchCount(map);
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cpage, 5, 10);
+		ArrayList<Board> list = bService.selectSearchList(map, pi);
+		
+		m.addAttribute("pi", pi);
+		m.addAttribute("list", list);
+		m.addAttribute("condition", condition);
+		m.addAttribute("keyword", keyword);
+		
+		return "board/boardListView";
 	}
 	
 	@RequestMapping("myList.bo")

@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.ppicachu.ppic.board.model.vo.Board;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
@@ -23,4 +24,8 @@ public interface BoardService {
 	
 	// 5. 게시글 수정용 서비스
 	int updateBoard(Board b);
+	
+	// 6. 게시글 검색용 서비스
+	int selectSearchCount(HashMap<String, String> map);
+	ArrayList<Board> selectSearchList(HashMap<String, String> map, PageInfo pi);
 }

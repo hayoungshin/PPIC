@@ -1,11 +1,13 @@
 package com.ppicachu.ppic.notice.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ppicachu.ppic.board.model.vo.Board;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.notice.model.dao.NoticeDao;
 import com.ppicachu.ppic.notice.model.vo.Notice;
@@ -52,6 +54,16 @@ public class NoticeServiceImpl implements NoticeService{
 	@Override
 	public int updateNotice(Notice n) {
 		return 0;
+	}
+
+	@Override
+	public int selectSearchCount(HashMap<String, String> map) {
+		return nDao.selectSearchCount(sqlSession, map);
+	}
+
+	@Override
+	public ArrayList<Notice> selectSearchList(HashMap<String, String> map, PageInfo pi) {
+		return nDao.selectSearchList(sqlSession, map, pi);
 	}
 	
 }
