@@ -75,7 +75,7 @@
 </style>
 </head>
 <body>
-	
+	<!--  -->
 	<jsp:include page="../common/menubar.jsp" />
 	
 	<div class="outer">
@@ -89,16 +89,17 @@
             </div>
            
            <div class="workcategory" style="float:left; color:lightgray;" >
-                <a>출퇴근기록</a>
-                <a>올해근무정보</a>
-                <a>휴가현황</a>
-                <a>휴가신청</a>
+                <a href="workList.wo"> <!--  --> 출퇴근기록</a>
+                <a > <!-- href="workinfo.wo" -->올해근무정보</a>
+                <a > <!-- href="holidayList.ho" -->휴가현황</a>
+                <a > <!-- href="enrollForm.ho" --> 휴가신청</a>
+                
                 
                 <!-- 관리자만 보이게 할거임 -->
-                <a>구성원근무</a>
-                <a>전사원휴가현황</a>
-                <a>휴가지급|회수</a>
-                <a>휴가승인</a>
+                <a > <!-- href="memberwork.wo" -->구성원근무</a>
+                <a > <!-- href="enrollForm.ho" -->전사원휴가현황</a>
+                <a > <!-- href="memberholi.ho" -->휴가지급|회수</a>
+                <a > <!-- href="holiapprove.ho" -->휴가승인</a>
                 
                 <br>
             </div>
