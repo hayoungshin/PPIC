@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ppicachu.ppic.board.model.vo.Board;
+import com.ppicachu.ppic.board.model.vo.Report;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 
 @Repository
@@ -58,6 +59,10 @@ public class BoardDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
 		return (ArrayList)sqlSession.selectList("boardMapper.selectSearchList", map, rowBounds);
+	}
+	
+	public int insertReport(SqlSessionTemplate sqlSession, Report r) {
+		return sqlSession.insert("boardMapper.insertReport", r);
 	}
 
 }

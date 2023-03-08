@@ -70,7 +70,7 @@
             </tr>
             <tr class="line">
                 <td colspan="2">
-                    <span>2023-02-16 (목) 16:35</span>
+                    <span>${ b.createDate }</span>
                     <a href="">👍 </a>${ b.likeCount }  <a href="">👎  </a>${ b.hateCount }
                     <!-- 이미 좋아요 또는 싫어요 눌렀을 시 표시 달라지고 누른거 취소해야 다시 누를 수 있음 -->
                 </td>
@@ -86,6 +86,7 @@
         </table>
         <form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ b.boardNo }">
+        	<input type="hidden" name="type" value="0"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
         </form>
         
         <script>
@@ -125,7 +126,9 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <b>신고하기</b> <br><br>
-                    <form action="report.bo">
+                    <form action="report.bo" method="post">
+                    <input type="hidden" name="reportBno" value="${ b.boardNo }">
+                    <input type="hidden" name="reportMno" value="40"> <!-- 로그인한 회원으로 바꾸기 -->
                         <table>
                             <tr>
                                 <td><b>신고구분</b></td>

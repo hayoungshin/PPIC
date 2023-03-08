@@ -57,31 +57,44 @@
     <div class="boardOuter">
         <table>
             <tr>
-                <td colspan="2" width="1200px"><h5>개발팀 차은우 대리 여자친구 있나요?</h5></td>
+                <td colspan="2" width="1200px"><h5>${ b.boardTitle }</h5></td>
             </tr>
             <tr class="line">
                 <td>
-                    <span>2023-02-16 (목) 16:35</span>
-                    <a href="">👍 </a>840  <a href="">👎  </a>87
+                    <span>${ b.createDate }</span>
+                    <a href="">👍 </a>${ b.likeCount }  <a href="">👎  </a>${ b.hateCount }
                     <!-- 이미 좋아요 또는 싫어요 눌렀을 시 표시 달라지고 누른거 취소해야 다시 누를 수 있음 -->
                 </td>
-                <td style="text-align: right;">조회수 999</td>
+                <td style="text-align: right;">조회수 ${ b.count }</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <p>
-                        제발 알려주세요
+                        ${ b.boardContent }
                     </p>
                 </td>
             </tr>
         </table>
         <br>
         <div align="center" style="width:1200px;">
-            <a href="" class="btn" id="list-btn">목록</a>
-            <a href="" class="btn" id="modify-btn">수정</a>
-            <a href="" class="btn" data-toggle="modal" data-target="#deleteModal" id="modal-btn">삭제</a>
+            <a class="btn" id="list-btn" onclick="history.back();">목록</a>
+            <a class="btn" id="modify-btn" onclick="postFormSubmit(1)">수정</a>
+            <a class="btn" data-toggle="modal" data-target="#deleteModal" id="modal-btn">삭제</a>
         </div>
-
+		<form action="" method="post" id="postForm">
+        	<input type="hidden" name="no" value="${ b.boardNo }">
+        	<input type="hidden" name="type" value="1"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
+        </form>
+		<script>
+        	function postFormSubmit(num){
+        		if(num == 1){
+        			$("#postForm").attr("action", "updateForm.bo").submit();
+        		} else{
+        			$("#postForm").attr("action", "delete.bo").submit();
+        		}
+        	}
+        </script>
+        
         <!-- 삭제 확인용 Modal -->
         <div class="modal" id="deleteModal" data-backdrop='static' data-keyboard='false'> 
             <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -91,7 +104,7 @@
                 <div align="center">
                     삭제하시겠습니까?<br><br>
                     <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-                    <a href="" class="btn" id="delete-btn">확인</a>
+                    <a onclick="postFormSubmit(2);" class="btn" id="delete-btn">확인</a>
                 </div>
                 </div>
             </div>

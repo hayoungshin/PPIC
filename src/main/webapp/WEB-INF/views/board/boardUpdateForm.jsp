@@ -45,12 +45,18 @@
 <body>
 	<jsp:include page="boardMenubar.jsp"/>
     <script>
-        document.getElementsByClassName("menus")[1].className += ' clicked';
+    	if(${type} == 0){
+    		document.getElementsByClassName("menus")[1].className += ' clicked';
+    	}else{
+    		document.getElementsByClassName("menus")[2].className += ' clicked';
+    	}
+        
     </script>
     <div class="boardOuter">
         <br><h5><b>게시글 수정</b></h5><br>
         <form action="update.bo" method="post">
         <input type="hidden" name="boardNo" value="${ b.boardNo }">
+        <input type="hidden" name="type" value="${ type }">
             <table>
                 <tr>
                     <td width="100">제목</td>

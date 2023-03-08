@@ -74,8 +74,8 @@
 		       board_no
 		     , board_title
 		     , board_writer
-		     , to_char(create_date, 'YYYY-MM-DD') "create_date"
-		     , to_char(modify_date, 'YYYY-MM-DD') "modify_date"
+		     , to_char(create_date, 'YYYY-MM-DD (DY) HH24:MI:SS') "create_date"
+		     , to_char(modify_date, 'YYYY-MM-DD (DY) HH24:MI:SS') "modify_date"
 		     , board_content
 		     , count
 		     , (select 
@@ -159,4 +159,8 @@
 		 order
 		    by board_no desc
   	</select>
+  	
+  	<insert id="insertReport">
+  		
+  	</insert>
 </mapper>
