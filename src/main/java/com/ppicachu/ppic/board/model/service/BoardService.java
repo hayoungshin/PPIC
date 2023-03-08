@@ -9,8 +9,8 @@ import com.ppicachu.ppic.common.model.vo.PageInfo;
 public interface BoardService {
 
 	// 1. 게시판 리스트 조회 서비스 (페이징)
-	int selectListCount();
-	ArrayList<Board> selectList(PageInfo pi);
+	int selectListCount(String userNo);
+	ArrayList<Board> selectList(String userNo, PageInfo pi);
 	
 	// 2. 게시글 작성하기 서비스
 	int insertBoard(Board b);

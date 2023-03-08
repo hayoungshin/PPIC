@@ -21,13 +21,13 @@ public class BoardServiceImpl implements BoardService{
 	private BoardDao bDao;
 	
 	@Override
-	public int selectListCount() {
-		return bDao.selectListCount(sqlSession);
+	public int selectListCount(String userNo) {
+		return bDao.selectListCount(sqlSession, userNo);
 	}
 
 	@Override
-	public ArrayList<Board> selectList(PageInfo pi) {
-		return bDao.selectList(sqlSession, pi);
+	public ArrayList<Board> selectList(String userNo, PageInfo pi) {
+		return bDao.selectList(sqlSession, userNo, pi);
 	}
 
 	@Override

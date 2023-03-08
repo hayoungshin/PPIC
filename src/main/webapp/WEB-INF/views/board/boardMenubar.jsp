@@ -106,7 +106,7 @@
 		        <div class="menu">
 		            <div class="menus" onclick="location.href='list.no'">공지사항</div>
 		            <div class="menus" onclick="location.href='list.bo'">익명게시판</div>
-		            <div class="menus" onclick="location.href='myList.bo'">나의 게시글</div>
+		            <div class="menus" onclick="location.href='myList.bo?userNo=1'">나의 게시글</div>
 		            <!-- 관리자일 경우 보여짐 -->
 		            <div class="menus" onclick="location.href='manage.bo'">익명게시판 관리</div>
 		            <div class="menus" onclick="location.href='schedule.bo'">회사 일정 관리</div>

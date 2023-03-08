@@ -24,10 +24,10 @@ public class BoardController {
 	
 	@RequestMapping("list.bo")
 	public String selectNoticeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, Model m) {
-		int listCount = bService.selectListCount();
+		int listCount = bService.selectListCount("");
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-		ArrayList<Board> list = bService.selectList(pi);
+		ArrayList<Board> list = bService.selectList("", pi);
 		
 		m.addAttribute("pi", pi);
 		m.addAttribute("list", list);
@@ -105,6 +105,7 @@ public class BoardController {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("condition", condition);
 		map.put("keyword", keyword);
+		map.put("userNo", "");
 		
 		int searchCount = bService.selectSearchCount(map);
 		
@@ -120,13 +121,42 @@ public class BoardController {
 	}
 	
 	@RequestMapping("myList.bo")
-	public String selectmyPostList() {
+	public String selectmyPostList(@RequestParam(value="cpage", defaultValue="1") int currentPage, String userNo, Model m) {
+		int listCount = bService.selectListCount(userNo);
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<Board> list = bService.selectList(userNo, pi);
+		
+		m.addAttribute("pi", pi);
+		m.addAttribute("list", list);
+		
+		return "board/myPostListView";
+	}
+	
+	@RequestMapping("searchMy.bo")
+	public String searchMyBoard(String condition, String keyword, int cpage, String userNo, Model m) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		map.put("userNo", userNo);
+		
+		int searchCount = bService.selectSearchCount(map);
+		
+		PageInfo pi = Pagination.getPageInfo(searchCount, cpage, 5, 10);
+		ArrayList<Board> list = bService.selectSearchList(map, pi);
+		
+		m.addAttribute("pi", pi);
+		m.addAttribute("list", list);
+		m.addAttribute("condition", condition);
+		m.addAttribute("keyword", keyword);
+		
 		return "board/myPostListView";
 	}
 	
 	@RequestMapping("manage.bo")
-	public String selectBoardManageList() {
+	public String selectBoardManageList(@RequestParam(value="cpage", defaultValue="1") int currentPage, Model m) {
 		return "board/boardManage";
 	}
+	
 
 }

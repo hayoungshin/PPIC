@@ -17,8 +17,12 @@
 	<select id="selectListCount" resultType="_int">
 		select
 		       count(*)
-		  from board
-		 where status = 'Y'
+		  from board b
+		  join member on(board_writer = user_no)
+		 where b.status = 'Y'
+		 <if test="userNo != ''">
+		   and user_no = #{userNo}
+		 </if>
 	</select>
 	
 	<select id="selectList" resultMap="boardResult">
@@ -28,9 +32,13 @@
 		     , count
 		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
 		     , board_writer
-		  from board
-		 where status = 'Y'
+		  from board b
+		  join member on(board_writer = user_no)
+		 where b.status = 'Y'
 		   and blind_sta = 'N'
+		   <if test="userNo != ''">
+		     and user_no = #{userNo}
+		   </if>
 		 order
 		    by board_no desc
 	</select>
@@ -103,11 +111,12 @@
 	<select id="selectSearchCount" resultType="_int">
 		select
 		       count(*)
-		  from board 	
-		 where status = 'Y'
+		  from board b	
+		  join member on(board_writer = user_no)
+		 where b.status = 'Y'
 		   <if test="condition == 'all'">
 		   	and board_title like '%' || #{keyword} || '%'
-		   	or status = 'Y' and board_content 
+		   	or b.status = 'Y' and board_content 
 		   </if>
 		   <if test="condition == 'title'">
 		   	and board_title 
@@ -116,6 +125,9 @@
 		  	and board_content 
 		   </if>
 		   like '%' || #{keyword} || '%'
+		   <if test="userNo != ''">
+		     and user_no = #{userNo}
+		   </if>
 	</select>
 	
 	<select id="selectSearchList" resultMap="boardResult">
@@ -125,12 +137,13 @@
 		     , count
 		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
 		     , board_writer
-		  from board
-		 where status = 'Y'
+		  from board b
+		  join member on(board_writer = user_no)
+		 where b.status = 'Y'
 		   <choose>
 			   <when test="condition == 'all'">
 	          	 and board_title like '%' || #{keyword} || '%'
-		   		 or status = 'Y' and board_content
+		   		 or b.status = 'Y' and board_content
 	           </when>
 	           <when test="condition == 'title'">
 	           	 and board_title
@@ -140,6 +153,9 @@
 	           </otherwise>
            </choose>
            like '%' || #{keyword} || '%'
+           <if test="userNo != ''">
+		     and user_no = #{userNo}
+		   </if>
 		 order
 		    by board_no desc
   	</select>

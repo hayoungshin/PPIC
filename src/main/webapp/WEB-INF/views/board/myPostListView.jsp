@@ -19,7 +19,7 @@
     </script>
 	<div class="boardOuter"> 
      <br><br>
-     <table class="table">
+     <table class="table" id="myPostList">
          <thead class="thead-light">
            <tr>
              <th style="width:50px;">번호</th>
@@ -29,22 +29,28 @@
              </tr>
            </thead>
            <tbody>
-             <tr>
-               <td>10</td>
-               <td>익명게시판 제목</td>
-               <td>2023-02-16</td>
-               <td>100</td>
-             </tr>
-             <tr>
-               <td>9</td>
-               <td>익명게시판 제목</td>
-               <td>2023-02-15</td>
-               <td>50</td>
-             </tr>
+             <c:forEach var="b" items="${ list }">
+               <tr>
+                   <td class="no">${ b.boardNo }</td>
+                   <td>${ b.boardTitle }</td>
+                   <td>${ b.createDate }</td>
+                   <td>${ b.count }</td>
+               </tr>
+              </c:forEach>
            </tbody>
        </table>
        
-       <form id="searchForm" action="" method="Get">
+       <script>
+        	$(function(){
+        		$("#myPostList>tbody>tr").click(function(){
+        			location.href = 'detailMy.bo?no=' + $(this).children(".no").text();
+        		})
+        	})
+        </script>
+       
+       <form id="searchForm" action="searchMy.bo" method="Get">
+      	   <input type="hidden" name="cpage" value="1">
+      	   <input type="hidden" name="userNo" value="1">
            <div class="select">
                <select name="condition">
                    <option value="all">전체</option>
@@ -54,24 +60,55 @@
            </div>
            <div class="text">
                <div id="search-text">
-                   <input type="text" name="keyword" placeholder="&nbsp;검색어를 입력하세요">
+                   <input type="text" name="keyword" value="${ keyword }" placeholder="&nbsp;검색어를 입력하세요">
                </div>
                <div id="search-btn">
                    <button type="submit"><img src="resources/icons/search.png" height="23px" width="23px"></button>
                </div>
            </div>
        </form>
+       
+       <script>
+        	document.querySelector("#searchForm option[value=${condition}]").selected = true;
+        </script>
+       
        <div id="paging">
-           <ul>
-               <li><a href="#"><</a></li>
-               <li><a href="#">1</a></li>
-               <li><a href="#">2</a></li>
-               <li><a href="#">3</a></li>
-               <li><a href="#">4</a></li>
-               <li><a href="#">5</a></li>
-               <li><a href="#">></a></li>
+            <ul>
+          		<c:if test="${ pi.currentPage ne 1 }">
+              		<li><a href="myList.bo?cpage=${ p } - 1"><</a></li>
+              	</c:if>
+	            
+	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+	            	<c:choose>
+	            		<c:when test="${ pi.currentPage eq p }">
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li class="on"><a href="myList.bo?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li class="on"><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+	            			</c:choose>
+	            		</c:when>
+	            		<c:otherwise>
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li><a href="myList.bo?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+			            	</c:choose>
+	            		</c:otherwise>
+	            	</c:choose>
+	            	
+				</c:forEach>
+				
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
+	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }">></a></li>
+				</c:if>
            </ul>
-       </div>
-</div>
+        </div>
+    </div>
 </body>
 </html>
