@@ -81,30 +81,15 @@
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 	            	<c:choose>
 	            		<c:when test="${ pi.currentPage eq p }">
-	            			<c:choose>
-			            		<c:when test="${ empty condition }">
-				            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
-				            	</c:when>
-				            	<c:otherwise>
-				            		<li class="on"><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}&userNo=1">${ p }</a></li>
-				            	</c:otherwise>
-	            			</c:choose>
+		            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
 	            		</c:when>
 	            		<c:otherwise>
-	            			<c:choose>
-			            		<c:when test="${ empty condition }">
-				            		<li><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
-				            	</c:when>
-				            	<c:otherwise>
-				            		<li><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}&userNo=1">${ p }</a></li>
-				            	</c:otherwise>
-			            	</c:choose>
+		            		<li><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
 	            		</c:otherwise>
 	            	</c:choose>
-	            	
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage lt pi.maxPage }">
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
 	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }&userNo=1">></a></li><!-- userNo바꾸기 -->
 				</c:if>
            </ul>

@@ -26,10 +26,18 @@ public interface BoardService {
 	// 5. 게시글 수정용 서비스
 	int updateBoard(Board b);
 	
-	// 6. 게시글 검색용 서비스
+	// 6. 게시글 검색용 서비스 (페이징)
 	int selectSearchCount(HashMap<String, String> map);
 	ArrayList<Board> selectSearchList(HashMap<String, String> map, PageInfo pi);
 	
 	// 7. 게시글 신고용 서비스
 	int insertReport(Report r);
+	
+	// 8. 익명게시판 관리 리스트 조회 서비스 (페이징)
+	int selectReportCount();
+	ArrayList<Report> selectReportList(PageInfo pi);
+	
+	// 9. 블라인드 처리 서비스
+	int blindReportUpdate(Report r);
+	int blindBoardUpdate(Report r);
 }

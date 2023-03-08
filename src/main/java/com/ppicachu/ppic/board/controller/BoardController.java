@@ -179,13 +179,47 @@ public class BoardController {
 	}
 	
 	@RequestMapping("report.bo")
-	public String insertReport(Report r, Model m) {
+	public String insertReport(Report r, Model m, HttpSession session) {
 		int result = bService.insertReport(r);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "게시글 신고 완료되었습니다.");
+			return "redirect:list.bo";
+		} else {
+			m.addAttribute("errorMsg", "게시글 신고 실패");
+			return "common/errorPage";
+		}
 	}
 	
 	@RequestMapping("manage.bo")
 	public String selectBoardManageList(@RequestParam(value="cpage", defaultValue="1") int currentPage, Model m) {
+		int listCount = bService.selectReportCount();
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<Report> list = bService.selectReportList(pi);
+		
+		m.addAttribute("pi", pi);
+		m.addAttribute("list", list);
+		
 		return "board/boardManage";
+	}
+	
+	@RequestMapping("blind.bo")
+	public String blindBoard(Report r, HttpSession session, Model m) {
+		int result1 = bService.blindReportUpdate(r);
+		int result2 = bService.blindBoardUpdate(r);
+		
+		if(result1 > 0 && result2 > 0) {
+			if(r.getReportSta().equals("1")) {
+				session.setAttribute("alertMsg", "블라인드 처리 취소되었습니다.");
+			} else {
+				session.setAttribute("alertMsg", "성공적으로 블라인드 처리되었습니다.");
+			}
+			return "redirect:manage.bo";
+		} else {
+			m.addAttribute("errorMsg", "게시글 신고 실패");
+			return "common/errorPage";
+		}
 	}
 	
 

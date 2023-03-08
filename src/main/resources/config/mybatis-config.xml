@@ -18,6 +18,7 @@
 		<typeAlias type="com.ppicachu.ppic.notification.model.vo.Notification" alias="Notification"/>
 		<typeAlias type="com.ppicachu.ppic.common.model.vo.Attachment" alias="Attachment"/>
 		<typeAlias type="com.ppicachu.ppic.work.model.vo.Work" alias="Work" />
+		<typeAlias type="com.ppicachu.ppic.board.model.vo.Report" alias="Report" />
 	</typeAliases>
 
 	

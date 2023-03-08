@@ -124,7 +124,7 @@
 	            	</c:choose>
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage lt pi.maxPage }">
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
 	            	<li><a href="list.no?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>

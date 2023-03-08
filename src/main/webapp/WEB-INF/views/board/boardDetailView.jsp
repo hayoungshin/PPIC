@@ -134,11 +134,11 @@
                                 <td><b>신고구분</b></td>
                                 <td>
                                     <select name="reportKind">
-                                        <option value="0">욕설/비방</option>
-                                        <option value="1">개인정보노출</option>
-                                        <option value="2">회사기밀</option>
-                                        <option value="3">게시글도배</option>
-                                        <option value="4">기타</option>
+                                        <option>욕설/비방</option>
+                                        <option>개인정보노출</option>
+                                        <option>회사기밀</option>
+                                        <option>게시글도배</option>
+                                        <option>기타</option>
                                     </select>
                                 </td>
                             </tr>

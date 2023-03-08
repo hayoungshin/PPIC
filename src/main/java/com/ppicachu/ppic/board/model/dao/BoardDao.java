@@ -64,5 +64,25 @@ public class BoardDao {
 	public int insertReport(SqlSessionTemplate sqlSession, Report r) {
 		return sqlSession.insert("boardMapper.insertReport", r);
 	}
-
+	
+	public int selectReportCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("boardMapper.selectReportCount");
+	}
+	
+	public ArrayList<Report> selectReportList(SqlSessionTemplate sqlSession, PageInfo pi){
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); 
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);	
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReportList", null, rowBounds);
+	}
+	
+	public int blindReportUpdate(SqlSessionTemplate sqlSession, Report r) {
+		return sqlSession.update("boardMapper.blindReportUpdate", r);
+	}
+	
+	public int blindBoardUpdate(SqlSessionTemplate sqlSession, Report r) {
+		return sqlSession.update("boardMapper.blindBoardUpdate", r);
+	}
 }

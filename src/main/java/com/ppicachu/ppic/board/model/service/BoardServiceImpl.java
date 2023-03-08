@@ -71,4 +71,24 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.insertReport(sqlSession, r);
 	}
 
+	@Override
+	public int selectReportCount() {
+		return bDao.selectReportCount(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Report> selectReportList(PageInfo pi) {
+		return bDao.selectReportList(sqlSession, pi);
+	}
+
+	@Override
+	public int blindReportUpdate(Report r) {
+		return bDao.blindReportUpdate(sqlSession, r);
+	}
+
+	@Override
+	public int blindBoardUpdate(Report r) {
+		return bDao.blindBoardUpdate(sqlSession, r);
+	}
+
 }

@@ -20,7 +20,7 @@
         background: rgb(190, 190, 190);
     }
     #modal-btn, #delete-btn, #blind-btn{background: rgb(111, 80, 248);}
-    #blind-btn{width:75px;}
+    #blind-btn{width:auto;}
     .btn:hover{opacity: 0.7;}
 
     textarea{
@@ -42,51 +42,83 @@
     </script>
 
 	<div class="boardOuter"> 
-        <div align="right">
+        <div align="right" style="width:1200px;">
             <a href="" class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
         </div>
         <br>
-        <table class="table">
+        <table class="table" style="width:1200px;">
             <thead class="thead-light">
               <tr>
                 <th><input type="checkbox"></th> <!-- 전체 선택 체크박스 -->
-                <th style="width:50px;">번호</th>
-                <th style="width:800px;">제목</th>
-                <th>신고글 번호</th>
-                <th style="width:70px;">신고일</th>
+                <th>신고구분</th>
+                <th style="width:600px;">신고게시글</th>
+                <th style="width:150px;">신고일</th>
                 <th>블라인드</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>10</td>
-                <td class="title">익명게시판 신고 내역</td>
-                <td>2023-02-16</td>
-                <td>100</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox"></td>
-                <td>9</td>
-                <td>익명게시판 신고 내역</td>
-                <td>2023-02-15</td>
-                <td>50</td>
-                <td>완료</td>
-              </tr>
+            	<c:forEach var="r" items="${ list }">
+                	<tr>
+                		<td onclick="event.cancelBubble=true"><input type="checkbox"></td>
+                        <td>${ r.reportKind }</td>
+                        <td>${ r.boardTitle }</td>
+                        <td>${ r.reportDate }</td>
+                        <td>
+                       		<c:if test="${ r.reportSta eq 1 }">
+	                     		블라인드
+	                     	</c:if>
+	                     	<c:if test="${ r.reportSta eq 2 }">
+	                     		블라인드 취소
+	                     	</c:if>
+	                     	<input type="hidden" class="reportContent" value="${ r.reportContent }">
+                    		<input type="hidden" class="reportBno" value="${ r.reportBno }">
+                    		<input type="hidden" class="reportSta" value="${r.reportSta}">
+                        </td>
+                    </tr>
+                    
+                 </c:forEach>
             </tbody>
         </table>
 
-        <div id="paging">
+		<script>
+		    $(".table tbody tr").click(function(){
+		        // 신고 번호 넘기면서
+		        $('#report-kind').text($(this).children().eq(1).text());
+		        $('#report-title').text($(this).children().eq(2).text());
+		        $('#goTo').attr("href", "detail.bo?no="+$(this).find('.reportBno').val());
+		        $('#report-content').text($(this).find('.reportContent').val());
+		        $('#report-bno').val($(this).find('.reportBno').val());
+		        $('#report-sta').val($(this).find('.reportSta').val());
+		        if($(this).find('.reportSta').val() == 1){
+		        	$('#blind-btn').text("블라인드 취소");
+		        }else{
+		        	$('#blind-btn').text("블라인드");
+		        }
+		        $('#blindModal').modal('show'); 
+		    })
+	    </script>
+				    
+        <div id="paging" style="width:1200px;">
             <ul>
-                <li><a href="#"><</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">></a></li>
-            </ul>
+          		<c:if test="${ pi.currentPage ne 1 }">
+              		<li><a href="manage.bo?cpage=${ pi.currentPage - 1 }"><</a></li>
+              	</c:if>
+	            
+	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+	            	<c:choose>
+	            		<c:when test="${ pi.currentPage eq p }">
+		            		<li class="on"><a href="manage.bo?cpage=${ p }">${ p }</a></li>
+	            		</c:when>
+	            		<c:otherwise>
+		            		<li><a href="manage.bo?cpage=${ p }">${ p }</a></li>
+	            		</c:otherwise>
+	            	</c:choose>
+				</c:forEach>
+				
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
+	            	<li><a href="manage.bo?cpage=${ pi.currentPage + 1 }">></a></li>
+				</c:if>
+           </ul>
         </div>
         
         <!-- 삭제 확인용 Modal -->
@@ -110,25 +142,28 @@
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
-                    <b>신고하기</b> <br><br>
-                    <form action="">
+                    <b>신고내역</b> <br><br>
+                    <form action="blind.bo">
+                    	<input type="hidden" name="reportBno" id="report-bno">
+                    	<input type="hidden" name="reportSta" id="report-sta">
                         <table>
                             <tr>
                                 <td><b>신고구분</b></td>
-                                <td>기타</td>
+                                <td colspan="2" id="report-kind"></td>
                             </tr>
                             <tr>
                                 <td><b>신고게시글</b></td>
-                                <td>개발팀 차은우 대리 여자친구 있나요? <a href=""><img src=""></a></td>
+                                <td id="report-title"></td>
+                                <td style="text-align:right; vertical-align:middle;"><a id="goTo"><img src="resources/icons/goTo.png" height="15px" width="15px" style="margin-left:5px"></a></td>
                             </tr>
                             <tr>
                                 <td><b>신고내용</b></td>
-                                <td><textarea name="" style="resize: none;" readonly>고발합니다.</textarea></td>
+                                <td colspan="2"><textarea name="" style="resize: none; padding:10px;" id="report-content" readonly></textarea></td>
                             </tr>
                         </table>
                         <div align="center">
-                            <a class="btn" data-dismiss="modal" id="check-btn">확인</a>
-                            <a href="" class="btn" id="blind-btn">블라인드</a>
+                            <button class="btn" data-dismiss="modal" id="check-btn">확인</button>
+                            <button class="btn" id="blind-btn"></button>
                         </div>
                     </form>
                 </div>
@@ -136,11 +171,6 @@
             </div>
         </div>
     </div>
-    <script>
-	    $(".title").click(function(){
-	        // 신고 번호 넘기면서
-	        $('#blindModal').modal('show'); 
-	    })
-    </script>
+    
 </body>
 </html>

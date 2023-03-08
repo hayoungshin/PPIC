@@ -106,7 +106,7 @@
 	            	
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage lt pi.maxPage }">
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
 	            	<li><a href="list.bo?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>

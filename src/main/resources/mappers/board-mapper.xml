@@ -13,6 +13,16 @@
 		<result column="like_count" property="likeCount"/>
 		<result column="hate_count" property="hateCount"/>
 	</resultMap>
+	
+	<resultMap id="reportResult" type="Report">
+		<id column="report_bno" property="reportBno"/>
+		<id column="report_mno" property="reportMno"/>
+		<result column="report_kind" property="reportKind"/>
+		<result column="report_content" property="reportContent"/>
+		<result column="report_date" property="reportDate"/>
+		<result column="report_sta" property="reportSta"/>
+		<result column="board_title" property="boardTitle"/>
+	</resultMap>
 
 	<select id="selectListCount" resultType="_int">
 		select
@@ -161,6 +171,66 @@
   	</select>
   	
   	<insert id="insertReport">
-  		
+  		insert 
+  		  into report
+ 		  (
+  		    report_bno
+  		  , report_mno
+  		  , report_kind
+  		  , report_content
+  		  )
+  		  values
+  		  (
+  		    #{reportBno}
+  		  , #{reportMno}
+  		  , #{reportKind}
+  		  , #{reportContent}
+  		  )
   	</insert>
+  	
+  	<select id="selectReportCount" resultType="_int">
+  		select
+  		       count(*)
+  		  from report
+  		 where status = 'Y'
+  	</select>
+  	
+  	<select id="selectReportList" resultMap="reportResult">
+  		select
+  			   report_bno
+  		     , board_title
+  		     , report_mno
+  		     , report_kind
+  		     , report_content
+  		     , to_char(report_date, 'YYYY-MM-DD') "report_date"
+             , report_sta
+  		  from report r
+          join board on(report_bno = board_no)
+  		 where r.status='Y'
+  		 order
+  		    by report_date desc
+  	</select>
+  	
+  	<update id="blindReportUpdate">
+  		update
+  		       report
+  		   set report_sta = 
+  		   <choose>
+  		   	<when test="reportSta == 1">2</when>
+  		   	<otherwise>1</otherwise>
+  		   </choose>
+  		   
+  		 where report_bno = #{reportBno}
+  	</update>
+  	
+  	<update id="blindBoardUpdate">
+  		update
+  		       board
+  		   set blind_sta = 
+  		   <choose>
+  		   	<when test="reportSta == 1">'N'</when>
+  		   	<otherwise>'Y'</otherwise>
+  		   </choose>
+  		 where board_no = #{reportBno}
+  	</update>
 </mapper>
