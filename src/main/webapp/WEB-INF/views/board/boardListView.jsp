@@ -33,13 +33,13 @@
             </thead>
             <tbody>
               <c:forEach var="b" items="${ list }">
-                    <tr>
-                        <td class="no">${ b.boardNo }</td>
-                        <td>${ b.boardTitle }</td>
-                        <td>${ b.createDate }</td>
-                        <td>${ b.count }</td>
-                    </tr>
-                   </c:forEach>
+               <tr>
+                   <td class="no">${ b.boardNo }</td>
+                   <td>${ b.boardTitle }</td>
+                   <td>${ b.createDate }</td>
+                   <td>${ b.count }</td>
+               </tr>
+              </c:forEach>
             </tbody>
         </table>
         
@@ -77,7 +77,7 @@
         <div id="paging">
             <ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="list.no?cpage=${ p } - 1"><</a></li>
+              		<li><a href="list.bo?cpage=${ p } - 1"><</a></li>
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
@@ -85,20 +85,20 @@
 	            		<c:when test="${ pi.currentPage eq p }">
 	            			<c:choose>
 			            		<c:when test="${ empty condition }">
-				            		<li class="on"><a href="list.no?cpage=${ p }">${ p }</a></li>
+				            		<li class="on"><a href="list.bo?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<li class="on"><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li class="on"><a href="search.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
 				            	</c:otherwise>
 	            			</c:choose>
 	            		</c:when>
 	            		<c:otherwise>
 	            			<c:choose>
 			            		<c:when test="${ empty condition }">
-				            		<li><a href="list.no?cpage=${ p }">${ p }</a></li>
+				            		<li><a href="list.bo?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<li><a href="search.no?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li><a href="search.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
 				            	</c:otherwise>
 			            	</c:choose>
 	            		</c:otherwise>
@@ -107,7 +107,7 @@
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage lt pi.maxPage }">
-	            	<li><a href="list.no?cpage=${ pi.currentPage + 1 }">></a></li>
+	            	<li><a href="list.bo?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>
         </div>

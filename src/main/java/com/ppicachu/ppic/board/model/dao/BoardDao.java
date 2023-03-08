@@ -13,17 +13,17 @@ import com.ppicachu.ppic.common.model.vo.PageInfo;
 @Repository
 public class BoardDao {
 	
-	public int selectListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("boardMapper.selectListCount");
+	public int selectListCount(SqlSessionTemplate sqlSession, String userNo) {
+		return sqlSession.selectOne("boardMapper.selectListCount", userNo);
 	}
 	
-	public ArrayList<Board> selectList(SqlSessionTemplate sqlSession, PageInfo pi){
+	public ArrayList<Board> selectList(SqlSessionTemplate sqlSession, String userNo, PageInfo pi){
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); 
 		int limit = pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, limit);	
 		
-		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("boardMapper.selectList", userNo, rowBounds);
 	}
 	
 	public int insertBoard(SqlSessionTemplate sqlSession, Board b) {
