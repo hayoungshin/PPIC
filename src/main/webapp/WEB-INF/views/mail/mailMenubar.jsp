@@ -121,39 +121,39 @@
 		
 		<div style="display:inline-block;">
 				<span style="font-size:30px;">메일</span>
-			</div>
-			<div style="display:inline-block;">
-				<a href="">
-					<img src="resources/icons/addressBook.png" style="width:30px; margin-left:20px; vertical-align:bottom">
-				</a>
-			</div>
-		    <div style="display:inline-block; margin-left: 1000px;">
-		        <button class="btn-purple" style="width:200px; height:40px">메일쓰기</button>
-		    </div>
+		</div>
+		<div style="display:inline-block;">
+			<a href="">
+				<img src="resources/icons/addressBook.png" style="width:30px; margin-left:20px; vertical-align:bottom">
+			</a>
+		</div>
+	    <div style="display:inline-block; margin-left: 1000px;">
+	        <button class="btn-purple" style="width:200px; height:40px" onclick="location.href='sendForm.ml'">메일쓰기</button>
+	    </div>
 
-			<br><br><br>
+		<br><br><br>
 
-			<div id="mail-menu" style="margin-bottom:40px;">
-				<div style="margin-left:0; color:rgb(60,60,60); font-weight: 600;">
-					받은메일
-					<span style="color:#6F50F8;">12</span>
-				</div>
-				<div>보낸메일</div>
-				<div>중요메일</div>
-				<div>임시보관함</div>
-				<div>휴지통</div>
-				<div id="mail-search-area" style="font-size:15px; margin-left:400px;">
-					<form action="">
-						<input type="text" placeholder="메일검색" style="width:300px; border-radius:5px; border:1px solid gray; padding-left:10px;">
-						<button id="mail-search-btn">
-							<img src="resources/icons/search-g.png" style="width:20px;">
-						</button>
-						<button id="detail-modal-btn" type="button" data-toggle="modal" data-target="#myModal">
-							│ 상세
-						</button>
-					</form>
-				</div>
+		<div id="mail-menu" style="margin-bottom:40px;">
+			<div style="margin-left:0; color:rgb(60,60,60); font-weight: 600;">
+				받은메일
+				<span style="color:#6F50F8;">12</span>
 			</div>
+			<div>보낸메일</div>
+			<div>중요메일</div>
+			<div>임시보관함</div>
+			<div>휴지통</div>
+			<div id="mail-search-area" style="font-size:15px; margin-left:400px;">
+				<form action="">
+					<input type="text" placeholder="메일검색" style="width:300px; border-radius:5px; border:1px solid gray; padding-left:10px;">
+					<button id="mail-search-btn">
+						<img src="resources/icons/search-g.png" style="width:20px;">
+					</button>
+					<button id="detail-modal-btn" type="button" data-toggle="modal" data-target="#myModal">
+						│ 상세
+					</button>
+				</form>
+			</div>
+		</div>
 			
 			
 			
