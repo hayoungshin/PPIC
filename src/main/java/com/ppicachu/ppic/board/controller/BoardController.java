@@ -68,12 +68,16 @@ public class BoardController {
 	}
 	
 	@RequestMapping("delete.bo")
-	public String deleteBoard(int no, Model m, HttpSession session) {
+	public String deleteBoard(int no, int type, Model m, HttpSession session) {
 		int result = bService.deleteBoard(no);
 		
 		if(result > 0) {
 			session.setAttribute("alertMsg", "성공적으로 게시글 삭제 되었습니다.");
-			return "redirect:list.bo";
+			if(type == 0) {
+				return "redirect:list.bo";
+			} else {
+				return "redirect:myList.bo";
+			}
 		}else {
 			m.addAttribute("errorMsg", "익명게시글 삭제 실패");
 			return "common/errorPage";
@@ -81,18 +85,24 @@ public class BoardController {
 	}
 	
 	@RequestMapping("updateForm.bo")
-	public String updateForm(int no, Model model) {
+	public String updateForm(int no, int type, Model model) {
 		model.addAttribute("b", bService.selectBoard(no));
+		model.addAttribute("type", type);
 		return "board/boardUpdateForm";
 	}
 	
 	@RequestMapping("update.bo")
-	public String updateBoard(Board b, HttpSession session, Model model) {
+	public String updateBoard(Board b, int type, HttpSession session, Model model) {
 		int result = bService.updateBoard(b);
 		
 		if(result > 0) {
 			session.setAttribute("alertMsg", "성공적으로 게시글 수정 되었습니다.");
-			return "redirect:detail.bo?no=" + b.getBoardNo();
+			if(type == 0) {
+				return "redirect:detail.bo?no=" + b.getBoardNo();
+			} else{
+				return "redirect:detailMy.bo?no=" + b.getBoardNo();
+			}
+			
 		} else {
 			model.addAttribute("errorMsg", "게시글 수정 실패");
 			return "common/errorPage";
@@ -151,6 +161,20 @@ public class BoardController {
 		m.addAttribute("keyword", keyword);
 		
 		return "board/myPostListView";
+	}
+	
+	@RequestMapping("detailMy.bo")
+	public String selectMyBoard(int no, Model m) {
+		int result = bService.increaseCount(no);
+		
+		if(result > 0) {
+			Board b = bService.selectBoard(no);
+			m.addAttribute("b", b);
+			return "board/myPostDetailView";
+		}else {
+			m.addAttribute("errorMsg", "게시글 조회 실패");
+			return "common/errorPage";
+		}
 	}
 	
 	@RequestMapping("manage.bo")

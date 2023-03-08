@@ -23,7 +23,7 @@
          <thead class="thead-light">
            <tr>
              <th style="width:50px;">번호</th>
-             <th style="width:500px;">제목</th>
+             <th style="width:1000px;">제목</th>
              <th>작성일</th>
              <th style="width:70px;">조회수</th>
              </tr>
