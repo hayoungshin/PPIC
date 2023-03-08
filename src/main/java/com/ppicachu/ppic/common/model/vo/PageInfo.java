@@ -12,7 +12,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class PageInfo {
-	
 	private int listCount;
 	private int currentPage;
 	private int pageLimit;
@@ -21,5 +20,4 @@ public class PageInfo {
 	private int maxPage;
 	private int startPage;
 	private int endPage;
-
 }

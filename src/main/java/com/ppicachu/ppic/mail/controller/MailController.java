@@ -21,4 +21,9 @@ public class MailController {
 		return "mail/recieveMailDetailView";
 	}
 	
+	@RequestMapping("sendForm.ml")
+	public String sendMailForm() {
+		return "mail/sendMailForm";
+	}
+	
 }
