@@ -82,6 +82,29 @@
 	#paging a:hover{font-weight:700;}
 	#paging .active{background:#6F50F8;}
 	#paging .active a{color:white;}
+
+	/* 모달 */
+	.modal-form{
+        background:rgb(240,240,240);
+        border:none;
+		border-radius:5px;
+    }
+    #detail-search-body th{
+        font-size: 15px;
+        font-weight:500;
+        color: rgb(150,150,150);
+    }
+    #detail-search-body tr{
+        height:40px;
+    }
+    #detail-search-body td{
+        font-size:13px;
+    }
+    #detail-search-body input, #detail-search-body select{
+        border:1px solid rgb(150,150,150);
+        border-radius:5px;
+        height:25px;
+    }
 </style>
 </head>
 <body>
@@ -119,7 +142,7 @@
 						<button id="mail-search-btn">
 							<img src="resources/icons/search-g.png" style="width:20px;">
 						</button>
-						<button id="detail-modal-btn" type="button">
+						<button id="detail-modal-btn" type="button" data-toggle="modal" data-target="#myModal">
 							│ 상세
 						</button>
 					</form>
@@ -269,31 +292,91 @@
 
 			</div>
 
-			<!-- Button to Open the Modal -->
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-				Open modal
-			</button>
+
 			
 			<!-- The Modal -->
 			<div class="modal" id="myModal">
 				<div class="modal-dialog">
 				<div class="modal-content">
 			
-					<!-- Modal Header -->
-					<div class="modal-header">
-					<h4 class="modal-title">Modal Heading</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					</div>
+					<form action="" class="modal-form">
+
+						<!-- Modal body -->
+						<div class="modal-body" id="detail-search-body">
+							<h5 class="modal-title" style="margin:20px 15px 40px;">상세검색</h5>
+							<table>
+								<tr>
+									<th style="width:100px;">보낸사람</th>
+									<td colspan="2" style="width:350px;">
+										<input type="text" style="width:100%">
+									</td>
+								</tr>
+								<tr>
+									<th>받는사람</th>
+									<td colspan="2">
+										<select name="" id="" style="width:33%;">
+											<option value="">받는사람+참조</option>
+											<option value="">받는사람</option>
+										</select>
+										<input type="text" style="width:65.9%">
+									</td>
+								</tr>
+								<tr>
+									<th>내용</th>
+									<td colspan="2">
+										<select name="" id="" style="width:25%;">
+											<option value="">전체</option>
+											<option value="">제목+본문</option>
+											<option value="">제목</option>
+											<option value="">첨부파일</option>
+										</select>
+										<input type="text" style="width:73.9%">
+									</td>
+								</tr>
+								<tr>
+									<th>메일함</th>
+									<td colspan="2">
+										<select name="" id="">
+											<option value="">받은메일함</option>
+											<option value="">보낸메일함</option>
+											<option value="">중요메일함</option>
+											<option value="">휴지통</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<th>기간</th>
+									<td>
+										<select name="" id="">
+											<option value="">전체</option>
+											<option value="">1주일</option>
+											<option value="">1개월</option>
+											<option value="">6개월</option>
+											<option value="">1년</option>
+											<option value="">직접입력</option>
+										</select>
+									</td>
+									<td>
+										<input type="date" name="" id="" style="width:130px;"> - <input type="date" name="" id="" style="width:130px;">
+									</td>
+								</tr>
+							</table>
 			
-					<!-- Modal body -->
-					<div class="modal-body">
-					Modal body..
-					</div>
+							<div style="font-size:13px; color:gray; margin-left:100px; margin-top:10px;">
+								<input type="checkbox" name="" id="file-attached">
+								<label for="file-attached" style="vertical-align:middle; margin-bottom:18px;">첨부파일 있음</label>
+							</div>
+						</div>
 			
-					<!-- Modal footer -->
-					<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-					</div>
+						<br>
+				
+						<!-- Modal footer -->
+						<div class="modal-footer" style="padding:25px 15px;">
+							<button type="button" data-dismiss="modal" style="width:70px;">취소</button>
+							<button class="btn-purple" style="width:70px;">검색</button>
+						</div>
+
+					</form>
 			
 				</div>
 				</div>
