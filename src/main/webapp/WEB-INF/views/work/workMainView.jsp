@@ -7,6 +7,8 @@
 <meta charset="UTF-8">
 <title>PPIC</title>
 <style>
+	<!-- 카테고리 css -->
+	
 	.workcategory{
 	    width: 100%;
 	    margin-bottom: 30px;
@@ -16,7 +18,13 @@
 	    font-weight: bold;
 	    margin-right: 20px;
 	    color: lightgray;
+	    text-decoration:none;
 	}
+	
+	.workcategory>a:link {color:lightgray; text-decoration:none;}
+    .workcategory>a:visited {color:lightgray; text-decoration:none;}
+	.workcategory>a:hover{color: black; text-decoration:none;}
+	
 	.woww{
 	    /* border: 1px solid black; */
 	    height: 30px;
@@ -83,23 +91,23 @@
 
         <div id="content" style=" " >
 
-             <div>
-                <h2 >근무</h2>
-                <br>
-            </div>
+			<div onclick="workback();">
+				<h2 style="font-weight:bold">근무</h2>
+				<br>
+			</div>
            
-           <div class="workcategory" style="float:left; color:lightgray;" >
-                <a href="workList.wo"> <!--  --> 출퇴근기록</a>
-                <a > <!-- href="workinfo.wo" -->올해근무정보</a>
-                <a > <!-- href="holidayList.ho" -->휴가현황</a>
-                <a > <!-- href="enrollForm.ho" --> 휴가신청</a>
+           <div class="workcategory" style="float:left;" >
+                <a href="workList.wo" >출퇴근기록</a>
+                <a href="workInfo.wo" >올해근무정보</a>
+				<a href="holiInfo.ho" >휴가현황</a>
+                <a href="holiApply.ho">휴가신청</a>
                 
                 
                 <!-- 관리자만 보이게 할거임 -->
-                <a > <!-- href="memberwork.wo" -->구성원근무</a>
-                <a > <!-- href="enrollForm.ho" -->전사원휴가현황</a>
-                <a > <!-- href="memberholi.ho" -->휴가지급|회수</a>
-                <a > <!-- href="holiapprove.ho" -->휴가승인</a>
+                <a href="memberWork.wo">구성원근무</a>
+                <a href="memberHoli.ho">전사원휴가현황</a>
+                <a href="holiGive.ho">휴가지급|회수</a>
+                <a href="holiApprove.ho">휴가승인</a>
                 
                 <br>
             </div>
@@ -107,7 +115,7 @@
             <br>
             
             <div class="workinfo" >
-               <table width="" >
+               <table  >
                     <tr style="font-size: 20px;">
                         <th height="50px" width="440px" >근태현황</th>
                         <th width="445px">휴가현황</th>

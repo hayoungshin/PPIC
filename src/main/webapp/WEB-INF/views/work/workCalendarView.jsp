@@ -40,13 +40,9 @@
     </script>
 
 <style>
-	.calendar{
-	    border:1px solid darkgray;
-	    border-radius: 3px;
-	    margin: 30px ;
-	    width: 100%;
-	    height: 650px;
-	}
+
+	<!-- 카테고리 css -->
+	
 	.workcategory{
 	    width: 100%;
 	    margin-bottom: 30px;
@@ -56,7 +52,14 @@
 	    font-weight: bold;
 	    margin-right: 20px;
 	    color: lightgray;
+	    text-decoration:none;
 	}
+	
+	.workcategory>a:link {color:lightgray; text-decoration:none;}
+    .workcategory>a:visited {color:lightgray; text-decoration:none;}
+	.workcategory>a:hover{color: black; text-decoration:none;}
+	
+	
 	#calender{
 		color:black;
 	}
@@ -78,19 +81,29 @@
 			
 			<script>
 				function workback(){
-					history.back();
+					location.href="workMain.wo"
 				}
 			</script>
            
-			<div class="workcategory" style="float:left" >
-				<a>출퇴근기록</a>
-				<a style="color:lightgray;">올해근무정보</a>
-				<a style="color:lightgray;">휴가현황</a>
-			    <a style="color:lightgray;">휴가신청</a>
-			    <br>
-			</div>
+			<div class="workcategory" style="float:left;" >
+                <a href="workList.wo" >출퇴근기록</a>
+                <a href="workInfo.wo" >올해근무정보</a>
+				<a href="holiInfo.ho" >휴가현황</a>
+                <a href="holiApply.ho">휴가신청</a>
+                
+                
+                <!-- 관리자만 보이게 할거임 -->
+                <a href="memberWork.wo">구성원근무</a>
+                <a href="memberHoli.ho">전사원휴가현황</a>
+                <a href="holiGive.ho">휴가지급|회수</a>
+                <a href="holiApprove.ho">휴가승인</a>
+                
+                <br>
+            </div>
+
 			
 			<br>
+			<br><br>
 	
 			
 			 <!-- calendar 태그 -->
