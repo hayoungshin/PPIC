@@ -159,4 +159,8 @@
 		 order
 		    by board_no desc
   	</select>
+  	
+  	<insert id="insertReport">
+  		
+  	</insert>
 </mapper>

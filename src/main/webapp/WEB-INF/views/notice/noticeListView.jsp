@@ -68,7 +68,7 @@
         		})
         	})
         </script>
-	
+	    
 	    <form id="searchForm" action="search.no" method="Get">
 	    	<input type="hidden" name="cpage" value="1">
             <div class="select">
@@ -122,7 +122,6 @@
 			            	</c:choose>
 	            		</c:otherwise>
 	            	</c:choose>
-	            	
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage lt pi.maxPage }">

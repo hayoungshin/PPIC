@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ppicachu.ppic.board.model.dao.BoardDao;
 import com.ppicachu.ppic.board.model.vo.Board;
+import com.ppicachu.ppic.board.model.vo.Report;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 
 @Service
@@ -63,6 +64,11 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public ArrayList<Board> selectSearchList(HashMap<String, String> map, PageInfo pi) {
 		return bDao.selectSearchList(sqlSession, map, pi);
+	}
+
+	@Override
+	public int insertReport(Report r) {
+		return bDao.insertReport(sqlSession, r);
 	}
 
 }

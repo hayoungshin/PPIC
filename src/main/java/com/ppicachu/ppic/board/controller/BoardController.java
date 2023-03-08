@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ppicachu.ppic.board.model.service.BoardService;
 import com.ppicachu.ppic.board.model.vo.Board;
+import com.ppicachu.ppic.board.model.vo.Report;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.common.template.Pagination;
 
@@ -175,6 +176,11 @@ public class BoardController {
 			m.addAttribute("errorMsg", "게시글 조회 실패");
 			return "common/errorPage";
 		}
+	}
+	
+	@RequestMapping("report.bo")
+	public String insertReport(Report r, Model m) {
+		int result = bService.insertReport(r);
 	}
 	
 	@RequestMapping("manage.bo")

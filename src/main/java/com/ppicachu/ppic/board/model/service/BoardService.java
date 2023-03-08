@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.ppicachu.ppic.board.model.vo.Board;
+import com.ppicachu.ppic.board.model.vo.Report;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 
 public interface BoardService {
@@ -28,4 +29,7 @@ public interface BoardService {
 	// 6. 게시글 검색용 서비스
 	int selectSearchCount(HashMap<String, String> map);
 	ArrayList<Board> selectSearchList(HashMap<String, String> map, PageInfo pi);
+	
+	// 7. 게시글 신고용 서비스
+	int insertReport(Report r);
 }

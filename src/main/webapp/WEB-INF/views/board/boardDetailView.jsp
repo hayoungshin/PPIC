@@ -126,7 +126,9 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <b>신고하기</b> <br><br>
-                    <form action="report.bo">
+                    <form action="report.bo" method="post">
+                    <input type="hidden" name="reportBno" value="${ b.boardNo }">
+                    <input type="hidden" name="reportMno" value="40"> <!-- 로그인한 회원으로 바꾸기 -->
                         <table>
                             <tr>
                                 <td><b>신고구분</b></td>
