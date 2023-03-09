@@ -19,6 +19,7 @@
 		<typeAlias type="com.ppicachu.ppic.common.model.vo.Attachment" alias="Attachment"/>
 		<typeAlias type="com.ppicachu.ppic.work.model.vo.Work" alias="Work" />
 		<typeAlias type="com.ppicachu.ppic.board.model.vo.Report" alias="Report" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.Approval" alias="Approval" />
 	</typeAliases>
 
 	
@@ -33,6 +34,7 @@
 		<mapper resource="/mappers/notice-mapper.xml" />
 		<mapper resource="/mappers/notification-mapper.xml" />
 		<mapper resource="/mappers/work-mapper.xml" />
+		<mapper resource="/mappers/approval-mapper.xml" />
 	</mappers>
 	
 	
