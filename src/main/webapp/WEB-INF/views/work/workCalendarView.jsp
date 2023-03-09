@@ -86,7 +86,7 @@
 			</script>
            
 			<div class="workcategory" style="float:left;" >
-                <a href="workList.wo" >출퇴근기록</a>
+                <a href="workList.wo" style="color:black;">출퇴근기록</a>
                 <a href="workInfo.wo" >올해근무정보</a>
 				<a href="holiInfo.ho" >휴가현황</a>
                 <a href="holiApply.ho">휴가신청</a>
