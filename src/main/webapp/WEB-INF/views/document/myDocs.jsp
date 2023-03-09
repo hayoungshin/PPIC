@@ -22,35 +22,62 @@
    /* 리스트 */
    .table{
        text-align:center;
+       font-size:14px;
+   }
+   .table>thead{
+   	   background:rgb(244, 244, 244);
    }
    .edit-btn, .edit-btn:hover{
        margin-left:20px;
        cursor:pointer;
    }
-   .pagination {
-       display: flex;
-       justify-content: center;
-       margin-top: 50px;
+   .btn-outline-purple{
+   	   background:white;
+   	   border:0.5px solid #6F50F8;
+   	   color:#6F50F8;
    }
-
+   .btn-outline-purple:hover{
+   	   background:#6F50F8;
+   	   color:white;
+   }
+   /* 페이징 */
+   #paging{
+   	width:1400px; 
+       text-align:center;
+   }
+   #paging>ul{display: inline-block;}
+   #paging li {
+       text-align: center;
+       float: left;
+       list-style:none;
+       border-radius:5px;
+       background: rgb(244, 244, 244);
+       margin:2px;
+   }
+   #paging li a {
+       display: block;
+       font-size: 12px;
+       color: black;
+       padding: 5px 10px;
+       box-sizing: border-box;
+       text-decoration-line:none;
+   }
+   #paging li:hover{background: rgb(111, 80, 248);}
+   #paging li a:hover{color: white;}
+   #paging li.on {background: rgb(111, 80, 248);}
+   #paging li.on a {color: white;}
+   
    /* 증명서 신청 */
    .certificate-docs{
        width:400px;
        height:50px;
        margin:10px;
        border-radius:5px;
-       border:0px;
    }
    .certificate-docs>img{
        width:24px;
        margin-left:10px;
    }
-   .employment{
-       background:lightgray;
-   }
-   .carrer{
-       background: rgb(167, 167, 167);
-    }
 </style>
 </head>
 <body>
@@ -58,14 +85,15 @@
 	<jsp:include page="../common/menubar.jsp"/>
 	
 	<div id="content">
-		<h2 class="title"><b>문서ㆍ증명서</b></h2>
+		<h3 class="title"><b>문서ㆍ증명서</b></h3>
         <br><br>
         <div class="sub-menu">
              <a href="commonList.doc">회사문서</a>
              <a href="myList.doc" class="active">내 문서</a>
         </div>
-        <br><br>
-        <button style="float:right" class="btn btn-secondary" data-toggle="modal" data-target="#addModal">문서 추가</button>
+        <hr>
+        <br>
+        <button style="float:right" class="btn-purple" data-toggle="modal" data-target="#addModal">문서 추가</button>
         <br><br>
         <div class="list-area">
             <table class="table">
@@ -77,12 +105,12 @@
                 <tbody>
                    <tr>
                     <td><img>이력서<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn btn-primary">다운로드</button></td>
+                    <td><button class="btn-outline-purple">다운로드</button></td>
                     <td>2022.10.10</td>
                    </tr>
                    <tr>
                     <td><img>사업자등록증<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn btn-primary">다운로드</button></td>
+                    <td><button class="btn-outline-purple">다운로드</button></td>
                     <td>2022.10.10</td>
                    </tr>
                 </tbody>
@@ -143,29 +171,32 @@
             </div>
             </div>
         </div>
-  
+  		<br><br>
 
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
+        <div id="paging">
+            <ul>
+           		<li><a href="">&lt;</a></li>
+        		<li class="on"><a href="">1</a></li>
+        		<li><a href="">2</a></li>
+        		<li><a href="">3</a></li>
+        		<li><a href="">4</a></li>
+        		<li><a href="">&gt;</a></li>
+        		
+           </ul>
+		</div>
         <br><br>
         <hr>
-
+		<br>
         <div class="certificate">
             <h6><b>증명서 신청</b></h6>
             <br>
             <p style="font-size:10pt"><img src="resources/icons/info.png" width="16"> 기본 인사정보가 모두 등록되어 있어야 다운받으실 수 있습니다.</p>
 
-            <button class="certificate-docs employment">재직증명서 신청<img src="resources/icons/download.png"></button>
+            <button class="certificate-docs btn-outline-purple">재직증명서 신청<img src="resources/icons/download.png"></button>
             <br>
-            <button class="certificate-docs carrer">경력증명서 신청<img src="resources/icons/download.png"></button>
-
-
+            <button class="certificate-docs btn-outline-purple">경력증명서 신청<img src="resources/icons/download.png"></button>
         </div>
+        <br><br>
 	</div>
 	
 </body>
