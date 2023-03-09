@@ -4,16 +4,31 @@
 
 	<resultMap id="memberResult" type="Member">
 		<id column="user_no" property="userNo" />
-		<result column="user_name" property="userName" />
+		<result column ="user_name" property="userName" />
 		<result column ="position" property="position" />
 		<result column ="department" property="department" />
+		<result column ="phone" property="phone" />
+		<result column ="mail" property="mail" />
+		<result column ="hire_date" property="hireDate" />
+		<result column ="resign_date" property="resignDate" />
+		<result column ="employee_no" property="employeeNo" />
+	</resultMap>
+	
+	<resultMap id="departmentResult" type="Department">
+		<id column="department_no" property="departmentNo" />
+		<result column="department_name" property="departmentName" />
 		
 	</resultMap>
 
-	<select id="selectMember" resultMap="memberResult">
+	<select id="selectListMember" resultMap="memberResult">
 		select
 		       user_no
 		     , user_name
+		     , phone
+		     , mail
+		     , to_char(hire_date, 'YYYY.MM.DD') as "HIRE_DATE"
+		     , to_char(resign_date, 'YYYY.MM.DD') as "resign_date"
+		     , employee_no
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
 		  from member
@@ -22,5 +37,28 @@
 		 where status='Y'
 	     
 	</select>
+	
+	<select id="selectDeptList" resultMap="departmentResult">
+		select
+			   department_no
+			 , department_name
+		  from dept
+	</select>
+	
+	<select id="selectMember" resultMap="memberResult">
+		select
+		       user_name
+		     , phone
+		     , mail
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
+		  from member
+		  join dept on (member.department = dept.department_no) 
+		  join position on (member.position = position.position_no)
+		 where status='Y'
+		   and user_no = #{userNo}
+	</select>
+	
+	
 
 </mapper>

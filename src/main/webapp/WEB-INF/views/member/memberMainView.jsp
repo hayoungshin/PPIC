@@ -149,25 +149,29 @@
 				<div class="memberList">
 					<table id="list">
 						<tbody align="center">
-							<c:forEach var="m" items="${ list }" >
+							<c:forEach var="m" items="${ list1 }" >
 								<tr>
 									<td width="80%">
+										<div class="bno" style="display:none;">${ m.userNo }</div>
 										<div class="pro" style="float:left" >${ m.userName }</div>
 										<div class="proname" >${ m.userName }</div>
 									</td>
 									<td>
-									    <div class="position" style="float:right" > ${ m.department } | ${ m.position } </div>
+									    <div class="position" style="float:right" > ${ m.department }부 | ${ m.position } </div>
 									</td>
 								</tr>
 							</c:forEach>
-							
-							<script>
-								function proname(){
-									
-								}
-							</script>
 			        	</tbody>
 			    	</table>
+			    	
+			    	<script>
+		            	$(function(){
+		            		$("#list>tbody>tr").click(function(){
+		            			location.href = 'memberDetail.me?no=' + $(this).find(".bno").text(); ;
+		            		})
+		            	})
+		            </script>
+			    	
 				</div> 
 			    
 			
@@ -180,17 +184,16 @@
                     <div id="org">조직도</div>
 					<div class="depttitle"> 전체 구성원 (00) </div>
                     <div class="deptlist">
-                        <div> 00부 (00) </div>
-                        <div> 00부 (00) </div>
-                        <div> 00부 (00) </div>
+                    	<c:forEach var="d" items="${ list2 }" >
+							 <div> ${ d.departmentName }부 (00) </div>
+						</c:forEach>
                     </div>
+                    
+                    <script>
+                    	
+                    </script>
                 </div>
                 
-            
-                <script>
-                    /* td 클릭시 모달창 */
-                </script>
-
             </div>
 			
 			

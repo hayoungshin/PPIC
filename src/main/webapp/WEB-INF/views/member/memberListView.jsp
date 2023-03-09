@@ -179,94 +179,19 @@
                         </thead>
                         
                         <tbody align="center">
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                            <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
-                             <tr>
-                                <td >김이름 </td>
-                                <td >재직|퇴직</td>
-                                <td >0000000</td>
-                                <td >0000.00.00</td>
-                                <td >0000.00.00</td>
-                                <td >00부</td>
-                                <td >대리</td>
-                                <td >000-0000-0000</td>
-                                <td >aaa@email.com</td>
-                            </tr>
+                        	<c:forEach var="m" items="${ list1 }" >
+	                            <tr>
+	                                <td > ${ m.userName } </td>
+	                                <td >재직|퇴직</td>
+	                                <td >${ m.employeeNo }</td>
+	                                <td >${ m.hireDate }</td>
+	                                <td >${ m.resignDate }</td>
+	                                <td >${ m.department }부</td>
+	                                <td >${ m.position }</td>
+	                                <td >${ m.phone }</td>
+	                                <td >${ m.mail }</td>
+	                            </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
                     
@@ -284,9 +209,9 @@
                 <div id="org">조직도</div>
 				<div class="depttitle"> 전체 구성원 (00) </div>
                 <div class="deptlist">
-                    <div> 00부 (00) </div>
-                    <div> 00부 (00) </div>
-                    <div> 00부 (00) </div>
+                  	<c:forEach var="d" items="${ list2 }" >
+						 <div> ${ d.departmentName }부 (00) </div>
+					</c:forEach>
                 </div>
             </div>
                 
