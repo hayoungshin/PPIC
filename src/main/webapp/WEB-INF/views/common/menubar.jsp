@@ -196,7 +196,7 @@
                 <span>전자결재</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='commonList.doc'">
                 <img src="resources/icons/folder.png">
                 <span>문서</span>
             </div>
@@ -206,7 +206,7 @@
                 <span>예약</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='list.pr'">
                 <img src="resources/icons/monitor.png">
                 <span>업무</span>
             </div>
