@@ -41,25 +41,25 @@ public class WorkController {
 	/* 근무_구성원근무 */
 	@RequestMapping("memberWork.wo")
 	public String memberwork() {
-		return "work/memberwork";
+		return "work/workMemberView";
 	}
 	
 	/* 근무_전사원휴가현황 */
 	@RequestMapping("memberHoli.ho")
 	public String memberHoli() {
-		return "work/memberHoli";
+		return "work/holidayMemberView";
 	}
 	
 	/* 근무_휴가지급 */
 	@RequestMapping("holiGive.ho")
 	public String holiGive() {
-		return "work/holiGive";
+		return "work/holidayGiveForm";
 	}
 	
 	/* 근무_휴가승인 */
 	@RequestMapping("holiApprove.ho")
 	public String holiApprove() {
-		return "work/holiApprove";
+		return "work/holidayApproveView";
 	}
 
 }

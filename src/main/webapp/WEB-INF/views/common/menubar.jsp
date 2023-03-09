@@ -186,7 +186,7 @@
                 <span>회사소식</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='memberList.me'">
                 <img src="resources/icons/group.png">
                 <span>구성원</span>
             </div>
@@ -223,9 +223,11 @@
 		<jsp:include page="../alarm/alarmPopup.jsp"/>
 
         <script>
+        
+        	/* 마이페이지 url로 이동 */
             function toMyPage(){
             	location.href="myPage.me"
-                /* 마이페이지 url로 이동 */
+                
             }
             
             /* 새로운 알람 클릭 */
