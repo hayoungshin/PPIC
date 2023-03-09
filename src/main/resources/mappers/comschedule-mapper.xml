@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="comscheduleMapper">
+
+	<resultMap id="comscheduleResult" type="Comschedule">
+		<id column="sch_no" property="schNo"/>
+		<result column="sch_kind" property="schKind"/>
+		<result column="restday_kind" property="restdayKind"/>
+		<result column="sch_name" property="schName"/>
+		<result column="sch_content" property="schContent"/>
+		<result column="sch_location" property="schLocation"/>
+		<result column="lunar_solar" property="lunarSolar"/>
+		<result column="start_date" property="startDate"/>
+		<result column="end_date" property="endDate"/>
+		<result column="annual" property="annual"/>
+		<result column="start_time" property="startTime"/>
+		<result column="end_time" property="endTime"/>
+		<result column="allday" property="allday"/>
+		<result column="legalholiday" property="legalholiday"/>
+	</resultMap>
+	
+	<select id="selectComscheduleList" resultMap="comscheduleResult">
+		select
+		       sch_no
+		     , sch_kind
+		     , restday_kind
+		     , sch_name
+		     , sch_content
+		     , sch_location
+		     , lunar_solar
+		     , start_date
+		     , end_date
+		     , annual
+		     , start_time
+		     , end_time
+		     , allday
+		     , legalholiday
+		  from company_sch
+		 where sch_kind = 0
+	</select>
+
 </mapper>
