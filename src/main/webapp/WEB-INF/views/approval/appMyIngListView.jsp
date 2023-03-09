@@ -17,57 +17,69 @@
 			// 부서 mouseover
 			const m2 = document.getElementById("menu-2")
 			m2.addEventListener("mouseover", function(){
-				const arr = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:none';
+				const arr1 = document.getElementsByClassName("menu1");
+				for(let i=0; i<arr1.length; i++){
+		        	arr1[i].style = 'display:none';
 				}
-			});
-			m2.addEventListener("mouseover", function(){
-				const arr = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:none';
+				const arr2 = document.getElementsByClassName("menu2");
+				for(let i=0; i<arr2.length; i++){
+		        	arr2[i].style = 'display:none';
+				}
+				const arr3 = document.getElementsByClassName("menu3");
+				for(let i=0; i<arr3.length; i++){
+		        	arr3[i].style = 'display:block';
+				}
+				const arrm2 = document.getElementsByClassName("m2");
+				for(let i=0; i<arrm2.length; i++){
+		        	arrm2[i].style = 'margin-left: 19px';
 				}
 			});
 			m2.addEventListener("mouseout", function(){
-				const arr = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:block';
+				const arr1 = document.getElementsByClassName("menu1");
+				for(let i=0; i<arr1.length; i++){
+		        	arr1[i].style = 'display:block';
 				}
-			});
-			m2.addEventListener("mouseout", function(){
-				const arr = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:block';
+				const arr2 = document.getElementsByClassName("menu2");
+				for(let i=0; i<arr2.length; i++){
+		        	arr2[i].style = 'display:block';
+				}
+				const arr3 = document.getElementsByClassName("menu3");
+				for(let i=0; i<arr3.length; i++){
+		        	arr3[i].style = 'display:none';
+				}
+				const arrm2 = document.getElementsByClassName("m2");
+				for(let i=0; i<arrm2.length; i++){
+		        	arrm2[i].style = '';
 				}
 			});
 			
 			// 참조 mouseover
 			const m12 = document.getElementById("menu-1-2")
 			m12.addEventListener("mouseover", function(){
-				const arr = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:none';
+				const arr2 = document.getElementsByClassName("menu2");
+				for(let i=0; i<arr2.length; i++){
+		        	arr2[i].style = 'display:none';
 				}
 			});
 			m12.addEventListener("mouseout", function(){
-				const arr = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:block';
+				const arr2 = document.getElementsByClassName("menu2");
+				for(let i=0; i<arr2.length; i++){
+		        	arr2[i].style = 'display:block';
 				}
 			});
 			
 			// 중요 mouseover
 			const m13 = document.getElementById("menu-1-3")
 			m13.addEventListener("mouseover", function(){
-				const arr = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:none';
+				const arr2 = document.getElementsByClassName("menu2");
+				for(let i=0; i<arr2.length; i++){
+		        	arr2[i].style = 'display:none';
 				}
 			});
 			m13.addEventListener("mouseout", function(){
-				const arr = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr.length; i++){
-		        	arr[i].style = 'display:block';
+				const arr2 = document.getElementsByClassName("menu2");
+				for(let i=0; i<arr2.length; i++){
+		        	arr2[i].style = 'display:block';
 				}
 			});
 			
@@ -77,9 +89,9 @@
 			document.getElementById("menu-1-1-1").style = 'color:black; font-weight:600';
 			
 			// 부서- none
-			const arr = document.getElementsByClassName("menu3");
-			for(let i=0; i<arr.length; i++){
-	        	arr[i].style = 'display:none';
+			const arr3 = document.getElementsByClassName("menu3");
+			for(let i=0; i<arr3.length; i++){
+	        	arr3[i].style = 'display:none';
 			}
 			
 			// 승인필요 block
