@@ -11,4 +11,6 @@ public interface DocumentService {
 	int selectCommonDocsCount();
 	ArrayList<Document> selectCommonDocs(PageInfo pi);
 	
+	// 회사문서 추가
+	int insertCommonDocs(Document doc);
 }

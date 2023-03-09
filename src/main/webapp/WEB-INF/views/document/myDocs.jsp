@@ -109,7 +109,12 @@
                     <td>2022.10.10</td>
                    </tr>
                    <tr>
-                    <td><img>사업자등록증<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
+                    <td><img>근로계약서<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
+                    <td><button class="btn-outline-purple">다운로드</button></td>
+                    <td>2022.10.10</td>
+                   </tr>
+                   <tr>
+                    <td><img>연봉계약서<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
                     <td><button class="btn-outline-purple">다운로드</button></td>
                     <td>2022.10.10</td>
                    </tr>
@@ -130,7 +135,7 @@
         
                 <!-- Modal body -->
                 <div class="modal-body">
-                    문서 이름 : <input type="text" placeholder="문서명을 입력해주세요." required>
+                    문서 이름 : <input type="text" name="docName" placeholder="문서명을 입력해주세요." required>
                     <br><br>
                     문서 첨부 : <input type="file">
                 </div>

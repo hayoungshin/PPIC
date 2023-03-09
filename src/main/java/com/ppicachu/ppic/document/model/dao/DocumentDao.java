@@ -23,4 +23,8 @@ public class DocumentDao {
 		RowBounds rbounds = new RowBounds(offset, limit);
 		return (ArrayList)sqlSession.selectList("documentMapper.selectCommonDocs", null, rbounds);
 	}
+
+	public int insertCommonDocs(SqlSessionTemplate sqlSession, Document doc) {
+		return sqlSession.insert("documentMapper.insertCommonDocs", doc);
+	}
 }

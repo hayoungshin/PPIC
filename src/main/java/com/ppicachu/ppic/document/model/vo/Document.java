@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class Document {
 	private int docNo;
-	private int docType;
+	private String docType;
 	private String docName;
 	private String savePath;
 	private String originName;

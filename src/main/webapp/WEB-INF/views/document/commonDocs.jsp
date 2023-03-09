@@ -32,6 +32,12 @@
        cursor:pointer;
    }
    .btn-outline-purple{
+   	   display:inline-block;
+   	   width:72px;
+   	   height:29px;
+   	   border-radius:5px;
+   	   text-decoration:none;
+   	   line-height:29px;
    	   background:white;
    	   border:0.5px solid #6F50F8;
    	   color:#6F50F8;
@@ -39,6 +45,7 @@
    .btn-outline-purple:hover{
    	   background:#6F50F8;
    	   color:white;
+   	   text-decoration:none;
    }
    /* 페이징 */
    #paging{
@@ -93,8 +100,19 @@
                 <tbody>
 	                <c:forEach var="d" items="${list}">
 	                   <tr>
-	                    <td>${d.docName}<img src="${d.savePath}" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-	                    <td><button class="btn-outline-purple">다운로드</button></td>
+	                    <td>
+	                    	${d.docName}
+	                    	<%-- <c:if test="${loginUser eq 관리자}" 로그인 구현 후 추가해야 함--%>
+	                    	<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal">
+	                    </td>
+	                    <c:choose>
+		                    <c:when test="${not empty d.originName}">
+		                    	<td><a class="btn-outline-purple" href="${d.savePath}" download="${d.originName}">다운로드</a></td>
+		                    </c:when>
+		                    <c:otherwise>
+		                    	<td>미등록</td>
+		                    </c:otherwise>
+	                    </c:choose>
 	                    <td>${d.modifyDate}</td>
 	                   </tr>
 	                </c:forEach>
@@ -115,16 +133,20 @@
                 </div>
         
                 <!-- Modal body -->
-                <div class="modal-body">
-                    문서 이름 : <input type="text" placeholder="문서명을 입력해주세요." required>
-                    <br><br>
-                    문서 첨부 : <input type="file">
-                </div>
-        
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">등록</button>
-                </div>
+                <form action="insertCommon.doc" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        * 문서 이름 : <input type="text" name="docName" placeholder="문서명을 입력해주세요." required>
+                        <br><br>
+                        문서 첨부 : <input type="file" name="upfile">
+                        <input type="hidden" name="docType" value="1">
+                        <input type="hidden" name="createUser" value="1"><%-- 로그인 구현 완료 시 ${loginUser.userNo}--%>
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn-purple">등록</button>
+                    </div>
+                </form>
         
             </div>
             </div>
@@ -167,10 +189,10 @@
 	        	<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
 	        		<c:choose>
 	        			<c:when test="${pi.currentPage eq p}">
-                    		<li class="on"><a class="page-link" href="commonList.docs?cpage=${p}">${p}</a></li>
+                    		<li class="on"><a href="commonList.docs?cpage=${p}">${p}</a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li><a class="page-link" href="commonList.docs?cpage=${p}">${p}</a></li>
+                    		<li><a href="commonList.docs?cpage=${p}">${p}</a></li>
                     	</c:otherwise>
                     </c:choose>
                 </c:forEach>
