@@ -47,7 +47,7 @@
         </div>
         <br>
         <table class="table" id="report-table" style="width:1200px;">
-            <thead class="thead-light">
+            <thead>
               <tr>
                 <th><input type="checkbox" id="chkAll"></th> 
                 <th>신고구분</th>

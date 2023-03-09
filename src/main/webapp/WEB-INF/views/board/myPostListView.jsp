@@ -20,7 +20,7 @@
 	<div class="boardOuter"> 
      <br><br>
      <table class="table" id="myPostList">
-         <thead class="thead-light">
+         <thead>
            <tr>
              <th style="width:50px;">번호</th>
              <th style="width:1000px;">제목</th>

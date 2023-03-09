@@ -102,7 +102,7 @@
 	<div class="outer">
 		<div id="content">
 			<div class="boardMenu"> 
-		        <h4><b>회사소식</b></h4>
+		        <h4><b>회사소식</b></h4><br>
 		        <div class="menu">
 		            <div class="menus" onclick="location.href='list.no'">공지사항</div>
 		            <div class="menus" onclick="location.href='list.bo'">익명게시판</div>
@@ -113,7 +113,5 @@
 		        </div>
 		    </div>
 
-    
-    
 </body>
 </html>
