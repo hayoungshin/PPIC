@@ -186,7 +186,7 @@
                 <span>회사소식</span>
             </div>
 
-            <div class="side-menu" onclick="location.href='memberList.me'">
+            <div class="side-menu" onclick="location.href='memberMain.me'">
                 <img src="resources/icons/group.png">
                 <span>구성원</span>
             </div>

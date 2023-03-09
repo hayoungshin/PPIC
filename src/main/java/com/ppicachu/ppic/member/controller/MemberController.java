@@ -14,9 +14,21 @@ public class MemberController {
 		return "member/myPage";
 	}
 	
-	/* 구성원_사용자 */
+	/* 구성원_메인 */
+	@RequestMapping("memberMain.me")
+	public String memberMain() {
+		return "member/memberMainView";
+	}
+	
+	/* 구성원_관리자 */
 	@RequestMapping("memberList.me")
 	public String memberList() {
 		return "member/memberListView";
+	}
+	
+	/* 구성원_권한설정 */
+	@RequestMapping("memberAuth.me")
+	public String memberAuth() {
+		return "member/memberAuthView";
 	}
 }
