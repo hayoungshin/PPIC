@@ -93,6 +93,8 @@
         background:none;
         cursor:pointer;
     }
+    
+    th{background:rgb(240, 240, 240)}
 </style>
 
 </head>

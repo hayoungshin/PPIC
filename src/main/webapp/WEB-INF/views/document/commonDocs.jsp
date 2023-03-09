@@ -36,6 +36,10 @@
    	   border:0.5px solid #6F50F8;
    	   color:#6F50F8;
    }
+   .btn-outline-purple:hover{
+   	   background:#6F50F8;
+   	   color:white;
+   }
    /* 페이징 */
    #paging{
    	width:1400px; 
@@ -87,16 +91,13 @@
                     <th style="width:100px">수정일</th>
                 </thead>
                 <tbody>
-                   <tr>
-                    <td><img>사업자등록증<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn-outline-purple">다운로드</button></td>
-                    <td>2022.10.10</td>
-                   </tr>
-                   <tr>
-                    <td><img>사업자등록증<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn-outline-purple">다운로드</button></td>
-                    <td>2022.10.10</td>
-                   </tr>
+	                <c:forEach var="d" items="${list}">
+	                   <tr>
+	                    <td>${d.docName}<img src="${d.savePath}" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
+	                    <td><button class="btn-outline-purple">다운로드</button></td>
+	                    <td>${d.modifyDate}</td>
+	                   </tr>
+	                </c:forEach>
                 </tbody>
             </table>
         </div>
@@ -160,13 +161,22 @@
 
         <div id="paging">
             <ul>
+            <c:if test="${pi.currentPage ne 1}">
            		<li><a href="">&lt;</a></li>
-        		<li class="on"><a href="">1</a></li>
-        		<li><a href="">2</a></li>
-        		<li><a href="">3</a></li>
-        		<li><a href="">4</a></li>
+           	</c:if>
+	        	<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
+	        		<c:choose>
+	        			<c:when test="${pi.currentPage eq p}">
+                    		<li class="on"><a class="page-link" href="commonList.docs?cpage=${p}">${p}</a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li><a class="page-link" href="commonList.docs?cpage=${p}">${p}</a></li>
+                    	</c:otherwise>
+                    </c:choose>
+                </c:forEach>
+        	<c:if test="${pi.maxPage ne pi.endPage}">
         		<li><a href="">&gt;</a></li>
-        		
+        	</c:if>
            </ul>
 		</div>
 	

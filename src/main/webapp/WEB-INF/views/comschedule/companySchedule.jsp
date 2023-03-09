@@ -22,14 +22,18 @@
    }
    .schedule>span{
        border-radius:3px; 
-       padding:5px 10px; 
+       padding:5px 5px; 
+       width:50px;
+       text-align:center;
        margin-right:8px;
+       display:inline-block;
    }
    .boardOuter img{
        margin-bottom: 5px; 
        margin-right:5px;
        cursor:pointer;
    }
+   .schedule{text-align:right;}
 
    /* 버튼 스타일 */
    #modal-btn, #exit-btn, #delete-btn, #check-btn, #modify-btn, #reset-btn, #add-btn, #resetadd-btn{
@@ -141,39 +145,59 @@
         document.getElementsByClassName("menus")[4].className += ' clicked';
     </script>
     <div class="boardOuter"> 
-        <div align="right">
+        <div align="right" style="width:1200px;">
             <a href="" class="btn" id="modal-btn" data-toggle="modal" data-target="#addModal">추가</a>
         </div>
         <!-- ajax -->
-        <input type="radio" id="allSchedule" name="category" checked><label for="allSchedule">전체</label><input type="radio" id="restDay" name="category"><label for="restDay">쉬는 날</label><input type="radio" id="comSchedule" name="category"><label for="comSchedule">회사 일정</label>
-        <table class="table">
+        <input type="radio" id="restDay" name="category" checked><label for="restDay">쉬는 날</label><input type="radio" id="comSchedule" name="category"><label for="comSchedule">회사 일정</label>
+        <table class="table" id="schedule-list" style="width:1200px;">
             <tbody>
-              <tr>
-                <td class="date">
-                    <b>1월 1일</b><br>
-                    <span class="solarLunar" style="background: rgb(241, 196, 15);">양</span><span class="date">1월 1일</span>
-                </td>
-                <td width="1000px" class="schedule" style="text-align: right;">
-                    <span style="background:rgb(204, 228, 244);">매년</span>
-                    <span style="background:rgb(224, 224, 224);">휴일</span>
-                    <img src="resources/icons/modify.png" width="20px" height="20px" class="modify-img">
-                    <img src="resources/icons/bin.png" width="20px" height="25px" class="delete-img">
-                </td>
-              </tr>
-              <tr>
-                <td class="date">
-                    <b>설날</b><br>
-                    <span class="solarLunar" style="background: rgb(155, 89, 182);">음</span><span class="date">12월 30일 - 1월 2일</span>
-                </td>
-                <td width="700px" class="schedule" style="text-align: right;">
-                    <span style="background:rgb(204, 228, 244);">매년</span>
-                    <span style="background:rgb(224, 224, 224);">휴일</span>
-                    <img src="resources/icons/modify.png" width="20px" height="20px" class="modify-img">
-                    <img src="resources/icons/bin.png" width="20px" height="25px" class="delete-img">
-                </td>
-              </tr>
             </tbody>
         </table>
+        <script>
+	        $(function(){
+	        	restDaySchedule();
+	        })
+	        
+	        function restDaySchedule(){
+	        	$.ajax({
+	        		url:"restDayScheduleList.bo",
+	        		success:function(list){
+	        			
+	        			let value = "";
+	        			for(let i=0; i<list.length; i++){
+	    					value += "<tr>"
+	    							+	"<td class='date' width='400px'><b>" + list[i].schName + "</b><br>";
+			    				    if(list[i].lunarSolar == 0){
+			    				    	value += "<span class='solarLunar' style='background: rgb(241, 196, 15);'>양";
+			    				    } else{
+			    				    	value += "<span class='solarLunar' style='background: rgb(155, 89, 182);'>음";
+			    				    }
+			    			value += 		"</span><span class='date'>" + list[i].startDate.substring(3,5) + "월 " + list[i].startDate.substring(6,8) + "일";
+			    			        if(list[i].endDate != null){
+			    			        	value += " - " + list[i].endDate.substring(3,5) + "월" + list[i].endDate.substring(6,8) + "일" + "</span></td>"
+			    			        }
+	    				    		value += "<td class='schedule'>";
+	    				    	    if(list[i].annual != 'N'){
+	    				    	    	value += "<span style='background:rgb(204, 228, 244);'>매년</span>";
+	    				    	    }
+	    				    	    if(list[i].restdayKind == '0'){
+	    				    	    	value += "<span style='background:rgb(224, 224, 224);'>휴일</span>";
+	    				    	    } else{
+	    				    	    	value += "<span style='background:rgb(224, 224, 224);'>기념일</span>";
+	    				    	    }
+	    				    value += "<img src='resources/icons/modify.png' width='20px' height='20px' class='modify-img'>"
+		                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'></td></tr>";
+	    				}
+	        			
+	    				$("#schedule-list").html(value);
+	        		}, error:function(){
+	        			console.log("전체 조회용 ajax 통신 실패");
+	        		}
+	        	})
+	        }
+        		
+        </script>
         <script>
             $(document).on("click", ".modify-img", function(){
                 // 일정 번호 넘기면서
