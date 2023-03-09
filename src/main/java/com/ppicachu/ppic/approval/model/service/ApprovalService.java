@@ -7,10 +7,15 @@ import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
 import com.ppicachu.ppic.approval.model.vo.FormTransfer;
+import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.member.model.vo.Member;
 
 public interface ApprovalService {
+	
+	// 1. 전자결재 리스트 페이지 조회 서비스 (페이징)
+	int selectListCount(MyDept md);
+	ArrayList<Approval> selectList(MyDept md, PageInfo pi);
 	/*
 	// 1. 개인_기안_진행중 select (/승인필요) (+count)
 	int selectMyIngListCount(String userNo);
@@ -42,6 +47,15 @@ public interface ApprovalService {
 	// 8.부서_완료 select (+count)
 	int selectDeptEdCount(String deptNo);
 	ArrayList<Approval> selectDeptEdList(String deptNo, PageInfo pi);
+	
+	// 20.전체관리_전체문서 select (+count)
+	int selectAllListCount(String userNo);
+	ArrayList<Approval> selectAllList(PageInfo pi);
+	
+	// 22.삭제관리_삭제문서 select (+count)
+	int selectDelListCount(String userNo);
+	ArrayList<Approval> selectDelList(PageInfo pi);
+	*/
 	
 	// 9.작성_회원 리스트 select (+회원명, 부서명, 직급명)
 	// 15.수정_회원 리스트 select (+회원명, 부서명, 직급명)
@@ -83,20 +97,12 @@ public interface ApprovalService {
 	int selectSearchListCount(); // 매개변수 검색조건
 	ArrayList<Approval> selectSearchList(PageInfo pi); // 매개변수 검색조건 추가
 	
-	// 20.전체관리_전체문서 select (+count)
-	int selectAllListCount(String userNo);
-	ArrayList<Approval> selectAllList(PageInfo pi);
-	
 	// 21.삭제 update
 	int updateApproval(int approvalNo); // 고민해보기 삭제인데 update..?
-	
-	// 22.삭제관리_삭제문서 select (+count)
-	int selectDelListCount(String userNo);
-	ArrayList<Approval> selectDelList(PageInfo pi);
 	
 	// 23.삭제관리_복원 update
 	
 	
 	// 24.삭제관리_영구삭제 delete
-*/
+
 }

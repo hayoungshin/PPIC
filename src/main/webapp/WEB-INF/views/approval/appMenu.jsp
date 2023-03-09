@@ -12,14 +12,26 @@
 	
 	.menu{float: left; margin: 0px 40px 10px 10px;}
 	.menu a{text-decoration: none;}
-	.menu h4, .menu h5, .menu h6{color: black;}
-	.menu h4:hover, .menu h5:hover, .menu h6:hover{font-weight:600; color: #6F50F8;}
+	.m1{height: 25px;}
+	.m2, .m3{height: 20px;}
+	
+	#menu-1
+	, #menu-1-1, #menu-1-2, #menu-1-3
+	, #menu-1-1-1, #menu-1-1-2, #menu-1-1-3
+	, #menu-2
+	, #menu-2-1, #menu-2-2{color: gray;}
+	
+	#menu-1:hover
+	, #menu-1-1:hover, #menu-1-2:hover, #menu-1-3:hover
+	, #menu-1-1-1:hover, #menu-1-1-2:hover, #menu-1-1-3:hover
+	, #menu-2:hover
+	, #menu-2-1:hover, #menu-2-2:hover{cursor: pointer; color: black; font-weight:600;}
 
-	.switch-area{float: left; margin-left: 10px; margin-top: 10px;}
+	#switch-area{float: left; margin-left: 10px; margin-top: 10px;}
 	.search-option{background-color: lightgray; border-radius: 10px; padding: 6px; padding-left: 10px; margin-bottom: 10px;}
 	/* 검색, 정렬, 필터 */
 	.two-btn-area{float: right;}
-	.two-btn{padding-left: 30px; font-size: 23px;}
+	.two-btn{padding-left: 30px; width: 60px;}
 	.btn-align{float: left;}
 	
 	/* 공통 */
@@ -45,41 +57,40 @@
 <body>
 	<div id="content">
 		<div class="content-1">
-	    	<br>
 	    	<div class="title-area"><h2><b>전자결재</b></h2></div>
 	
-		    <div class="title-area-enroll"><button class="btnn-pp">+ 작성하기</button></div>    
+		    <div class="title-area-enroll"><button type="button" class="btnn-pp" onclick="location.href='enrollForm.ap';">+ 작성하기</button></div>    
 			<br clear="both"><br>
 			
-			<div class="menu"><a href=""><h4>개인 문서함</h4></a></div>
-			<div class="menu"><a href=""><h4>부서 문서함</h4></a></div>
+			<div class="menu"><a href="list.ap?myi=1"><h4 id="menu-1">개인 문서함</h4></a></div>
+			<div class="menu"><a href="list.ap?dpi=1"><h4 id="menu-2">부서 문서함</h4></a></div>
 			
-			<!-- if관리자일 경우 -->
-			<div class="menu"><a href=""><h4>전체 문서 관리</h4></a></div>
-			<div class="menu"><a href=""><h4>삭제 문서 관리</h4></a></div>
-			
+			<!-- if관리자일 경우
+			<div class="menu"><a href="list.ap?a=1"><h4 id="menu-3">전체 문서 관리</h4></a></div>
+			<div class="menu"><a href="list.ap?d=1"><h4 id="menu-4">삭제 문서 관리</h4></a></div>
+			 -->
 			<br clear="both">
 			
 			<!-- if개인 문서함일 경우 -->
-			<div class="menu"><a href=""><h5>기안 문서함</h5></a></div>
-			<div class="menu"><a href=""><h5>참조 문서함</h5></a></div>
-			<div class="menu"><a href=""><h5>중요</h5></a></div>
+			<div class="menu m1"><div class="menu1"><a href="list.ap?myi=1"><h5 id="menu-1-1">기안 문서함</h5></a></div></div>
+			<div class="menu m1"><div class="menu1"><a href="list.ap?myr=1"><h5 id="menu-1-2">참조 문서함</h5></a></div></div>
+			<div class="menu m1"><div class="menu1"><a href="list.ap?myb=1"><h5 id="menu-1-3">중요</h5></a></div></div>
 			
 			<br clear="both">
 			
 			<!-- when개인 문서함 _ 기안 문서함일 경우-->
-			<div class="menu"><a href=""><h6>진행중</h6></a></div>
-			<div class="menu"><a href=""><h6>완료</h6></a></div>
-			<div class="menu"><a href=""><h6>임시저장</h6></a></div>
+			<div class="menu m2"><div class="menu2"><a href="list.ap?myi=1"><h6 id="menu-1-1-1">진행중</h6></a></div></div>
+			<div class="menu m2"><div class="menu2"><a href="list.ap?mye=1"><h6 id="menu-1-1-2">완료</h6></a></div></div>
+			<div class="menu m2"><div class="menu2"><a href="list.ap?myt=1"><h6 id="menu-1-1-3">임시저장</h6></a></div></div>
 			
 			<!-- when부서 문서함일 경우 -->
-			<div class="menu"><a href=""><h6>진행중</h6></a></div>
-			<div class="menu"><a href=""><h6>완료</h6></a></div>
+			<div class="menu m3"><div class="menu3"><a href="list.ap?dpi=1"><h6 id="menu-2-1">진행중</h6></a></div></div>
+			<div class="menu m3"><div class="menu3"><a href="list.ap?dpe=1"><h6 id="menu-2-2">완료</h6></a></div></div>
 			
 			<br clear="both">
 		
 			<!-- if개인 문서함 _ 기안 문서함 _ 진행중일 경우-->
-			<div class="custom-control custom-switch switch-area">
+			<div class="custom-control custom-switch" id="switch-area" style="display: none;">
 			    <input type="checkbox" class="custom-control-input" id="switch1">
 			    <label class="custom-control-label" for="switch1">승인필요</label>
 		    </div>
@@ -103,10 +114,10 @@
 			    	<button class="btnn-gr">검색</button>
 				</div>
 				<div class="btn-align">
-		   			<span class="two-btn" onclick="selectHow(0);">🔍</span>
+				<img src="resources/icons/search.png" class="two-btn" onclick="selectHow(0);">
 				</div>
 				<div class="dropdown btn-align">
-		    		<span class="dropdown-toggle two-btn" data-toggle="dropdown">🗂</span>
+					<img src="resources/icons/dots.png" class="dropdown-toggle two-btn" data-toggle="dropdown">
 		    		<div class="dropdown-menu">
 		    			<a class="dropdown-item" href="">최근 업데이트 순</a>
 		    			<a class="dropdown-item" href="">작성일 순</a>

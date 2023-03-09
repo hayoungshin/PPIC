@@ -191,7 +191,7 @@
                 <span>구성원</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='list.ap?myi=1'">
                 <img src="resources/icons/approval.png">
                 <span>전자결재</span>
             </div>

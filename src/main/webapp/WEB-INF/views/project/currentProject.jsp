@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>업무</title>
+ <!-- Link Swiper's CSS -->
+ <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
 <style>
 /* 서브메뉴 */
   .sub-menu a{
@@ -20,48 +22,49 @@
   }
 
   /* swiper 슬라이드 */
-  swiper-container {
+  .swiper{
       width:100%;
       height:200px;
       margin-left:10px !important;
-      z-index:-99;
+      z-index:0 !important;
   }
-  swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .swiper-slide{
+    text-align:center;
+    font-size:18px;
+    background:#ffffff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     border:0.5px solid #ececee;
-    width:320px !important;
+    width:320px;
     height:140px;
     box-shadow:12px 12px 15px -5px #dddddd;
   }
-  swiper-slide:hover{cursor:pointer;}
+  .swiper-slide:hover{cursor:pointer;}
+  .swiper-pagination, .swiper-button-next, .swiper-button-prev{z-index:1 !important;}
 
   /* 프로젝트 박스 */
   .project-box div{margin:10px; font-size:14px;}
   .project-title{font-size:16px !important; font-weight:700;}
-  swiper-slide.active{border:1px solid #6F50F8;}
+  .swiper-slide.active{border:1px solid #6F50F8;}
 
   /* 진행률 */
   .progress {
-    background: #f3f3f3;
-    justify-content: flex-start;
-    border-radius: 100px;
-    align-items: center;
-    position: relative;
-    padding: 0 5px;
-    display: flex;
-    height: 30px;
-    width: 100%;
+    background:#f3f3f3;
+    justify-content:flex-start;
+    border-radius:100px !important;
+    align-items:center;
+    position:relative;
+    padding:0 5px;
+    display:flex;
+    height:30px !important;
+    width:100%;
   }
   .progress-bar {
     animation: load 2s normal forwards;
-    box-shadow: 0 10px 30px -10px #6F50F8;
+    box-shadow: 0 10px 30px -10px #6F50F8 !important;
     border-radius: 100px;
-    background:linear-gradient(to right, #00b5d1 60%, #FFCECE);;
+    background:linear-gradient(to right, #00b5d1 60%, #FFCECE);
     height: 20px;
     width: 0;
   }
@@ -88,7 +91,7 @@
   #task-category{font-size:14px; margin-bottom:15px;}
   .task-box{
     border:1px solid #e4e4e4;
-    width:250px;
+    width:300px;
     font-size:14px;
     margin:auto;
     margin-bottom:12px;
@@ -107,7 +110,7 @@
     -webkit-box-orient: vertical;
   }
   .file{color:gray; margin-bottom:10px;}
-  .ref-people{display:inline-block; width:130px; text-align:right; font-size:12px;}
+  .ref-people{display:inline-block; width:180px; text-align:right; font-size:12px;}
   .status{display:inline-block; color:white; width:50px; border-radius:5px; text-align:center; font-size:12px;}
 
   /* 상태 */
@@ -118,8 +121,8 @@
 
   /* 작업이동시 그림자 */
   .move-task{
-    margin: 0 1em 1em 0;
-    height: 50px;
+    margin:0 1em 1em 0;
+    height:50px;
     margin-left:auto;
     margin-right:auto;
     background-color: rgba(240, 240, 240, 0.671);
@@ -139,56 +142,72 @@
         </div>
         <hr>
         <br>
-        <swiper-container class="mySwiper" pagination="true" pagination-clickable="true" slides-per-view="3"
-          space-between="30" free-mode="true">
-          <swiper-slide class="active" onclick="location.href='http://naver.com';">
-            <div class="project-box">
-              <div class="project-title">PPIC 고도화</div>
-              <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-              <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+        
+        <!-- Swiper -->
+        <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide active">
+              <div class="project-box">
+                <div class="project-title">PPIC 고도화</div>
+                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
+                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+              </div>
             </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="project-box">
-              <div class="project-title">PPIC 고도화</div>
-              <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-              <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+            <div class="swiper-slide">
+              <div class="project-box">
+                <div class="project-title">PPIC 고도화</div>
+                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
+                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+              </div>
             </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="project-box">
-              <div class="project-title">PPIC 고도화</div>
-              <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-              <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+            <div class="swiper-slide">
+              <div class="project-box">
+                <div class="project-title">PPIC 고도화</div>
+                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
+                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+              </div>
             </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="project-box">
-              <div class="project-title">PPIC 고도화</div>
-              <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-              <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+            <div class="swiper-slide">
+              <div class="project-box">
+                <div class="project-title">PPIC 고도화</div>
+                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
+                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
+              </div>
             </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="project-box">
-              <div class="project-title">PPIC 고도화</div>
-              <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-              <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="project-box">
-              <div class="project-title">PPIC 고도화</div>
-              <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-              <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
-            </div>
-          </swiper-slide>
-        </swiper-container>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
         <br>
         <hr>
-
-        <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
         
+        <!-- Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+        <!-- Initialize Swiper -->
+        <script>
+          const swiper = new Swiper('.swiper', {
+            // Optional parameters
+            slidesPerView: 4,
+            spaceBetween: 30,
+            freeMode: true,
+            direction: 'horizontal',
+            loop: true,
+            autoplay: {
+              delay: 3000,
+              disableOnInteraction: false,
+            },
+            // If we need pagination
+            pagination: {
+              el: ".swiper-pagination",
+              clickable: true,
+            },
+            // And if we need scrollbar
+            scrollbar: {
+              el: '.swiper-scrollbar',
+            },
+          });
+      </script>
+         
          
 
         <h4><b>PPIC ver.2</b></h4>
@@ -206,13 +225,13 @@
           <span style="font-size:16px;"><b>작업 현황</b></span>
           <button id="add-task" class="btn-purple">+ 작업 만들기</button>
           <br><br>
-          <div class="row" id="task-category" style="width:1200px">
+          <div class="row" id="task-category"">
             <div class="col" id="wait"><div class="circle status-wait"></div>대기중</div>
             <div class="col" id="working"><div class="circle status-working"></div>작업중</div>
             <div class="col" id="done"><div class="circle status-done"></div>완료</div>
             <div class="col" id="hold"><div class="circle status-hold"></div>보류</div>
           </div>
-          <div class="row" id="task-list" style="width:1200px">
+          <div class="row" id="task-list"">
             <div class="col column wait-list">
               <div class="task-box" data-toggle="modal" data-target="#task">
                 <div class="task-title">어쩌구저쩌구 작업ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</div>

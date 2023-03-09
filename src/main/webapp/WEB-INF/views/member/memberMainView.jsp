@@ -149,78 +149,23 @@
 				<div class="memberList">
 					<table id="list">
 						<tbody align="center">
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
-							<tr>
-								<td width="80%">
-									<div class="pro" style="float:left" >뫄뫄</div>
-									<div class="proname" > 김뫄뫄</div>
-								</td>
-								<td>
-								    <div class="position" style="float:right" >00부 | 대리 </div>
-								</td>
-							</tr>
+							<c:forEach var="m" items="${ list }" >
+								<tr>
+									<td width="80%">
+										<div class="pro" style="float:left" >${ m.userName }</div>
+										<div class="proname" >${ m.userName }</div>
+									</td>
+									<td>
+									    <div class="position" style="float:right" > ${ m.department } | ${ m.position } </div>
+									</td>
+								</tr>
+							</c:forEach>
+							
+							<script>
+								function proname(){
+									
+								}
+							</script>
 			        	</tbody>
 			    	</table>
 				</div> 
