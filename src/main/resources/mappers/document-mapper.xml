@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="documentMapper">
+
+	<resultMap id="documentResult" type="Document">
+		<id column="doc_no" property="docNo" />
+		<result column="doc_name" property="docName" />
+		<result column="save_path" property="originName" />
+		<result column="create_user" property="createUser" />
+		<result column="create_date" property="createDate" />
+		<result column="modify_date" property="modifyDate" />
+	</resultMap>
+	
+	<select id="selectCommonDocsCount" resultType="_int">
+		select 
+			   count(*)
+		  from document
+		 where doc_type = 1
+		   and delete_status = 'N'
+	</select>
+	<select id="selectCommonDocs" resultMap="documentResult">
+		select
+			   doc_no
+			 , doc_name
+			 , save_path
+			 , origin_name
+			 , create_user
+			 , create_date
+			 , modify_date
+		  from document
+		 where doc_type = 1
+		   and delete_status = 'N'
+		 order
+		    by doc_no
+	</select>
 </mapper>
