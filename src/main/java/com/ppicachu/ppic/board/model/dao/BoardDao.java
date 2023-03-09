@@ -35,8 +35,8 @@ public class BoardDao {
 		return sqlSession.update("boardMapper.increaseCount", boardNo);
 	}
 	
-	public Board selectBoard(SqlSessionTemplate sqlSession, int boardNo) {
-		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
+	public Board selectBoard(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		return sqlSession.selectOne("boardMapper.selectBoard", map);
 	}
 	
 	public int deleteBoard(SqlSessionTemplate sqlSession, int boardNo) {
@@ -84,5 +84,9 @@ public class BoardDao {
 	
 	public int blindBoardUpdate(SqlSessionTemplate sqlSession, Report r) {
 		return sqlSession.update("boardMapper.blindBoardUpdate", r);
+	}
+	
+	public int deleteReport(SqlSessionTemplate sqlSession, int reportNo) {
+		return sqlSession.update("boardMapper.deleteReport", reportNo);
 	}
 }

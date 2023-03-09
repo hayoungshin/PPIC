@@ -84,6 +84,7 @@
 		<form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ b.boardNo }">
         	<input type="hidden" name="type" value="1"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
+        	<input type="hidden" name="userNo" value="10"> <!-- value 수정 -->
         </form>
 		<script>
         	function postFormSubmit(num){

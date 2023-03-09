@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 
+	<resultMap id="memberResult" type="Member">
+		<id column="user_no" property="userNo" />
+		<result column="user_name" property="userName" />
+		<result column ="position" property="position" />
+		<result column ="department" property="department" />
+		
+	</resultMap>
+
+	<select id="selectMember" resultMap="memberResult">
+		select
+		       user_no
+		     , user_name
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
+		  from member
+		  join dept on (member.department = dept.department_no) 
+		  join position on (member.position = position.position_no)
+		 where status='Y'
+	     
+	</select>
+
 </mapper>

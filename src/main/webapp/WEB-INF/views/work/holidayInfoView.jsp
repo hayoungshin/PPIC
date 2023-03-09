@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>PPIC</title>
 <style>
 	<!-- 카테고리 css -->
 	
@@ -76,7 +76,7 @@
 			<div class="workcategory" style="float:left;" >
                 <a href="workList.wo" >출퇴근기록</a>
                 <a href="workInfo.wo" >올해근무정보</a>
-				<a href="holiInfo.ho" >휴가현황</a>
+				<a href="holiInfo.ho" style="color:black;">휴가현황</a>
                 <a href="holiApply.ho">휴가신청</a>
                 
                 

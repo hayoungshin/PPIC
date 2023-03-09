@@ -22,4 +22,5 @@ public class Board {
 	private String blindSta;
 	private int likeCount;
 	private int hateCount;
+	private int reportCount;
 }

@@ -27,7 +27,6 @@
         background: rgb(190, 190, 190);
     }
     #report-btn, #delete-btn, #modal-btn{background: rgb(111, 80, 248);}
-    .boardOuter a:hover{opacity: 0.7;}
     .dropdown-toggle{cursor:pointer;}
 
     /* modal내 input요소 스타일 */
@@ -87,6 +86,7 @@
         <form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ b.boardNo }">
         	<input type="hidden" name="type" value="0"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
+        	<input type="hidden" name="userNo" value="10"> <!-- value 수정 -->
         </form>
         
         <script>
@@ -100,8 +100,10 @@
         </script>
         <br>
         <div align="center" style="width:1200px;">
-            <a href="#" class="btn" id="list-btn" onclick="history.back();">목록</a>
-            <a href="#" class="btn" id="modal-btn" data-toggle="modal" data-target="#reportModal">신고</a>
+            <button href="#" class="btn" id="list-btn" onclick="history.back();">목록</button>
+            <c:if test="${ b.reportCount ne 1 }"> <!-- 신고 중복 방지 -->
+            	<button class="btn" id="modal-btn" data-toggle="modal" data-target="#reportModal">신고</button>
+            </c:if>
         </div>
 
         <!-- 삭제 확인용 Modal -->
@@ -128,7 +130,7 @@
                     <b>신고하기</b> <br><br>
                     <form action="report.bo" method="post">
                     <input type="hidden" name="reportBno" value="${ b.boardNo }">
-                    <input type="hidden" name="reportMno" value="40"> <!-- 로그인한 회원으로 바꾸기 -->
+                    <input type="hidden" name="reportMno" value="40"> <!-- 로그인한 회원으로 수정 -->
                         <table>
                             <tr>
                                 <td><b>신고구분</b></td>

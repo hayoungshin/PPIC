@@ -186,7 +186,7 @@
                 <span>회사소식</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='memberMain.me'">
                 <img src="resources/icons/group.png">
                 <span>구성원</span>
             </div>
@@ -196,7 +196,7 @@
                 <span>전자결재</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='commonList.doc'">
                 <img src="resources/icons/folder.png">
                 <span>문서</span>
             </div>
@@ -206,7 +206,7 @@
                 <span>예약</span>
             </div>
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='list.pr'">
                 <img src="resources/icons/monitor.png">
                 <span>업무</span>
             </div>
@@ -223,9 +223,11 @@
 		<jsp:include page="../alarm/alarmPopup.jsp"/>
 
         <script>
+        
+        	/* 마이페이지 url로 이동 */
             function toMyPage(){
             	location.href="myPage.me"
-                /* 마이페이지 url로 이동 */
+                
             }
             
             /* 새로운 알람 클릭 */

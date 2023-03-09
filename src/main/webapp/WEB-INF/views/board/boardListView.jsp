@@ -23,7 +23,7 @@
         </div>
         <br>
         <table class="table" id="boardList">
-            <thead class="thead-light">
+            <thead>
               <tr>
                 <th style="width:50px;">번호</th>
                 <th style="width:1000px;">제목</th>
@@ -46,7 +46,7 @@
         <script>
         	$(function(){
         		$("#boardList>tbody>tr").click(function(){
-        			location.href = 'detail.bo?no=' + $(this).children(".no").text();
+        			location.href = 'detail.bo?userNo=40&no=' + $(this).children(".no").text(); // userNo 바꾸기
         		})
         	})
         </script>
