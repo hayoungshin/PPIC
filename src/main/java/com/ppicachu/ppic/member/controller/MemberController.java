@@ -1,10 +1,20 @@
 package com.ppicachu.ppic.member.controller;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.vo.Member;
 
 @Controller
 public class MemberController {
+	
+	@Autowired
+	private MemberService mService;
 	
 	/* 단순 페이지 불러오기*/
 	
@@ -16,7 +26,11 @@ public class MemberController {
 	
 	/* 구성원_메인 */
 	@RequestMapping("memberMain.me")
-	public String memberMain() {
+	public String memberMain(Model model) {
+		ArrayList<Member> list = mService.selectMember();
+		
+		model.addAttribute("list", list);
+		
 		return "member/memberMainView";
 	}
 	
