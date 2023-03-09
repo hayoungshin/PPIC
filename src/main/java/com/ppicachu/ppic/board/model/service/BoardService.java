@@ -18,7 +18,7 @@ public interface BoardService {
 	
 	// 3. 게시글 상세조회
 	int increaseCount(int boardNo);
-	Board selectBoard(int boardNo);
+	Board selectBoard(HashMap<String, Integer> map);
 	
 	// 4. 게시글 삭제용 서비스
 	int deleteBoard(int boardNo);

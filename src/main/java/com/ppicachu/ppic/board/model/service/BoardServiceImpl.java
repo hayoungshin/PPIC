@@ -42,8 +42,8 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public Board selectBoard(int boardNo) {
-		return bDao.selectBoard(sqlSession, boardNo);
+	public Board selectBoard(HashMap<String, Integer> map) {
+		return bDao.selectBoard(sqlSession, map);
 	}
 
 	@Override

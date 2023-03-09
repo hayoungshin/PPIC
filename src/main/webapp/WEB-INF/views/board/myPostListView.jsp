@@ -43,7 +43,7 @@
        <script>
         	$(function(){
         		$("#myPostList>tbody>tr").click(function(){
-        			location.href = 'detailMy.bo?no=' + $(this).children(".no").text();
+        			location.href = 'detailMy.bo?userNo=10&no=' + $(this).children(".no").text(); // userNo 바꾸기
         		})
         	})
         </script>

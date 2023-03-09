@@ -55,11 +55,14 @@ public class BoardController {
 	}
 	
 	@RequestMapping("detail.bo")
-	public String selectBoard(int no, Model m) {
+	public String selectBoard(int no, int userNo, Model m) {
 		int result = bService.increaseCount(no);
 		
 		if(result > 0) {
-			Board b = bService.selectBoard(no);
+			HashMap<String, Integer> map = new HashMap<>();
+			map.put("boardNo", no);
+			map.put("userNo", userNo);
+			Board b = bService.selectBoard(map);
 			m.addAttribute("b", b);
 			return "board/boardDetailView";
 		}else {
@@ -86,8 +89,11 @@ public class BoardController {
 	}
 	
 	@RequestMapping("updateForm.bo")
-	public String updateForm(int no, int type, Model model) {
-		model.addAttribute("b", bService.selectBoard(no));
+	public String updateForm(int no, int type, int userNo, Model model) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("boardNo", no);
+		map.put("userNo", userNo);
+		model.addAttribute("b", bService.selectBoard(map));
 		model.addAttribute("type", type);
 		return "board/boardUpdateForm";
 	}
@@ -99,9 +105,9 @@ public class BoardController {
 		if(result > 0) {
 			session.setAttribute("alertMsg", "성공적으로 게시글 수정 되었습니다.");
 			if(type == 0) {
-				return "redirect:detail.bo?no=" + b.getBoardNo();
+				return "redirect:detail.bo?no=" + b.getBoardNo() + "&userNo=" + b.getBoardWriter();
 			} else{
-				return "redirect:detailMy.bo?no=" + b.getBoardNo();
+				return "redirect:detailMy.bo?no=" + b.getBoardNo() + "&userNo=" + b.getBoardWriter();
 			}
 			
 		} else {
@@ -165,11 +171,14 @@ public class BoardController {
 	}
 	
 	@RequestMapping("detailMy.bo")
-	public String selectMyBoard(int no, Model m) {
+	public String selectMyBoard(int no, int userNo, Model m) {
 		int result = bService.increaseCount(no);
 		
 		if(result > 0) {
-			Board b = bService.selectBoard(no);
+			HashMap<String, Integer> map = new HashMap<>();
+			map.put("boardNo", no);
+			map.put("userNo", userNo);
+			Board b = bService.selectBoard(map);
 			m.addAttribute("b", b);
 			return "board/myPostDetailView";
 		}else {

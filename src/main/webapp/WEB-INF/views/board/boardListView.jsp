@@ -46,7 +46,7 @@
         <script>
         	$(function(){
         		$("#boardList>tbody>tr").click(function(){
-        			location.href = 'detail.bo?no=' + $(this).children(".no").text();
+        			location.href = 'detail.bo?userNo=40&no=' + $(this).children(".no").text(); // userNo 바꾸기
         		})
         	})
         </script>

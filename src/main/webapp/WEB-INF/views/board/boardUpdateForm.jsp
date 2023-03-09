@@ -57,6 +57,7 @@
         <form action="update.bo" method="post">
         <input type="hidden" name="boardNo" value="${ b.boardNo }">
         <input type="hidden" name="type" value="${ type }">
+        <input type="hidden" name="boardWriter" value="${ b.boardWriter }">
             <table>
                 <tr>
                     <td width="100">제목</td>
