@@ -15,8 +15,9 @@
 	</resultMap>
 	
 	<resultMap id="reportResult" type="Report">
-		<id column="report_bno" property="reportBno"/>
-		<id column="report_mno" property="reportMno"/>
+		<id column="report_no" property="reportNo"/>
+		<result column="report_bno" property="reportBno"/>
+		<result column="report_mno" property="reportMno"/>
 		<result column="report_kind" property="reportKind"/>
 		<result column="report_content" property="reportContent"/>
 		<result column="report_date" property="reportDate"/>
@@ -174,14 +175,16 @@
   		insert 
   		  into report
  		  (
-  		    report_bno
+ 		    report_no
+  		  , report_bno
   		  , report_mno
   		  , report_kind
   		  , report_content
   		  )
   		  values
   		  (
-  		    #{reportBno}
+  		    seq_reportno.nextval
+  		  , #{reportBno}
   		  , #{reportMno}
   		  , #{reportKind}
   		  , #{reportContent}
@@ -197,9 +200,9 @@
   	
   	<select id="selectReportList" resultMap="reportResult">
   		select
-  			   report_bno
+  		       report_no
+  			 , report_bno
   		     , board_title
-  		     , report_mno
   		     , report_kind
   		     , report_content
   		     , to_char(report_date, 'YYYY-MM-DD') "report_date"
@@ -214,12 +217,12 @@
   	<update id="blindReportUpdate">
   		update
   		       report
-  		   set report_sta = 
+  		   set modify_date = sysdate
+  		     , report_sta = 
   		   <choose>
   		   	<when test="reportSta == 1">2</when>
   		   	<otherwise>1</otherwise>
   		   </choose>
-  		   
   		 where report_bno = #{reportBno}
   	</update>
   	
@@ -232,5 +235,13 @@
   		   	<otherwise>'Y'</otherwise>
   		   </choose>
   		 where board_no = #{reportBno}
+  	</update>
+  	
+  	<update id="deleteReport">
+  		update
+  		       report
+  		   set status = 'N'
+  		     , modify_date = sysdate
+  	 	 where report_no in (#{reportNo})
   	</update>
 </mapper>

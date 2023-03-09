@@ -40,4 +40,7 @@ public interface BoardService {
 	// 9. 블라인드 처리 서비스
 	int blindReportUpdate(Report r);
 	int blindBoardUpdate(Report r);
+	
+	// 10. 신고 삭제 서비스
+	int deleteReport(int reportNo);
 }

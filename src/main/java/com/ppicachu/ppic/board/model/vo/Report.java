@@ -11,8 +11,9 @@ import lombok.ToString;
 @ToString
 public class Report {
 
-	private String reportBno;
-	private String reportMno;
+	private int reportNo;
+	private int reportBno;
+	private int reportMno;
 	private String reportKind;
 	private String reportContent;
 	private String reportDate;

@@ -91,4 +91,9 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.blindBoardUpdate(sqlSession, r);
 	}
 
+	@Override
+	public int deleteReport(int reportNo) {
+		return bDao.deleteReport(sqlSession, reportNo);
+	}
+
 }

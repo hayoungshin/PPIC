@@ -43,13 +43,13 @@
 
 	<div class="boardOuter"> 
         <div align="right" style="width:1200px;">
-            <a href="" class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
         </div>
         <br>
-        <table class="table" style="width:1200px;">
+        <table class="table" id="report-table" style="width:1200px;">
             <thead class="thead-light">
               <tr>
-                <th><input type="checkbox"></th> <!-- 전체 선택 체크박스 -->
+                <th><input type="checkbox" id="chkAll"></th> 
                 <th>신고구분</th>
                 <th style="width:600px;">신고게시글</th>
                 <th style="width:150px;">신고일</th>
@@ -59,7 +59,12 @@
             <tbody>
             	<c:forEach var="r" items="${ list }">
                 	<tr>
-                		<td onclick="event.cancelBubble=true"><input type="checkbox"></td>
+                		<td onclick="event.cancelBubble=true">
+                			<input type="checkbox" name="deleteReport" value="${ r.reportNo }">
+                			<input type="hidden" class="reportContent" value="${ r.reportContent }">
+                    		<input type="hidden" class="reportBno" value="${ r.reportBno }">
+                    		<input type="hidden" class="reportSta" value="${r.reportSta}">
+                		</td>
                         <td>${ r.reportKind }</td>
                         <td>${ r.boardTitle }</td>
                         <td>${ r.reportDate }</td>
@@ -70,9 +75,6 @@
 	                     	<c:if test="${ r.reportSta eq 2 }">
 	                     		블라인드 취소
 	                     	</c:if>
-	                     	<input type="hidden" class="reportContent" value="${ r.reportContent }">
-                    		<input type="hidden" class="reportBno" value="${ r.reportBno }">
-                    		<input type="hidden" class="reportSta" value="${r.reportSta}">
                         </td>
                     </tr>
                     
@@ -82,7 +84,6 @@
 
 		<script>
 		    $(".table tbody tr").click(function(){
-		        // 신고 번호 넘기면서
 		        $('#report-kind').text($(this).children().eq(1).text());
 		        $('#report-title').text($(this).children().eq(2).text());
 		        $('#goTo').attr("href", "detail.bo?no="+$(this).find('.reportBno').val());
@@ -96,6 +97,34 @@
 		        }
 		        $('#blindModal').modal('show'); 
 		    })
+		    
+		    $(function(){
+				$("#chkAll").click(function() {
+					if($("#chkAll").is(":checked")) {
+						$("input[name=deleteReport]").prop("checked", true);
+					}else {
+						$("input[name=deleteReport]").prop("checked", false);
+					}
+				});
+
+				$("input[name=deleteReport]").click(function() {
+					var total = $("input[name=deleteReport]").length;
+					var checked = $("input[name=deleteReport]:checked").length;
+
+					if(total != checked) $("#chkAll").prop("checked", false);
+					else $("#chkAll").prop("checked", true); 
+				});
+			})
+			
+			$("#modal-btn").click(function(){
+				let reportNo = "";
+	         	$("input[name=deleteReport]:checked").each(function(){
+	         		 let arr = $(this).val(); 
+	         		 reportNo += arr + ","
+	         	})
+	         	reportNo = reportNo.substring(0, reportNo.length-1);
+	            $("#deleteModal input[name=reportNo]").val(reportNo);
+			})
 	    </script>
 				    
         <div id="paging" style="width:1200px;">
@@ -127,11 +156,14 @@
             <div class="modal-content">
                 <div class="modal-body">
                 <b>신고 내역 삭제</b> <br><br>
-                <div align="center">
-                    삭제하시겠습니까?<br><br>
-                    <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-                    <a href="" class="btn" id="delete-btn">확인</a>
-                </div>
+                <form action="deleteReport.bo" method="post">
+	                <div align="center">
+	                	<input type="hidden" name="reportNo">
+	                    삭제하시겠습니까?<br><br>
+	                    <button type="button" class="btn" data-dismiss="modal" id="exit-btn">취소</button>
+	                    <button type="submit" class="btn" id="delete-btn">확인</button>
+	                </div>
+                </form>
                 </div>
             </div>
             </div>

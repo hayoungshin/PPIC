@@ -222,5 +222,18 @@ public class BoardController {
 		}
 	}
 	
+	@RequestMapping("deleteReport.bo")
+	public String deleteReport(int reportNo, HttpSession session, Model m) {
+		int result = bService.deleteReport(reportNo);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 신고 삭제 되었습니다.");
+			return "redirect:manage.bo";
+		} else {
+			m.addAttribute("errorMsg", "신고 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
 
 }
