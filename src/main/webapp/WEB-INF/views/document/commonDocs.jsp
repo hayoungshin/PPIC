@@ -46,6 +46,7 @@
    	   background:#6F50F8;
    	   color:white;
    	   text-decoration:none;
+   	   transition:background 0.3s;
    }
    /* 페이징 */
    #paging{
@@ -104,6 +105,7 @@
 	                    	${d.docName}
 	                    	<%-- <c:if test="${loginUser eq 관리자}" 로그인 구현 후 추가해야 함--%>
 	                    	<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal">
+                            <input type="hidden" name="editDocNo" id="editDocNo" value="${d.docNo}">
 	                    </td>
 	                    <c:choose>
 		                    <c:when test="${not empty d.originName}">
@@ -119,8 +121,88 @@
                 </tbody>
             </table>
         </div>
-        <br><br>
+        <h1><c:out value="${editDocNo}" /></h1>
 
+        <br><br>
+        
+        <script>
+            $(".edit-btn").click(function(){
+                var no = $(this).next().val();
+                
+            })
+        </script>
+            
+        <!-- 수정 모달
+        <div class="modal fade" id="editModal">
+            <div class="modal-dialog">
+            <form class="modal-content">
+        
+                <div class="modal-header">
+                <h4 class="modal-title">문서 수정</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <div class="modal-body">
+                    문서 이름 : <input type="text" name="docName" id="update-docName" placeholder="문서명을 입력해주세요." value="" required>
+                    <br><br>
+                    문서 첨부 : <input type="file" name="reUpfile" id="reUpfile">
+                    <br>
+                    <a href="" download="" style="font-size:12px;" id="originalFile"></a>
+                    <input type="hidden" name="savePath" id="origin-savePath" value="">
+                    <input type="hidden" name="docNo" value="" id="update-docNo">
+                    <input type="hidden" name="createUser" value="1" id="">
+                </div>
+    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" id="deleteBtn">삭제</button>
+                    <button type="submit" class="btn btn-primary" id="updateBtn">수정</button>
+                </div>
+        
+            </div>
+            </div>
+        </div>  -->
+
+        <!-- 문서 수정 스크립트 -->
+        <!-- <script>
+            let reUpfile = "";
+
+            $("#reUpfile").change(function(){
+                reUpfile = this.files[0];
+            })
+
+            $("#updateBtn").click(function(){
+                let formData = new FormData();
+
+                let docNo = $("#update-docNo").val();
+                let docName = $("#update-docName").val();
+                let originalFile = $("#originalFile").text();
+                let createUser = $("#update-user").val();
+                let originSavePath = $("#origin-savePath").val();
+
+                formData.append("docNo", docNo);
+                formData.append("docName", docName);
+                formData.append("originalFile", originalFile);
+                formData.append("createUser", createUser);
+                formData.append("reUpfile", reUpfile);
+                formData.append("originSavePath", originSavePath);
+                
+                $.ajax({
+                        url:"updateCommon.doc",
+                        data:formData,
+                        processData:false,
+                        contentType:false,
+                        type:"POST",
+                        success:function(result){
+                            if(result == "success"){
+                                alert("수정되었습니다.");
+                            }
+                        },error:function(){
+                            console.log("실패");
+                        }
+                    })
+
+            }) -->
+            
         <!-- 추가 모달 -->
         <div class="modal fade" id="addModal">
             <div class="modal-dialog">
@@ -151,35 +233,6 @@
             </div>
             </div>
         </div>
-
-        <!-- 수정 모달 -->
-        <div class="modal fade" id="editModal">
-            <div class="modal-dialog">
-            <div class="modal-content">
-        
-                <!-- Modal Header -->
-                <div class="modal-header">
-                <h4 class="modal-title">문서 수정</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-        
-                <!-- Modal body -->
-                <div class="modal-body">
-                    문서 이름 : <input type="text" placeholder="문서명을 입력해주세요." required>
-                    <br><br>
-                    문서 첨부 : <input type="file">
-                </div>
-        
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger">삭제</button>
-                    <button type="button" class="btn btn-primary">등록</button>
-                </div>
-        
-            </div>
-            </div>
-        </div>
-  
 
         <div id="paging">
             <ul>

@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.document.controller;
 
 import java.util.ArrayList;
+import java.io.File;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -45,6 +47,15 @@ public class DocumentController {
 		return mv;
 	}
 	
+	/**
+	 * 회사문서 추가
+	 * @author koo
+	 * @param doc
+	 * @param upfile
+	 * @param session
+	 * @param model
+	 * @return 성공여부
+	 */
 	@RequestMapping("insertCommon.doc")
 	public String insertCommonDocs(Document doc, MultipartFile upfile, HttpSession session, Model model) {
 		if(!upfile.getOriginalFilename().equals("")) {
@@ -64,6 +75,31 @@ public class DocumentController {
 		}
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping("updateCommon.doc")
+	public String updateCommonDocs(MultipartFile reUpfile, String originalFile, String originSavePath,
+								 Document doc, HttpSession session) {
+		
+		// 새 파일 있을 때
+		if(!reUpfile.getOriginalFilename().equals("")) {
+			String saveFilePath = FileUpload.saveFile(reUpfile, session, "resources/uploadFiles/commonDocs/");
+			doc.setSavePath(saveFilePath);
+		}
+		
+		int result = dService.updateCommonDocs(doc);
+		
+		if(result > 0) {
+			if(originalFile != null) {
+				new File(session.getServletContext().getRealPath(originSavePath)).delete();
+			}
+			
+			return "success";
+		}else {
+			return "failed";
+		}
+		
+	}
 	
 	@RequestMapping("myList.doc")
 	public String selectMyDocs() {

@@ -57,4 +57,15 @@
 		  , #{createUser}
 		  )
 	</insert>
+	
+	<!-- 회사문서 수정 -->
+	<update id="updateCommonDocs">
+		update
+			   document
+		   set doc_name = #{docName}
+		     , save_path = #{savePath}
+		     , origin_name = #{originName}
+		     , create_user = #{createUser}
+		 where doc_no = #{docNo}
+	</update>
 </mapper>

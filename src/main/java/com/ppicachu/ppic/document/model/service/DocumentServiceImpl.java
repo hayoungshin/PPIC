@@ -35,4 +35,9 @@ public class DocumentServiceImpl implements DocumentService {
 		return dDao.insertCommonDocs(sqlSession, doc);
 	}
 
+	@Override
+	public int updateCommonDocs(Document doc) {
+		return dDao.updateCommonDocs(sqlSession, doc);
+	}
+
 }

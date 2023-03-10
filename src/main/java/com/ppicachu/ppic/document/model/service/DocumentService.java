@@ -13,4 +13,7 @@ public interface DocumentService {
 	
 	// 회사문서 추가
 	int insertCommonDocs(Document doc);
+	
+	// 회사문서 수정
+	int updateCommonDocs(Document doc);
 }

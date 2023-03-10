@@ -27,4 +27,8 @@ public class DocumentDao {
 	public int insertCommonDocs(SqlSessionTemplate sqlSession, Document doc) {
 		return sqlSession.insert("documentMapper.insertCommonDocs", doc);
 	}
+	
+	public int updateCommonDocs(SqlSessionTemplate sqlSession, Document doc) {
+		return sqlSession.update("documentMapper.updateCommonDocs", doc);
+	}
 }
