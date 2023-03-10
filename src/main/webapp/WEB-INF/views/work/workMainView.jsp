@@ -25,14 +25,14 @@
     .workcategory>a:visited {color:lightgray; text-decoration:none;}
 	.workcategory>a:hover{color: black; text-decoration:none;}
 	
-	.woww{
+	.wotitle{
 	    /* border: 1px solid black; */
 	    height: 30px;
 	    width: 100%;
 	    font-size: 20px;
 	    font-weight: bold;
 	    margin-bottom: 20px;
-	    margin-top: 20px;
+	    margin-top: 40px;
 	}
 	
 	.day{
@@ -114,9 +114,9 @@
 
             <br>
             
-            <div class="workinfo" >
-               <table  >
-                    <tr style="font-size: 20px;">
+            <div class="workinfo" style="margin-top:30px;">
+               <table style="float:left;">
+                    <tr style="font-size: 20px;" >
                         <th height="50px" width="440px" >근태현황</th>
                         <th width="445px">휴가현황</th>
                         <th width="300px">근무시간</th>
@@ -142,12 +142,12 @@
                 <table align="center" style="margin-top:10px" >
                     <tr align="center">
                         <td height="100px" width="100px"> 잔여연차</td>
-                        <td width="100px"> <button class="btn-purple">휴가현황</button> </td>
+                        <td width="100px"> <button class="btn-purple" onclick="location.href='holiInfo.ho'" >휴가현황</button> </td>
                        
                     </tr>
                     <tr align="center">
                         <td height="50px">00회</td>
-                        <td><button class="btn-purple">휴가신청</button></td>
+                        <td><button class="btn-purple" onclick="location.href='holiApply.ho'">휴가신청</button></td>
                         
                     </tr>
                 </table>
@@ -173,7 +173,7 @@
             </div>
             <br>
 
-            <div class="woww" style="float:left"> 출퇴근기록</div>
+            <div class="wotitle" style="float:left;"> 출퇴근기록</div>
 
             <div class="day"  align="center" style="float:left">
                 <span> 00월 00 일</span> <br>
@@ -254,7 +254,7 @@
                 </table>
             </div>
             
-            <div class="worklist" style="float:left"> 
+            <div class="worklist" style="float:left" onclick="location.href='workList.wo'"> 
                 
                 o o o  
             

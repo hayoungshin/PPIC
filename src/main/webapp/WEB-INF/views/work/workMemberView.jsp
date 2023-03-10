@@ -60,10 +60,10 @@
                 
                 
                 <!-- 관리자만 보이게 할거임 -->
-                <a href="memberWork.wo">구성원근무</a>
+                <a href="memberWork.wo" style="color:black;">구성원근무</a>
                 <a href="memberHoli.ho">전사원휴가현황</a>
                 <a href="holiGive.ho" >휴가지급|회수</a>
-                <a href="holiApprove.ho" style="color:black;">휴가승인</a>
+                <a href="holiApprove.ho" >휴가승인</a>
                 
                 <br>
             </div>

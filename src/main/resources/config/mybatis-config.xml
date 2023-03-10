@@ -22,6 +22,7 @@
 		<typeAlias type="com.ppicachu.ppic.approval.model.vo.Approval" alias="Approval" />
 		<typeAlias type="com.ppicachu.ppic.document.model.vo.Document" alias="Document" />
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Department" alias="Department" />
+		<typeAlias type="com.ppicachu.ppic.work.model.vo.Holiday" alias="Holiday" />
 	</typeAliases>
 
 	
