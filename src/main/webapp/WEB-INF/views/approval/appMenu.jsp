@@ -33,7 +33,7 @@
 	.search-option{background-color: lightgray; border-radius: 10px; padding: 6px; padding-left: 10px; margin-bottom: 10px;}
 	/* 검색, 정렬, 필터 */
 	.two-btn-area{float: right;}
-	.two-btn{margin-left: 20px; margin-right: 10px; width: 31px;}
+	.two-btn{margin-left: 20px; margin-right: 10px; width: 32px;}
 	.two-btn:hover{cursor: pointer;}
 	.btn-align{float: left;}
 	

@@ -51,6 +51,8 @@
 				switch(title_selop_value){
 				case '결재양식' :
 					form.innerText = '결재양식을 선택하세요';
+					document.getElementById("title").readOnly=true;
+					document.getElementById("title").value = "";
 					
 					document.getElementById("draft").style = 'display:none';
 					document.getElementById("transfer").style = 'display:none';
@@ -65,6 +67,8 @@
 					break;
 				case '업무기안' :
 					form.innerText = '업무기안';
+					document.getElementById("title").readOnly=false;
+					document.getElementById("title").value = "";
 					document.getElementById("draft").style = 'display:block';
 					document.getElementById("draft").style = 'width:100%';
 					
@@ -80,6 +84,8 @@
 					break;
 				case '인사발령품의서' :
 					form.innerText = '인사발령품의서';
+					document.getElementById("title").readOnly=false;
+					document.getElementById("title").value = "";
 					document.getElementById("transfer").style = 'display:block';
 					document.getElementById("transfer").style = 'width:100%';
 					document.getElementById("transfer-btn").style = 'display:block';
@@ -95,6 +101,8 @@
 					break;
 				case '비품신청서' :
 					form.innerText = '비품신청서';
+					document.getElementById("title").readOnly=false;
+					document.getElementById("title").value = "";
 					document.getElementById("consume").style = 'display:block';
 					document.getElementById("consume").style = 'width:100%';
 					document.getElementById("consume-btn").style = 'display:block';
@@ -110,6 +118,8 @@
 					break;
 				case '지출결의서' :
 					form.innerText = '지출결의서';
+					document.getElementById("title").readOnly=false;
+					document.getElementById("title").value = "";
 					document.getElementById("cash").style = 'display:block';
 					document.getElementById("cash").style = 'width:100%';
 					document.getElementById("cash-btn").style = 'display:block';
@@ -125,6 +135,34 @@
 					break;
 				}
 			});
+			
+			$('#summernote').summernote({
+				height: 350,                 		// 에디터 높이
+				lang: "ko-KR",						// 한글 설정
+				placeholder: '내용을 입력하세요'			//placeholder 설정
+		    });
+			$('.note-view').remove();
+			$('.note-insert').remove();
+			
+			date = new Date();
+			year = date.getFullYear();
+			month = date.getMonth() + 1;
+			if(month < 10){
+				month = "0" + month;
+			}
+			day = date.getDate();
+			if(day < 10){
+				day = "0" + day;
+			}
+			document.getElementById("current-date").innerHTML = year + "-" + month + "-" + day;
+			
+			/* const member-tr = document.getElementsByClassName("member-tr");
+			member-tr.addEventListener("mouseover", function(){
+				
+			});
+			member-tr.addEventListener("mouseout", function(){
+				
+			}); */
 		}
 	</script>
 	
@@ -151,19 +189,19 @@
                             <tr>
                                 <th colspan="4"><br><h2><b id="form">결재양식을 선택하세요</b></h2><br></th>
                             </tr>
-                            <tr>
-                                <th>작성일</th>
-                                <td>?</td>
-                                <th>완료일</th>
-                                <td>?</td>
+                            <tr height="40px">
+                                <th width="20%">작성일</th>
+                                <td width="20%" id="current-date"></td>
+                                <th width="20%">완료일</th>
+                                <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
-                            <tr>
+                            <tr height="40px">
                                 <th>부서</th>
                                 <td>?</td>
                                 <th>문서번호</th>
-                                <td>?</td>
+                                <td>기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
-                            <tr>
+                            <tr height="40px">
                                 <th>직급</th>
                                 <td>?</td>
                                 <th>작성자</th>
@@ -171,7 +209,7 @@
                             </tr>
                             <tr>
                                 <th>제목</th>
-                                <td colspan="3">?</td>
+                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required readonly></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -180,49 +218,81 @@
 
                                     <!-- 업무기안일 경우 -->
                                     <table id="draft" class="table-bordered" style="display: none;">
-                                        <tr>
-                                            <th>시행일자</th>
-                                            <td><input type="">캘린더</td>
-                                            <th>협조부서</th>
-                                            <td>셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기)</td>
+                                        <tr height="40px">
+                                            <th width="20%">시행일자</th>
+                                            <td width="20%"><input type="date" style="width:190px; height:35px;"></td>
+                                            <th width="20%">협조부서</th>
+                                            <td width="40%">
+                                            	<select style="width:380px; height:35px;">
+                                            		<option>협조부서를 선택하세요</option>
+                                            		
+                                            		<!-- forEach -->
+                                            		<option>부서 불러오기</option>
+                                            		<!-- 셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기) -->
+                                            		
+                                            	</select>
+                                            </td>
                                         </tr>
-                                        <tr>
+                                        <tr height="40px">
                                             <th colspan="4">내용</th>
                                         </tr>
                                         <tr>
-                                            <td colspan="4">썸머노트api</td>
+                                            <td colspan="4"><textarea name="content" id="summernote" value=""></textarea></td>
                                         </tr>
                                     </table>
 
                                     <!-- 인사발령품의서일 경우 -->
                                     <table id="transfer" class="table-bordered" style="display: none;">
-                                        <tr>
-                                            <th colspan="2">시행일자</th>
-                                            <td colspan="3"><input type="">캘린더</td>
-                                        </tr>
-                                        <tr>
-                                            <th>부서</th>
-                                            <th>성명</th>
-                                            <th>현직급</th>
-                                            <th>변경직급</th>
-                                            <th>비고</th>
-                                        </tr>
+                                        <colgroup>
+				                    		<col style="width:15%">
+				                    		<col style="width:5%">
+				                    		<col style="width:10%">
+				                    		<col style="width:15%">
+				                    		<col style="width:15%">
+				                    		<col style="width:40%">
+				                    	</colgroup>
+				                    	<tr height="40px">
+				                            <th colspan="2" width="40%">시행일자</th>
+				                            <td colspan="4" width="60%" align="left"><input type="date" style="width:190px; height:35px;"></td>
+				                        </tr>
+				                        <tr height="40px">
+				                            <th width="15%">부서</th>
+				                            <th colspan="2" width="15%">성명</th>
+				                            <th width="15%">현직급</th>
+				                            <th width="15%">변경직급</th>
+				                            <th width="40%">비고</th>
+				                        </tr>
 
-                                        <!-- 사원 선택할 경우-->
+                                        <!-- 사원 추가할 경우-->
                                         <div id="transfer-btn" class="add-btn-area" style="display: none;"><button class="btnn-pp">+ 사원추가</button></div>
                                         <br id="transfer-br" clear="both" style="display: none;">
                                         
                                         <!-- forEach -->
-                                        <tr>
-                                            <td>?사원 추가시 저절로</td>
-                                            <td>?사원 추가시 저절로</td>
-                                            <td>?사원 추가시 저절로</td>
-                                            <td>?셀렉옵션 직급</td>
-                                            <td>?</td>
+                                        <tr class="member-tr" height="40px">
+                                            <td><div style="display:none;float:left;">x</div>?추가시 저절로</td>
+                                            <td colspan="2">?추가시 저절로</td>
+                                            <td>?추가시 저절로</td>
+                                            <td>
+                                            	<select style="width:140px; height:35px;">
+                                            		<option>변경직급을 선택하세요</option>
+                                            		
+                                            		<!-- forEach -->
+                                            		<option>직급 불러오기</option>
+                                            		
+                                            	</select>
+											</td>
+                                            <td>
+                                            	<div style="position:relative;">
+                                            		<input type="text" style="width:380px; height:35px;">
+                                            		<div style="float:right;position:absolute; background-color:white; color:red; margin-radius:10px;">x</div>
+                                            	</div>
+                                            </td>
                                         </tr>
 
                                     </table>
-
+	<script>
+		
+	</script>
                                     <!-- 비품신청서일 경우 -->
                                     <table id="consume" class="table-bordered" style="display: none;">
                                         <tr>
@@ -292,7 +362,10 @@
                         <input type="file" class="custom-file-input" id="customFile">
                         <label class="custom-file-label" for="customFile">Choose file</label>드래그앤드랍..
                     </div>
-                    
+                    <div style="position:relative; width:380px;">
+                  		<input type="text" style="width:380px; height:35px; position:relative;">
+                  		<div style="float:right">x</div>
+                  	</div>
                 </div>
     
             </div>
@@ -360,7 +433,7 @@
 
             <br clear="both">
             
-            <button class="btnn-gr">취소</button>
+            <button class="btnn-gr" onclick="javascript:history.go(-1);">취소</button>
             <button class="btnn-pk">임시저장</button>
             <button class="btnn-pp">작성</button>
         </div>
