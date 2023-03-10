@@ -30,6 +30,8 @@ public class Member {
 	private String memberSign;
 	private String connSta;
 	
-	
+	private String giveDay;
+	private String useDay;
+	private String addDay;
 
 }

@@ -27,7 +27,7 @@
 	.workcategory>a:hover{color: black; text-decoration:none;}
 	
 	/* content */
-	.holydaycotegory>a{
+	.holidaycotegory>a{
 	    font-size: 18px;
 	    font-weight: bold;
 	    margin-right: 20px;
@@ -35,9 +35,9 @@
 	    text-decoration:none;
 	}
 	
-	.holydaycotegory>a:link {color:lightgray; text-decoration:none;}
-    .holydaycotegory>a:visited {color:lightgray; text-decoration:none;}
-	.holydaycotegory>a:hover{color: black; text-decoration:none;}
+	.holidaycotegory>a:link {color:lightgray; text-decoration:none;}
+    .holidaycotegory>a:visited {color:lightgray; text-decoration:none;}
+	.holidaycotegory>a:hover{color: black; text-decoration:none;}
         
 	.pro{
         width: 50px;
@@ -58,14 +58,18 @@
     	font-weight: bold;"
     }
 	
-	.holyin{ margin: 50px 50px 50px 50px;}
-    .holyday thead th{ font-size: 18px;}
+	.holiin{
+        margin: 50px 50px 50px 50px;
+    }
+        
+    .holiday thead th{
+        font-size: 18px;
+    }
     
-    #holyday {overflow:auto; height:400px;}
-    #holyday::-webkit-scrollbar { width: 8px; }
-	#holyday::-webkit-scrollbar-thumb {background: lightgray; border-radius: 10px;}
+    #holiday {overflow:auto; height:500px;}
+    #holiday::-webkit-scrollbar { width: 8px; }
+	#holiday::-webkit-scrollbar-thumb {background: lightgray; border-radius: 10px;}
 	
-	#holyday td {font-size: 20px;}
 </style>
 </head>
 <body>
@@ -108,11 +112,11 @@
 			<br>
 			<br><br>
 	
-			<div class="holydayList">
+			<div class="holidayList">
 			
-				<div class="holydaycotegory">
-                    <a href="memberHoli.ho" style="color:black" >휴가보유현황</a>
-                    <a href="memberHoliUse.ho">휴가사용내역</a>
+				<div class="holidaycotegory">
+                    <a href="memberHoli.ho">휴가보유현황</a>
+                    <a href="memberHoliUse.ho" style="color:black">휴가사용내역</a>
                     
                     <div style="float:right; margin-right:20px;">
 						<img src="resources/icons/up-down.png" style="width:25px; ">
@@ -125,37 +129,38 @@
 
                 
                 
-                <div class="holyin">
+                <div class="holiin">
                     <div>
                     	<table style="width:100%;">
 	                        <thead>
 	                            <tr align="center" style="font-size:18px; width:100%;">
 	                                <th width="15%" align="left">이름</th>
-	                                <th width="20%">기본지급</th>
-	                                <th width="20%">추가지급</th>
-	                                <th width="20%">차감</th>
-	                                <th width="20%">잔여</th>
+	                                <th width="20%">기간</th>
+	                                <th width="20%">항목</th>
+	                                <th width="20%">사용기간</th>
+	                                <th width="20%">승인</th>
 	                            </tr>
 	                        </thead>
                     	</table>
                     </div>
                     <hr>
-                    <div id="holyday" >
+                    <div id="holiday" >
                     	<table  style="width:100%;">
 	                        <tbody>
-	                            <c:forEach var="h" items="${ list }" >
-		                            <tr id="holyday" style="height :60px;" align="center">
+		                            <c:forEach var="h" items="${ list }" >
+			                            <tr style="height :60px;" align="center">
 			                                <td width="15%" >
-												<div class="bno" style="display:none;">${ h.userNo}</div>
-												<div class="pro" style="float:left; font-size:15px;" >${ h.userName }</div>
+												<div class="bno" style="display:none;">${ h.userNo }</div>
+												<div class="pro" style="float:left" >${ h.userName }</div>
 												<div class="proname" >${ h.userName }</div>
 			                                </td>
-			                                <td width="20%">+${ h.giveDay }</td>
-			                                <td width="20%">${ h.addDay }</td>
-			                                <td width="20%">${ h.useDay }</td>
-			                                <td width="20%">${ h.giveDay + h.addDay + h.useDay }</td>
-	                            	</tr>
-	                            </c:forEach>
+			                                <td width="20%">${ h.start } - ${ h.finish }</td>
+			                                <td width="20%">${ h.type }</td>
+			                                <td width="20%">${ h.datea }</td>
+			                                <td width="20%">${ h.status }</td>
+		                            	</tr>
+		                            </c:forEach>
+	                            
 	                        </tbody>   
                     </table>
                     </div>
