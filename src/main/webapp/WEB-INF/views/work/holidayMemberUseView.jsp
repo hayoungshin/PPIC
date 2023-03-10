@@ -135,35 +135,30 @@
 	                        <thead>
 	                            <tr align="center" style="font-size:18px; width:100%;">
 	                                <th width="15%" align="left">이름</th>
-	                                <th width="20%">기본지급</th>
-	                                <th width="20%">추가지급</th>
-	                                <th width="20%">차감</th>
-	                                <th width="20%">잔여</th>
+	                                <th width="20%">기간</th>
+	                                <th width="20%">항목</th>
+	                                <th width="20%">사용기간</th>
+	                                <th width="20%">승인</th>
 	                            </tr>
 	                        </thead>
                     	</table>
                     </div>
                     <hr>
                     <div id="holiday" >
-                    	<table border style="width:100%;">
+                    	<table  style="width:100%;">
 	                        <tbody>
 		                            <c:forEach var="h" items="${ list }" >
-		                            	
-				                            <tr style="height :60px;" align="center">
-				                            	
-					                                <td width="15%" >
-														<div class="bno" style="display:none;">userno</div>
-														<div class="pro" style="float:left" >${ h.userName }</div>
-														<div class="proname" >${ h.userName }</div>
-					                                </td>
-					                                <td width="20%">+${ h.give }</td>
-					                                <td width="20%">00</td>
-					                                <td width="20%">-01</td>
-					                                <td width="20%">00</td>
-				                                
-			                            	</tr>
-			                            	
-			                            	
+			                            <tr style="height :60px;" align="center">
+			                                <td width="15%" >
+												<div class="bno" style="display:none;">${ h.userNo }</div>
+												<div class="pro" style="float:left" >${ h.userName }</div>
+												<div class="proname" >${ h.userName }</div>
+			                                </td>
+			                                <td width="20%">${ h.start } - ${ h.finish }</td>
+			                                <td width="20%">${ h.type }</td>
+			                                <td width="20%">${ h.datea }</td>
+			                                <td width="20%">${ h.status }</td>
+		                            	</tr>
 		                            </c:forEach>
 	                            
 	                        </tbody>   

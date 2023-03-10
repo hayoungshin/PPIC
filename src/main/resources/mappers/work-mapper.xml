@@ -2,14 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="workMapper">
 
-	<resultMap id="holidayResult" type="Holiday">
-		<id column="holi_no" property="holiNo" />
+	<resultMap id="holidayResult1" type="Holiday">
+		<id column="holiday_no" property="holidayNo" />
 		<result column="user_no" property="userNo" />
 		<result column ="user_name" property="userName" />
-		<result column ="h_give" property="give" />
-		<result column ="h_date" property="date" />
-		<result column ="h_cause" property="cause" />
-		<result column ="h_remain" property="remain" />
+		<result column ="h_type" property="type" />
+		<result column ="h_sort" property="sort" />
+		<result column ="h_start" property="start" />
+		<result column ="h_finish" property="finish" />
+		<result column ="h_date" property="datea" />
+		<result column ="h_reason" property="reason" />
+		<result column ="status" property="status" />
 	</resultMap>
 	
 	<resultMap id="holidayResult2" type="Member">
@@ -33,5 +36,21 @@
 		 GROUP BY T1.USER_NO  
 		       , T1.USER_NAME 
 		 ORDER BY T1.USER_NO ASC
+	</select>
+	
+	<select id="selectHolidayUseList" resultMap="holidayResult1" >
+		SELECT 
+		       HOLIDAY_NO
+		     , H.USER_NO
+		     , USER_NAME
+		     , H_TYPE
+		     , H_SORT
+		     , H_START
+		     , H_FINISH
+		     , H_DATE
+		     , H_REASON
+		     , H.STATUS
+		  FROM HOLIDAY_APPLY H
+		  join member on (member.user_no = h.user_no)
 	</select>
 </mapper>

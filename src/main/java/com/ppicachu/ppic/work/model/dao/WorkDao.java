@@ -15,6 +15,8 @@ public class WorkDao {
 		return (ArrayList)sqlSession.selectList("workMapper.selectHolidayList");
 	}
 	
-	
+	public ArrayList<Holiday> selectHolidayUseList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("workMapper.selectHolidayUseList");
+	}
 
 }

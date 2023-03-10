@@ -59,13 +59,15 @@ public class WorkController {
 	@RequestMapping("memberHoli.ho")
 	public String memberHoli(Model model) {
 		ArrayList<Member> list = wService.selectHolidayList();
-		
 		model.addAttribute("list", list);
 		return "work/holidayMemberView";
 	}
 	
+	/* 근무_전사원휴가사용내역 */
 	@RequestMapping("memberHoliUse.ho")
-	public String memberHoliUse() {
+	public String memberHoliUse(Model model) {
+		ArrayList<Holiday> list = wService.selectHolidayUseList();
+		model.addAttribute("list", list);
 		return "work/holidayMemberUseView";
 	}
 	
