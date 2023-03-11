@@ -85,6 +85,11 @@
 				'N'
 			</if>
 		  )
-		  
 	</insert>
+	
+	<delete id="deleteSchedule">
+		delete 
+		  from company_sch
+		 where sch_no = #{schNo}
+	</delete>
 </mapper>

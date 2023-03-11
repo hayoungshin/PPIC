@@ -55,7 +55,7 @@
        border-radius: 5px;
        height:30px;
    }
-   input[name=schName], .date, input[name=location]{width: 300px;}
+   input[name=schName], .date, input[name=schLocation]{width: 300px;}
    input[type=time]{width:130px; margin-left:15px;}
    input[type=radio]{display:none;}
    input[type=radio]+label{
@@ -79,7 +79,7 @@
        border-bottom-left-radius:0px;
        border-bottom-right-radius:0px;
    }
-   #period, #period2{margin-left:150px;}
+   .period{margin-left:150px;}
    .checkPeriod, .allday, #add-comSchedule{display:none;}
    textarea{
        border: 1px solid rgb(202, 199, 199);
@@ -167,6 +167,7 @@
 	        		data:{schKind:$("input[name=category]:checked").val()},
 	        		success:function(list){
 	        			let value = "";
+	        			let value2 = "";
 	        			for(let i=0; i<list.length; i++){
 	    					value += "<tr>"
 	    							+	"<td class='date' width='400px'><b>" + list[i].schName + "</b><br>";
@@ -201,9 +202,12 @@
 		    				    	    
 	    				    		}
 	    				    		value += "<img src='resources/icons/modify.png' width='20px' height='20px' class='modify-img'>"
-			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'></td></tr>"
+			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'>"
+	    				    			+ "<input type='hidden' class='schNo' value='"+ list[i].schNo + "'>"
+	    				    			+ "<input type='hidden' class='legalholiday' value='"+ list[i].legalholiday + "'>"
+	    				    			+ "<input type='hidden' class='schKind' value='"+ list[i].schKind + "'>"
+	    				    			+ "</td></tr>"
 	    				}
-	        			
 	    				$("#schedule-list").html(value);
 	        		}, error:function(){
 	        			console.log("전체 조회용 ajax 통신 실패");
@@ -211,16 +215,6 @@
 	        	})
 	        }
         		
-        </script>
-        <script>
-            $(document).on("click", ".modify-img", function(){
-                // 일정 번호 넘기면서
-                $('#modifyModal').modal('show'); 
-            })
-            $(document).on("click", ".delete-img", function(){
-                // 일정 번호 넘기면서
-                $('#deleteModal').modal('show'); 
-            })
         </script>
 
         <!-- 삭제 확인용 Modal -->
@@ -232,7 +226,7 @@
                 <div align="center">
                     삭제하시겠습니까?<br><br>
                     <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-                    <a href="" class="btn" id="delete-btn">확인</a>
+                    <a class="btn" id="delete-btn">확인</a>
                 </div>
                 </div>
             </div>
@@ -245,15 +239,15 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <b>일정수정</b>
-                        <small>* 법정 공휴일은 삭제만 가능합니다.</small><br><br> <!-- 법정 공휴일은 input 요소들 비활성화 + 삭제버튼 -->
                         <form action="" id="modify-form">
-                            <table>
+                        <small>* 법정 공휴일은 삭제만 가능합니다.</small><br><br>
+                            <table id="restday-table">
                                 <!-- 해당 일정 내용 checked & 입력해놓기 -->
                                 <!-- 쉬는날 -->
                                 <tr>
                                     <td width="100px"><b>이름</b></td>
                                     <td>
-                                        <input type="text" value="1월 1일" name="name">
+                                        <input type="text" value="1월 1일" name="schName">
                                     </td>
                                 </tr>
                                 <tr>
@@ -263,11 +257,11 @@
                                         <label for="solar">양력</label>
                                         <input type="radio" id="lunar" name="lunarSolar">
                                         <label for="lunar">음력</label>
-                                        <input type="checkbox" id="period" class="period">
-                                        <label for="period">기간 입력</label>
+                                        <input type="checkbox" id="period1" class="period">
+                                        <label for="period1">기간 입력</label>
                                         <!-- 기간 입력 미체크시 -->
                                         <div class="uncheckPeriod">
-                                            <input type="text" class="datepicker inpType" name="date" value="2023-01-01">
+                                            <input type="text" class="datepicker inpType date" name="startDate" value="2023-01-01">
                                         </div>
                                         <a href="#none" class="btncalendar dateclick"></a>
                                         <!-- 기간 입력 체크시 -->
@@ -288,7 +282,7 @@
                                     <td><b>매년 반복</b></td>
                                     <td>
                                         <label class="switch-button">
-                                            <input type="checkbox" checked/>
+                                            <input type="checkbox" name="annual" checked/>
                                             <span class="onoff-switch"></span>
                                         </label>
                                     </td>
@@ -302,11 +296,12 @@
                                         <label for="anniversary">기념일</label>
                                     </td>
                                 </tr>
-                                <!-- 회사 일정 
+                               </table>
+                               <table id="comschedule-table">
                                 <tr>
                                     <td width="100px"><b>이름</b></td>
                                     <td>
-                                        <input type="text" value="창립기념일" name="name">
+                                        <input type="text" name="schName">
                                     </td>
                                 </tr>
                                 <tr>
@@ -339,7 +334,7 @@
                                         <div align="right" style="width:290px; margin-top:5px">
                                             <label for="allday">종일</label>
                                             <label class="switch-button">
-                                                <input type="checkbox" name="allday" id="allday" checked/>
+                                                <input type="checkbox" name="allday" id="allday" class="allday-btn">
                                                 <span class="onoff-switch"></span>
                                             </label>
                                         </div>
@@ -357,11 +352,10 @@
                                         <textarea name="" style="resize: none;"></textarea>
                                     </td>
                                 </tr>
-                                -->
                             </table>
                             <div align="center">
-                                <a class="btn" data-dismiss="modal" id="reset-btn">취소</a>
-                                <a href="" class="btn" id="modify-btn">수정</a>
+                                <button type="button" class="btn" data-dismiss="modal" id="reset-btn">취소</button>
+                                <button type="submit" class="btn" id="modify-btn">수정</button>
                             </div>
                         </form>
                     </div>
@@ -477,9 +471,9 @@
                                             </span>
                                         </div> 
                                         <div align="right" style="width:290px; margin-top:5px">
-                                            <label for="allday">종일</label>
+                                            <label for="allday2">종일</label>
                                             <label class="switch-button">
-                                                <input type="checkbox" name="allday" id="allday">
+                                                <input type="checkbox" name="allday" id="allday2" class="allday-btn">
                                                 <span class="onoff-switch"></span>
                                             </label>
                                         </div>
@@ -541,8 +535,8 @@
         })
 
         // 종일 스위치 클릭 이벤트
-        $("#allday").click(function(){
-        	if($("#allday").is(":checked")){
+        $(".allday-btn").click(function(){
+        	if($(".allday-btn").is(":checked")){
                 $(".allday").show();
                 $(".notallday").hide();
             } else{
@@ -575,6 +569,34 @@
         		a.find("input").prop("disabled", false);
         	}
         }
+        
+        $(document).on("click", ".modify-img", function(){
+        	if($(this).siblings(".legalholiday").val() == 'Y'){
+            	$('#modifyModal input').prop("disabled", true);
+            	$('#modify-btn').prop("disabled", true);
+            } else{
+            	$('#modifyModal input').prop("disabled", false);
+            	$('#modify-btn').prop("disabled", false);
+            }
+        	if($(this).siblings(".schKind").val() == 0){
+        		$("#restday-table").show();
+                $("#comschedule-table").hide();
+        	}else{
+        		$("#restday-table").hide();
+                $("#comschedule-table").show();
+        	}
+            hide($("#restday-table"));
+            hide($("#comschedule-table"));
+            hide($(".allday"));
+            console.log($(this).parent().prev().children("b").text())
+            $("#modifyModal input[name=schName]").val($(this).parent().prev().children("b").text())
+            $('#modifyModal').modal('show');
+        })
+        
+        $(document).on("click", ".delete-img", function(){
+	        $("#delete-btn").attr("href", "delete.sch?no=" + $(this).siblings(".schNo").val());
+	        $('#deleteModal').modal('show'); 
+	    })
     </script>
 
 </body>

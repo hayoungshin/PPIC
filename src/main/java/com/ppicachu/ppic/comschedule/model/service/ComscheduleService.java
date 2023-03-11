@@ -11,5 +11,8 @@ public interface ComscheduleService {
 	
 	// 2. 일정 추가
 	int insertSchedule(Comschedule cs);
+	
+	// 3. 일정 삭제
+	int deleteSchedule(int schNo);
 
 }

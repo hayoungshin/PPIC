@@ -44,4 +44,16 @@ public class ComscheduleController {
 		}
 	}
 	
+	@RequestMapping("delete.sch")
+	public String deleteSchedule(int no, Model m, HttpSession session) {
+		int result = cService.deleteSchedule(no);
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 일정 삭제 되었습니다.");
+			return "redirect:schedule.bo";
+		}else {
+			m.addAttribute("errorMsg", "일정 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
 }
