@@ -76,30 +76,54 @@ public class DocumentController {
 	}
 	
 	
-	@ResponseBody
 	@RequestMapping("updateCommon.doc")
-	public String updateCommonDocs(MultipartFile reUpfile, String originalFile, String originSavePath,
-								 Document doc, HttpSession session) {
+	public String updateCommonDocs(MultipartFile reUpfile, Document doc, HttpSession session) {
 		
 		// 새 파일 있을 때
 		if(!reUpfile.getOriginalFilename().equals("")) {
+
+			// 원본파일 있었으면 삭제
+			if(doc.getOriginName() != null) {
+				new File(session.getServletContext().getRealPath(doc.getSavePath())).delete();
+			}
+			
 			String saveFilePath = FileUpload.saveFile(reUpfile, session, "resources/uploadFiles/commonDocs/");
 			doc.setSavePath(saveFilePath);
+			doc.setOriginName(reUpfile.getOriginalFilename());
+
 		}
+		
 		
 		int result = dService.updateCommonDocs(doc);
 		
 		if(result > 0) {
-			if(originalFile != null) {
-				new File(session.getServletContext().getRealPath(originSavePath)).delete();
-			}
-			
-			return "success";
+			session.setAttribute("alertMsg", "문서가 수정되었습니다.");
+			return "redirect:commonList.doc";
 		}else {
-			return "failed";
+			session.setAttribute("errorMsg", "문서 수정 실패");
+			return "common/errorPage";
 		}
 		
 	}
+	
+	
+	@RequestMapping("deleteCommon.doc")
+	public String deleteCommonDocs(int no, String savePath, HttpSession session) {
+		
+		int result = dService.deleteCommonDocs(no);
+		
+		if(result > 0) {
+			// 기존파일 삭제
+			new File(session.getServletContext().getRealPath(savePath)).delete();
+			
+			session.setAttribute("alertMsg", "문서가 삭제되었습니다.");
+			return "redirect:commonList.doc";
+		}else {
+			session.setAttribute("errorMsg", "문서 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
 	
 	@RequestMapping("myList.doc")
 	public String selectMyDocs() {

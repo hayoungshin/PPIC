@@ -104,7 +104,7 @@
 	                    <td>
 	                    	${d.docName}
 	                    	<%-- <c:if test="${loginUser eq 관리자}" 로그인 구현 후 추가해야 함--%>
-	                    	<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal">
+	                    	<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal${d.docNo}">
                             <input type="hidden" name="editDocNo" id="editDocNo" value="${d.docNo}">
 	                    </td>
 	                    <c:choose>
@@ -131,36 +131,51 @@
                 
             })
         </script>
+        
+        <c:forEach var="d" items="${list}">
+            <div class="modal fade" id="editModal${d.docNo}">
+                <div class="modal-dialog">
+                <div class="modal-content">
             
-        <!-- 수정 모달
-        <div class="modal fade" id="editModal">
-            <div class="modal-dialog">
-            <form class="modal-content">
-        
-                <div class="modal-header">
-                <h4 class="modal-title">문서 수정</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="modal-header">
+                    <h4 class="modal-title">문서 수정</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data" id="updateForm${d.docNo}">
+                        <div class="modal-body">
+                            * 문서 이름 : <input type="text" name="docName" placeholder="문서명을 입력해주세요." value="${d.docName}" required>
+                            <br><br>
+                            파일 첨부 : <input type="file" name="reUpfile">
+                            <br><br>
+                            현재 파일 : <a href="${d.savePath}" download="${d.originName}">${d.originName}</a>
+                            <input type="hidden" name="savePath" value="${d.savePath}">
+                            <input type="hidden" name="originName" value="${d.originName}">
+                            <input type="hidden" name="docNo" value="${d.docNo}">
+                            <input type="hidden" name="createUser" value="1">
+                        </div>
+
+                        <div class="modal-footer">
+                            <a class="btn btn-outline-danger" onclick="deleteSubmit('${d.docNo}');">삭제</a>
+                            <a class="btn btn-primary" onclick="updateSubmit('${d.docNo}');">수정</a>
+                        </div>
+                    </form>
                 </div>
-        
-                <div class="modal-body">
-                    문서 이름 : <input type="text" name="docName" id="update-docName" placeholder="문서명을 입력해주세요." value="" required>
-                    <br><br>
-                    문서 첨부 : <input type="file" name="reUpfile" id="reUpfile">
-                    <br>
-                    <a href="" download="" style="font-size:12px;" id="originalFile"></a>
-                    <input type="hidden" name="savePath" id="origin-savePath" value="">
-                    <input type="hidden" name="docNo" value="" id="update-docNo">
-                    <input type="hidden" name="createUser" value="1" id="">
                 </div>
-    
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" id="deleteBtn">삭제</button>
-                    <button type="submit" class="btn btn-primary" id="updateBtn">수정</button>
-                </div>
-        
             </div>
-            </div>
-        </div>  -->
+        </c:forEach>
+
+        <script>
+            function updateSubmit(num){
+                    $("#updateForm" + num).attr("action", "updateCommon.doc").submit();
+            }
+
+            function deleteSubmit(num){
+                if(confirm("정말 삭제하시겠습니까?")){
+                    $("#updateForm" + num).attr("action", "deleteCommon.doc?no=" + num).submit();
+                }
+            }
+        </script>
 
         <!-- 문서 수정 스크립트 -->
         <!-- <script>
@@ -219,7 +234,7 @@
                     <div class="modal-body">
                         * 문서 이름 : <input type="text" name="docName" placeholder="문서명을 입력해주세요." required>
                         <br><br>
-                        문서 첨부 : <input type="file" name="upfile">
+                        파일 첨부 : <input type="file" name="upfile">
                         <input type="hidden" name="docType" value="1">
                         <input type="hidden" name="createUser" value="1"><%-- 로그인 구현 완료 시 ${loginUser.userNo}--%>
                     </div>

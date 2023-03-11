@@ -31,4 +31,8 @@ public class DocumentDao {
 	public int updateCommonDocs(SqlSessionTemplate sqlSession, Document doc) {
 		return sqlSession.update("documentMapper.updateCommonDocs", doc);
 	}
+	
+	public int deleteCommonDocs(SqlSessionTemplate sqlSession, int docNo) {
+		return sqlSession.update("documentMapper.deleteCommonDocs", docNo);
+	}
 }

@@ -16,4 +16,7 @@ public interface DocumentService {
 	
 	// 회사문서 수정
 	int updateCommonDocs(Document doc);
+	
+	// 회사문서 삭제
+	int deleteCommonDocs(int docNo);
 }

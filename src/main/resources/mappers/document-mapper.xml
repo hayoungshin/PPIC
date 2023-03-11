@@ -66,6 +66,16 @@
 		     , save_path = #{savePath}
 		     , origin_name = #{originName}
 		     , create_user = #{createUser}
+		     , modify_date = sysdate
+		 where doc_no = #{docNo}
+	</update>
+
+	<!-- 회사문서 삭제 -->
+	<update id="deleteCommonDocs">
+		update
+			   document
+		   set modify_date = sysdate
+		 	 , delete_status = 'Y'
 		 where doc_no = #{docNo}
 	</update>
 </mapper>
