@@ -11,7 +11,7 @@
 	/* 회사 일정 리스트 */
    .table{text-align: center;}
    .table td{vertical-align: middle;}
-   .solarLunar{
+   .lunarSolar{
        border-radius:50%; 
        display:inline-block; 
        height: 18px; 
@@ -55,7 +55,7 @@
        border-radius: 5px;
        height:30px;
    }
-   input[name=name], input[name=date], input[name=location]{width: 300px;}
+   input[name=schName], .date, input[name=location]{width: 300px;}
    input[type=time]{width:130px; margin-left:15px;}
    input[type=radio]{display:none;}
    input[type=radio]+label{
@@ -80,7 +80,7 @@
        border-bottom-right-radius:0px;
    }
    #period, #period2{margin-left:150px;}
-   .checkPeriod, .allDay, #add-comSchedule{display:none;}
+   .checkPeriod, .allday, #add-comSchedule{display:none;}
    textarea{
        border: 1px solid rgb(202, 199, 199);
        border-radius: 5px;
@@ -149,45 +149,59 @@
             <a href="" class="btn" id="modal-btn" data-toggle="modal" data-target="#addModal">추가</a>
         </div>
         <!-- ajax -->
-        <input type="radio" id="restDay" name="category" checked><label for="restDay">쉬는 날</label><input type="radio" id="comSchedule" name="category"><label for="comSchedule">회사 일정</label>
+        <input type="radio" id="restDay" name="category" value="0" checked><label for="restDay">쉬는 날</label><input type="radio" id="comSchedule" name="category" value="1"><label for="comSchedule">회사 일정</label>
         <table class="table" id="schedule-list" style="width:1200px;">
             <tbody>
             </tbody>
         </table>
         <script>
 	        $(function(){
-	        	restDaySchedule();
+	        	comSchedule();
 	        })
-	        
-	        function restDaySchedule(){
+	        $("input[name=category]").change(function(){
+	        	comSchedule();
+	        })
+	        function comSchedule(){
 	        	$.ajax({
-	        		url:"restDayScheduleList.bo",
+	        		url:"comScheduleList.bo",
+	        		data:{schKind:$("input[name=category]:checked").val()},
 	        		success:function(list){
-	        			
 	        			let value = "";
 	        			for(let i=0; i<list.length; i++){
 	    					value += "<tr>"
 	    							+	"<td class='date' width='400px'><b>" + list[i].schName + "</b><br>";
 			    				    if(list[i].lunarSolar == 0){
-			    				    	value += "<span class='solarLunar' style='background: rgb(241, 196, 15);'>양";
-			    				    } else{
-			    				    	value += "<span class='solarLunar' style='background: rgb(155, 89, 182);'>음";
+			    				    	value += "<span class='lunarSolar' style='background: rgb(241, 196, 15);'>양";
+			    				    } else if(list[i].lunarSolar == 1){
+			    				    	value += "<span class='lunarSolar' style='background: rgb(155, 89, 182);'>음";
 			    				    }
-			    			value += 		"</span><span class='date'>" + list[i].startDate.substring(3,5) + "월 " + list[i].startDate.substring(6,8) + "일";
+			    			value += 		"</span><span class='date'>" + list[i].startDate.substring(5,7) + "월 " + list[i].startDate.substring(8) + "일";
+			    					if(list[i].startTime != null){
+			    						value += " " + list[i].startTime;
+			    					}
 			    			        if(list[i].endDate != null){
-			    			        	value += " - " + list[i].endDate.substring(3,5) + "월" + list[i].endDate.substring(6,8) + "일" + "</span></td>"
+			    			        	value += " - " + list[i].endDate.substring(5,7) + "월" + list[i].endDate.substring(8) + "일" 
+			    			        	if(list[i].endTime != null && list[i].allday == 'N'){
+				    						value += " " + list[i].endTime;
+				    					}
 			    			        }
-	    				    		value += "<td class='schedule'>";
-	    				    	    if(list[i].annual != 'N'){
-	    				    	    	value += "<span style='background:rgb(204, 228, 244);'>매년</span>";
-	    				    	    }
-	    				    	    if(list[i].restdayKind == '0'){
-	    				    	    	value += "<span style='background:rgb(224, 224, 224);'>휴일</span>";
-	    				    	    } else{
-	    				    	    	value += "<span style='background:rgb(224, 224, 224);'>기념일</span>";
-	    				    	    }
-	    				    value += "<img src='resources/icons/modify.png' width='20px' height='20px' class='modify-img'>"
-		                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'></td></tr>";
+			    			        if(list[i].allday == 'Y'){
+			    			        	value += " 종일";
+			    			        }
+	    				    		value += "</span></td><td class='schedule'>";
+	    				    		if(list[i].schKind == 0){
+	    				    			if(list[i].annual != 'N'){
+		    				    	    	value += "<span style='background:rgb(204, 228, 244);'>매년</span>";
+		    				    	    }
+		    				    	    if(list[i].restdayKind == '0'){
+		    				    	    	value += "<span style='background:rgb(224, 224, 224);'>휴일</span>";
+		    				    	    } else{
+		    				    	    	value += "<span style='background:rgb(224, 224, 224);'>기념일</span>";
+		    				    	    }
+		    				    	    
+	    				    		}
+	    				    		value += "<img src='resources/icons/modify.png' width='20px' height='20px' class='modify-img'>"
+			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'></td></tr>"
 	    				}
 	        			
 	    				$("#schedule-list").html(value);
@@ -245,9 +259,9 @@
                                 <tr>
                                     <td><br><br><b>날짜</b></td>
                                     <td>
-                                        <input type="radio" id="solar" name="solarLunar" checked>
+                                        <input type="radio" id="solar" name="lunarSolar" checked>
                                         <label for="solar">양력</label>
-                                        <input type="radio" id="lunar" name="solarLunar">
+                                        <input type="radio" id="lunar" name="lunarSolar">
                                         <label for="lunar">음력</label>
                                         <input type="checkbox" id="period" class="period">
                                         <label for="period">기간 입력</label>
@@ -298,7 +312,7 @@
                                 <tr>
                                     <td><b>날짜</b><br><br><br></td>
                                     <td>
-                                        <div class="notAllDay">
+                                        <div class="notallday">
                                             <span class="dset">
                                                 <input type="text" class="datepicker inpType" name="startDate" id="startDate2">
                                                 <a href="#none" class="btncalendar dateclick"></a>
@@ -311,7 +325,7 @@
                                             </span>
                                             <input type="time" name="endTime">
                                         </div> 
-                                        <div class="allDay">
+                                        <div class="allday">
                                             <span class="dset">
                                                 <input type="text" class="datepicker inpType" name="startDate" id="startDate3" >
                                                 <a href="#none" class="btncalendar dateclick"></a>
@@ -323,9 +337,9 @@
                                             </span>
                                         </div> 
                                         <div align="right" style="width:290px; margin-top:5px">
-                                            <label for="allDay">종일</label>
+                                            <label for="allday">종일</label>
                                             <label class="switch-button">
-                                                <input type="checkbox" name="allDay" id="allDay" checked/>
+                                                <input type="checkbox" name="allday" id="allday" checked/>
                                                 <span class="onoff-switch"></span>
                                             </label>
                                         </div>
@@ -361,14 +375,14 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <b>일정 추가</b>
-                        <form action="" id="add-form">
+                        <form action="insert.sch" id="add-form">
                             <table>
                                 <tr>
                                     <td width="100px"><b>종류</b></td>
                                     <td>
-                                        <input type="radio" id="restDay-modal" name="sch-cat" checked>
+                                        <input type="radio" id="restDay-modal" name="schKind" value="0" onchange="addModal(0);" checked>
                                         <label for="restDay-modal">쉬는 날</label>
-                                        <input type="radio" id="comSchedule-modal" name="sch-cat">
+                                        <input type="radio" id="comSchedule-modal" value="1" name="schKind" onchange="addModal(1);">
                                         <label for="comSchedule-modal">회사 일정</label>
                                     </td>
                                 </tr>
@@ -378,21 +392,21 @@
                                 <tr>
                                     <td width="100px"><b>이름</b></td>
                                     <td>
-                                        <input type="text" name="name">
+                                        <input type="text" name="schName" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><br><br><b>날짜</b></td>
                                     <td>
-                                        <input type="radio" id="solar" name="solarLunar" checked>
-                                        <label for="solar">양력</label>
-                                        <input type="radio" id="lunar" name="solarLunar">
-                                        <label for="lunar">음력</label>
+                                        <input type="radio" id="solar2" name="lunarSolar" value="0" checked>
+                                        <label for="solar2">양력</label>
+                                        <input type="radio" id="lunar2" value="1" name="lunarSolar">
+                                        <label for="lunar2">음력</label>
                                         <input type="checkbox" id="period2" class="period">
                                         <label for="period2">기간 입력</label>
                                         <!-- 기간 입력 미체크시 -->
                                         <div class="uncheckPeriod">
-                                            <input type="text" class="datepicker inpType" name="date">
+                                            <input type="text" class="datepicker inpType date" name="startDate">
                                         </div>
                                         <a href="#none" class="btncalendar dateclick"></a>
                                         <!-- 기간 입력 체크시 -->
@@ -413,7 +427,7 @@
                                     <td><b>매년 반복</b></td>
                                     <td>
                                         <label class="switch-button">
-                                            <input type="checkbox"/>
+                                            <input type="checkbox" name="annual">
                                             <span class="onoff-switch"></span>
                                         </label>
                                     </td>
@@ -421,10 +435,10 @@
                                 <tr>
                                     <td><b>휴일 여부</b></td>
                                     <td>
-                                        <input type="radio" id="holiday" name="restDay" checked>
-                                        <label for="holiday">휴일</label>
-                                        <input type="radio" id="anniversary" name="restDay">
-                                        <label for="anniversary">기념일</label>
+                                        <input type="radio" id="holiday3" name="restdayKind" value="0" checked>
+                                        <label for="holiday3">휴일</label>
+                                        <input type="radio" id="anniversary3" name="restdayKind" value="1">
+                                        <label for="anniversary3">기념일</label>
                                     </td>
                                 </tr>
                             </table>
@@ -432,40 +446,40 @@
                                 <tr>
                                     <td width="100px"><b>이름</b></td>
                                     <td>
-                                        <input type="text" name="name">
+                                        <input type="text" name="schName" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>날짜</b><br><br><br></td>
                                     <td>
-                                        <div class="notAllDay">
+                                        <div class="notallday">
                                             <span class="dset">
-                                                <input type="text" class="datepicker inpType" name="startDate2" id="startDate5">
+                                                <input type="text" class="datepicker inpType" name="startDate" id="startDate5">
                                                 <a href="#none" class="btncalendar dateclick"></a>
                                             </span>
                                             <input type="time" name="startTime">
                                             <div align="center"><b>-</b></div>
                                             <span class="dset">
-                                                <input type="text" class="datepicker inpType" name="endDate2" id="endDate5">
+                                                <input type="text" class="datepicker inpType" name="endDate" id="endDate5">
                                                 <a href="#none" class="btncalendar dateclick"></a>
                                             </span>
                                             <input type="time" name="endTime">
                                         </div> 
-                                        <div class="allDay">
+                                        <div class="allday">
                                             <span class="dset">
-                                                <input type="text" class="datepicker inpType" name="startDate3" id="startDate6" >
+                                                <input type="text" class="datepicker inpType" name="startDate" id="startDate6" >
                                                 <a href="#none" class="btncalendar dateclick"></a>
                                             </span>
                                             <span class="demi">-</span>
                                             <span class="dset">
-                                                <input type="text" class="datepicker inpType" name="endDate3" id="endDate6" >
+                                                <input type="text" class="datepicker inpType" name="endDate" id="endDate6" >
                                                 <a href="#none" class="btncalendar dateclick"></a>
                                             </span>
                                         </div> 
                                         <div align="right" style="width:290px; margin-top:5px">
-                                            <label for="allDay">종일</label>
+                                            <label for="allday">종일</label>
                                             <label class="switch-button">
-                                                <input type="checkbox" name="allDay" id="allDay"/>
+                                                <input type="checkbox" name="allday" id="allday">
                                                 <span class="onoff-switch"></span>
                                             </label>
                                         </div>
@@ -474,19 +488,19 @@
                                 <tr>
                                     <td><b>장소</b></td>
                                     <td>
-                                        <input type="text" name="location">
+                                        <input type="text" name="schLocation">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>내용</b></td>
                                     <td>
-                                        <textarea name="" style="resize: none;"></textarea>
+                                        <textarea name="schContent" style="resize: none;"></textarea>
                                     </td>
                                 </tr>
                             </table>
                             <div align="center">
-                                <a class="btn" data-dismiss="modal" id="resetadd-btn">취소</a>
-                                <a href="" class="btn" id="add-btn">추가</a>
+                                <button type="button" class="btn" data-dismiss="modal" id="resetadd-btn">취소</button>
+                                <button type="submit" class="btn" id="add-btn">추가</button>
                             </div>
                         </form>
                     </div>
@@ -495,10 +509,12 @@
         </div>
    	</div>
     <script>
-        // datePicker
         $(function() {
+        	// datepicker
             $.datepicker.setDefaults($.datepicker.regional['ko']);
             $(".datepicker").datepicker(); 
+           	addModal(0);
+           	hide($(".checkPeriod"));
         });
 
         // 수정 취소 버튼 클릭 이벤트
@@ -520,35 +536,45 @@
                 $(".checkPeriod").hide();
                 $(".uncheckPeriod").show();
             }
+            hide($(".checkPeriod"));
+            hide($(".uncheckPeriod"));
         })
 
         // 종일 스위치 클릭 이벤트
-        $(function(){
-            allDayCheck();
-        })
-        $("#allDay").click(function(){
-            allDayCheck();
-        })
-        function allDayCheck(){
-            if($("#allDay").is(":checked")){
-                $(".allDay").show();
-                $(".notAllDay").hide();
+        $("#allday").click(function(){
+        	if($("#allday").is(":checked")){
+                $(".allday").show();
+                $(".notallday").hide();
             } else{
-                $(".allDay").hide();
-                $(".notAllDay").show();
+                $(".allday").hide();
+                $(".notallday").show();
             }
-        }
+        	hide($(".allday"));
+            hide($(".notallday"));
+        })
 
         // 일정 추가 모달 쉬는날/회사일정 선택 이벤트
-        $("input[name=sch-cat]").click(function(){
-            if($("#restDay-modal").is(":checked")){
+        function addModal(num){
+        	if(num == 0){
                 $("#add-restDay").show();
                 $("#add-comSchedule").hide();
             }else{
                 $("#add-restDay").hide();
                 $("#add-comSchedule").show();
             }
-        })
+        	hide($("#add-comSchedule"));
+            hide($("#add-restDay"));
+            hide($(".allday"));
+        }
+        
+        // 숨긴 요소 내 input 비활성화
+        function hide(a){
+        	if(a.css('display') == 'none'){
+        		a.find("input").prop("disabled", true);
+        	} else{
+        		a.find("input").prop("disabled", false);
+        	}
+        }
     </script>
 
 </body>
