@@ -19,8 +19,18 @@ public class ComscheduleServiceImpl implements ComscheduleService{
 	private ComscheduleDao cDao;
 
 	@Override
-	public ArrayList<Comschedule> selectComscheduleList() {
-		return cDao.selectComscheduleList(sqlSession);
+	public ArrayList<Comschedule> selectComscheduleList(int schKind) {
+		return cDao.selectComscheduleList(sqlSession, schKind);
+	}
+
+	@Override
+	public int insertSchedule(Comschedule cs) {
+		return cDao.insertSchedule(sqlSession, cs);
+	}
+
+	@Override
+	public int deleteSchedule(int schNo) {
+		return cDao.deleteSchedule(sqlSession, schNo);
 	}
 
 }

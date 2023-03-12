@@ -36,7 +36,60 @@
 		     , allday
 		     , legalholiday
 		  from company_sch
-		 where sch_kind = 0
+		 where sch_kind = #{schKind}
+		 order
+		    by start_date
 	</select>
 
+	<insert id="insertSchedule">
+		insert 
+		  into company_sch
+		  (
+		    sch_no
+		  , sch_kind
+		  , restday_kind
+		  , sch_name
+		  , sch_content
+		  , sch_location
+		  , lunar_solar
+		  , start_date
+		  , end_date
+		  , annual
+		  , start_time
+		  , end_time
+		  , allday
+		  )
+		  values
+		  (
+		    seq_schno.nextval
+		  , #{schKind}
+		  , #{restdayKind}
+		  , #{schName}
+		  , #{schContent}
+		  , #{schLocation}
+		  , #{lunarSolar}
+		  , #{startDate}
+		  , #{endDate}
+		  , <if test="annual == 'on'">
+				'Y'
+			</if>
+			<if test="annual == null">
+				'N'
+			</if>
+		  , #{startTime}
+		  , #{endTime}
+		  , <if test="allday == 'on'">
+				'Y'
+			</if>
+			<if test="allday == null">
+				'N'
+			</if>
+		  )
+	</insert>
+	
+	<delete id="deleteSchedule">
+		delete 
+		  from company_sch
+		 where sch_no = #{schNo}
+	</delete>
 </mapper>

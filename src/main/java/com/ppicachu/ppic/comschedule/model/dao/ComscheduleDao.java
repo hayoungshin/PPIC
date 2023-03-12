@@ -10,7 +10,15 @@ import com.ppicachu.ppic.comschedule.model.vo.Comschedule;
 @Repository
 public class ComscheduleDao {
 
-	public ArrayList<Comschedule> selectComscheduleList(SqlSessionTemplate sqlSession){
-		return (ArrayList)sqlSession.selectList("comscheduleMapper.selectComscheduleList");
+	public ArrayList<Comschedule> selectComscheduleList(SqlSessionTemplate sqlSession, int schKind){
+		return (ArrayList)sqlSession.selectList("comscheduleMapper.selectComscheduleList", schKind);
+	}
+	
+	public int insertSchedule(SqlSessionTemplate sqlSession, Comschedule cs) {
+		return sqlSession.insert("comscheduleMapper.insertSchedule", cs);
+	}
+	
+	public int deleteSchedule(SqlSessionTemplate sqlSession, int schNo) {
+		return sqlSession.delete("comscheduleMapper.deleteSchedule", schNo);
 	}
 }
