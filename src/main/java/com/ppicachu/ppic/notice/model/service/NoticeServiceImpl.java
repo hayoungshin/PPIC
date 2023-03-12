@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ppicachu.ppic.board.model.vo.Board;
+import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.notice.model.dao.NoticeDao;
 import com.ppicachu.ppic.notice.model.vo.Notice;
@@ -32,11 +33,6 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public int insertNotice(Notice b) {
-		return 0;
-	}
-
-	@Override
 	public int increaseCount(int noticeNo) {
 		return nDao.increaseCount(sqlSession, noticeNo);
 	}
@@ -44,6 +40,16 @@ public class NoticeServiceImpl implements NoticeService{
 	@Override
 	public Notice selectNotice(int noticeNo) {
 		return nDao.selectNotice(sqlSession, noticeNo);
+	}
+	
+	@Override
+	public int insertNotice(Notice n, ArrayList<Attachment> list) {
+		int result1 = nDao.insertNotice(sqlSession, n);
+		int result2 = 1;
+		if(!list.isEmpty()) {
+			result2 = nDao.insertAttachment(sqlSession, list);
+		}
+		return result1 * result2;
 	}
 
 	@Override
@@ -65,5 +71,7 @@ public class NoticeServiceImpl implements NoticeService{
 	public ArrayList<Notice> selectSearchList(HashMap<String, String> map, PageInfo pi) {
 		return nDao.selectSearchList(sqlSession, map, pi);
 	}
+
+	
 	
 }
