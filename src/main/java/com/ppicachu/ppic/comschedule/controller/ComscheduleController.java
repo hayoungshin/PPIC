@@ -56,4 +56,15 @@ public class ComscheduleController {
 		}
 	}
 	
+	@RequestMapping("update.sch")
+	public String updateSchedule(Comschedule cs, Model m, HttpSession session) {
+		int result = cService.updateSchedule(cs);
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 일정 수정 되었습니다.");
+			return "redirect:schedule.bo";
+		}else {
+			m.addAttribute("errorMsg", "일정 수정 실패");
+			return "common/errorPage";
+		}
+	}
 }

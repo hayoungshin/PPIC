@@ -33,4 +33,9 @@ public class ComscheduleServiceImpl implements ComscheduleService{
 		return cDao.deleteSchedule(sqlSession, schNo);
 	}
 
+	@Override
+	public int updateSchedule(Comschedule cs) {
+		return cDao.updateSchedule(sqlSession, cs);
+	}
+
 }
