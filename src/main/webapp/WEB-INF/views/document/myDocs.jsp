@@ -27,11 +27,17 @@
    .table>thead{
    	   background:rgb(244, 244, 244);
    }
-   .edit-btn, .edit-btn:hover{
+   .edit-btn{
        margin-left:20px;
        cursor:pointer;
    }
    .btn-outline-purple{
+   	   display:inline-block;
+   	   width:72px;
+   	   height:29px;
+   	   border-radius:5px;
+   	   text-decoration:none;
+   	   line-height:29px;
    	   background:white;
    	   border:0.5px solid #6F50F8;
    	   color:#6F50F8;
@@ -39,6 +45,8 @@
    .btn-outline-purple:hover{
    	   background:#6F50F8;
    	   color:white;
+   	   text-decoration:none;
+   	   transition:background 0.3s;
    }
    /* 페이징 */
    #paging{
@@ -103,21 +111,20 @@
                     <th style="width:100px">수정일</th>
                 </thead>
                 <tbody>
+                <c:forEach var="d" items="${list}">
                    <tr>
-                    <td><img>이력서<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn-outline-purple">다운로드</button></td>
-                    <td>2022.10.10</td>
+                    <td>${d.docName}<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal${d.docNo}"></td>
+                    	<c:choose>
+                    		<c:when test="${not empty d.originName}">
+                    			<td><a class="btn-outline-purple" href="${d.savePath}" download="${d.originName}">다운로드</a></td>
+                    		</c:when>
+                    		<c:otherwise>
+                    			<td>미등록</td>
+                    		</c:otherwise>
+                    	</c:choose>
+                    <td>${d.modifyDate}</td>
                    </tr>
-                   <tr>
-                    <td><img>근로계약서<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn-outline-purple">다운로드</button></td>
-                    <td>2022.10.10</td>
-                   </tr>
-                   <tr>
-                    <td><img>연봉계약서<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal"></td>
-                    <td><button class="btn-outline-purple">다운로드</button></td>
-                    <td>2022.10.10</td>
-                   </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
@@ -134,23 +141,28 @@
                 </div>
         
                 <!-- Modal body -->
-                <div class="modal-body">
-                    문서 이름 : <input type="text" name="docName" placeholder="문서명을 입력해주세요." required>
-                    <br><br>
-                    문서 첨부 : <input type="file">
-                </div>
-        
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">등록</button>
-                </div>
+                <form action="insertMy.doc" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        * 문서 이름 : <input type="text" name="docName" placeholder="문서명을 입력해주세요." required>
+                        <br><br>
+                        파일 첨부 : <input type="file" name="upfile">
+                        <input type="hidden" name="docType" value="2">
+                        <input type="hidden" name="createUser" value="1"><%-- 로그인 구현 완료 시 ${loginUser.userNo}--%>
+                    </div>
+            
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn-purple">등록</button>
+                    </div>
+                </form>
         
             </div>
             </div>
         </div>
 
         <!-- 수정 모달 -->
-        <div class="modal fade" id="editModal">
+        <c:forEach var="d" items="${list}">
+        <div class="modal fade" id="editModal${d.docNo}">
             <div class="modal-dialog">
             <div class="modal-content">
         
@@ -161,32 +173,62 @@
                 </div>
         
                 <!-- Modal body -->
-                <div class="modal-body">
-                    문서 이름 : <input type="text" placeholder="문서명을 입력해주세요." required>
-                    <br><br>
-                    문서 첨부 : <input type="file">
-                </div>
-        
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger">삭제</button>
-                    <button type="button" class="btn btn-primary">수정</button>
-                </div>
+                <form method="post" enctype="multipart/form-data" id="updateForm${d.docNo}">
+	                <div class="modal-body">
+	                    * 문서 이름 : <input type="text" placeholder="문서명을 입력해주세요." name="docName" value="${d.docName}" required>
+	                    <br><br>
+	                    문서 첨부 : <input type="file" name="reUpfile">
+	                    <br><br>
+	                    현재 파일 : <a href="${d.savePath}" download="${d.originName}">${d.originName}</a>
+                        <input type="hidden" name="savePath" value="${d.savePath}">
+                        <input type="hidden" name="originName" value="${d.originName}">
+                        <input type="hidden" name="docNo" value="${d.docNo}">
+                        <input type="hidden" name="createUser" value="1">
+	                </div>
+	        
+	                <!-- Modal footer -->
+	                <div class="modal-footer">
+	                    <a class="btn btn-outline-danger" onclick="deleteSubmit('${d.docNo}');">삭제</a>
+                        <a class="btn btn-primary" onclick="updateSubmit('${d.docNo}');">수정</a>
+	                </div>
+                </form>
         
             </div>
             </div>
         </div>
+        </c:forEach>
   		<br><br>
+
+        <script>
+            function updateSubmit(num){
+                    $("#updateForm" + num).attr("action", "updateMy.doc").submit();
+            }
+
+            function deleteSubmit(num){
+                if(confirm("정말 삭제하시겠습니까?")){
+                    $("#updateForm" + num).attr("action", "deleteMy.doc?no=" + num).submit();
+                }
+            }
+        </script>
 
         <div id="paging">
             <ul>
+            <c:if test="${pi.currentPage ne 1}">
            		<li><a href="">&lt;</a></li>
-        		<li class="on"><a href="">1</a></li>
-        		<li><a href="">2</a></li>
-        		<li><a href="">3</a></li>
-        		<li><a href="">4</a></li>
+           	</c:if>
+	        	<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}">
+	        		<c:choose>
+	        			<c:when test="${pi.currentPage eq p}">
+                    		<li class="on"><a href="commonList.docs?cpage=${p}">${p}</a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li><a href="commonList.docs?cpage=${p}">${p}</a></li>
+                    	</c:otherwise>
+                    </c:choose>
+                </c:forEach>
+        	<c:if test="${pi.maxPage ne pi.endPage}">
         		<li><a href="">&gt;</a></li>
-        		
+        	</c:if>
            </ul>
 		</div>
         <br><br>
