@@ -27,7 +27,7 @@
    .table>thead{
    	   background:rgb(244, 244, 244);
    }
-   .edit-btn, .edit-btn:hover{
+   .edit-btn{
        margin-left:20px;
        cursor:pointer;
    }
@@ -125,12 +125,6 @@
 
         <br><br>
         
-        <script>
-            $(".edit-btn").click(function(){
-                var no = $(this).next().val();
-                
-            })
-        </script>
         
         <c:forEach var="d" items="${list}">
             <div class="modal fade" id="editModal${d.docNo}">
@@ -176,47 +170,6 @@
                 }
             }
         </script>
-
-        <!-- 문서 수정 스크립트 -->
-        <!-- <script>
-            let reUpfile = "";
-
-            $("#reUpfile").change(function(){
-                reUpfile = this.files[0];
-            })
-
-            $("#updateBtn").click(function(){
-                let formData = new FormData();
-
-                let docNo = $("#update-docNo").val();
-                let docName = $("#update-docName").val();
-                let originalFile = $("#originalFile").text();
-                let createUser = $("#update-user").val();
-                let originSavePath = $("#origin-savePath").val();
-
-                formData.append("docNo", docNo);
-                formData.append("docName", docName);
-                formData.append("originalFile", originalFile);
-                formData.append("createUser", createUser);
-                formData.append("reUpfile", reUpfile);
-                formData.append("originSavePath", originSavePath);
-                
-                $.ajax({
-                        url:"updateCommon.doc",
-                        data:formData,
-                        processData:false,
-                        contentType:false,
-                        type:"POST",
-                        success:function(result){
-                            if(result == "success"){
-                                alert("수정되었습니다.");
-                            }
-                        },error:function(){
-                            console.log("실패");
-                        }
-                    })
-
-            }) -->
             
         <!-- 추가 모달 -->
         <div class="modal fade" id="addModal">

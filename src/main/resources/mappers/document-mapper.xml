@@ -78,4 +78,72 @@
 		 	 , delete_status = 'Y'
 		 where doc_no = #{docNo}
 	</update>
+	
+	<!-- 내 문서 -->
+	<!-- 내 문서 리스트 조회 -->
+	<select id="selectMyDocsCount" resultType="_int">
+		select 
+			   count(*)
+		  from document
+		 where doc_type = 2
+		   and delete_status = 'N'
+		   and create_user = #{createUser}
+	</select>
+	<select id="selectMyDocs" resultMap="documentResult">
+		select
+			   doc_no
+			 , doc_name
+			 , save_path
+			 , origin_name
+			 , create_user
+			 , to_char(modify_date, 'YY/MM/DD') "modify_date"
+		  from document
+		 where doc_type = 2
+		   and delete_status = 'N'
+		   and create_user = #{createUser}
+		 order
+		    by doc_no
+	</select>
+	
+	<insert id="insertMyDocs">
+		insert
+		  into document
+		  (
+		  	doc_no
+		  , doc_type
+		  , doc_name
+		  , save_path
+		  , origin_name
+		  , create_user
+		  )
+		  values
+		  (
+		  	seq_docno.nextval
+		  , #{docType}
+		  , #{docName}
+		  , #{savePath}
+		  , #{originName}
+		  , #{createUser}
+		  )
+	</insert>
+	
+	<update id="updateMyDocs">
+		update
+			   document
+		   set doc_name = #{docName}
+		     , save_path = #{savePath}
+		     , origin_name = #{originName}
+		     , create_user = #{createUser}
+		     , modify_date = sysdate
+		 where doc_no = #{docNo}
+	</update>
+	
+	<update id="deleteMyDocs">
+		update
+			   document
+		   set modify_date = sysdate
+		 	 , delete_status = 'Y'
+		 where doc_no = #{docNo}
+	</update>
+	
 </mapper>

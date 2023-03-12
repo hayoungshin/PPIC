@@ -12,6 +12,7 @@ import com.ppicachu.ppic.document.model.vo.Document;
 @Repository
 public class DocumentDao {
 
+	// ------ 회사 문서
 	public int selectCommonDocsCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("documentMapper.selectCommonDocsCount");
 	}
@@ -35,4 +36,30 @@ public class DocumentDao {
 	public int deleteCommonDocs(SqlSessionTemplate sqlSession, int docNo) {
 		return sqlSession.update("documentMapper.deleteCommonDocs", docNo);
 	}
+	
+	// ------ 내 문서
+	public int selectMyDocsCount(SqlSessionTemplate sqlSession, String createUser) {
+		return sqlSession.selectOne("documentMapper.selectMyDocsCount", createUser);
+	}
+	
+	public ArrayList<Document> selectMyDocs(SqlSessionTemplate sqlSession, String createUser, PageInfo pi){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); 
+		int limit = pi.getBoardLimit();
+				
+		RowBounds rbounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("documentMapper.selectMyDocs", createUser, rbounds);
+	}
+	
+	public int insertMyDocs(SqlSessionTemplate sqlSession, Document doc) {
+		return sqlSession.insert("documentMapper.insertMyDocs", doc);
+	}
+	
+	public int updateMyDocs(SqlSessionTemplate sqlSession, Document doc) {
+		return sqlSession.update("documentMapper.updateMyDocs", doc);
+	}
+	
+	public int deleteMyDocs(SqlSessionTemplate sqlSession, int docNo) {
+		return sqlSession.update("documentMapper.deleteMyDocs", docNo);
+	}
+	
 }

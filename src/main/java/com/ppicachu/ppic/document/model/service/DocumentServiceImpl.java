@@ -45,4 +45,30 @@ public class DocumentServiceImpl implements DocumentService {
 		return dDao.deleteCommonDocs(sqlSession, docNo);
 	}
 
+	// ----- 내 문서
+	@Override
+	public int selectMyDocsCount(String createUser) {
+		return dDao.selectMyDocsCount(sqlSession, createUser);
+	}
+
+	@Override
+	public ArrayList<Document> selectMyDocs(String createUser, PageInfo pi) {
+		return dDao.selectMyDocs(sqlSession, createUser, pi);
+	}
+
+	@Override
+	public int insertMyDocs(Document doc) {
+		return dDao.insertMyDocs(sqlSession, doc);
+	}
+
+	@Override
+	public int updateMyDocs(Document doc) {
+		return dDao.updateMyDocs(sqlSession, doc);
+	}
+
+	@Override
+	public int deleteMyDocs(int docNo) {
+		return dDao.deleteCommonDocs(sqlSession, docNo);
+	}
+
 }

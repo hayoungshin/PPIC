@@ -19,4 +19,17 @@ public interface DocumentService {
 	
 	// 회사문서 삭제
 	int deleteCommonDocs(int docNo);
+	
+	// 내문서 리스트 조회
+	int selectMyDocsCount(String createUser);
+	ArrayList<Document> selectMyDocs(String createUser, PageInfo pi);
+	
+	// 내문서 추가
+	int insertMyDocs(Document doc);
+	
+	// 내문서 수정
+	int updateMyDocs(Document doc);
+	
+	// 내문서 삭제
+	int deleteMyDocs(int docNo);
 }
