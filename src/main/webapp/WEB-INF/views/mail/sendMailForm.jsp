@@ -83,10 +83,7 @@
 	
 	<div class="outer">
 		<div id="content">
-		
-		<div style="display:inline-block; margin-bottom:40px;">
-			<span style="font-size:30px;">메일</span>
-		</div>
+		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
 
 		<form action="" style="padding:0px 20px;">
 
@@ -94,7 +91,7 @@
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">미리보기</button>
 
-			<table border="1" style="margin:20px 0; font-size:14px;" id="mail-send-form">
+			<table style="margin:20px 0; font-size:14px;" id="mail-send-form">
 				<tr>
 					<th colspan="2" style="width:150px;">받는사람</th>
 					<td class="reciever-list" style="width:1200px;">
@@ -160,6 +157,11 @@
 						</div>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="3" style="padding-top:30px;">
+						<textarea id="summernote"></textarea>
+					</td>
+				</tr>
 			</table>
 
 			<script>
@@ -176,14 +178,11 @@
 
 				fileArea.addEventListener("dragenter",function(e){
 					e.preventDefault();
-					console.log(e);
 					console.log('파일닿았따!!!');
 					fileArea.className = "drag-enter";
 				})
 				fileArea.addEventListener("dragover",function(e){
 					e.preventDefault();
-					console.log(e);
-					console.log('...');
 					fileArea.className = "drag-enter";
 				})
 				fileArea.addEventListener("dragleave",function(e){
@@ -195,8 +194,31 @@
 					e.preventDefault();
 					fileArea.classList.remove("drag-enter");
 					console.log(e.dataTransfer.files);
+					fileArea.innerHTML += "<p class='input-file-list'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[0].name + "</p>";
 				})
-
+			</script>
+			<script>
+				$(document).ready(function () {
+					$('#summernote').summernote({
+						height: 500,
+						minHeight: 500,
+						maxHeight: 500,
+						lang: "ko-KR",
+						toolbar: [
+							// [groupName, [list of button]]
+							['fontname', ['fontname']],
+							['fontsize', ['fontsize']],
+							['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+							['color', ['forecolor', 'backcolor']],
+							['table', ['table']],
+							['para', ['ul', 'ol', 'paragraph']],
+							['height', ['height']],
+							['insert', ['picture', 'link', 'video']]
+						],
+						fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체', '굴림', '돋움체', '바탕체'],
+						fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72']
+					});
+				});
 			</script>
 
 
