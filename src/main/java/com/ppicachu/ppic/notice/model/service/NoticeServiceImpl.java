@@ -58,8 +58,13 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	@Override
-	public int updateNotice(Notice n) {
-		return 0;
+	public int updateNotice(Notice n, ArrayList<Attachment> list) {
+		int result1 = nDao.updateNotice(sqlSession, n);
+		int result2 = 1;
+		if(!list.isEmpty()) {
+			result2 = nDao.updateAttachment(sqlSession, list);
+		}
+		return result1 * result2;
 	}
 
 	@Override

@@ -192,4 +192,42 @@
 		    ) at       
 	</insert>
 	
+	<update id="updateNotice">
+		update
+		       notice
+		   set notice_title = #{noticeTitle}
+		     , notice_content = #{noticeContent}
+		     , modify_date = sysdate
+		     , important = <choose>
+				  		   	  <when test="important == 'on'">'Y'</when>
+				  		   	  <otherwise>'N'</otherwise>
+				  		    </choose>
+		  where notice_no = #{noticeNo}
+	</update>
+	
+	<insert id="updateAttachment">
+		insert
+		  into attachment
+		  (
+		    attachment_no
+		  , origin_name
+		  , change_name
+		  , category_no
+		  , ref_no
+		  )
+		  select seq_atno.nextval 
+		       , at.*
+		    from 
+		    (
+		      <foreach collection="list" item="item" separator="union all">
+		      select
+		             #{item.originName}
+		           , #{item.changeName}
+		           , 2
+		           , #{item.refNo}
+		        from dual
+		      </foreach>
+		    ) at   
+	</insert>
+	
 </mapper>

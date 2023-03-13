@@ -56,5 +56,13 @@ public class NoticeDao {
 	public int insertAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> list) {
 		return sqlSession.insert("noticeMapper.insertAttachment", list);
 	}
+	
+	public int updateNotice(SqlSessionTemplate sqlSession, Notice n) {
+		return sqlSession.update("noticeMapper.updateNotice", n);
+	}
+	
+	public int updateAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> list) {
+		return sqlSession.insert("noticeMapper.updateAttachment", list);
+	}
 
 }
