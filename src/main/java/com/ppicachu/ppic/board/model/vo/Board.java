@@ -23,4 +23,6 @@ public class Board {
 	private int likeCount;
 	private int hateCount;
 	private int reportCount;
+	private String likehateStatus;
+	private int userNo;
 }

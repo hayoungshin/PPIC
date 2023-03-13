@@ -13,6 +13,7 @@
 		<result column="like_count" property="likeCount"/>
 		<result column="hate_count" property="hateCount"/>
 		<result column="report_count" property="reportCount"/>
+		<result column="likehate_status" property="likehateStatus"/>
 	</resultMap>
 	
 	<resultMap id="reportResult" type="Report">
@@ -105,6 +106,11 @@
                   from report
                  where report_bno = #{boardNo}
                    and report_mno = #{userNo}) "report_count"
+              , (select
+                        status
+                   from likehate
+                  where board_no = #{boardNo}    
+                    and mem_no = #{userNo}) "likehate_status"
 		  from board
 		 where board_no = #{boardNo}
 	</select>
@@ -250,4 +256,27 @@
   		     , modify_date = sysdate
   	 	 where report_no in (#{reportNo})
   	</update>
+  	
+  	<delete id="deleteLike">
+  		delete
+  		  from likehate
+  		 where board_no = #{boardNo}
+  		   and mem_no = #{userNo}
+  	</delete>
+  	
+  	<insert id="insertLike">
+  		insert
+  		  into likehate
+  		  (
+  		    board_no
+  		  , mem_no
+  		  , status
+  		  )
+  		  values
+  		  (
+  		    #{boardNo}
+  		  , #{userNo}
+  		  , 0
+  		  )
+  	</insert>
 </mapper>

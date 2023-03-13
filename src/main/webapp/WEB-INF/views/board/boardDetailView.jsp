@@ -28,6 +28,17 @@
     }
     #report-btn, #delete-btn, #modal-btn{background: rgb(111, 80, 248);}
     .dropdown-toggle{cursor:pointer;}
+    .likehate{
+    	display:inline-block;
+    	width:60px;
+    	padding:1px 5px;
+    	border-radius:5px; 
+    	text-align:center;
+    	cursor:pointer;
+   	}
+   	.clickedbtn, .likehate:active{
+   		background:rgb(220, 220, 220);
+   	}
 
     /* modal내 input요소 스타일 */
     select{
@@ -70,7 +81,8 @@
             <tr class="line">
                 <td colspan="2">
                     <span>${ b.createDate }</span>
-                    <a href="">👍 </a>${ b.likeCount }  <a href="">👎  </a>${ b.hateCount }
+                    <input type="hidden" id="likehateStatus" value="${ b.likehateStatus }">
+                    <span class="likehate" id="like-btn" style="margin-right:0px;">👍 ${ b.likeCount } </span><span class="likehate" id="hate-btn" style="margin-right:0px;">👎 ${ b.hateCount }</span>
                     <!-- 이미 좋아요 또는 싫어요 눌렀을 시 표시 달라지고 누른거 취소해야 다시 누를 수 있음 -->
                 </td>
                 <td style="text-align: right;">조회수 ${ b.count }</td>
@@ -83,6 +95,86 @@
                 </td>
             </tr>
         </table>
+        
+        <script>
+        	// 로그인한 회원이 좋아요/싫어요 했는지 여부 표시
+	        $(function(){
+	        	if("${ b.likehateStatus }" == "0"){
+	        		$("#like-btn").addClass("clickedbtn");
+	        	} else if("${ b.likehateStatus }" == "1"){
+	        		$("#hate-btn").addClass("clickedbtn");
+	        	}
+	        	
+	        	// 좋아요 버튼 클릭
+		        $("#like-btn").click(function(){
+		        	if($("#likehateStatus").val() == "0"){ // 이미 좋아요 클릭 돼있을 경우
+		        		$.ajax({
+		        			url:"deleteLike.bo",
+		        			data:{
+		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				boardNo:${ b.boardNo }
+		        			},success:function(b){
+		        				$("#like-btn").removeClass("clickedbtn");
+		        				$("#like-btn").text("👍 " + b.likeCount);
+		        				$("#likehateStatus").val(b.likehateStatus);
+		        			},error:function(){
+		        				console.log("좋아요 해제 ajax 통신 실패")
+		        			}
+		        		})
+		        	} else if($("#likehateStatus").val() == "1"){ // 싫어요 클릭 돼있을 경우
+		        		$("#message>p").text("싫어요 취소 후 좋아요 가능합니다.");
+		        		$("#likehateModal").modal("show");
+		        	} else{ // 좋아요 추가
+		        		$.ajax({
+		        			url:"insertLike.bo",
+		        			data:{
+		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				boardNo:${ b.boardNo }
+		        			},success:function(b){
+		        				$("#like-btn").addClass("clickedbtn");
+		        				$("#like-btn").text("👍 " + b.likeCount);
+		        				$("#likehateStatus").val(b.likehateStatus);
+		        			},error:function(){
+		        				console.log("좋아요 추가 ajax 통신 실패")
+		        			}
+		        		})
+		        	}
+		        })
+		        
+		        // 싫어요 버튼 클릭
+		        $("#dislike-btn").click(function(){
+		        	if($("#likehateStatus").val() == "1"){ // 이미 싫어요 클릭 돼있을 경우
+		        		$.ajax({
+		        			url:"deleteLike.bo",
+		        			success:function(){
+		        				
+		        			},error:function(){
+		        				
+		        			}
+		        		})
+		        	} else if($("#likehateStatus").val() == "0"){ // 좋아요 클릭 돼있을 경우
+		        		$("#message>p").text("좋아요 취소 후 싫어요 가능합니다.");
+		        		$("#likehateModal").modal("show");
+		        	} else{ // 싫어요 추가
+		        		$.ajax({
+		        			url:"addLike.bo",
+		        			success:function(){
+		        				
+		        			},error:function(){
+		        				
+		        			}
+		        		})
+		        	}
+		        })
+	        })
+	        
+	        
+	        
+	        
+	        
+	        
+        </script>
+        
         <form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ b.boardNo }">
         	<input type="hidden" name="type" value="0"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
@@ -104,6 +196,19 @@
             <c:if test="${ b.reportCount ne 1 }"> <!-- 신고 중복 방지 -->
             	<button class="btn" id="modal-btn" data-toggle="modal" data-target="#reportModal">신고</button>
             </c:if>
+        </div>
+        
+        <div class="modal" id="likehateModal" data-backdrop='static' data-keyboard='false'>
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                <div align="center" id="message">
+                    <p></p>
+                    <a class="btn" data-dismiss="modal" id="exit-btn">확인</a>
+                </div>
+                </div>
+            </div>
+            </div>
         </div>
 
         <!-- 삭제 확인용 Modal -->
