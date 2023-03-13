@@ -39,48 +39,31 @@
     <div class="boardOuter">
         <table>
             <tr>
-                <td colspan="3" width="1200px"><h5>[공지] 회의실 노트북 패스워드 변경 작업 안내</h5></td>
+                <td colspan="3" width="1200px"><h5>${ n.noticeTitle }</h5></td>
             </tr>
             <tr class="line">
                 <td colspan="2">
                     <img src="resources/icons/profile.jpg" class="rounded-circle" width="25" height="25">
-                    문동은 팀장 
-                    2023-02-16 (목) 16:35
+                    ${ n.noticeWriter } &nbsp;
+                    ${ n.createDate }
                 </td>
-                <td><div align="right">조회수 50</div></td>
+                <td><div align="right">조회수 ${ n.count }</div></td>
             </tr>
             <!-- 첨부파일 있을 경우 -->
+            <c:if test="${ not empty n.attList }">
+	        	<tr>
+		           	<td style="width:120px; vertical-align:top;">첨부파일 <b>${ n.attachmentCount }</b>개</td>
+	                <td colspan="2">
+		                <c:forEach var="a" items="${ n.attList }">
+		          			<c:if test="${ a.categoryNo eq 2 }">
+		                    	${ a.originName } <a href="${ a.changeName }" download="${ a.originName }"><img src="resources/icons/download.png" height="15px" width="15px"></a><br>
+		                	</c:if>
+		                </c:forEach>
+	                </td>
+	            </tr> 
+            </c:if>
             <tr>
-                <td style="width:120px; vertical-align:top;">첨부파일 <b>2</b>개</td>
-                <td colspan="2">
-                    noticeFile.pdf <img src="resources/icons/download.png" height="15px" width="15px"><br>
-                    noticeFile2.pdf <img src="resources/icons/download.png" height="15px" width="15px">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <pre>
-안녕하세요. 문동은입니다.
-
-6층 회의실 노트북 패스워드 변경 작업 관련해서 안내 말씀 드립니다.
-
-ISMS 보안정책에 따라 공용 노트북의 패스워드를 3개월 주기로 변경하고 있습니다.
-
-변경되는 패스워드 및 주의사항은 아래 내용을 참고하시기 바랍니다.
- 
-                            - 아 래 -
-
-1. 작업 시간 : 2023년 02월 20일 월요일 17:30 ~ 18:00
-
-2. 작업 내용 : 6층 회의실 노트북 패스워드 변경 작업
-
-3. 대상 회의실 : ①LA Dodgers, ②Cincinnati Reds
-
-4. 주의 사항 : 노트북 패스워드 임의 변경 및 기록 금지
-
-감사합니다.   
-                    </pre>
-                </td>
+                <td colspan="3">${ n.noticeContent }</td>
             </tr>
         </table>
         <div align="center" style="width:1200px;">

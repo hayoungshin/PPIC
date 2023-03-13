@@ -18,6 +18,7 @@
 		<id column="attachment_no" property="attachmentNo"/>
 		<result column="origin_name" property="originName"/>
 		<result column="change_name" property="changeName"/>
+		<result column="category_no" property="categoryNo"/>
 	</resultMap>
 
 	<select id="selectListCount" resultType="_int">
@@ -60,21 +61,22 @@
 		       notice_no
 		     , notice_title
 		     , user_name
+		     , notice_content
 		     , count
-		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		     , to_char(create_date, 'YYYY-MM-DD (DY) HH24:MI:SS') as "create_date"
 		     , important
-		     , (select 
-		               origin_name
-		          from attachment
-		         where category_no = 2
-		           and ref_no = #{noticeNo}) "origin_name"
-		     , (select 
-		               change_name
-		          from attachment
-		         where category_no = 2
-		           and ref_no = #{noticeNo}) "change_name"
+		     , attachment_no
+		     , origin_name
+		     , change_name
+		     , category_no
+		     , (select
+                       count(*)
+                  from attachment
+                 where category_no = 2
+                   and ref_no = notice_no) "attachment_count"
 		  from notice n
           join member on (notice_writer = user_no)
+          left join attachment on (notice_no = ref_no)
 		 where n.status = 'Y'
 		   and notice_no = #{noticeNo}
 	</select>
