@@ -118,10 +118,7 @@
 	<jsp:include page="../common/menubar.jsp" />
 	<div class="outer">
 		<div id="content">
-		
-		<div style="display:inline-block;">
-				<span style="font-size:30px;">메일</span>
-		</div>
+		<h2 style="display:inline-block;"><b>메일</b></h2>
 		<div style="display:inline-block;">
 			<a href="">
 				<img src="resources/icons/addressBook.png" style="width:30px; margin-left:20px; vertical-align:bottom">
