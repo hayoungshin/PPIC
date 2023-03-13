@@ -211,7 +211,7 @@ public class BoardController {
 		
 		m.addAttribute("pi", pi);
 		m.addAttribute("list", list);
-		
+		                             
 		return "board/boardManage";
 	}
 	

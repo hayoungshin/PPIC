@@ -6,7 +6,8 @@
 		<id column="notice_no" property="noticeNo"/>
 		<result column="notice_title" property="noticeTitle"/>
 		<result column="create_date" property="createDate"/>
-		<result column="user_name" property="noticeWriter"/>
+		<result column="user_name" property="userName"/>
+		<result column="notice_writer" property="noticeWriter"/>
 		<result column="profile_img" property="profileImg"/>
 		<result column="notice_content" property="noticeContent"/>
 		<result column="important" property="important"/>
@@ -62,6 +63,7 @@
 		       notice_no
 		     , notice_title
 		     , user_name
+		     , notice_writer
 		     , profile_img
 		     , notice_content
 		     , count

@@ -43,14 +43,14 @@
        <script>
         	$(function(){
         		$("#myPostList>tbody>tr").click(function(){
-        			location.href = 'detailMy.bo?userNo=10&no=' + $(this).children(".no").text(); // userNo 바꾸기
+        			location.href = 'detailMy.bo?userNo=${loginUser.userNo}&no=' + $(this).children(".no").text();
         		})
         	})
         </script>
        
        <form id="searchForm" action="searchMy.bo" method="Get">
       	   <input type="hidden" name="cpage" value="1">
-      	   <input type="hidden" name="userNo" value="1"><!-- userNo바꾸기 -->
+      	   <input type="hidden" name="userNo" value="${loginUser.userNo}">
            <div class="select">
                <select name="condition">
                    <option value="all">전체</option>
@@ -75,22 +75,22 @@
        <div id="paging">
             <ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="myList.bo?cpage=${ pi.currentPage - 1 }&userNo=1"><</a></li><!-- userNo바꾸기 -->
+              		<li><a href="myList.bo?cpage=${ pi.currentPage - 1 }&userNo=${loginUser.userNo}"></a></li>
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 	            	<c:choose>
 	            		<c:when test="${ pi.currentPage eq p }">
-		            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
+		            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=${loginUser.userNo}">${ p }</a></li>
 	            		</c:when>
 	            		<c:otherwise>
-		            		<li><a href="myList.bo?cpage=${ p }&userNo=1">${ p }</a></li>
+		            		<li><a href="myList.bo?cpage=${ p }&userNo=${loginUser.userNo}">${ p }</a></li>
 	            		</c:otherwise>
 	            	</c:choose>
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage ne pi.maxPage }">
-	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }&userNo=1">></a></li><!-- userNo바꾸기 -->
+	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }&userNo=${loginUser.userNo}"></a></li>
 				</c:if>
            </ul>
         </div>

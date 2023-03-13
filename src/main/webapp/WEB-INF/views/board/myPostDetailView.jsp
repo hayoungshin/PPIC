@@ -30,6 +30,12 @@
     #modify-btn, #delete-btn, #modal-btn{background: rgb(111, 80, 248);}
     a:hover{opacity: 0.7;}
     .dropdown-toggle{border:none; background: white;}
+    .likehate{
+    	display:inline-block;
+    	padding:1px 10px;
+    	border-radius:5px; 
+    	border:1px solid rgb(220, 220, 220);
+   	}
 
     /* modal내 input요소 스타일 */
     select{
@@ -62,8 +68,7 @@
             <tr class="line">
                 <td>
                     <span>${ b.createDate }</span>
-                    <a href="">👍 </a>${ b.likeCount }  <a href="">👎  </a>${ b.hateCount }
-                    <!-- 이미 좋아요 또는 싫어요 눌렀을 시 표시 달라지고 누른거 취소해야 다시 누를 수 있음 -->
+                    <span class="likehate">👍 ${ b.likeCount } </span><span class="likehate">👎 ${ b.hateCount }</span>
                 </td>
                 <td style="text-align: right;">조회수 ${ b.count }</td>
             </tr>
@@ -84,7 +89,7 @@
 		<form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ b.boardNo }">
         	<input type="hidden" name="type" value="1"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
-        	<input type="hidden" name="userNo" value="10"> <!-- value 수정 -->
+        	<input type="hidden" name="userNo" value="${loginUser.userNo}">
         </form>
 		<script>
         	function postFormSubmit(num){

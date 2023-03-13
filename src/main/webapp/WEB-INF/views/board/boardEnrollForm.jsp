@@ -64,7 +64,7 @@
                     </td>
                 </tr>
             </table>
-            <!-- <input type="hidden" name="boardWriter" value="${ loginUser.userNo }"> -->
+            <input type="hidden" name="boardWriter" value="${ loginUser.userNo }">
             <div align="center">
                 <button type="button" class="btn" id="cancel-btn" onclick="javascript:history.go(-1);">취소</button>
                 <button type="submit" class="btn" id="enroll-btn">작성</button>

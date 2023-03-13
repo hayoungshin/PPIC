@@ -30,11 +30,10 @@
     .dropdown-toggle{cursor:pointer;}
     .likehate{
     	display:inline-block;
-    	width:60px;
-    	padding:1px 5px;
+    	padding:1px 10px;
     	border-radius:5px; 
-    	text-align:center;
     	cursor:pointer;
+    	border:1px solid rgb(220, 220, 220);
    	}
    	.clickedbtn, .likehate:active{
    		background:rgb(220, 220, 220);
@@ -71,9 +70,10 @@
                     <div class="dropdown btn-align">
                         <img src="resources/icons/dots.png" class="dropdown-toggle" data-toggle="dropdown" height="15" width="15">
                         <div class="dropdown-menu">
-                            <!-- 작성자만 클릭할 수 있는 버튼 -->
-                            <a class="dropdown-item" href="#" onclick="postFormSubmit(1)">수정</a>
-                            <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#deleteModal">삭제</a>
+                            <c:if test="${ loginUser.userNo eq b.boardWriter }">
+	                            <a class="dropdown-item" href="#" onclick="postFormSubmit(1)">수정</a>
+	                            <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#deleteModal">삭제</a>
+                            </c:if>
                         </div>
                     </div>
                 </td>
@@ -82,7 +82,7 @@
                 <td colspan="2">
                     <span>${ b.createDate }</span>
                     <input type="hidden" id="likehateStatus" value="${ b.likehateStatus }">
-                    <span class="likehate" id="like-btn" style="margin-right:0px;">👍 ${ b.likeCount } </span><span class="likehate" id="dislike-btn" style="margin-right:0px;">👎 ${ b.hateCount }</span>
+                    <span class="likehate" id="like-btn">👍 ${ b.likeCount } </span><span class="likehate" id="dislike-btn">👎 ${ b.hateCount }</span>
                 </td>
                 <td style="text-align: right;">조회수 ${ b.count }</td>
             </tr>
@@ -110,7 +110,7 @@
 		        		$.ajax({
 		        			url:"deleteLike.bo",
 		        			data:{
-		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				userNo:${loginUser.userNo}, 
 		        				boardNo:${ b.boardNo }
 		        			},success:function(b){
 		        				$("#like-btn").removeClass("clickedbtn");
@@ -127,7 +127,7 @@
 		        		$.ajax({
 		        			url:"insertLike.bo",
 		        			data:{
-		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				userNo:${loginUser.userNo}, 
 		        				boardNo:${ b.boardNo },
 		        				likehateStatus:0
 		        			},success:function(b){
@@ -147,7 +147,7 @@
 		        		$.ajax({
 		        			url:"deleteLike.bo",
 		        			data:{
-		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				userNo:${loginUser.userNo}, 
 		        				boardNo:${ b.boardNo }
 		        			},success:function(b){
 		        				$("#dislike-btn").removeClass("clickedbtn");
@@ -164,7 +164,7 @@
 		        		$.ajax({
 		        			url:"insertLike.bo",
 		        			data:{
-		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				userNo:${loginUser.userNo}, 
 		        				boardNo:${ b.boardNo },
 		        				likehateStatus:1
 		        			},success:function(b){
@@ -179,17 +179,12 @@
 		        })
 	        })
 	        
-	        
-	        
-	        
-	        
-	        
         </script>
         
         <form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ b.boardNo }">
         	<input type="hidden" name="type" value="0"> <!-- 익명게시판에서 수정이면 0, 나의 게시글에서 수정이면 1 -->
-        	<input type="hidden" name="userNo" value="10"> <!-- value 수정 -->
+        	<input type="hidden" name="userNo" value="${loginUser.userNo}"> 
         </form>
         
         <script>
@@ -213,10 +208,10 @@
             <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
-                <div align="center" id="message">
-                    <p></p>
-                    <a class="btn" data-dismiss="modal" id="exit-btn">확인</a>
-                </div>
+	                <div align="center" id="message">
+	                    <p></p>
+	                    <a class="btn" data-dismiss="modal" id="exit-btn">확인</a>
+	                </div>
                 </div>
             </div>
             </div>
@@ -246,7 +241,7 @@
                     <b>신고하기</b> <br><br>
                     <form action="report.bo" method="post">
                     <input type="hidden" name="reportBno" value="${ b.boardNo }">
-                    <input type="hidden" name="reportMno" value="40"> <!-- 로그인한 회원으로 수정 -->
+                    <input type="hidden" name="reportMno" value="${loginUser.userNo}"> 
                         <table>
                             <tr>
                                 <td><b>신고구분</b></td>

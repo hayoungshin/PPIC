@@ -70,13 +70,13 @@
                 <td colspan="2">
                 	<c:choose>
                 		<c:when test="${ empty n.profileImg }">
-                			<span class="pro">${ fn:substring(n.noticeWriter,0,1) } </span> 
+                			<span class="pro">${ fn:substring(n.userName,0,1) } </span> 
                 		</c:when>
                 		<c:otherwise>
                 			<img src="${ n.profileImg }" id="profileImg">
                 		</c:otherwise>
                 	</c:choose>
-                    ${ n.noticeWriter } &nbsp;
+                    ${ n.userName } &nbsp;
                     ${ n.createDate }
                 </td>
                 <td><div align="right">조회수 ${ n.count }</div></td>
@@ -121,9 +121,10 @@
         
         <div align="center" style="width:1200px;">
             <a class="btn" id="list-btn" onclick="history.back();">목록</a>
-            <!-- 수정/삭제 관리자만 보여짐 -->
-            <a class="btn" id="update-btn" onclick="postFormSubmit(1)">수정</a>
-            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            <c:if test="${ loginUser.userNo eq n.noticeWriter }">
+	            <a class="btn" id="update-btn" onclick="postFormSubmit(1)">수정</a>
+	            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            </c:if>
         </div>
         <!-- 삭제 확인용 Modal -->
         <div class="modal" id="deleteModal" data-backdrop='static' data-keyboard='false'>
