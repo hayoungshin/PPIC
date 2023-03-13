@@ -16,5 +16,8 @@ public interface MemberService {
 	// 3. 구성원 상세조회 서비스(사용자)
 	Member selectMember(int userNo);
 	
+	
+	// 로그인 대충
+	Member loginMember(Member m);
 
 }

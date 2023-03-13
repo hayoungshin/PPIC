@@ -2,6 +2,8 @@ package com.ppicachu.ppic.member.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,5 +64,19 @@ public class MemberController {
 	@RequestMapping("memberAuth.me")
 	public String memberAuth() {
 		return "member/memberAuthView";
+	}
+	
+	// 로그인 대충
+	@RequestMapping("login.me")
+	public String loginMember(Member m, Model model, HttpSession session) {
+		Member loginUser = mService.loginMember(m);
+		if(loginUser == null) { 
+			model.addAttribute("errorMsg", "로그인 실패");
+			return "common/errorPage"; 
+		} else { 
+			session.setAttribute("loginUser", loginUser);
+			return "common/menubar"; 
+		}
+		
 	}
 }

@@ -22,5 +22,10 @@ public class MemberDao {
 	public Member selectMember(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.selectOne("memberMapper.selectMember", userNo);
 	}
+	
+	// 로그인 대충
+	public Member loginMember(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.selectOne("memberMapper.loginMember", m);
+	}
 
 }
