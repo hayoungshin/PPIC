@@ -82,8 +82,7 @@
                 <td colspan="2">
                     <span>${ b.createDate }</span>
                     <input type="hidden" id="likehateStatus" value="${ b.likehateStatus }">
-                    <span class="likehate" id="like-btn" style="margin-right:0px;">👍 ${ b.likeCount } </span><span class="likehate" id="hate-btn" style="margin-right:0px;">👎 ${ b.hateCount }</span>
-                    <!-- 이미 좋아요 또는 싫어요 눌렀을 시 표시 달라지고 누른거 취소해야 다시 누를 수 있음 -->
+                    <span class="likehate" id="like-btn" style="margin-right:0px;">👍 ${ b.likeCount } </span><span class="likehate" id="dislike-btn" style="margin-right:0px;">👎 ${ b.hateCount }</span>
                 </td>
                 <td style="text-align: right;">조회수 ${ b.count }</td>
             </tr>
@@ -102,12 +101,12 @@
 	        	if("${ b.likehateStatus }" == "0"){
 	        		$("#like-btn").addClass("clickedbtn");
 	        	} else if("${ b.likehateStatus }" == "1"){
-	        		$("#hate-btn").addClass("clickedbtn");
+	        		$("#dislike-btn").addClass("clickedbtn");
 	        	}
 	        	
 	        	// 좋아요 버튼 클릭
 		        $("#like-btn").click(function(){
-		        	if($("#likehateStatus").val() == "0"){ // 이미 좋아요 클릭 돼있을 경우
+		        	if($("#likehateStatus").val() == "0"){ // 이미 좋아요 클릭 돼있을 경우 => 좋아요 삭제
 		        		$.ajax({
 		        			url:"deleteLike.bo",
 		        			data:{
@@ -129,7 +128,8 @@
 		        			url:"insertLike.bo",
 		        			data:{
 		        				userNo:40, // 로그인한 회원으로 바꾸기
-		        				boardNo:${ b.boardNo }
+		        				boardNo:${ b.boardNo },
+		        				likehateStatus:0
 		        			},success:function(b){
 		        				$("#like-btn").addClass("clickedbtn");
 		        				$("#like-btn").text("👍 " + b.likeCount);
@@ -143,13 +143,18 @@
 		        
 		        // 싫어요 버튼 클릭
 		        $("#dislike-btn").click(function(){
-		        	if($("#likehateStatus").val() == "1"){ // 이미 싫어요 클릭 돼있을 경우
+		        	if($("#likehateStatus").val() == "1"){ // 이미 싫어요 클릭 돼있을 경우 => 싫어요 삭제
 		        		$.ajax({
 		        			url:"deleteLike.bo",
-		        			success:function(){
-		        				
+		        			data:{
+		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				boardNo:${ b.boardNo }
+		        			},success:function(b){
+		        				$("#dislike-btn").removeClass("clickedbtn");
+		        				$("#dislike-btn").text("👎 " + b.likeCount);
+		        				$("#likehateStatus").val(b.likehateStatus);
 		        			},error:function(){
-		        				
+		        				console.log("싫어요 삭제 ajax 통신 실패")
 		        			}
 		        		})
 		        	} else if($("#likehateStatus").val() == "0"){ // 좋아요 클릭 돼있을 경우
@@ -157,11 +162,17 @@
 		        		$("#likehateModal").modal("show");
 		        	} else{ // 싫어요 추가
 		        		$.ajax({
-		        			url:"addLike.bo",
-		        			success:function(){
-		        				
+		        			url:"insertLike.bo",
+		        			data:{
+		        				userNo:40, // 로그인한 회원으로 바꾸기
+		        				boardNo:${ b.boardNo },
+		        				likehateStatus:1
+		        			},success:function(b){
+		        				$("#dislike-btn").addClass("clickedbtn");
+		        				$("#dislike-btn").text("👎 " + b.hateCount);
+		        				$("#likehateStatus").val(b.likehateStatus);
 		        			},error:function(){
-		        				
+		        				console.log("싫어요 추가 ajax 통신 실패")
 		        			}
 		        		})
 		        	}

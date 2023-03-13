@@ -276,7 +276,7 @@
   		  (
   		    #{boardNo}
   		  , #{userNo}
-  		  , 0
+  		  , #{likehateStatus}
   		  )
   	</insert>
 </mapper>
