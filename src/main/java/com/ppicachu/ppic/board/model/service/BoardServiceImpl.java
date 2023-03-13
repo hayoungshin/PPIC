@@ -96,4 +96,14 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.deleteReport(sqlSession, reportNo);
 	}
 
+	@Override
+	public int deleteLike(Board b) {
+		return bDao.deleteLike(sqlSession, b);
+	}
+
+	@Override
+	public int insertLike(Board b) {
+		return bDao.insertLike(sqlSession, b);
+	}
+
 }

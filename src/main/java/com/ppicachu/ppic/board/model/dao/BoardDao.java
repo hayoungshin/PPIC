@@ -89,4 +89,12 @@ public class BoardDao {
 	public int deleteReport(SqlSessionTemplate sqlSession, int reportNo) {
 		return sqlSession.update("boardMapper.deleteReport", reportNo);
 	}
+	
+	public int deleteLike(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.delete("boardMapper.deleteLike", b);
+	}
+	
+	public int insertLike(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.insert("boardMapper.insertLike", b);
+	}
 }

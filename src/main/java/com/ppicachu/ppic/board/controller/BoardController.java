@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.ppicachu.ppic.board.model.service.BoardService;
 import com.ppicachu.ppic.board.model.vo.Board;
 import com.ppicachu.ppic.board.model.vo.Report;
@@ -242,6 +244,28 @@ public class BoardController {
 			m.addAttribute("errorMsg", "신고 삭제 실패");
 			return "common/errorPage";
 		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="deleteLike.bo", produces="application/json; charset=utf-8")
+	public String ajaxDeleteLike(Board b) {
+		int result = bService.deleteLike(b);
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("boardNo", b.getBoardNo());
+		map.put("userNo", b.getUserNo());
+		Board board = bService.selectBoard(map);
+		return new Gson().toJson(board);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="insertLike.bo", produces="application/json; charset=utf-8")
+	public String ajaxInsertLike(Board b) {
+		int result = bService.insertLike(b);
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("boardNo", b.getBoardNo());
+		map.put("userNo", b.getUserNo());
+		Board board = bService.selectBoard(map);
+		return new Gson().toJson(board);
 	}
 	
 

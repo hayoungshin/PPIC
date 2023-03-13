@@ -43,4 +43,10 @@ public interface BoardService {
 	
 	// 10. 신고 삭제 서비스
 	int deleteReport(int reportNo);
+	
+	// 11. 좋아요 삭제
+	int deleteLike(Board b);
+	
+	// 12. 좋아요 추가
+	int insertLike(Board b);
 }
