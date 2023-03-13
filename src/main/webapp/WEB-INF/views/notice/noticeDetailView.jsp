@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,6 +27,24 @@
     }
     #update-btn, #delete-btn, #modal-btn{background: rgb(111, 80, 248);}
     a:hover{opacity: 0.7;}
+    
+    .pro{
+    	display:inline-block;
+        width: 25px;
+        height: 25px;
+        background: rgb(111, 80, 248);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: small;
+        text-align:center;
+        line-height:25px;
+	}
+	#profileImg{
+		height:25px;
+		width:25px;
+		border-radius: 5px;
+	}
 </style>
 </head>
 <body>
@@ -43,7 +62,14 @@
             </tr>
             <tr class="line">
                 <td colspan="2">
-                    <img src="resources/icons/profile.jpg" class="rounded-circle" width="25" height="25">
+                	<c:choose>
+                		<c:when test="${ empty n.profileImg }">
+                			<span class="pro">${ fn:substring(n.noticeWriter,0,1) } </span> 
+                		</c:when>
+                		<c:otherwise>
+                			<img src="${ n.profileImg }" id="profileImg">
+                		</c:otherwise>
+                	</c:choose>
                     ${ n.noticeWriter } &nbsp;
                     ${ n.createDate }
                 </td>
@@ -66,11 +92,26 @@
                 <td colspan="3">${ n.noticeContent }</td>
             </tr>
         </table>
+        
+        <form action="" method="post" id="postForm">
+        	<input type="hidden" name="no" value="${ n.noticeNo }">
+        </form>
+        
+        <script>
+        	function postFormSubmit(num){
+        		if(num == 1){
+        			$("#postForm").attr("action", "updateForm.no").submit();
+        		} else{
+        			$("#postForm").attr("action", "delete.no").submit();
+        		}
+        	}
+        </script>
+        
         <div align="center" style="width:1200px;">
-            <a href="" class="btn" id="list-btn">목록</a>
+            <a class="btn" id="list-btn" onclick="history.back();">목록</a>
             <!-- 수정/삭제 관리자만 보여짐 -->
-            <a href="" class="btn" id="update-btn">수정</a>
-            <a href="" class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            <a class="btn" id="update-btn" onclick="postFormSubmit(1)">수정</a>
+            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
         </div>
         <!-- 삭제 확인용 Modal -->
         <div class="modal" id="deleteModal" data-backdrop='static' data-keyboard='false'>
@@ -81,7 +122,7 @@
                 <div align="center">
                     삭제하시겠습니까?<br><br>
                     <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-                    <a href="" class="btn" id="delete-btn">확인</a>
+                    <a class="btn" id="delete-btn" onclick="postFormSubmit(2);">확인</a>
                 </div>
                 </div>
             </div>

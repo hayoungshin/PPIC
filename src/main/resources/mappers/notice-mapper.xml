@@ -7,6 +7,7 @@
 		<result column="notice_title" property="noticeTitle"/>
 		<result column="create_date" property="createDate"/>
 		<result column="user_name" property="noticeWriter"/>
+		<result column="profile_img" property="profileImg"/>
 		<result column="notice_content" property="noticeContent"/>
 		<result column="important" property="important"/>
 		<result column="count" property="count"/>
@@ -61,6 +62,7 @@
 		       notice_no
 		     , notice_title
 		     , user_name
+		     , profile_img
 		     , notice_content
 		     , count
 		     , to_char(create_date, 'YYYY-MM-DD (DY) HH24:MI:SS') as "create_date"

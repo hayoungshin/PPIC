@@ -28,4 +28,5 @@ public class Notice {
 	private String important;
 	private int attachmentCount;
 	private ArrayList<Attachment> attList;
+	private String profileImg;
 }
