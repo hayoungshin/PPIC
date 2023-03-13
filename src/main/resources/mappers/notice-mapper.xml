@@ -230,4 +230,16 @@
 		    ) at   
 	</insert>
 	
+	<delete id="deleteNotice">
+		delete 
+		  from notice
+		 where notice_no = #{noticeNo}
+	</delete>
+	
+	<delete id="deleteAttachment">
+		delete 
+		  from attachment
+		 where ref_no = #{refNo}
+	</delete>
+	
 </mapper>

@@ -64,5 +64,13 @@ public class NoticeDao {
 	public int updateAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> list) {
 		return sqlSession.insert("noticeMapper.updateAttachment", list);
 	}
+	
+	public int deleteNotice(SqlSessionTemplate sqlSession, int noticeNo) {
+		return sqlSession.update("noticeMapper.deleteNotice", noticeNo);
+	}
+	
+	public int deleteAttachment(SqlSessionTemplate sqlSession, int refNo) {
+		return sqlSession.delete("noticeMapper.deleteAttachment", refNo);
+	}
 
 }

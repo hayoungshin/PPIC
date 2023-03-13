@@ -53,6 +53,12 @@
 
 	<script>
         document.getElementsByClassName("menus")[0].className += ' clicked';
+        let changeArr = [];
+ 	     let origin = "";
+ 	     $(function(){
+ 		     $("input[name=origin]").val(origin);
+ 		     $("input[name=change]").val(changeArr);
+ 	     })
     </script>
     <br>
     <div class="boardOuter">
@@ -83,6 +89,10 @@
 		                <c:forEach var="a" items="${ n.attList }">
 		          			<c:if test="${ a.categoryNo eq 2 }">
 		                    	${ a.originName } <a href="${ a.changeName }" download="${ a.originName }"><img src="resources/icons/download.png" height="15px" width="15px"></a><br>
+		                    	<script>
+		                    		origin = "${a.originName}";
+			                		changeArr.push("${ a.changeName }");
+			                	</script>
 		                	</c:if>
 		                </c:forEach>
 	                </td>
@@ -95,6 +105,8 @@
         
         <form action="" method="post" id="postForm">
         	<input type="hidden" name="no" value="${ n.noticeNo }">
+        	<input type="hidden" name="origin">
+        	<input type="hidden" name="change">
         </form>
         
         <script>

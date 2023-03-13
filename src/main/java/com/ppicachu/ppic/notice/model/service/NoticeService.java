@@ -24,6 +24,7 @@ public interface NoticeService {
 	int deleteNotice(int noticeNo);
 	
 	// 5. 공지사항 수정용 서비스
+	int deleteAttachment(int refNo);
 	int updateNotice(Notice n, ArrayList<Attachment> list);
 	
 	// 6. 공지사항 검색용 서비스

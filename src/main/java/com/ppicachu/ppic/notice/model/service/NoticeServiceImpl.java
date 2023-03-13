@@ -54,7 +54,12 @@ public class NoticeServiceImpl implements NoticeService{
 
 	@Override
 	public int deleteNotice(int noticeNo) {
-		return 0;
+		return nDao.deleteNotice(sqlSession, noticeNo);
+	}
+	
+	@Override
+	public int deleteAttachment(int refNo) {
+		return nDao.deleteAttachment(sqlSession, refNo);
 	}
 
 	@Override
@@ -76,6 +81,8 @@ public class NoticeServiceImpl implements NoticeService{
 	public ArrayList<Notice> selectSearchList(HashMap<String, String> map, PageInfo pi) {
 		return nDao.selectSearchList(sqlSession, map, pi);
 	}
+
+	
 
 	
 	

@@ -76,20 +76,14 @@
 	
 	<script>
 	   document.getElementsByClassName("menus")[0].className += ' clicked';
-	   let changeArr = [];
-	   let origin = "";
-	   $(function(){
-		   $("input[name=origin]").val(origin);
-		   $("input[name=change]").val(changeArr);
-	   })
 	</script>
 	
 	<div class="boardOuter">
         <br><h5><b>공지사항 수정</b></h5><br>
         <form action="update.no" method="post" enctype="multipart/form-data">
         <input type="hidden" name="noticeNo" value="${ n.noticeNo }">
-        <input type="hidden" name="origin">
-        <input type="hidden" name="change">
+        <input type="hidden" name="origin" value="${ origin }">
+        <input type="hidden" name="change" value="${ change }">
             <table>
                 <tr>
                     <td width="100">제목</td>
@@ -113,10 +107,6 @@
 		                        	<c:forEach var="a" items="${ n.attList }">
 					          			<c:if test="${ a.categoryNo eq 2 }">
 					                    	<a href="${ a.changeName }" download="${ a.originName }">${ a.originName }</a><br>
-					                    	<script>
-					                    		origin = "${a.originName}";
-						                		changeArr.push("${ a.changeName }");
-						                	</script>
 					                	</c:if>
 					                </c:forEach>
 		                        </c:when>
