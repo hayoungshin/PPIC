@@ -61,5 +61,12 @@ public class ChatController {
 		}
 		return result > 0 ? "success" : "fail";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="searchName.chat", produces="application/json; charset=UTF-8")
+	public String ajaxSearchName(Member m) {
+		ArrayList<Member> list = cService.searchName(m);
+		return new Gson().toJson(list);
+	}
 
 }

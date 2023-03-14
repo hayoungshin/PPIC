@@ -26,4 +26,8 @@ public class ChatDao {
 	public int deleteChatLike(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.delete("chatMapper.deleteChatLike", m);
 	}
+	
+	public ArrayList<Member> searchName(SqlSessionTemplate sqlSession, Member m){
+		return (ArrayList)sqlSession.selectList("chatMapper.searchName", m);
+	}
 }

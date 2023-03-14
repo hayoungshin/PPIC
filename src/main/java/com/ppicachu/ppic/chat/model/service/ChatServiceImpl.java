@@ -37,4 +37,9 @@ public class ChatServiceImpl implements ChatService{
 	public int deleteChatLike(Member m) {
 		return cDao.deleteChatLike(sqlSession, m);
 	}
+
+	@Override
+	public ArrayList<Member> searchName(Member m) {
+		return cDao.searchName(sqlSession, m);
+	}
 }

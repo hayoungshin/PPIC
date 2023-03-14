@@ -48,7 +48,8 @@
         background:linear-gradient( to right, #6F50F8 5%, #FFCECE);;
     }
     #chat-menu>*{padding-left:18px;}
-    #chat-menu>img:hover{cursor: pointer; opacity: 0.7;}
+    #chat-menu>img{opacity: 0.7;}
+    #chat-menu>img:hover{cursor: pointer; opacity: 1;}
 
     /* chat 검색 스타일 */
     #search-area tr{border-bottom:1px solid lightgray;} 
@@ -199,15 +200,15 @@
             </div>
     
             <div id="chat-menu">
-                <img src="resources/icons/user.png" height="26px" onclick="showUser();"> 
-                <img src="resources/icons/chat.png" height="25px" onclick="showChatting();"> 
+                <img src="resources/icons/user.png" height="26px" id="member-btn" onclick="showUser();" style="opacity:1;"> 
+                <img src="resources/icons/chat.png" height="25px" id="chat-btn" onclick="showChatting();"> 
             </div> 
             
             <table id="search-area">
                 <tr>
                     <td width="300px">
                         <input type="text" name="keyword" placeholder="&nbsp;이름으로 검색하세요">
-                        <button type="submit"><img src="resources/icons/search.png" height="25px" width="25px"></button>
+                        <button id="nameSearch-btn"><img src="resources/icons/search.png" height="25px" width="25px"></button>
                     </td>
                 </tr>
             </table>
@@ -581,7 +582,7 @@
        		$("#collegeProfile").modal("show");
         })
         
-        // 멤버 즐겨찾기
+        // 멤버 즐겨찾기 => ajax
         $(document).on("click", "#like-img", function(){
         	$.ajax({
         		url:"likeMember.chat",
@@ -598,7 +599,11 @@
         					$("#like-img").attr("class", "n");
         					$("#like-img").attr("src", "resources/icons/star.png");
         				}
-        				memList();
+        				if($("#college-area").html().includes("detailView")){
+        					memList();
+        				}else{
+        					nameSearch();
+        				}
         			}
         		},error:function(){
         			console.log("멤버 즐겨찾기용 ajax 통신 실패");
@@ -606,9 +611,60 @@
         	})
         })
         
+        // 주소록 이름 검색
+        function nameSearch(){
+        	$.ajax({
+        		url:"searchName.chat",
+        		data:{
+        			userName:$("input[name=keyword]").val(),
+        			userNo:${loginUser.userNo}
+        		},success:function(list){
+        			let value = "";
+        			for(let i=0; i<list.length; i++){
+        				value += "<div class='detail' style='display:block;'>"
+        					+ "<div><img src='"
+        					if(list[i].profileImg != null){
+    							value += list[i].profileImg
+    						}else{
+    							value += "resources/icons/profile.png"
+    						}
+    						value += "' class='rounded-circle collegeProfileImg pro-small'>"
+    							+ "<input type='hidden' value='" + list[i].userNo +"'>"
+    							+ "<input type='hidden' value='" + list[i].userName +"'>"
+    							+ "<input type='hidden' value='" + list[i].department +"'>"
+    							+ "<input type='hidden' value='" + list[i].position +"'>"
+    							+ "<input type='hidden' value='" + list[i].mail +"'>"
+    							+ "<input type='hidden' value='" + list[i].phone +"'>"
+    							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
+    							+ "<span>" + list[i].userName + "&nbsp;<span class='conn";
+    						if(list[i].connSta == 0){
+    			        		value += " online";
+    			       		} else if(list[i].connSta == 1){
+    			       			value += " offline";
+    			       		} else if(list[i].connSta == 2){
+    			       			value += " out";
+    			       		}
+    						value += "'></span></span></div></div>";
+        			}
+        			$("#college-area").html(value);
+        		},error:function(){
+        			console.log("주소록 검색용 ajax 통신 실패");
+        		}
+        	})
+        }
+        $("#nameSearch-btn").click(function(){
+        	if($("input[name=keyword]").val() != ""){
+        		nameSearch();
+        	} else{
+        		memList();
+        	}
+        })
+        
         // 채팅 메뉴바 클릭 (주소록)
         function showUser(){
-            // ajax
+        	memList();
+        	$("#member-btn").css("opacity", "1");
+        	$("#chat-btn").css("opacity", "0.7");
         }
 
         // 채팅 메뉴바 클릭 (채팅목록)

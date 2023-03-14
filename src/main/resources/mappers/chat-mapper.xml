@@ -9,17 +9,7 @@
 		<result column ="department" property="department" />
 		<result column ="phone" property="phone" />
 		<result column ="mail" property="mail" />
-		<result column ="hire_date" property="hireDate" />
-		<result column ="resign_date" property="resignDate" />
-		<result column ="employee_no" property="employeeNo" />
-		<result column ="user_id" property="userId" />
-		<result column ="user_pwd" property="userPwd" />
-		<result column ="address" property="address" />
-		<result column ="company" property="company" />
 		<result column ="profile_img" property="profileImg" />
-		<result column ="status" property="status" />
-		<result column ="authority_no" property="authorityNo" />
-		<result column ="member_sign" property="memberSign" />
 		<result column ="conn_sta" property="connSta" />
 		<result column ="chat_like" property="chatLike" />
 	</resultMap>
@@ -37,14 +27,13 @@
 		     , user_name
 		     , nvl(phone, '전화번호 없음') "phone"
 		     , mail
-		     , employee_no
 		     , position_name as "position"
 		     , department_name as "department"
 		     , conn_sta
 		     , profile_img
 		     , (select like_date
                   from chat_like
-                 where myuser_no = #{user_no}
+                 where myuser_no = #{userNo}
                    and likeuser_no = user_no) "chat_like"
 		  from member
 		  join dept on (member.department = dept.department_no) 
@@ -72,4 +61,27 @@
 		 where myuser_no = #{userNo}
 		   and likeuser_no = #{chatLike}
 	</delete>
+	
+	<select id="searchName" resultMap="memberResult">
+		select
+		       user_no
+		     , user_name
+		     , nvl(phone, '전화번호 없음') "phone"
+		     , mail
+		     , position_name as "position"
+		     , department_name as "department"
+		     , conn_sta
+		     , profile_img
+		     , (select like_date
+                  from chat_like
+                 where myuser_no = #{userNo}
+                   and likeuser_no = user_no) "chat_like"
+		  from member
+		  join dept on (member.department = dept.department_no) 
+		  join position on (member.position = position.position_no)
+		 where status='Y'
+		   and user_name like '%' || #{userName} || '%'
+		   and user_no != #{userNo}
+	</select>
+	
 </mapper>

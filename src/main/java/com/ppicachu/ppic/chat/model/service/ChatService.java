@@ -15,4 +15,7 @@ public interface ChatService {
 	// 3. 멤버 즐겨찾기
 	int insertChatLike(Member m);
 	int deleteChatLike(Member m);
+	
+	// 4. 주소록 이름 찾기
+	ArrayList<Member> searchName(Member m);
 }
