@@ -33,5 +33,7 @@ public class Member {
 	private String giveDay;
 	private String useDay;
 	private String addDay;
+	
+	private String chatLike;
 
 }

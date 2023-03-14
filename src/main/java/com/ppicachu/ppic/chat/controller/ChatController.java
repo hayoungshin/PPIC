@@ -42,8 +42,8 @@ public class ChatController {
 	
 	@ResponseBody
 	@RequestMapping(value="memList.chat", produces="application/json; charset=UTF-8")
-	public String ajaxSelectMemList() {
-		ArrayList<Member> list1 = mService.selectListMember();
+	public String ajaxSelectMemList(int userNo) {
+		ArrayList<Member> list1 = cService.selectListMember(userNo);
 		ArrayList<Department> list2 = mService.selectDeptList();
 		HashMap<String, ArrayList> map = new HashMap<>();
 		map.put("memList", list1);

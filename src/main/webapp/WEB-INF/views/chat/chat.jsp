@@ -478,41 +478,102 @@
 	   		// 주소록 불러오기 => ajax
 	   		$.ajax({
 	   			url:"memList.chat",
+	   			data:{userNo:${loginUser.userNo}},
         		success:function(map){
-        			value = "";
+        			let value1 = "<div class='detailView'>"
+		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
+		    					+ "내 부서"
+		    					+ "</div>"
+		    					+ "<div class='detail' style='display:block;'>";
+        			let value2 = "";
+        			let value3 = "<div class='detailView'>"
+		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
+		    					+ "즐겨찾기"
+		    					+ "</div>"
+		    					+ "<div class='detail' style='display:block;'>";
+		    		let likeCount = 0; // 즐겨찾는 사람수
         			for(let i=0; i<map.deptList.length; i++){
-        				value += "<div class='detailView'>"
-        					+ "<img src='resources/icons/right-arrow.png' height='15px' width='15px'>&nbsp;"
-        					+ map.deptList[i].departmentName
-        					+ "</div>"
-        					+ "<div class='detail'>";
-        				for(let j=0; j<map.memList.length; j++){
-        					if(map.memList[j].department == map.deptList[i].departmentName){
-        						value += "<div><img src='";
-        						if(map.memList[j].profilImg != null){
-        							value += map.memList[j].profileImg
-        						}else{
-        							value += "resources/icons/profile.jpg"
-        						}
-        						value += "' class='rounded-circle collegeProfileImg pro-small'>"
-        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
-        						if(map.memList[j].connSta == 0){
-        			        		value += " online";
-        			       		} else if(map.memList[j].connSta == 1){
-        			       			value += " offline";
-        			       		} else if(map.memList[j].connSta == 2){
-        			       			value += " out";
-        			       		}
-        						value += "'></span></span></div>";
-        					}
+        				if(map.deptList[i].departmentNo == ${loginUser.department}){
+	        				for(let j=0; j<map.memList.length; j++){
+	        					if(map.memList[j].department == map.deptList[i].departmentName){
+	        						value1 += "<div><img src='";
+	        						if(map.memList[j].profilImg != null){
+	        							value1 += map.memList[j].profileImg
+	        						}else{
+	        							value1 += "resources/icons/profile.jpg"
+	        						}
+	        						value1 += "' class='rounded-circle collegeProfileImg pro-small'>"
+	        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+	        						if(map.memList[j].connSta == 0){
+	        			        		value1 += " online";
+	        			       		} else if(map.memList[j].connSta == 1){
+	        			       			value1 += " offline";
+	        			       		} else if(map.memList[j].connSta == 2){
+	        			       			value1 += " out";
+	        			       		}
+	        						value1 += "'></span></span></div>";
+	        					}
+	        				}
+	        				value1 += "</div>";
+        				} else{
+        					value2 += "<div class='detailView'>"
+	        					+ "<img src='resources/icons/right-arrow.png' height='15px' width='15px'>&nbsp;"
+	        					+ map.deptList[i].departmentName
+	        					+ "</div>"
+	        					+ "<div class='detail'>";
+	        				for(let j=0; j<map.memList.length; j++){
+	        					if(map.memList[j].department == map.deptList[i].departmentName){
+	        						value2 += "<div><img src='";
+	        						if(map.memList[j].profilImg != null){
+	        							value2 += map.memList[j].profileImg
+	        						}else{
+	        							value2 += "resources/icons/profile.jpg"
+	        						}
+	        						value2 += "' class='rounded-circle collegeProfileImg pro-small'>"
+	        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+	        						if(map.memList[j].connSta == 0){
+	        			        		value2 += " online";
+	        			       		} else if(map.memList[j].connSta == 1){
+	        			       			value2 += " offline";
+	        			       		} else if(map.memList[j].connSta == 2){
+	        			       			value2 += " out";
+	        			       		}
+	        						value2 += "'></span></span></div>";
+	        					}
+	        				}
+	        				value2 += "</div>"
         				}
-        				value += "</div>"
         			}
-        			$("#college-area").html(value);
+        			for(let k=0; k<map.memList.length; k++){
+        				
+    					if(map.memList[k].chatLike != null){
+    						value3 += "<div><img src='";
+    						if(map.memList[k].profilImg != null){
+    							value3 += map.memList[k].profileImg
+    						}else{
+    							value3 += "resources/icons/profile.jpg"
+    						}
+    						value3 += "' class='rounded-circle collegeProfileImg pro-small'>"
+    							+ "<span>" + map.memList[k].userName + "&nbsp;<span class='conn";
+    						if(map.memList[k].connSta == 0){
+    			        		value3 += " online";
+    			       		} else if(map.memList[k].connSta == 1){
+    			       			value3 += " offline";
+    			       		} else if(map.memList[k].connSta == 2){
+    			       			value3 += " out";
+    			       		}
+    						value3 += "'></span></span></div>";
+    						likeCount += 1;
+    					}
+    				}
+        			if(likeCount == 0){
+        				value3 += "<div><small>즐겨찾는 멤버가 없습니다.<small></div>"
+        			}
+    				value3 += "</div>"
+        			$("#college-area").html(value3 + value1 + value2);
         		},error:function(){
         			console.log("주소록 불러오기용 ajax 통신 실패");
         		}
-	   			
 	   		})
 	   	})
 	   	

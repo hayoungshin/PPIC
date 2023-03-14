@@ -40,13 +40,10 @@
 		     , employee_no
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
-		     , conn_sta
-		     , profile_img
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
 		 where status='Y'
-	     
 	</select>
 	
 	<select id="selectDeptList" resultMap="departmentResult">
