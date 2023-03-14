@@ -31,4 +31,9 @@ public class MailController {
 		return "mail/sendMailListView";
 	}
 	
+	@RequestMapping("sendDetail.ml")
+	public String selectsendMail() {
+		return "mail/sendMailDetailView";
+	}
+	
 }

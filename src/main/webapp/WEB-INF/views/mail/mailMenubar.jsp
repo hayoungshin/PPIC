@@ -136,13 +136,13 @@
 		<br><br><br>
 
 		<div id="mail-menu" style="margin-bottom:40px;">
-			<div style="margin-left:0;" class="selected" onclick="menuSelected(this);">
+			<div class="mail-menu" style="margin-left:0;" onclick="location.href='recieveList.ml'">
 				받은메일 <span style="color:#6F50F8; font-weight:600">12</span>
 			</div>
-			<div onclick="location.href='sendList.ml'" onclick="menuSelected(this);">보낸메일</div>
-			<div onclick="menuSelected(this);">중요메일</div>
-			<div onclick="menuSelected(this);">임시보관함</div>
-			<div onclick="menuSelected(this);">휴지통</div>
+			<div class="mail-menu" onclick="location.href='sendList.ml'">보낸메일</div>
+			<div class="mail-menu">중요메일</div>
+			<div class="mail-menu">임시보관함</div>
+			<div class="mail-menu">휴지통</div>
 			<div id="mail-search-area" style="font-size:15px; margin-left:400px;">
 				<form action="">
 					<input type="text" placeholder="메일검색" style="width:300px; border-radius:5px; border:1px solid gray; padding-left:10px;">
@@ -156,22 +156,7 @@
 			</div>
 		</div>
 		
-		<script>
-			function menuSelected(e){
-				e.className = "selected";
-				const siblings = e.parentNode.children;
-				
-				for(let i=0; i<siblings.length; i++){
-					if(siblings[i] != e){
-						siblings[i].classList.remove("selected");
-					}
-				}
-			}
-		</script>
-			
-			
-			
-	
+		
 	<!-- The Modal -->
 	<div class="modal" id="myModal">
 		<div class="modal-dialog">

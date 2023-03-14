@@ -9,6 +9,9 @@
 </head>
 <body>
 	<jsp:include page="mailMenubar.jsp" />
+	<script>
+	document.getElementsByClassName("mail-menu")[0].className += ' selected';
+    </script>
 	
 	<!-- 리스트 -->
 	<div align="center">

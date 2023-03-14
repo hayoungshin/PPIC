@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-
 	table th{
 		font-weight:600;
 		padding:3px 0px;
@@ -69,10 +68,10 @@
 <body>
 	<jsp:include page="mailMenubar.jsp" />
 	<script>
-	document.getElementsByClassName("mail-menu")[0].className += ' selected';
+	document.getElementsByClassName("mail-menu")[1].className += ' selected';
     </script>
-	
-	<div class="tooltip">Hover over me
+    
+    <div class="tooltip">
 		<span class="tooltiptext" style="font-size:12px;">답장</span>
 	</div>
 
@@ -85,7 +84,7 @@
 		</tr>
 		<tr>
 			<th style="width:100px;">보낸 사람</th>
-			<td style="width:1000px;">박사원</td>
+			<td style="width:1035px;">박사원</td>
 		</tr>
 		<tr>
 			<th>받는 사람</th>
@@ -99,19 +98,12 @@
 				<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
 			</td>
 			<td style="width:35px; text-align:center;">
-				<div class="tool-tip">
-					<img src="resources/icons/reply.png" style="cursor:pointer; width:20px;">	
-					<span class="tooltiptext" style="font-size:12px;">답장</span>
-				  </div>
-			</td>
-			<td style="width:35px; text-align:center;">
 				<div class="dropdown" id="dropdown">
 					<img src="resources/icons/dots.png" style="width:18px; cursor:pointer; opacity:0.7;" class="dropdown-toggle" data-toggle="dropdown">
 					<div class="dropdown-menu" style="font-size:13px; padding:0; left:-120px;">
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">답장</a>
+						<a class="dropdown-item" style="padding:5px 10px;" href="#">다시보내기</a>
 						<a class="dropdown-item" style="padding:5px 10px;" href="#">전달</a>
 						<a class="dropdown-item" style="padding:5px 10px;" href="#">삭제</a>
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">안읽음으로표시</a>
 					</div>
 				</div>
 			</td>
@@ -131,5 +123,6 @@
 		어떤팀 신하영입니다.<br><br>
 		안녕히계세요.
 	</div>
+
 </body>
 </html>
