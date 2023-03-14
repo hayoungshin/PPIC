@@ -1,13 +1,16 @@
 package com.ppicachu.ppic.approval.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.ppicachu.ppic.approval.model.service.ApprovalService;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
@@ -22,16 +25,18 @@ public class ApprovalController {
 	
 	@RequestMapping("list.ap")
 	public String selectList(@RequestParam(value="cpage", defaultValue="1") int currentPage, MyDept md, Model m) {
-		/*int listCount = aService.selectListCount(md);
+		int listCount = aService.selectListCount(md);
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 5);
 		ArrayList<Approval> list = aService.selectList(md, pi);
 		
 		m.addAttribute("pi", pi);
 		m.addAttribute("list", list);
-		*/
+		
 		String page = "";
 		if(md.getMyi() != 0) {
 			page = "approval/appMyIngListView";
+		} else if(md.getAgr() != 0) {
+			page = "approval/appMyIngAgreeView";
 		} else if(md.getMye() != 0) {
 			page = "approval/appMyEdListView";
 		} else if(md.getMyt() != 0) {
@@ -52,6 +57,32 @@ public class ApprovalController {
 			page = "approval/managerAppDelListView";
 		}
 		return page;
+	}
+	
+	/*
+	 * @ResponseBody
+	 * 
+	 * @RequestMapping(value="agreeListCount.ap",
+	 * produces="application/json; charset=utf-8") public String
+	 * AjaxAgreeListCount(@RequestParam(value="cpage", defaultValue="1") int
+	 * currentPage, MyDept md) { int listCount = aService.selectListCount(md);
+	 * PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 5);
+	 * 
+	 * return new Gson().toJson(pi); }
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value="agreeList.ap", produces="application/json; charset=utf-8")
+	public String AjaxAgreeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, MyDept md) {
+		int listCount = aService.selectListCount(md);
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 5);
+		ArrayList<Approval> list = aService.selectList(md, pi);
+
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("agreePi", pi);
+		map.put("agreeList", list);
+		
+		return new Gson().toJson(map);
 	}
 	/*
 	// 개인_기안_진행중
@@ -167,6 +198,30 @@ public class ApprovalController {
 	@RequestMapping("enrollForm.ap")
 	public String enrollForm() {
 		return "approval/appEnrollForm";
+	}
+	
+	/* 업무기안폼으로 이동 */
+	@RequestMapping("enrollDraftForm.ap")
+	public String enrollDraftForm() {
+		return "approval/appEnrollDraftForm";
+	}
+	
+	/* 인사발령품의서폼으로 이동 */
+	@RequestMapping("enrollTransferForm.ap")
+	public String enrollTransferForm() {
+		return "approval/appEnrollTransferForm";
+	}
+	
+	/* 비품신청서폼으로 이동 */
+	@RequestMapping("enrollConsumeForm.ap")
+	public String enrollConsumeForm() {
+		return "approval/appEnrollConsumeForm";
+	}
+	
+	/* 지출결의서폼으로 이동 */
+	@RequestMapping("enrollCashForm.ap")
+	public String enrollCashForm() {
+		return "approval/appEnrollCashForm";
 	}
 	
 	/* 작성 */

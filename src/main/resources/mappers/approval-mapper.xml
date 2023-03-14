@@ -1,4 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="approvalMapper">
+	<resultMap type="Approval" id="approvalResult">
+		<id column="approval_no" property="approvalNo"/>
+		<result column="user_name" property="userName"/>
+		<result column="form" property="form"/>
+		<result column="title" property="title"/>
+		<result column="origin_name" property="originName"/>
+		<result column="approval_status" property="approvalStatus"/>
+		<result column="current_order" property="currentOrder"/>
+		<result column="final_order" property="finalOrder"/>
+		<result column="create_date" property="createDate"/>
+		<result column="complete_date" property="completeDate"/>
+		<result column="complete_no" property="completeNo"/>
+		<result column="bookmark" property="bookmark"/>
+	</resultMap>
+	
+	<select id="selectListCount" resultType="_int">
+		select count(*)
+		  from app_process ap <!-- app_process(결재선)에 내가 결재자로 포함된 모든 기안 -->
+		  join approval a using(approval_no)
+		 <where>
+		 	<if test="myi != null">
+		   		ap.user_no = 2
+		   		<if test="agr == null">
+		   			and process_order <![CDATA[<=]]> current_order + 1 <!-- 결재 진행상황 상 현재 순서보다 내가 먼저이거나 같을때만 보여줘야 함 -->
+		   		</if>
+		   		<if test="agr != null">
+		   			and process_order = current_order + 1 <!-- 결재자의 순서가 본인일 경우 -->
+		   		</if>
+		   		and approval_role != '참조'
+		   		and approval_status in ('대기', '진행중')
+		   		and a.status = 'Y'
+		 	</if>
+		 </where>
+	</select>
+	
+	<select id="selectList" resultMap="approvalResult">
+		select
+		       approval_no
+		     , user_name
+		     , form
+		     , title
+		     , (
+		        select first_value(origin_name) over() <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
+		          from attachment
+		         where approval_no = ref_no
+		           and category_no = 1
+		       ) origin_name
+		     , approval_status
+		     , current_order
+		     , final_order
+		     , create_date
+		     , complete_date
+		     , complete_no
+		     , bookmark
+		  from app_process ap <!-- app_process(결재선)에 내가 결재자로 포함된 모든 기안 -->
+		  join approval a using(approval_no)
+		  join member m on (a.user_no = m.user_no)
+		 <where>
+		 	<if test="myi != 0">
+		   		ap.user_no = 2
+		   		<if test="agr == 0">
+		   			and process_order <![CDATA[<=]]> current_order + 1 <!-- 결재 진행상황 상 현재 순서보다 내가 먼저이거나 같을때만 보여줘야 함 -->
+		   		</if>
+		   		<if test="agr != 0">
+		   			and process_order = current_order + 1 <!-- 결재자의 순서가 본인일 경우 -->
+		   		</if>
+		   		and approval_role != '참조'
+		   		and approval_status in ('대기', '진행중')
+		   		and a.status = 'Y'
+		 	</if>
+		 </where>
+		 order
+		    by approval_no desc
+	</select>
+
 </mapper>

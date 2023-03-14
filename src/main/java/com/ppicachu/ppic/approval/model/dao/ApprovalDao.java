@@ -7,19 +7,20 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ppicachu.ppic.approval.model.vo.Approval;
+import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 
 @Repository
 public class ApprovalDao {
 	
-	public int selectListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("approvalMapper.selectListCount");
+	public int selectListCount(SqlSessionTemplate sqlSession, MyDept md) {
+		return sqlSession.selectOne("approvalMapper.selectListCount", md);
 	}
 	
-	public ArrayList<Approval> selectList(SqlSessionTemplate sqlSession, PageInfo pi){
+	public ArrayList<Approval> selectList(SqlSessionTemplate sqlSession, MyDept md, PageInfo pi){
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		int limit = pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return (ArrayList)sqlSession.selectList("approvalMapper.selectList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("approvalMapper.selectList", md, rowBounds);
 	}
 }

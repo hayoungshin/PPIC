@@ -94,7 +94,7 @@
 		
 			<!-- 개인 문서함 _ 기안 문서함 _ 진행중일 경우-->
 			<div class="custom-control custom-switch" id="switch-area" style="display: none;">
-			    <input type="checkbox" class="custom-control-input" id="switch1">
+			    <input type="checkbox" class="custom-control-input" id="switch1" onclick="switchBox();">
 			    <label class="custom-control-label" for="switch1">승인필요</label>
 		    </div>
 		    

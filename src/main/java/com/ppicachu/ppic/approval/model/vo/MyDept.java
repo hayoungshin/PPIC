@@ -13,6 +13,7 @@ import lombok.ToString;
 @ToString
 public class MyDept {
 	private int myi; // 개인_기안_진행중
+	private int agr; // 승인필요
 	private int mye; // 개인_기안_완료
 	private int myt; // 개인_기안_임시저장
 	private int myr; // 개인_참조

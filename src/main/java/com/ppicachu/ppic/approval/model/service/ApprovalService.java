@@ -16,6 +16,7 @@ public interface ApprovalService {
 	// 1. 전자결재 리스트 페이지 조회 서비스 (페이징)
 	int selectListCount(MyDept md);
 	ArrayList<Approval> selectList(MyDept md, PageInfo pi);
+	
 	/*
 	// 1. 개인_기안_진행중 select (/승인필요) (+count)
 	int selectMyIngListCount(String userNo);

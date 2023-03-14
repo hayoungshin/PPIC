@@ -2,8 +2,11 @@ package com.ppicachu.ppic.approval.model.service;
 
 import java.util.ArrayList;
 
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ppicachu.ppic.approval.model.dao.ApprovalDao;
 import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
@@ -16,14 +19,20 @@ import com.ppicachu.ppic.member.model.vo.Member;
 @Service
 public class ApprovalServiceImpl implements ApprovalService {
 
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	@Autowired
+	private ApprovalDao aDao;
+	
 	@Override
 	public int selectListCount(MyDept md) {
-		return 0;
+		return aDao.selectListCount(sqlSession, md);
 	}
 
 	@Override
 	public ArrayList<Approval> selectList(MyDept md, PageInfo pi) {
-		return null;
+		return aDao.selectList(sqlSession, md, pi);
 	}
 
 	@Override

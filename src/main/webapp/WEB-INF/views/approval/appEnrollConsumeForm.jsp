@@ -65,7 +65,7 @@
             <div class="title-area"><h2><b>작성하기</b></h2></div>
             <div id="title-area-selop">
 	            <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" style="width:130px; background-color:#6F50F8; border:0px;">
-	              결재양식
+	              비품신청서
 	            </button>
 	            <div class="dropdown-menu">
 	              <a class="dropdown-item" href="enrollDraftForm.ap">업무기안</a>
@@ -83,7 +83,7 @@
                     <table id="tb" class="table-bordered">
                         <thead>
                             <tr>
-                                <th colspan="4"><br><h2><b>결재양식을 선택하세요</b></h2><br></th>
+                                <th colspan="4"><br><h2><b>비품신청서</b></h2><br></th>
                             </tr>
                             <tr>
                                 <th width="20%">작성일</th>
@@ -93,22 +93,64 @@
                             </tr>
                             <tr>
                                 <th>부서</th>
-                                <td>${ loginUser.department }</td>
+                                <td>?</td>
                                 <th>문서번호</th>
                                 <td>기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
                             <tr>
                                 <th>직급</th>
-                                <td>${ loginUser.position }</td>
+                                <td>?</td>
                                 <th>작성자</th>
-                                <td>${ loginUser.userId }</td>
+                                <td>?</td>
                             </tr>
                             <tr>
                                 <th>제목</th>
-                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" readonly></td>
+                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>
                             </tr>
                         </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">
+
+                                    <!-- 비품신청서일 경우 -->
+                                    <table id="tb" class="table-bordered">
+                                        <tr>
+                                            <th>품명</th>
+                                            <th>사유</th>
+                                            <th>단위</th>
+                                            <th>수량</th>
+                                            <th>단가</th>
+                                            <th>금액</th>
+                                        </tr>
+
+                                        <!-- 행 추가할 경우-->
+                                        <div class="add-btn-area"><button class="btnn-pp">+ 행추가</button></div>
+                                        <br clear="both">
+
+                                        <!-- forEach -->
+                                        <tr>
+                                            <td>?</td>
+                                            <td>?</td>
+                                            <td>?</td>
+                                            <td>?</td>
+                                            <td>?</td>
+                                            <td>?</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th colspan="2">합계</th>
+                                            <td colspan="4">?</td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose file</label>드래그앤드랍..
+                    </div>
                 </div>
     
             </div>
@@ -176,10 +218,11 @@
 
             <br clear="both">
             
-            <button class="btnn-gr" onclick="javascript:history.go(-1);">취소</button>
-            <button class="btnn-pk" disabled>임시저장</button>
-            <button class="btnn-pp" disabled>작성</button><!-- 작성완료시 상세로 -->
+            <button class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
+            <button class="btnn-pk">임시저장</button>
+            <button class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
         </div>
     </div>
+
 </body>
 </html>

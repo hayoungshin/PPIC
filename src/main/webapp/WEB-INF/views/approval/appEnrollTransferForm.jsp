@@ -65,7 +65,7 @@
             <div class="title-area"><h2><b>작성하기</b></h2></div>
             <div id="title-area-selop">
 	            <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" style="width:130px; background-color:#6F50F8; border:0px;">
-	              결재양식
+	              인사발령품의서
 	            </button>
 	            <div class="dropdown-menu">
 	              <a class="dropdown-item" href="enrollDraftForm.ap">업무기안</a>
@@ -83,7 +83,7 @@
                     <table id="tb" class="table-bordered">
                         <thead>
                             <tr>
-                                <th colspan="4"><br><h2><b>결재양식을 선택하세요</b></h2><br></th>
+                                <th colspan="4"><br><h2><b>인사발령품의서</b></h2><br></th>
                             </tr>
                             <tr>
                                 <th width="20%">작성일</th>
@@ -93,22 +93,79 @@
                             </tr>
                             <tr>
                                 <th>부서</th>
-                                <td>${ loginUser.department }</td>
+                                <td>?</td>
                                 <th>문서번호</th>
                                 <td>기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
                             <tr>
                                 <th>직급</th>
-                                <td>${ loginUser.position }</td>
+                                <td>?</td>
                                 <th>작성자</th>
-                                <td>${ loginUser.userId }</td>
+                                <td>?</td>
                             </tr>
                             <tr>
                                 <th>제목</th>
-                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" readonly></td>
+                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>
                             </tr>
                         </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">
+
+                                    <!-- 인사발령품의서일 경우 -->
+                                    <table id="tb" class="table-bordered">
+                                        <colgroup>
+				                    		<col style="width:15%">
+				                    		<col style="width:5%">
+				                    		<col style="width:10%">
+				                    		<col style="width:15%">
+				                    		<col style="width:15%">
+				                    		<col style="width:40%">
+				                    	</colgroup>
+				                    	<tr>
+				                            <th colspan="2" width="40%">시행일자</th>
+				                            <td colspan="4" width="60%" align="left"><input type="date" style="width:190px; height:35px;"></td>
+				                        </tr>
+				                        <tr>
+				                            <th width="15%">부서</th>
+				                            <th colspan="2" width="15%">성명</th>
+				                            <th width="15%">현직급</th>
+				                            <th width="15%">변경직급</th>
+				                            <th width="40%">비고</th>
+				                        </tr>
+
+                                        <!-- 사원 추가할 경우-->
+                                        <div class="add-btn-area"><button class="btnn-pp">+ 사원추가</button></div>
+                                        <br clear="both">
+                                        
+                                        <!-- forEach -->
+                                        <tr class="member-tr">
+                                            <td><div style="display:none;float:left;">x</div>?추가시 저절로</td>
+                                            <td colspan="2">?추가시 저절로</td>
+                                            <td>?추가시 저절로</td>
+                                            <td>
+                                            	<select style="width:140px; height:35px;">
+                                            		<option>변경직급을 선택하세요</option>
+                                            		
+                                            		<!-- forEach -->
+                                            		<option>직급 불러오기</option>
+                                            		
+                                            	</select>
+											</td>
+                                            <td>
+                                            	<input type="text" style="width:380px; height:35px;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose file</label>드래그앤드랍..
+                    </div>
                 </div>
     
             </div>
@@ -176,10 +233,11 @@
 
             <br clear="both">
             
-            <button class="btnn-gr" onclick="javascript:history.go(-1);">취소</button>
-            <button class="btnn-pk" disabled>임시저장</button>
-            <button class="btnn-pp" disabled>작성</button><!-- 작성완료시 상세로 -->
+            <button class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
+            <button class="btnn-pk">임시저장</button>
+            <button class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
         </div>
     </div>
+
 </body>
 </html>

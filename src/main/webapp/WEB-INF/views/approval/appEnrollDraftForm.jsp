@@ -45,6 +45,19 @@
 	
 	<script>
 		window.onload = function(){
+			$('#summernote').summernote({
+				height: 350,                 		// 에디터 높이disableResize: true,            // Does not work
+			    disableResizeEditor: true,      	// Does not work either
+			    lang: "ko-KR",						// 한글 설정
+				placeholder: '내용을 입력하세요'			//placeholder 설정
+		    });
+			$('.note-view').remove();
+			$('.note-insert').remove();
+			const pop = document.getElementsByClassName("note-popover");
+			for(let i=0; i<pop.length; i++){
+	        	pop[i].style = 'display:none';
+			}
+			
 			/* 작성일 */
 			date = new Date();
 			year = date.getFullYear();
@@ -65,7 +78,7 @@
             <div class="title-area"><h2><b>작성하기</b></h2></div>
             <div id="title-area-selop">
 	            <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" style="width:130px; background-color:#6F50F8; border:0px;">
-	              결재양식
+	              업무기안
 	            </button>
 	            <div class="dropdown-menu">
 	              <a class="dropdown-item" href="enrollDraftForm.ap">업무기안</a>
@@ -83,7 +96,7 @@
                     <table id="tb" class="table-bordered">
                         <thead>
                             <tr>
-                                <th colspan="4"><br><h2><b>결재양식을 선택하세요</b></h2><br></th>
+                                <th colspan="4"><br><h2><b>업무기안</b></h2><br></th>
                             </tr>
                             <tr>
                                 <th width="20%">작성일</th>
@@ -93,22 +106,58 @@
                             </tr>
                             <tr>
                                 <th>부서</th>
-                                <td>${ loginUser.department }</td>
+                                <td>?</td>
                                 <th>문서번호</th>
                                 <td>기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
                             <tr>
                                 <th>직급</th>
-                                <td>${ loginUser.position }</td>
+                                <td>?</td>
                                 <th>작성자</th>
-                                <td>${ loginUser.userId }</td>
+                                <td>?</td>
                             </tr>
                             <tr>
                                 <th>제목</th>
-                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" readonly></td>
+                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>
                             </tr>
                         </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">
+
+                                    <!-- 업무기안일 경우 -->
+                                    <table id="tb" class="table-bordered">
+                                        <tr>
+                                            <th width="20%">시행일자</th>
+                                            <td width="20%"><input type="date" style="width:190px; height:35px;"></td>
+                                            <th width="20%">협조부서</th>
+                                            <td width="40%">
+                                            	<select style="width:380px; height:35px;">
+                                            		<option>협조부서를 선택하세요</option>
+                                            		
+                                            		<!-- forEach -->
+                                            		<option>부서 불러오기</option>
+                                            		<!-- 셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기) -->
+                                            		
+                                            	</select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="4">내용</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4"><textarea name="content" id="summernote" value=""></textarea></td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose file</label>드래그앤드랍..
+                    </div>
                 </div>
     
             </div>
@@ -176,10 +225,11 @@
 
             <br clear="both">
             
-            <button class="btnn-gr" onclick="javascript:history.go(-1);">취소</button>
-            <button class="btnn-pk" disabled>임시저장</button>
-            <button class="btnn-pp" disabled>작성</button><!-- 작성완료시 상세로 -->
+            <button class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
+            <button class="btnn-pk">임시저장</button>
+            <button class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
         </div>
     </div>
+
 </body>
 </html>

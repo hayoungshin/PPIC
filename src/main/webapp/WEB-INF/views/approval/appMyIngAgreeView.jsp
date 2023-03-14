@@ -102,53 +102,8 @@
 		
 		// 승인필요
 		function switchBox(){
-			const stch = document.getElementById("switch1")
-			if(stch.checked == true){ // 승인필요가 checked인 경우
-				$.ajax({
-					url:'agreeList.ap?myi=1&agr=1',
-					success:function(map){
-						const result = document.getElementById("ajaxResult");
-						let arr = "";
-						if(map.agreePi.listCount == 0){
-							arr +=	"<tr>"
-								+		"<td colspan='8'>나의 승인이 필요한 문서가 없습니다</td>"
-								+	"</tr>";
-						}else{
-							for(let i=0; i<map.agreeList.length; i++){
-								arr +=	"<tr>"
-									+		"<td><input type='checkbox'></td>"
-									+		"<td>" + map.agreeList[i].userName + "</td>"
-									+		"<td>" + map.agreeList[i].form + "</td>"
-									+		"<td>" + map.agreeList[i].title + "</td>"
-									+		"<td>";
-								if(map.agreeList[i].originName != null){
-									arr +=		"<img src='resources/icons/clip.png' height='20px'>";
-								}
-								arr +=		"</td>"
-									+		"<td>";
-								if(map.agreeList[i].currentOrder == 0){
-									arr +=		map.agreeList[i].approvalStatus;
-								}else{
-									arr +=		map.agreeList[i].approvalStatus + " " +  + map.agreeList[i].currentOrder + "/" +  + map.agreeList[i].finalOrder;
-								}
-								arr +=		"</td>"
-									+		"<td>" + map.agreeList[i].createDate + "</td>"
-									+		"<td>";
-								if(map.agreeList[i].bookmark != null){
-									arr +=		"<img src='resources/icons/star-y.png' height='20px'>";
-								}else{
-									arr +=		"<img src='resources/icons/star.png' height='20px'>";
-								}
-								arr +=		"</td>"
-									+	"</tr>";
-							}
-						}
-						result.innerHTML = arr;
-					},
-					error:function(){
-						console.log("승인필요용 list ajax통신 실패");
-					}
-				});
+			if(document.getElementById("switch1").checked == true){ // 승인필요가 checked인 경우
+				location.href="agreeList.ap?agr=1";
 			}else{ // 승인필요가 checked가 아닌 경우
 				location.href="list.ap?myi=1";
 			}
@@ -169,51 +124,43 @@
                     <th>중요</th>
                 </tr>
             </thead>
-            <tbody id="ajaxResult">
+            <tbody>
                 
-                <c:choose>
-                	<c:when test="${ empty list }">
-                		<tr>
-                			<td colspan="8">진행중인 문서가 없습니다.</td>
-                		</tr>
-                	</c:when>
-                	<c:otherwise>
-		                <c:forEach var="a" items="${ list }">
-			                <tr>
-			                    <td><input type="checkbox"></td>
-			                    <td>${ a.userName }</td>
-			                    <td>${ a.form }</td>
-			                    <td>${ a.title }</td>
-			                    <td>
-			                    	<c:if test="${ not empty a.originName }">
-			                    		<img src="resources/icons/clip.png" height="20px">
-			                    	</c:if>
-			                    </td>
-			                    <td>
-			                    	<c:choose>
-			                    		<c:when test="${ a.currentOrder eq 0 }">
-			                    			${ a.approvalStatus }
-			                    		</c:when>
-			                    		<c:otherwise>
-			                    			${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }
-			                    		</c:otherwise>
-			                    	</c:choose>
-			                    </td>
-			                    <td>${ a.createDate }</td>
-			                    <td>
-			                    	<c:choose>
-			                    		<c:when test="${ empty a.bookmark }">
-			                    			<img src="resources/icons/star.png" height="20px">
-			                    		</c:when>
-			                    		<c:otherwise>
-				                    		<img src="resources/icons/star-y.png" height="20px">
-			                    		</c:otherwise>
-			                    	</c:choose>
-			                    </td>
-			                </tr>
-		                </c:forEach>
-		            </c:otherwise>
-                </c:choose>
+                <c:forEach var="a" items="${ list }">
+	                <tr>
+	                    <td><input type="checkbox"></td>
+	                    <td>${ a.userName }</td>
+	                    <td>${ a.form }</td>
+	                    <td>${ a.title }</td>
+	                    <td>
+	                    	<c:if test="${ not empty a.originName }">
+	                    		<img src="resources/icons/clip.png" height="100%">
+	                    	</c:if>
+	                    </td>
+	                    <td>
+	                    	<c:choose>
+	                    		<c:when test="${ a.approvalStatus eq '대기' }">
+	                    			${ a.approvalStatus }
+	                    		</c:when>
+	                    		<c:otherwise>
+	                    			${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }
+	                    		</c:otherwise>
+	                    	</c:choose>
+	                    </td>
+	                    <td>${ a.createDate }</td>
+	                    <td>
+	                    	<c:choose>
+	                    		<c:when test="${ empty a.bookmark }">
+	                    			<img src="resources/icons/star.png" height="20px">
+	                    		</c:when>
+	                    		<c:otherwise>
+		                    		<img src="resources/icons/star-y.png" height="20px">
+	                    		</c:otherwise>
+	                    	</c:choose>
+	                    </td>
+	                </tr>
+                </c:forEach>
+                
             </tbody>
         </table>
         
