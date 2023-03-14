@@ -76,6 +76,8 @@
 			// 개인-중요 black
 			document.getElementById("menu-1").style = 'color:black; font-weight:600';
 			document.getElementById("menu-1-3").style = 'color:black; font-weight:600';
+
+			document.getElementById("menu-1-3").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 개인-기안-, 부서- none
 			const arr2 = document.getElementsByClassName("menu2");
@@ -106,19 +108,52 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- forEach -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                
+                <c:choose>
+                	<c:when test="${ empty list }">
+                		<tr>
+                			<td colspan="10">중요 문서가 없습니다.</td>
+                		</tr>
+                	</c:when>
+                	<c:otherwise>
+		                <c:forEach var="a" items="${ list }">
+			                <tr>
+			                    <td><input type="checkbox"></td>
+			                    <td>${ a.userName }</td>
+			                    <td>${ a.form }</td>
+			                    <td>${ a.title }</td>
+			                    <td>
+			                    	<c:if test="${ not empty a.originName }">
+			                    		<img src="resources/icons/clip.png" height="20px">
+			                    	</c:if>
+			                    </td>
+			                    <td>
+			                    	<c:choose>
+			                    		<c:when test="${ a.currentOrder lt a.finalOrder }">
+			                    			${ a.approvalStatus } 반려
+			                    		</c:when>
+			                    		<c:otherwise>
+			                    			${ a.approvalStatus} 승인
+			                    		</c:otherwise>
+			                    	</c:choose>
+			                    </td>
+			                    <td>${ a.createDate }</td>
+			                    <td>${ a.completeDate }</td>
+			                    <td>${ a.completeNo }</td>
+			                    <td>
+			                    	<c:choose>
+			                    		<c:when test="${ empty a.bookmark }">
+			                    			<img src="resources/icons/star.png" height="20px">
+			                    		</c:when>
+			                    		<c:otherwise>
+				                    		<img src="resources/icons/star-y.png" height="20px">
+			                    		</c:otherwise>
+			                    	</c:choose>
+			                    </td>
+			                </tr>
+		                </c:forEach>
+		            </c:otherwise>
+                </c:choose>
 
             </tbody>
         </table>

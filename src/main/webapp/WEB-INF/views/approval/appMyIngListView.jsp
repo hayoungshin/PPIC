@@ -105,7 +105,7 @@
 			const stch = document.getElementById("switch1")
 			if(stch.checked == true){ // 승인필요가 checked인 경우
 				$.ajax({
-					url:'agreeList.ap?myi=1&agr=1',
+					url:'agreeList.ap?agr=1',
 					success:function(map){
 						const result = document.getElementById("ajaxResult");
 						let arr = "";
@@ -214,6 +214,7 @@
 		                </c:forEach>
 		            </c:otherwise>
                 </c:choose>
+                
             </tbody>
         </table>
         

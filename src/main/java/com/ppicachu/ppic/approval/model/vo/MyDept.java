@@ -12,6 +12,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MyDept {
+	private int userNo;
+	private String department;
+	
 	private int myi; // 개인_기안_진행중
 	private int agr; // 승인필요
 	private int mye; // 개인_기안_완료
