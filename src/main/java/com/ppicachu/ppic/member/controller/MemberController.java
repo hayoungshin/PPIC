@@ -1,5 +1,6 @@
 package com.ppicachu.ppic.member.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
@@ -8,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ppicachu.ppic.common.template.FileUpload;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
@@ -79,4 +83,48 @@ public class MemberController {
 		}
 		
 	}
+	
+	/* 회원정보 update(세션 out 됨) */
+	@RequestMapping("update.me")
+	public String updateMember(Member m, HttpSession session) {
+		int result = mService.updateMember(m);
+		
+		if(result >0) {
+			Member updateMem = mService.loginMember(m);
+			session.setAttribute("loginUser", updateMem);
+			session.setAttribute("alertMsg", "성공적으로 회원정보를 변경하였습니다");
+			
+			return "redirect:myPage.me";
+		} else {
+			
+			return "common/errorPage";
+		}
+	}
+	
+	/* 회원프로필 update(세션 out 됨) */
+	@ResponseBody 
+	@RequestMapping("uploadProfile.me")
+	public void uploadProfileImg(MultipartFile uploadFile, Member m, String originalFile, HttpSession session) {
+		
+		
+		if(uploadFile != null) {
+			String saveFilePath = FileUpload.saveFile(uploadFile, session, "resources/profile_images/");
+			m.setProfileImg(saveFilePath);
+			
+			int result = mService.updateProfileImg(m);
+			
+			if(result > 0) {
+				if(!originalFile.equals("")) {
+					new File(session.getServletContext().getRealPath(originalFile)).delete();
+				}
+				
+				Member loginUser = mService.loginMember(m);
+				session.setAttribute("loginUser",loginUser);
+				
+			}
+		}
+	}
+	
+	
+	
 }
