@@ -2,10 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="chatMapper">
 
+	<resultMap id="memberResult" type="Member">
+		<id column="user_no" property="userNo" />
+		<result column ="user_name" property="userName" />
+		<result column ="position" property="position" />
+		<result column ="department" property="department" />
+		<result column ="phone" property="phone" />
+		<result column ="mail" property="mail" />
+		<result column ="hire_date" property="hireDate" />
+		<result column ="resign_date" property="resignDate" />
+		<result column ="employee_no" property="employeeNo" />
+		<result column ="user_id" property="userId" />
+		<result column ="user_pwd" property="userPwd" />
+		<result column ="address" property="address" />
+		<result column ="company" property="company" />
+		<result column ="profile_img" property="profileImg" />
+		<result column ="status" property="status" />
+		<result column ="authority_no" property="authorityNo" />
+		<result column ="member_sign" property="memberSign" />
+		<result column ="conn_sta" property="connSta" />
+		<result column ="chat_like" property="chatLike" />
+	</resultMap>
+
 	<update id="updateConn">
 		update
 		       member
 		   set conn_sta = #{connSta}
 		 where user_no = #{userNo}
  	</update>
+ 	
+ 	<select id="selectListMember" resultMap="memberResult">
+		select
+		       user_no
+		     , user_name
+		     , phone
+		     , mail
+		     , employee_no
+		     , position_name as "position"
+		     , department_name as "department"
+		     , conn_sta
+		     , profile_img
+		     , (select like_date
+                  from chat_like
+                 where myuser_no = #{user_no}
+                   and likeuser_no = user_no) "chat_like"
+		  from member
+		  join dept on (member.department = dept.department_no) 
+		  join position on (member.position = position.position_no)
+		 where status='Y'
+	</select>
 </mapper>

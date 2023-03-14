@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.chat.model.service;
 
+import java.util.ArrayList;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,5 +21,10 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public int updateConn(Member m) {
 		return cDao.updateConn(sqlSession, m);
+	}
+
+	@Override
+	public ArrayList<Member> selectListMember(int userNo) {
+		return cDao.selectListMember(sqlSession, userNo);
 	}
 }

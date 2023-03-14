@@ -1,5 +1,8 @@
 package com.ppicachu.ppic.chat.model.dao;
 
+import java.util.ArrayList;
+
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +13,9 @@ public class ChatDao {
 
 	public int updateConn(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.update("chatMapper.updateConn", m);
+	}
+	
+	public ArrayList<Member> selectListMember(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectListMember", userNo);
 	}
 }
