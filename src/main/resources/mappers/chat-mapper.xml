@@ -35,7 +35,7 @@
 		select
 		       user_no
 		     , user_name
-		     , phone
+		     , nvl(phone, '전화번호 없음') "phone"
 		     , mail
 		     , employee_no
 		     , position_name as "position"
@@ -51,4 +51,25 @@
 		  join position on (member.position = position.position_no)
 		 where status='Y'
 	</select>
+	
+	<insert id="insertChatLike">
+		insert
+		  into chat_like
+		  (
+		    myuser_no
+		  , likeuser_no
+		  )
+		  values
+		  (
+		    #{userNo}
+		  , #{chatLike}
+		  )
+	</insert>
+	
+	<delete id="deleteChatLike">
+		delete
+		  from chat_like
+		 where myuser_no = #{userNo}
+		   and likeuser_no = #{chatLike}
+	</delete>
 </mapper>

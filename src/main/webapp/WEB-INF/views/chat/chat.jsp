@@ -27,9 +27,7 @@
      position:sticky;
     }
     #chat-logo{padding:10px;}
-    .profileImg, .collegeProfileImg{
-        cursor:pointer;
-	} 
+    .profileImg, .collegeProfileImg{cursor:pointer;} 
 	.pro-small{
 		width: 25px;
         height: 25px;
@@ -39,8 +37,8 @@
         height: 70px;
 	}
 	.pro-big{
-		width: 25px;
-        height: 25px;
+		width: 150px;
+        height: 150px;
 	}
 
     /* chat 메뉴 스타일 */
@@ -49,9 +47,7 @@
         line-height: 30px; 
         background:linear-gradient( to right, #6F50F8 5%, #FFCECE);;
     }
-    #chat-menu>*{
-        padding-left:18px; 
-    }
+    #chat-menu>*{padding-left:18px;}
     #chat-menu>img:hover{cursor: pointer; opacity: 0.7;}
 
     /* chat 검색 스타일 */
@@ -73,9 +69,7 @@
         height:380px;
         overflow:auto;
     }
-    #chat-body::-webkit-scrollbar {
-	    width: 8px;
-	}
+    #chat-body::-webkit-scrollbar {width: 8px;}
 	
 	#chat-body::-webkit-scrollbar-thumb {
 	    background: lightgray; 
@@ -184,6 +178,11 @@
         background: rgb(190, 190, 190);
     }
     #update-btn{background: rgb(111, 80, 248);}
+    #like-img{
+    	width:20px; 
+    	margin-bottom:5px;
+    	cursor:pointer;
+    }
 </style>
 </head>
 <body>
@@ -194,7 +193,7 @@
                 <b style="font-size:17px;">PPIC CHAT 💬</b>
                 <span style="float:right;">
                     ${ loginUser.userName }&nbsp;
-                    <img class="profileImg pro-small rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.jpg' />">
+                    <img class="profileImg pro-small rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.png' />">
                     <span class="conn-my"></span> 
                 </span>
             </div>
@@ -214,107 +213,7 @@
             </table>
         </div>
         <div id="chat-body">
-            
             <div id="college-area">
-                <div class="detailView">
-                    <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
-                    즐겨찾기
-                </div>
-                <div class="detail" style="display:block;">
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            김혜수
-                            <span class="conn online"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            김서형
-                            <span class="conn online"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            배수지&nbsp;
-                            <span class="conn out"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            차은우&nbsp;
-                            <span class="conn offline"></span>
-                        </span>
-                    </div>
-                </div>
-    
-                <div class="detailView">
-                    <img src="resources/icons/right-arrow.png" height="15px" width="15px">&nbsp;
-                    내 부서
-                </div>
-                <div class="detail">
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            김혜수
-                            <span class="conn online"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            
-                            김서형
-                            <span class="conn online"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            배수지&nbsp;
-                            <span class="conn out"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            차은우&nbsp;
-                            <span class="conn offline"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            김혜수
-                            <span class="conn online"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            
-                            김서형
-                            <span class="conn online"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            배수지&nbsp;
-                            <span class="conn out"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
-                        <span>
-                            차은우&nbsp;
-                            <span class="conn offline"></span>
-                        </span>
-                    </div>
-                </div>
             </div>
 
             <!-- chatRoomList
@@ -322,7 +221,7 @@
                 <table width="270">
                     <tr>
                         <td>
-                            <img src="resources/icons/profile.jpg" class="rounded-circle" width="40" height="40">
+                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
                         </td>
                         <td>
                             <b>김혜수</b> <br>
@@ -335,7 +234,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <img src="resources/icons/profile.jpg" class="rounded-circle" width="40" height="40">
+                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
                         </td>
                         <td>
                             <b>김서형</b><br>
@@ -345,7 +244,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <img src="resources/icons/profile.jpg" class="rounded-circle" width="40" height="40">
+                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
                         </td>
                         <td>
                             <b>이지은</b><br>
@@ -355,7 +254,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <img src="resources/icons/profile.jpg" class="rounded-circle" width="40" height="40">
+                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
                         </td>
                         <td>
                             <b>개발팀</b><br>
@@ -377,7 +276,7 @@
                     <div class="detail" style="display:block;">
                         <div>
                             <input type="checkbox" id="1" name="" class="1">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="1">
                                     김혜수
@@ -387,7 +286,7 @@
                         </div>
                         <div>
                             <input type="checkbox" id="2" name="" class="2">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="2">
                                     김서형&nbsp;
@@ -397,7 +296,7 @@
                         </div>
                         <div>
                             <input type="checkbox" id="3" name="" class="3">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="3">
                                     배수지&nbsp;
@@ -408,7 +307,7 @@
                         </div>
                         <div>
                             <input type="checkbox" id="4" name="" class="4">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="4">
                                     차은우&nbsp;
@@ -425,7 +324,7 @@
                     <div class="detail">
                         <div>
                             <input type="checkbox" id="1" name="" class="1">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="1">
                                     김혜수
@@ -435,7 +334,7 @@
                         </div>
                         <div>
                             <input type="checkbox" id="2" name="" class="2">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="2">
                                     김서형&nbsp;
@@ -445,7 +344,7 @@
                         </div>
                         <div>
                             <input type="checkbox" id="3" name="" class="3">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="3">
                                     배수지&nbsp;
@@ -456,7 +355,7 @@
                         </div>
                         <div>
                             <input type="checkbox" id="4" name="" class="4">&nbsp;
-                            <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
                             <span>
                                 <label for="4">
                                     차은우&nbsp;
@@ -475,8 +374,13 @@
 	   		// chatheader에 표시되는 내 접속상태
 	   		myConnSta(${loginUser.connSta});
 	   		
-	   		// 주소록 불러오기 => ajax
-	   		$.ajax({
+	   		// 주소록 불러오기
+	   		memList();
+	   	})
+	   	
+	   	// 주소록 불러오기 => ajax
+   		function memList(){
+   			$.ajax({
 	   			url:"memList.chat",
 	   			data:{userNo:${loginUser.userNo}},
         		success:function(map){
@@ -492,26 +396,36 @@
 		    					+ "</div>"
 		    					+ "<div class='detail' style='display:block;'>";
 		    		let likeCount = 0; // 즐겨찾는 사람수
+		    		
         			for(let i=0; i<map.deptList.length; i++){
         				if(map.deptList[i].departmentNo == ${loginUser.department}){
 	        				for(let j=0; j<map.memList.length; j++){
-	        					if(map.memList[j].department == map.deptList[i].departmentName){
-	        						value1 += "<div><img src='";
-	        						if(map.memList[j].profilImg != null){
-	        							value1 += map.memList[j].profileImg
-	        						}else{
-	        							value1 += "resources/icons/profile.jpg"
-	        						}
-	        						value1 += "' class='rounded-circle collegeProfileImg pro-small'>"
-	        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
-	        						if(map.memList[j].connSta == 0){
-	        			        		value1 += " online";
-	        			       		} else if(map.memList[j].connSta == 1){
-	        			       			value1 += " offline";
-	        			       		} else if(map.memList[j].connSta == 2){
-	        			       			value1 += " out";
-	        			       		}
-	        						value1 += "'></span></span></div>";
+	        					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
+	        						if(map.memList[j].department == map.deptList[i].departmentName){
+		        						value1 += "<div><img src='";
+		        						if(map.memList[j].profileImg != null){
+		        							value1 += map.memList[j].profileImg
+		        						}else{
+		        							value1 += "resources/icons/profile.png"
+		        						}
+		        						value1 += "' class='rounded-circle collegeProfileImg pro-small'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].userNo +"'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].userName +"'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].department +"'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].position +"'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].mail +"'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].phone +"'>"
+		        							+ "<input type='hidden' value='" + map.memList[j].chatLike +"'>"
+		        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+		        						if(map.memList[j].connSta == 0){
+		        			        		value1 += " online";
+		        			       		} else if(map.memList[j].connSta == 1){
+		        			       			value1 += " offline";
+		        			       		} else if(map.memList[j].connSta == 2){
+		        			       			value1 += " out";
+		        			       		}
+		        						value1 += "'></span></span></div>";
+		        					}
 	        					}
 	        				}
 	        				value1 += "</div>";
@@ -527,9 +441,16 @@
 	        						if(map.memList[j].profilImg != null){
 	        							value2 += map.memList[j].profileImg
 	        						}else{
-	        							value2 += "resources/icons/profile.jpg"
+	        							value2 += "resources/icons/profile.png"
 	        						}
 	        						value2 += "' class='rounded-circle collegeProfileImg pro-small'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].userNo +"'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].userName +"'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].department +"'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].position +"'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].mail +"'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].phone +"'>"
+	        							+ "<input type='hidden' value='" + map.memList[j].chatLike +"'>"
 	        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
 	        						if(map.memList[j].connSta == 0){
 	        			        		value2 += " online";
@@ -545,15 +466,21 @@
         				}
         			}
         			for(let k=0; k<map.memList.length; k++){
-        				
     					if(map.memList[k].chatLike != null){
     						value3 += "<div><img src='";
     						if(map.memList[k].profilImg != null){
     							value3 += map.memList[k].profileImg
     						}else{
-    							value3 += "resources/icons/profile.jpg"
+    							value3 += "resources/icons/profile.png"
     						}
     						value3 += "' class='rounded-circle collegeProfileImg pro-small'>"
+    							+ "<input type='hidden' value='" + map.memList[k].userNo +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].userName +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].department +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].position +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].mail +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].phone +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].chatLike +"'>"
     							+ "<span>" + map.memList[k].userName + "&nbsp;<span class='conn";
     						if(map.memList[k].connSta == 0){
     			        		value3 += " online";
@@ -575,7 +502,7 @@
         			console.log("주소록 불러오기용 ajax 통신 실패");
         		}
 	   		})
-	   	})
+   		}
 	   	
         // 내 프로필 보기
         $(".profileImg").click(function(){
@@ -625,16 +552,6 @@
         	})
         })
         
-        // 채팅 메뉴바 클릭 (주소록)
-        function showUser(){
-            // ajax
-        }
-
-        // 채팅 메뉴바 클릭 (채팅목록)
-        function showChatting(){
-            // ajax
-        }
-
         // 주소록 펼쳐보기
         $(document).on("click", ".detailView", function(){
             $(this).next().slideToggle();
@@ -647,15 +564,64 @@
         })
 
         // 동료 프로필 보기
-        $(".collegeProfileImg").click(function(){
-            $("#collegeProfile").modal("show");
+       	$(document).on("click", ".collegeProfileImg", function(){
+       		let $this = $(this).siblings();
+       		let info = "<p>💻 " + $this.eq(2).val() + "부 (" + $this.eq(3).val() + ")</p><p>✉️ " + $this.eq(4).val() + " </p><p>📞 " + $this.eq(5).val() + " </p>";
+            $("#collegeName").html($this.eq(1).val());
+            $("#collegeInfo").html(info);
+            $("#modal-profile").attr("src", $(this).attr("src"));
+            if($this.eq(6).val() == "undefined"){
+            	$("#like-img").attr("src", "resources/icons/star.png");
+            	$("#like-img").attr("class", "n");
+            }else{
+            	$("#like-img").attr("src", "resources/icons/star-y.png");
+            	$("#like-img").attr("class", "y");
+            }
+            $("#userNo").val($this.eq(0).val());
+       		$("#collegeProfile").modal("show");
         })
+        
+        // 멤버 즐겨찾기
+        $(document).on("click", "#like-img", function(){
+        	$.ajax({
+        		url:"likeMember.chat",
+	   			data:{
+	   				userNo:${loginUser.userNo},
+	   				chatLike:$(this).next().val(),
+	   				star:$("#like-img").attr("class")
+        		},success:function(result){
+        			if(result == "success"){
+        				if($("#like-img").attr("class") == "n"){
+        					$("#like-img").attr("class", "y");
+        					$("#like-img").attr("src", "resources/icons/star-y.png");
+        				} else{
+        					$("#like-img").attr("class", "n");
+        					$("#like-img").attr("src", "resources/icons/star.png");
+        				}
+        				memList();
+        			}
+        		},error:function(){
+        			console.log("멤버 즐겨찾기용 ajax 통신 실패");
+        		}
+        	})
+        })
+        
+        // 채팅 메뉴바 클릭 (주소록)
+        function showUser(){
+            // ajax
+        }
+
+        // 채팅 메뉴바 클릭 (채팅목록)
+        function showChatting(){
+            // ajax
+        }
 
         // 대화방 상세보기
         $("#chatRoomList-area tr").click(function(){
             // ajax 이용
         })
 
+        
         $("input[type=checkbox]").click(function(){
             const $class = $(this).attr("class");
             if($(this).prop("checked")){
@@ -687,7 +653,7 @@
                 <div class="modal-body">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <b>내 프로필</b><br><br>
-                    <img class="profileImg pro-middle rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.jpg' />">
+                    <img class="profileImg pro-middle rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.png' />">
                     <b>${ loginUser.userName }</b>
                     <select name="connSta">
                         <option value="0">
@@ -717,13 +683,14 @@
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button><br>
                 <div align="center">
-                    <img src="resources/icons/profile.jpg" class="rounded-circle" width="150" height="150"><br><br>
-                    <b style="font-size:18px;">김혜수</b>
-                    ☆<br><br>
+                    <img class="rounded-circle pro-big" id="modal-profile"><br><br>
+                    <b style="font-size:18px;" id="collegeName"></b>
+                    <img src="resources/icons/star.png" id="like-img" style="width:20px; margin-bottom:5px;">
+                    <input type="hidden" id="userNo">
+                    <br>
                 </div>
-                <p>💻 개발부서 (부장)</p>
-                <p>✉️ hey_sookim@ppic.kr</p>
-                <p>📞 0548-309</p>
+                <div id="collegeInfo">
+                </div>
             </div>
         </div>
         </div>

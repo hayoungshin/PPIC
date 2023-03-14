@@ -18,4 +18,12 @@ public class ChatDao {
 	public ArrayList<Member> selectListMember(SqlSessionTemplate sqlSession, int userNo){
 		return (ArrayList)sqlSession.selectList("chatMapper.selectListMember", userNo);
 	}
+	
+	public int insertChatLike(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.insert("chatMapper.insertChatLike", m);
+	}
+	
+	public int deleteChatLike(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.delete("chatMapper.deleteChatLike", m);
+	}
 }

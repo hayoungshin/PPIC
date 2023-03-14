@@ -27,4 +27,14 @@ public class ChatServiceImpl implements ChatService{
 	public ArrayList<Member> selectListMember(int userNo) {
 		return cDao.selectListMember(sqlSession, userNo);
 	}
+
+	@Override
+	public int insertChatLike(Member m) {
+		return cDao.insertChatLike(sqlSession, m);
+	}
+
+	@Override
+	public int deleteChatLike(Member m) {
+		return cDao.deleteChatLike(sqlSession, m);
+	}
 }

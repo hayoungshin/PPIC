@@ -37,7 +37,6 @@ public class ChatController {
 		} else {
 			return null;
 		}
-		
 	}
 	
 	@ResponseBody
@@ -49,6 +48,18 @@ public class ChatController {
 		map.put("memList", list1);
 		map.put("deptList", list2);
 		return new Gson().toJson(map);
+	}
+	
+	@ResponseBody
+	@RequestMapping("likeMember.chat")
+	public String ajaxLikeMember(Member m, String star) {
+		int result = 0;
+		if(star.equals("n")) {
+			result = cService.insertChatLike(m);
+		}else {
+			result = cService.deleteChatLike(m);
+		}
+		return result > 0 ? "success" : "fail";
 	}
 
 }
