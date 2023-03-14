@@ -31,4 +31,33 @@ public class MailController {
 		return "mail/sendMailListView";
 	}
 	
+	@RequestMapping("sendDetail.ml")
+	public String selectsendMail() {
+		return "mail/sendMailDetailView";
+	}
+	
+	@RequestMapping("importantList.ml")
+	public String importantMailList() {
+		return "mail/importantMailListView";
+	}
+	
+	@RequestMapping("importantDetail.ml")
+	public String selectImportantMail() {
+		return "mail/importantMailDetailView";
+	}
+	
+	@RequestMapping("tempList.ml")
+	public String tempMailList() {
+		return "mail/tempMailListView";
+	}
+	
+	@RequestMapping("tempForm.ml")
+	public String tempMailForm() {
+		return "mail/tempMailForm";
+	}
+	
+	
+	
+	
+	
 }

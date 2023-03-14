@@ -126,7 +126,6 @@
     #mail-address-modal .selected{
         border:1.5px solid #00b5d1;
     }
-
 </style>
 </head>
 <body>

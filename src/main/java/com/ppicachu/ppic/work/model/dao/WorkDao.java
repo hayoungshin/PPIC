@@ -18,5 +18,9 @@ public class WorkDao {
 	public ArrayList<Holiday> selectHolidayUseList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("workMapper.selectHolidayUseList");
 	}
+	
+	public ArrayList<Holiday> selectBeforeUseList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("workMapper.selectBeforeUseList");
+	}
 
 }

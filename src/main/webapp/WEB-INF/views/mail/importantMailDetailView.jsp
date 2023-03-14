@@ -69,7 +69,7 @@
 <body>
 	<jsp:include page="mailMenubar.jsp" />
 	<script>
-	document.getElementsByClassName("mail-menu")[0].className += ' selected';
+	document.getElementsByClassName("mail-menu")[2].className += ' selected';
     </script>
 	
 	<div class="tooltip">
@@ -96,7 +96,7 @@
 			<td>최뭐뭐</td>
 			<td style="width:120px; text-align:center;">23-03-08 11:50</td>
 			<td style="width:35px; text-align:center;">
-				<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
+				<img src="resources/icons/star-y.png" style="cursor:pointer; width:18px;">
 			</td>
 			<td style="width:35px; text-align:center;">
 				<div class="tool-tip">

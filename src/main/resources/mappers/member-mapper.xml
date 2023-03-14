@@ -95,6 +95,20 @@
 		   and user_pwd = #{userPwd}
 	</select>
 	
+	<update id="updateProfileImg">
+		update 
+			   member
+		   set profile_img = #{profileImg}
+		 where user_id = #{userId}
+	</update>
 	
+	<update id="updateMember">
+		update
+		       member
+		   set user_name = #{userName}
+		     , phone = #{phone}
+		     , address = #{address}
+		 where user_id = #{userId}
+	</update>
 
 </mapper>

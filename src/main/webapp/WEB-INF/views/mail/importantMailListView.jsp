@@ -10,10 +10,10 @@
 <body>
 	<jsp:include page="mailMenubar.jsp" />
 	<script>
-	document.getElementsByClassName("mail-menu")[1].className += ' selected';
+	document.getElementsByClassName("mail-menu")[2].className += ' selected';
     </script>
-	
-	<!-- 리스트 -->
+    
+    <!-- 리스트 -->
 	<div align="center">
 		<table class="table" style="margin-top:30px;">
 			<thead>
@@ -28,14 +28,12 @@
 								<a class="dropdown-item" href="#">전체선택</a>
 								<a class="dropdown-item" href="#">읽은메일</a>
 								<a class="dropdown-item" href="#">읽지않은메일</a>
-								<a class="dropdown-item" href="#">중요메일</a>
-								<a class="dropdown-item" href="#">중요표시안한메일</a>
 								<a class="dropdown-item" href="#">선택해제</a>
 							</div>
 						</div>
 	
-						<a href="" style="margin:0px 48px;">삭제</a>
-						<a href="" style="margin:0px 60px;">다시보내기</a>
+						<a href="" style="margin:0px 48px;">읽음</a>
+						<a href="" style="margin:0px 60px;">삭제</a>
 						<span style="margin:0px 60px; color:gray;">│</span>
 	
 						<div class="dropdown" style="display:inline-block;">
@@ -49,12 +47,10 @@
 						</div>
 	
 						<div class="dropdown" style="display:inline-block;">
-							<a href="" style="margin:0px 30px" class="dropdown-toggle" data-toggle="dropdown">필터</a>
+							<a href="" style="margin:0px 30px" class="dropdown-toggle" data-toggle="dropdown">정렬</a>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">모든메일</a>
-								<a class="dropdown-item" href="#">안읽은메일</a>
-								<a class="dropdown-item" href="#">중요메일</a>
-								<a class="dropdown-item" href="#">첨부메일</a>
+								<a class="dropdown-item" href="#">최신 순</a>
+								<a class="dropdown-item" href="#">오래된 순</a>
 							</div>
 						</div>
 					</td>
@@ -66,7 +62,7 @@
 						<input type="checkbox" name="" id="">
 					</td>
 					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+						<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
 					</td>
 					<td style="width:70px; text-align:left;" onclick="toDetail();">
 						<img src="resources/icons/mail-c.png" style="width:20px;">
@@ -111,7 +107,7 @@
 						<input type="checkbox" name="" id="">
 					</td>
 					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+						<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
 					</td>
 					<td style="width:70px; text-align:left;">
 						<img src="resources/icons/mail-c.png" style="width:20px;">
@@ -125,7 +121,7 @@
 						<input type="checkbox" name="" id="">
 					</td>
 					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+						<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
 					</td>
 					<td style="width:70px; text-align:left;">
 						<img src="resources/icons/mail-c.png" style="width:20px;">
@@ -140,7 +136,7 @@
 	
 		<script>
 			function toDetail(){
-				location.href = "sendDetail.ml";
+				location.href = "importantDetail.ml";
 			}
 		</script>
 	
@@ -158,6 +154,7 @@
 			</ul>
 		</div>
 	</div>
+
     
 
 </body>
