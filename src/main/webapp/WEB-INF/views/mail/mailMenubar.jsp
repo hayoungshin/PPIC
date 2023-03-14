@@ -125,7 +125,7 @@
 		<div id="content">
 		<h2 style="display:inline-block;"><b>메일</b></h2>
 		<div style="display:inline-block;">
-			<a href="">
+			<a href="address.ml">
 				<img src="resources/icons/addressBook.png" style="width:30px; margin-left:20px; vertical-align:bottom">
 			</a>
 		</div>
@@ -142,7 +142,7 @@
 			<div class="mail-menu" onclick="location.href='sendList.ml'">보낸메일</div>
 			<div class="mail-menu" onclick="location.href='importantList.ml'">중요메일</div>
 			<div class="mail-menu" onclick="location.href='tempList.ml'">임시보관함</div>
-			<div class="mail-menu">휴지통</div>
+			<div class="mail-menu" onclick="location.href='binList.ml'">휴지통</div>
 			<div id="mail-search-area" style="font-size:15px; margin-left:400px;">
 				<form action="">
 					<input type="text" placeholder="메일검색" style="width:300px; border-radius:5px; border:1px solid gray; padding-left:10px;">
