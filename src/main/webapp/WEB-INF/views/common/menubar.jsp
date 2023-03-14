@@ -157,7 +157,7 @@
                         <td class="nametag-background" style="width:35px; height:35px; cursor:pointer;" onclick="toMyPage();">
                             <span class="nametag-name" style="font-size:12px;">이름</span>
                         </td>
-                        <td id="side-my-name" style="" onclick="toMyPage();">김이름</td>
+                        <td id="side-my-name" style="" onclick="toMyPage();">${loginUser.userName }</td>
                         <td style="cursor:pointer"><img src="resources/icons/messenger.png" style="width:25px;" onclick="chatPopup();"></td>
                     </tr>
                 </table>

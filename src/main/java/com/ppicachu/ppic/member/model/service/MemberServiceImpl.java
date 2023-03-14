@@ -34,5 +34,22 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.selectMember(sqlSession, userNo);
 	}
 
+	
+	// 로그인 대충
+	@Override
+	public Member loginMember(Member m) {
+		return mDao.loginMember(sqlSession, m);
+	}
+
+	@Override
+	public int updateProfileImg(Member m) {
+		return mDao.updateProfileImg(sqlSession, m);
+	}
+
+	@Override
+	public int updateMember(Member m) {
+		return mDao.updateMember(sqlSession, m);
+	}
+
 
 }

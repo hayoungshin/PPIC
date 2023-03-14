@@ -92,4 +92,32 @@
 		  from company_sch
 		 where sch_no = #{schNo}
 	</delete>
+	
+	<update id="updateSchedule">
+		update
+		       company_sch
+		   set sch_kind = #{schKind}
+		     , restday_kind = #{restdayKind}
+		     , sch_name = #{schName}
+		     , sch_content = #{schContent}
+		     , sch_location = #{schLocation}
+		     , lunar_solar = #{lunarSolar}
+		     , start_date = #{startDate}
+		     , end_date = #{endDate}
+		     , start_time = #{startTime}
+		     , end_time = #{endTime}
+		     , annual = <if test="annual == 'on'">
+							'Y'
+						</if>
+						<if test="annual == null">
+							'N'
+						</if>
+			 , allday = <if test="allday == 'on'">
+							'Y'
+						</if>
+						<if test="allday == null">
+							'N'
+						</if>
+		 where sch_no = #{schNo}
+	</update>
 </mapper>

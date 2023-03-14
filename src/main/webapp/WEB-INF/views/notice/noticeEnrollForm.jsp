@@ -78,6 +78,7 @@
     <div class="boardOuter">
         <br><h5><b>공지사항 작성</b></h5><br>
         <form action="insert.no" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="noticeWriter" value="${ loginUser.userNo }"> 
             <table>
                 <tr>
                     <td width="100">제목</td>

@@ -26,5 +26,8 @@ public class Notice {
 	private String modifyDate;
 	private String status;
 	private String important;
+	private int attachmentCount;
 	private ArrayList<Attachment> attList;
+	private String profileImg;
+	private String userName;
 }

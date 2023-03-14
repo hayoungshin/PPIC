@@ -16,5 +16,13 @@ public interface MemberService {
 	// 3. 구성원 상세조회 서비스(사용자)
 	Member selectMember(int userNo);
 	
+	// 4. 마이페이지 회원정보 변경 서비스
+	int updateMember(Member m);
+	
+	// 로그인 대충
+	Member loginMember(Member m);
+	
+	// 5. 프로필이미지 변경용 서비스
+	int updateProfileImg(Member m);
 
 }

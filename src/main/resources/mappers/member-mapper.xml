@@ -12,6 +12,15 @@
 		<result column ="hire_date" property="hireDate" />
 		<result column ="resign_date" property="resignDate" />
 		<result column ="employee_no" property="employeeNo" />
+		<result column ="user_id" property="userId" />
+		<result column ="user_pwd" property="userPwd" />
+		<result column ="address" property="address" />
+		<result column ="company" property="company" />
+		<result column ="profile_img" property="profileImg" />
+		<result column ="status" property="status" />
+		<result column ="authority_no" property="authorityNo" />
+		<result column ="member_sign" property="memberSign" />
+		<result column ="conn_sta" property="connSta" />
 	</resultMap>
 	
 	<resultMap id="departmentResult" type="Department">
@@ -31,6 +40,8 @@
 		     , employee_no
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
+		     , conn_sta
+		     , profile_img
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
@@ -59,6 +70,47 @@
 		   and user_no = #{userNo}
 	</select>
 	
+	<!-- 로그인 대충 -->
+	<select id="loginMember" resultMap="memberResult">
+		select
+			   user_no
+		     , user_id
+		     , user_pwd
+		     , user_name
+		     , mail
+		     , phone
+		     , address
+		     , company
+		     , position
+		     , department
+		     , employee_no
+		     , profile_img
+		     , hire_date
+		     , resign_date
+		     , status
+		     , authority_no
+		     , member_sign
+		     , conn_sta
+		  from member
+		 where status = 'Y'
+		   and user_id = #{userId}
+		   and user_pwd = #{userPwd}
+	</select>
 	
+	<update id="updateProfileImg">
+		update 
+			   member
+		   set profile_img = #{profileImg}
+		 where user_id = #{userId}
+	</update>
+	
+	<update id="updateMember">
+		update
+		       member
+		   set user_name = #{userName}
+		     , phone = #{phone}
+		     , address = #{address}
+		 where user_id = #{userId}
+	</update>
 
 </mapper>

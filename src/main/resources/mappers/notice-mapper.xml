@@ -6,10 +6,13 @@
 		<id column="notice_no" property="noticeNo"/>
 		<result column="notice_title" property="noticeTitle"/>
 		<result column="create_date" property="createDate"/>
-		<result column="user_name" property="noticeWriter"/>
+		<result column="user_name" property="userName"/>
+		<result column="notice_writer" property="noticeWriter"/>
+		<result column="profile_img" property="profileImg"/>
 		<result column="notice_content" property="noticeContent"/>
 		<result column="important" property="important"/>
 		<result column="count" property="count"/>
+		<result column="attachment_count" property="attachmentCount"/>
 		<collection property="attList" resultMap="attachmentResult" />
 	</resultMap>
 	
@@ -17,6 +20,7 @@
 		<id column="attachment_no" property="attachmentNo"/>
 		<result column="origin_name" property="originName"/>
 		<result column="change_name" property="changeName"/>
+		<result column="category_no" property="categoryNo"/>
 	</resultMap>
 
 	<select id="selectListCount" resultType="_int">
@@ -35,10 +39,10 @@
 		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
 		     , important
 		     , (select 
-		               origin_name
+		               count(*)
 		          from attachment
-		         where category_no = 1
-		           and ref_no = notice_no) "origin_name"
+		         where category_no = 2
+		           and ref_no = notice_no) "attachment_count"
 		  from notice n
           join member on (notice_writer = user_no)
 		 where n.status = 'Y'
@@ -59,21 +63,24 @@
 		       notice_no
 		     , notice_title
 		     , user_name
+		     , notice_writer
+		     , profile_img
+		     , notice_content
 		     , count
-		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		     , to_char(create_date, 'YYYY-MM-DD (DY) HH24:MI:SS') as "create_date"
 		     , important
-		     , (select 
-		               origin_name
-		          from attachment
-		         where category_no = 1
-		           and ref_no = #{noticeNo}) "origin_name"
-		     , (select 
-		               change_name
-		          from attachment
-		         where category_no = 1
-		           and ref_no = #{noticeNo}) "change_name"
+		     , attachment_no
+		     , origin_name
+		     , change_name
+		     , category_no
+		     , (select
+                       count(*)
+                  from attachment
+                 where category_no = 2
+                   and ref_no = notice_no) "attachment_count"
 		  from notice n
           join member on (notice_writer = user_no)
+          left join attachment on (notice_no = ref_no)
 		 where n.status = 'Y'
 		   and notice_no = #{noticeNo}
 	</select>
@@ -110,10 +117,10 @@
 		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
 		     , important
 		     , (select 
-		               origin_name
+		               count(*)
 		          from attachment
-		         where category_no = 1
-		           and ref_no = notice_no) "origin_name"
+		         where category_no = 2
+		           and ref_no = notice_no) "attachment_count"
 		  from notice n
           join member on (notice_writer = user_no)
 		 where n.status = 'Y'
@@ -136,5 +143,105 @@
 		    by important desc, notice_no desc
   	</select>
 	
+	<insert id="insertNotice">
+		insert
+		  into notice
+		  (
+		    notice_no
+		  , notice_writer
+		  , notice_title
+		  , notice_content
+		  , important
+		  )
+		  values
+		  (
+		    seq_nno.nextval
+		  , #{noticeWriter}
+		  , #{noticeTitle}
+		  , #{noticeContent}
+		  , <choose>
+  		   	  <when test="important == 'on'">'Y'</when>
+  		   	  <otherwise>'N'</otherwise>
+  		    </choose>
+		  )
+	</insert>
+	
+	<insert id="insertAttachment" parameterType="java.util.List">
+		<selectKey keyProperty="no" order="BEFORE" resultType="_int">
+			select seq_nno.currval from dual
+		</selectKey>
+		insert
+		  into attachment
+		  (
+		    attachment_no
+		  , origin_name
+		  , change_name
+		  , category_no
+		  , ref_no
+		  )
+		  select seq_atno.nextval 
+		       , at.*
+		    from 
+		    (
+		      <foreach collection="list" item="item" separator="union all">
+		      select
+		             #{item.originName}
+		           , #{item.changeName}
+		           , 2
+		           , #{no}
+		        from dual
+		      </foreach>
+		    ) at       
+	</insert>
+	
+	<update id="updateNotice">
+		update
+		       notice
+		   set notice_title = #{noticeTitle}
+		     , notice_content = #{noticeContent}
+		     , modify_date = sysdate
+		     , important = <choose>
+				  		   	  <when test="important == 'on'">'Y'</when>
+				  		   	  <otherwise>'N'</otherwise>
+				  		    </choose>
+		  where notice_no = #{noticeNo}
+	</update>
+	
+	<insert id="updateAttachment">
+		insert
+		  into attachment
+		  (
+		    attachment_no
+		  , origin_name
+		  , change_name
+		  , category_no
+		  , ref_no
+		  )
+		  select seq_atno.nextval 
+		       , at.*
+		    from 
+		    (
+		      <foreach collection="list" item="item" separator="union all">
+		      select
+		             #{item.originName}
+		           , #{item.changeName}
+		           , 2
+		           , #{item.refNo}
+		        from dual
+		      </foreach>
+		    ) at   
+	</insert>
+	
+	<delete id="deleteNotice">
+		delete 
+		  from notice
+		 where notice_no = #{noticeNo}
+	</delete>
+	
+	<delete id="deleteAttachment">
+		delete 
+		  from attachment
+		 where ref_no = #{refNo}
+	</delete>
 	
 </mapper>

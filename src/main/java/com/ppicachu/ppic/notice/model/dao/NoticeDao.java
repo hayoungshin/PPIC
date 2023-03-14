@@ -7,7 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ppicachu.ppic.board.model.vo.Board;
+import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.notice.model.vo.Notice;
 
@@ -47,6 +47,30 @@ public class NoticeDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
 		return (ArrayList)sqlSession.selectList("noticeMapper.selectSearchList", map, rowBounds);
+	}
+	
+	public int insertNotice(SqlSessionTemplate sqlSession, Notice n) {
+		return sqlSession.insert("noticeMapper.insertNotice", n);
+	}
+	
+	public int insertAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> list) {
+		return sqlSession.insert("noticeMapper.insertAttachment", list);
+	}
+	
+	public int updateNotice(SqlSessionTemplate sqlSession, Notice n) {
+		return sqlSession.update("noticeMapper.updateNotice", n);
+	}
+	
+	public int updateAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> list) {
+		return sqlSession.insert("noticeMapper.updateAttachment", list);
+	}
+	
+	public int deleteNotice(SqlSessionTemplate sqlSession, int noticeNo) {
+		return sqlSession.update("noticeMapper.deleteNotice", noticeNo);
+	}
+	
+	public int deleteAttachment(SqlSessionTemplate sqlSession, int refNo) {
+		return sqlSession.delete("noticeMapper.deleteAttachment", refNo);
 	}
 
 }

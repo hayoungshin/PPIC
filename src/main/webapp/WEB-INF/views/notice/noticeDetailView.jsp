@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,6 +27,24 @@
     }
     #update-btn, #delete-btn, #modal-btn{background: rgb(111, 80, 248);}
     a:hover{opacity: 0.7;}
+    
+    .pro{
+    	display:inline-block;
+        width: 25px;
+        height: 25px;
+        background: rgb(111, 80, 248);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: small;
+        text-align:center;
+        line-height:25px;
+	}
+	#profileImg{
+		height:25px;
+		width:25px;
+		border-radius: 5px;
+	}
 </style>
 </head>
 <body>
@@ -34,60 +53,78 @@
 
 	<script>
         document.getElementsByClassName("menus")[0].className += ' clicked';
+        let changeArr = [];
+ 	     let origin = "";
+ 	     $(function(){
+ 		     $("input[name=origin]").val(origin);
+ 		     $("input[name=change]").val(changeArr);
+ 	     })
     </script>
     <br>
     <div class="boardOuter">
         <table>
             <tr>
-                <td colspan="3" width="1200px"><h5>[공지] 회의실 노트북 패스워드 변경 작업 안내</h5></td>
+                <td colspan="3" width="1200px"><h5>${ n.noticeTitle }</h5></td>
             </tr>
             <tr class="line">
                 <td colspan="2">
-                    <img src="resources/icons/profile.jpg" class="rounded-circle" width="25" height="25">
-                    문동은 팀장 
-                    2023-02-16 (목) 16:35
+                	<c:choose>
+                		<c:when test="${ empty n.profileImg }">
+                			<span class="pro">${ fn:substring(n.userName,0,1) } </span> 
+                		</c:when>
+                		<c:otherwise>
+                			<img src="${ n.profileImg }" id="profileImg">
+                		</c:otherwise>
+                	</c:choose>
+                    ${ n.userName } &nbsp;
+                    ${ n.createDate }
                 </td>
-                <td><div align="right">조회수 50</div></td>
+                <td><div align="right">조회수 ${ n.count }</div></td>
             </tr>
             <!-- 첨부파일 있을 경우 -->
+            <c:if test="${ not empty n.attList }">
+	        	<tr>
+		           	<td style="width:120px; vertical-align:top;">첨부파일 <b>${ n.attachmentCount }</b>개</td>
+	                <td colspan="2">
+		                <c:forEach var="a" items="${ n.attList }">
+		          			<c:if test="${ a.categoryNo eq 2 }">
+		                    	${ a.originName } <a href="${ a.changeName }" download="${ a.originName }"><img src="resources/icons/download.png" height="15px" width="15px"></a><br>
+		                    	<script>
+		                    		origin = "${a.originName}";
+			                		changeArr.push("${ a.changeName }");
+			                	</script>
+		                	</c:if>
+		                </c:forEach>
+	                </td>
+	            </tr> 
+            </c:if>
             <tr>
-                <td style="width:120px; vertical-align:top;">첨부파일 <b>2</b>개</td>
-                <td colspan="2">
-                    noticeFile.pdf <img src="resources/icons/download.png" height="15px" width="15px"><br>
-                    noticeFile2.pdf <img src="resources/icons/download.png" height="15px" width="15px">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <pre>
-안녕하세요. 문동은입니다.
-
-6층 회의실 노트북 패스워드 변경 작업 관련해서 안내 말씀 드립니다.
-
-ISMS 보안정책에 따라 공용 노트북의 패스워드를 3개월 주기로 변경하고 있습니다.
-
-변경되는 패스워드 및 주의사항은 아래 내용을 참고하시기 바랍니다.
- 
-                            - 아 래 -
-
-1. 작업 시간 : 2023년 02월 20일 월요일 17:30 ~ 18:00
-
-2. 작업 내용 : 6층 회의실 노트북 패스워드 변경 작업
-
-3. 대상 회의실 : ①LA Dodgers, ②Cincinnati Reds
-
-4. 주의 사항 : 노트북 패스워드 임의 변경 및 기록 금지
-
-감사합니다.   
-                    </pre>
-                </td>
+                <td colspan="3">${ n.noticeContent }</td>
             </tr>
         </table>
+        
+        <form action="" method="post" id="postForm">
+        	<input type="hidden" name="no" value="${ n.noticeNo }">
+        	<input type="hidden" name="origin">
+        	<input type="hidden" name="change">
+        </form>
+        
+        <script>
+        	function postFormSubmit(num){
+        		if(num == 1){
+        			$("#postForm").attr("action", "updateForm.no").submit();
+        		} else{
+        			$("#postForm").attr("action", "delete.no").submit();
+        		}
+        	}
+        </script>
+        
         <div align="center" style="width:1200px;">
-            <a href="" class="btn" id="list-btn">목록</a>
-            <!-- 수정/삭제 관리자만 보여짐 -->
-            <a href="" class="btn" id="update-btn">수정</a>
-            <a href="" class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            <a class="btn" id="list-btn" onclick="history.back();">목록</a>
+            <c:if test="${ loginUser.userNo eq n.noticeWriter }">
+	            <a class="btn" id="update-btn" onclick="postFormSubmit(1)">수정</a>
+	            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            </c:if>
         </div>
         <!-- 삭제 확인용 Modal -->
         <div class="modal" id="deleteModal" data-backdrop='static' data-keyboard='false'>
@@ -98,7 +135,7 @@ ISMS 보안정책에 따라 공용 노트북의 패스워드를 3개월 주기�
                 <div align="center">
                     삭제하시겠습니까?<br><br>
                     <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-                    <a href="" class="btn" id="delete-btn">확인</a>
+                    <a class="btn" id="delete-btn" onclick="postFormSubmit(2);">확인</a>
                 </div>
                 </div>
             </div>

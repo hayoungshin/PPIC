@@ -49,11 +49,11 @@
 	                        		${ n.noticeTitle }
 	                        	</c:otherwise>
                         	</c:choose>
-                        	<c:if test="${ not empty n.attList }">
+                        	<c:if test="${ n.attachmentCount > 0 }">
                         		<img src="resources/icons/clip.png" height="15px" width="15px">
                         	</c:if>
                         </td>
-                        <td>${ n.noticeWriter }</td>
+                        <td>${ n.userName }</td>
                         <td>${ n.createDate }</td>
                         <td>${ n.count }</td>
                     </tr>

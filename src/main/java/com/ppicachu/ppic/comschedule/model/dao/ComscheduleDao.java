@@ -21,4 +21,8 @@ public class ComscheduleDao {
 	public int deleteSchedule(SqlSessionTemplate sqlSession, int schNo) {
 		return sqlSession.delete("comscheduleMapper.deleteSchedule", schNo);
 	}
+	
+	public int updateSchedule(SqlSessionTemplate sqlSession, Comschedule cs) {
+		return sqlSession.update("comscheduleMapper.updateSchedule", cs);
+	}
 }

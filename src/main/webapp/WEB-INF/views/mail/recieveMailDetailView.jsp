@@ -68,8 +68,11 @@
 </head>
 <body>
 	<jsp:include page="mailMenubar.jsp" />
+	<script>
+	document.getElementsByClassName("mail-menu")[0].className += ' selected';
+    </script>
 	
-	<div class="tooltip">Hover over me
+	<div class="tooltip">
 		<span class="tooltiptext" style="font-size:12px;">답장</span>
 	</div>
 

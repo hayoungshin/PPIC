@@ -202,11 +202,22 @@
 		    				    	    
 	    				    		}
 	    				    		value += "<img src='resources/icons/modify.png' width='20px' height='20px' class='modify-img'>"
-			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'>"
-	    				    			+ "<input type='hidden' class='schNo' value='"+ list[i].schNo + "'>"
-	    				    			+ "<input type='hidden' class='legalholiday' value='"+ list[i].legalholiday + "'>"
-	    				    			+ "<input type='hidden' class='schKind' value='"+ list[i].schKind + "'>"
-	    				    			+ "</td></tr>"
+			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'></td></tr>"
+			                    		+ "<tr style='display:none;'>"
+			                    		+	"<td>" + list[i].schNo + "</td>"
+			                    		+	"<td>" + list[i].legalholiday + "</td>"
+			                    		+	"<td>" + list[i].schKind + "</td>"
+			                    		+	"<td>" + list[i].restdayKind + "</td>"
+			                    		+	"<td>" + list[i].schContent + "</td>"
+			                    		+	"<td>" + list[i].schLocation + "</td>"
+			                    		+	"<td>" + list[i].lunarSolar + "</td>"
+			                    		+	"<td>" + list[i].startDate + "</td>"
+			                    		+	"<td>" + list[i].endDate + "</td>"
+			                    		+	"<td>" + list[i].allday + "</td>"
+			                    		+	"<td>" + list[i].annual + "</td>"
+			                    		+	"<td>" + list[i].startTime + "</td>"
+			                    		+	"<td>" + list[i].endTime + "</td>"
+	    				    			+ "</tr>"
 	    				}
 	    				$("#schedule-list").html(value);
 	        		}, error:function(){
@@ -214,7 +225,82 @@
 	        		}
 	        	})
 	        }
-        		
+        </script>
+        
+        <script>
+        	// 일정 수정
+	        $(document).on("click", ".modify-img", function(){
+	        	// 법정 공휴일일 경우 모달 내 input 요소 비활성화 / 버튼 숨기기
+	        	if($(this).parents("tr").next().children().eq(1).text() == 'Y'){
+	            	$('#modifyModal input').prop("disabled", true);
+	            	$('#modify-btn').hide();
+	            } else{
+	            	$('#modifyModal input').prop("disabled", false);
+	            	$('#modify-btn').show();
+	            }
+	        	
+	        	$this = $(this).parents("tr").next().children();
+	        	if($this.eq(2).text() == 0){ // 쉬는 날일 경우 
+	        		$("#restday-table").show();
+	                $("#comschedule-table").hide();
+	                hide($("#comschedule-table"));
+	                // 음력 양력 버튼 checked
+	                $("#modifyModal input[name=lunarSolar]").each(function(){
+	                	if($(this).val() == $this.eq(6).text()){
+	                		$(this).prop("checked", true);
+	                	}
+	                })
+	                // 기간 입력 선택 여부
+	                if($this.eq(8).text() != "undefined"){
+	                	$("#modifyModal .period").prop("checked", true);
+	                	$("#modifyModal input[name=endDate]").val($this.eq(8).text()); // 종료날짜
+	                }else{
+	                	$("#modifyModal .period").prop("checked", false);
+	                }
+	                periodClick(document.querySelector("#modifyModal .period"));
+	                
+	                // 매년 반복 여부
+	                if($this.eq(10).text() == "Y"){
+	                	$("#modifyModal input[name=annual]").prop("checked", true);
+	                }else{
+	                	$("#modifyModal input[name=annual]").prop("checked", false);
+	                }
+	                
+	                // 휴일 여부
+	                $("#modifyModal input[name=restdayKind]").each(function(){
+	                	if($(this).val() == $this.eq(3).text()){
+	                		$(this).prop("checked", true);
+	                	}
+	                })
+	        	}else{ // 회사 일정일 경우
+	        		$("#restday-table").hide();
+	                $("#comschedule-table").show();
+	                hide($("#restday-table"));
+	                $("#modifyModal input[name=endDate]").val($this.eq(8).text()); // 종료날짜
+	                $("#modifyModal input[name=schLocation]").val($this.eq(5).text()); // 장소
+	                $("#modifyModal textarea").val($this.eq(4).text()); // 내용
+	                
+	                // 종일여부
+	                if($this.eq(9).text() == 'Y'){
+	                	$("#modifyModal .allday-btn").prop("checked", true);
+	                } else{
+	                	$("#modifyModal .allday-btn").prop("checked", false);
+	                	$("#modifyModal input[name=startTime]").val($this.eq(11).text());
+	                	$("#modifyModal input[name=endTime]").val($this.eq(12).text());
+	                }
+	                alldayClick(document.querySelector("#modifyModal .allday-btn"));
+	        	}
+	            $("#modifyModal input[name=schName]").val($(this).parent().prev().children("b").text());
+	            $("#modifyModal input[name=startDate]").val($this.eq(7).text());
+	            $("#modifyModal input[name=schKind]").val($this.eq(2).text());
+	            $("#modifyModal input[name=schNo]").val($this.eq(0).text());
+	            $('#modifyModal').modal('show');
+	        })
+	        
+	        $(document).on("click", ".delete-img", function(){
+		        $("#delete-btn").attr("href", "delete.sch?no=" + $(this).parents("tr").next().children().eq(0).text());
+		        $('#deleteModal').modal('show'); 
+		    })
         </script>
 
         <!-- 삭제 확인용 Modal -->
@@ -239,7 +325,9 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <b>일정수정</b>
-                        <form action="" id="modify-form">
+                        <form action="update.sch" id="modify-form">
+                        <input type="hidden" name="schNo">
+                        <input type="hidden" name="schKind">
                         <small>* 법정 공휴일은 삭제만 가능합니다.</small><br><br>
                             <table id="restday-table">
                                 <!-- 해당 일정 내용 checked & 입력해놓기 -->
@@ -247,21 +335,21 @@
                                 <tr>
                                     <td width="100px"><b>이름</b></td>
                                     <td>
-                                        <input type="text" value="1월 1일" name="schName">
+                                        <input type="text" name="schName">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><br><br><b>날짜</b></td>
                                     <td>
-                                        <input type="radio" id="solar" name="lunarSolar" checked>
+                                        <input type="radio" id="solar" name="lunarSolar" value="0">
                                         <label for="solar">양력</label>
-                                        <input type="radio" id="lunar" name="lunarSolar">
+                                        <input type="radio" id="lunar" name="lunarSolar" value="1">
                                         <label for="lunar">음력</label>
-                                        <input type="checkbox" id="period1" class="period">
+                                        <input type="checkbox" id="period1" class="period" onclick="periodClick(this);">
                                         <label for="period1">기간 입력</label>
                                         <!-- 기간 입력 미체크시 -->
                                         <div class="uncheckPeriod">
-                                            <input type="text" class="datepicker inpType date" name="startDate" value="2023-01-01">
+                                            <input type="text" class="datepicker inpType date" name="startDate">
                                         </div>
                                         <a href="#none" class="btncalendar dateclick"></a>
                                         <!-- 기간 입력 체크시 -->
@@ -282,7 +370,7 @@
                                     <td><b>매년 반복</b></td>
                                     <td>
                                         <label class="switch-button">
-                                            <input type="checkbox" name="annual" checked/>
+                                            <input type="checkbox" name="annual"/>
                                             <span class="onoff-switch"></span>
                                         </label>
                                     </td>
@@ -290,9 +378,9 @@
                                 <tr>
                                     <td><b>휴일 여부</b></td>
                                     <td>
-                                        <input type="radio" id="holiday" name="restDay" checked>
+                                        <input type="radio" id="holiday" name="restdayKind" value="0">
                                         <label for="holiday">휴일</label>
-                                        <input type="radio" id="anniversary" name="restDay">
+                                        <input type="radio" id="anniversary" value="1" name="restdayKind">
                                         <label for="anniversary">기념일</label>
                                     </td>
                                 </tr>
@@ -334,7 +422,7 @@
                                         <div align="right" style="width:290px; margin-top:5px">
                                             <label for="allday">종일</label>
                                             <label class="switch-button">
-                                                <input type="checkbox" name="allday" id="allday" class="allday-btn">
+                                                <input type="checkbox" name="allday" id="allday" class="allday-btn" onclick="alldayClick(this);">
                                                 <span class="onoff-switch"></span>
                                             </label>
                                         </div>
@@ -343,13 +431,13 @@
                                 <tr>
                                     <td><b>장소</b></td>
                                     <td>
-                                        <input type="text" name="location">
+                                        <input type="text" name="schLocation">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><b>내용</b></td>
                                     <td>
-                                        <textarea name="" style="resize: none;"></textarea>
+                                        <textarea name="schContent" style="resize: none;"></textarea>
                                     </td>
                                 </tr>
                             </table>
@@ -396,7 +484,7 @@
                                         <label for="solar2">양력</label>
                                         <input type="radio" id="lunar2" value="1" name="lunarSolar">
                                         <label for="lunar2">음력</label>
-                                        <input type="checkbox" id="period2" class="period">
+                                        <input type="checkbox" id="period2" class="period" onclick="periodClick(this);">
                                         <label for="period2">기간 입력</label>
                                         <!-- 기간 입력 미체크시 -->
                                         <div class="uncheckPeriod">
@@ -473,7 +561,7 @@
                                         <div align="right" style="width:290px; margin-top:5px">
                                             <label for="allday2">종일</label>
                                             <label class="switch-button">
-                                                <input type="checkbox" name="allday" id="allday2" class="allday-btn">
+                                                <input type="checkbox" name="allday" id="allday2" class="allday-btn" onclick="alldayClick(this);">
                                                 <span class="onoff-switch"></span>
                                             </label>
                                         </div>
@@ -508,44 +596,48 @@
             $.datepicker.setDefaults($.datepicker.regional['ko']);
             $(".datepicker").datepicker(); 
            	addModal(0);
-           	hide($(".checkPeriod"));
         });
 
         // 수정 취소 버튼 클릭 이벤트
         $("#reset-btn").click(function(){
-            $("#modify-form")[0].reset();
+        	$("#modify-form")[0].reset();
+            periodClick(document.querySelector("#modifyModal .period"));
+           	alldayClick(document.querySelector("#modifyModal .allday-btn"));
         })
+        
+        // 추가 취소 버튼 클릭 이벤트
         $("#resetadd-btn").click(function(){
             $("#add-form")[0].reset();
-            $("#add-restDay").show();
-            $("#add-comSchedule").hide();
+            addModal(0);
+            periodClick(document.querySelector("#modifyModal .period"));
+           	alldayClick(document.querySelector("#modifyModal .allday-btn"));
         })
 
         // 기간 입력 클릭 이벤트
-        $(".period").click(function(){
-            if($(this).is(":checked")){
-                $(".checkPeriod").show();
-                $(".uncheckPeriod").hide();
+        function periodClick(a){
+        	if(a.checked){
+        		$(".checkPeriod").show();
+        		$(".uncheckPeriod").hide();
             }else{
-                $(".checkPeriod").hide();
-                $(".uncheckPeriod").show();
+            	$(".checkPeriod").hide();
+            	$(".uncheckPeriod").show();
             }
             hide($(".checkPeriod"));
             hide($(".uncheckPeriod"));
-        })
+        }
 
         // 종일 스위치 클릭 이벤트
-        $(".allday-btn").click(function(){
-        	if($(".allday-btn").is(":checked")){
-                $(".allday").show();
-                $(".notallday").hide();
-            } else{
-                $(".allday").hide();
-                $(".notallday").show();
-            }
+        function alldayClick(a){
+        	if(a.checked){
+        		$(".allday").show();
+        		$(".notallday").hide();
+        	}else{
+        		$(".allday").hide();
+        		$(".notallday").show();
+        	}
         	hide($(".allday"));
-            hide($(".notallday"));
-        })
+        	hide($(".notallday"));
+        }
 
         // 일정 추가 모달 쉬는날/회사일정 선택 이벤트
         function addModal(num){
@@ -569,34 +661,6 @@
         		a.find("input").prop("disabled", false);
         	}
         }
-        
-        $(document).on("click", ".modify-img", function(){
-        	if($(this).siblings(".legalholiday").val() == 'Y'){
-            	$('#modifyModal input').prop("disabled", true);
-            	$('#modify-btn').prop("disabled", true);
-            } else{
-            	$('#modifyModal input').prop("disabled", false);
-            	$('#modify-btn').prop("disabled", false);
-            }
-        	if($(this).siblings(".schKind").val() == 0){
-        		$("#restday-table").show();
-                $("#comschedule-table").hide();
-        	}else{
-        		$("#restday-table").hide();
-                $("#comschedule-table").show();
-        	}
-            hide($("#restday-table"));
-            hide($("#comschedule-table"));
-            hide($(".allday"));
-            console.log($(this).parent().prev().children("b").text())
-            $("#modifyModal input[name=schName]").val($(this).parent().prev().children("b").text())
-            $('#modifyModal').modal('show');
-        })
-        
-        $(document).on("click", ".delete-img", function(){
-	        $("#delete-btn").attr("href", "delete.sch?no=" + $(this).siblings(".schNo").val());
-	        $('#deleteModal').modal('show'); 
-	    })
     </script>
 
 </body>

@@ -86,7 +86,7 @@
 		    $(".table tbody tr").click(function(){
 		        $('#report-kind').text($(this).children().eq(1).text());
 		        $('#report-title').text($(this).children().eq(2).text());
-		        $('#goTo').attr("href", "detail.bo?userNo=40&no="+$(this).find('.reportBno').val()); // userNo 바꾸기
+		        $('#goTo').attr("href", "detail.bo?userNo=${loginUser.userNo}&no="+$(this).find('.reportBno').val()); 
 		        $('#report-content').text($(this).find('.reportContent').val());
 		        $('#report-bno').val($(this).find('.reportBno').val());
 		        $('#report-sta').val($(this).find('.reportSta').val());
