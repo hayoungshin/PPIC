@@ -239,11 +239,30 @@
             <br>
             <p style="font-size:10pt"><img src="resources/icons/info.png" width="16"> 기본 인사정보가 모두 등록되어 있어야 다운받으실 수 있습니다.</p>
 
-            <button class="certificate-docs btn-outline-purple">재직증명서 신청<img src="resources/icons/download.png"></button>
+            <button class="certificate-docs btn-outline-purple" id="employment-doc">재직증명서 신청<img src="resources/icons/download.png"></button>
             <br>
-            <button class="certificate-docs btn-outline-purple">경력증명서 신청<img src="resources/icons/download.png"></button>
+            <button class="certificate-docs btn-outline-purple" >경력증명서 신청<img src="resources/icons/download.png"></button>
         </div>
         <br><br>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script type="module">
+            import {_fonts} from '/ppic/resources/js/gulim.js';
+            $("#employment-doc").click(function(){
+                // ajax로 로그인 회원 정보 가져와서 출력해줘야 함
+
+                // PDF 그리기
+                window.jsPDF = window.jspdf.jsPDF;
+                var doc = new jsPDF("p", "mm", "a4");
+                doc.addFileToVFS('malgun.ttf', _fonts);
+                doc.addFont('malgun.ttf','malgun', 'normal');
+                doc.setFont('malgun');
+                doc.line(15, 19, 195, 19); // 선그리기(시작x, 시작y, 종료x, 종료y)
+                doc.text(15, 40, '재직증명서'); // 글씨입력(시작x, 시작y, 내용)
+                doc.save('재직증명서.pdf');  //결과 출력
+            })
+        </script>
+
 	</div>
 	
 </body>
