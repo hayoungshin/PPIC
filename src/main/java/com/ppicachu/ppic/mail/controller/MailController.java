@@ -26,4 +26,9 @@ public class MailController {
 		return "mail/sendMailForm";
 	}
 	
+	@RequestMapping("sendList.ml")
+	public String sendMailList() {
+		return "mail/sendMailListView";
+	}
+	
 }
