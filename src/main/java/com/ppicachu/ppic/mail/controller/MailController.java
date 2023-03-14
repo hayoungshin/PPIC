@@ -42,8 +42,22 @@ public class MailController {
 	}
 	
 	@RequestMapping("importantDetail.ml")
-	public String selectimportantMail() {
+	public String selectImportantMail() {
 		return "mail/importantMailDetailView";
 	}
+	
+	@RequestMapping("tempList.ml")
+	public String tempMailList() {
+		return "mail/tempMailListView";
+	}
+	
+	@RequestMapping("tempForm.ml")
+	public String tempMailForm() {
+		return "mail/tempMailForm";
+	}
+	
+	
+	
+	
 	
 }

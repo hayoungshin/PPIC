@@ -72,7 +72,7 @@
 	document.getElementsByClassName("mail-menu")[2].className += ' selected';
     </script>
 	
-	<div class="tooltip">Hover over me
+	<div class="tooltip">
 		<span class="tooltiptext" style="font-size:12px;">답장</span>
 	</div>
 
