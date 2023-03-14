@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +27,37 @@
      position:sticky;
     }
     #chat-logo{padding:10px;}
-    #myProfileImg{cursor: pointer;} 
+    .pro{
+    	display:inline-block;
+        background: rgb(111, 80, 248);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        text-align:center;
+        margin:0px;
+        cursor:pointer;
+	} 
+	.pro-small{
+		width: 25px;
+        height: 25px;
+        font-size: small;
+        line-height:25px;
+	}
+	.pro-middle{
+		width: 70px;
+        height: 70px;
+        line-height:70px;
+        font-size:20px;
+	}
+	.pro-big{
+		width: 25px;
+        height: 25px;
+        line-height:25px;
+	}
+	.profileImg{
+		border-radius: 50%;
+		cursor:pointer;
+	}
 
     /* chat 메뉴 스타일 */
     #chat-menu{
@@ -82,7 +113,7 @@
         cursor: pointer; 
         width:100%;
     }
-    .conn{
+    .conn, .conn-my{
         display:inline-block;
         margin-bottom:10px;
         height:5px;
@@ -178,9 +209,16 @@
             <div id="chat-logo">
                 <b style="font-size:17px;">PPIC CHAT 💬</b>
                 <span style="float:right;">
-                    홍길동&nbsp;
-                    <img src="resources/icons/profile.jpg" class="rounded-circle" width="25" height="25" id="myProfileImg">
-                    <span class="conn out"></span> 
+                    ${ loginUser.userName }&nbsp;
+                    <c:choose>
+                		<c:when test="${ empty n.profileImg }">
+                			<span class="pro pro-small">${ fn:substring(loginUser.userName,0,1) } </span> 
+                		</c:when>
+                		<c:otherwise>
+                			<img src="${ loginUser.profileImg }" class="profileImg pro-small">
+                		</c:otherwise>
+                	</c:choose>
+                    <span class="conn-my"></span> 
                 </span>
             </div>
     
@@ -188,6 +226,8 @@
                 <img src="resources/icons/user.png" height="26px" onclick="showUser();"> 
                 <img src="resources/icons/chat.png" height="25px" onclick="showChatting();"> 
             </div> 
+        </div>
+        <div id="chat-body">
             <table id="search-area">
                 <tr>
                     <td width="300px">
@@ -196,15 +236,12 @@
                     </td>
                 </tr>
             </table>
-        </div>
-        <div id="chat-body">
-            
             <div id="college-area">
                 <div class="detailView">
-                    <img src="resources/icons/right-arrow.png" height="15px" width="15px">&nbsp;
+                    <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
                     즐겨찾기
                 </div>
-                <div class="detail">
+                <div class="detail" style="display:block;">
                     <div>
                         <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
                         <span>
@@ -236,7 +273,7 @@
                 </div>
     
                 <div class="detailView">
-                    <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
+                    <img src="resources/icons/right-arrow.png" height="15px" width="15px">&nbsp;
                     내 부서
                 </div>
                 <div class="detail">
@@ -272,7 +309,7 @@
                 </div>
             </div>
 
-            <!-- chatRoomList -->
+            <!-- chatRoomList
             <div id="chatRoomList-area">
                 <table width="270">
                     <tr>
@@ -320,16 +357,16 @@
                     </tr>
                 </table>
                 <div id="plus-btn">+</div>
-            </div>
+            </div> -->
             
             <!-- chatRoom create -->
-            <div id="chatRoomCreate-area">
+            <!-- <div id="chatRoomCreate-area">
                 <form action="">
                     <div class="detailView">
-                        <img src="resources/icons/down-arrow.png" height="15px" width="15px">&nbsp;
+                        <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
                         즐겨찾기
                     </div>
-                    <div class="detail">
+                    <div class="detail" style="display:block;">
                         <div>
                             <input type="checkbox" id="1" name="" class="1">&nbsp;
                             <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
@@ -374,7 +411,7 @@
                     </div>
         
                     <div class="detailView">
-                        <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
+                        <img src="resources/icons/right-arrow.png" height="15px" width="15px">&nbsp;
                         내 부서
                     </div>
                     <div class="detail">
@@ -420,17 +457,64 @@
                             </span>
                         </div>
                     </div>
-                    <!-- <button type="submit" id="createChat">채팅방 생성</button> -->
+                    <button type="submit" id="createChat">채팅방 생성</button>
                 </form>
-            </div>
+            </div> -->
         </div>
     </div>
     <script>
+	   	$(function(){
+	   		myConnSta(${loginUser.connSta});
+	   	})
+	   	
         // 내 프로필 보기
-        $("#myProfileImg").click(function(){
+        $(".profileImg, .pro").click(function(){
+        	// 접속 상태 selected
+        	$("#myProfile option").each(function(){
+        		if($(this).val() == "${ loginUser.connSta}"){
+        			$(this).attr("selected", true);
+        		}
+        	})
             $("#myProfile").modal("show");
         })
+        
+       	// 내 접속상태
+        function myConnSta(no){
+        	if(no == 0){
+        		$(".conn-my").addClass("online");
+        		$(".conn-my").removeClass("offline");
+        		$(".conn-my").removeClass("out");
+       		} else if(no == 1){
+       			$(".conn-my").addClass("offline");
+       			$(".conn-my").removeClass("online");
+        		$(".conn-my").removeClass("out");
+       		} else if(no == 2){
+       			$(".conn-my").addClass("out");
+       			$(".conn-my").removeClass("offline");
+        		$(".conn-my").removeClass("online");
+       		}
+        }
 
+        // 내 프로필 접속상태 변경 => ajax
+        $(document).on("click", "#update-btn", function(){
+        	$.ajax({
+        		url:"updateConn.chat",
+        		data:{
+        			userNo:${loginUser.userNo},
+        			userId:"${loginUser.userId}",
+        			userPwd:"${loginUser.userPwd}", // 지우기
+        			connSta:$("#myProfile select").val()
+        		},success:function(updateUser){
+        			if(updateUser != null){
+        				myConnSta(updateUser.connSta);
+        				$("#myProfile").modal("hide");
+        			}
+        		},error:function(){
+        			console.log("내 접속상태 변경용 ajax 통신 실패");
+        		}
+        	})
+        })
+        
         // 채팅 메뉴바 클릭 (주소록)
         function showUser(){
             // ajax
@@ -443,11 +527,13 @@
 
         // 주소록 펼쳐보기
         $(".detailView").click(function(){
-            if($(this).next().css("display") == "none"){
-                $(this).next().show();
-            }else{
-                $(this).next().hide();
-            }
+            $(this).next().slideToggle();
+           	$img = $(this).children("img")
+           	if($img.attr("src") == "resources/icons/up-arrow.png"){
+           		$img.attr("src", "resources/icons/right-arrow.png")
+           	}else{
+           		$img.attr("src", "resources/icons/up-arrow.png")
+           	}
         })
 
         // 동료 프로필 보기
@@ -491,26 +577,31 @@
                 <div class="modal-body">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <b>내 프로필</b><br><br>
-                    <form action="">
-                        <img src="resources/icons/profile.jpg" class="rounded-circle" width="70" height="70">
-                        <b>홍길동</b>
-                        <select name="" id="">
-                            <option value="">
-                                온라인
-                            </option>
-                            <option value="">
-                                부재중
-                            </option>
-                            <option value="">
-                                오프라인
-                            </option>
-                        </select>
-                        <br><br>
-                        <div align="center">
-                            <button class="btn" id="update-btn">확인</button>
-                            <button class="btn" data-dismiss="modal" id="exit-btn">취소</button>
-                        </div>
-                    </form>
+                    <c:choose>
+                		<c:when test="${ empty n.profileImg }">
+                			<span class="pro pro-middle">${ fn:substring(loginUser.userName,1,3) }</span> 
+                		</c:when>
+                		<c:otherwise>
+                			<img src="${ loginUser.profileImg }" class="profileImg pro-middle">
+                		</c:otherwise>
+                	</c:choose>
+                    <b>${ loginUser.userName }</b>
+                    <select name="connSta">
+                        <option value="0">
+                            온라인
+                        </option>
+                        <option value="2">
+                            부재중
+                        </option>
+                        <option value="1">
+                            오프라인
+                        </option>
+                    </select>
+                    <br><br>
+                    <div align="center">
+                        <button class="btn" id="update-btn">확인</button>
+                        <button class="btn" data-dismiss="modal" id="exit-btn">취소</button>
+                    </div>
                 </div>
             </div>
         </div>

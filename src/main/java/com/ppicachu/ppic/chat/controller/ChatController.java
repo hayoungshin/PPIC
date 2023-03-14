@@ -1,5 +1,40 @@
 package com.ppicachu.ppic.chat.controller;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.ppicachu.ppic.chat.model.service.ChatService;
+import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.vo.Member;
+
+@Controller
 public class ChatController {
+	
+	@Autowired
+	private ChatService cService;
+	
+	@Autowired
+	private MemberService mService;
+	
+	@ResponseBody
+	@RequestMapping(value="updateConn.chat", produces="application/json; charset=UTF-8")
+	public String ajaxUpdateConn(Member m, HttpSession session) {
+		int result = cService.updateConn(m);
+		
+		if(result > 0) {
+			Member updateUser = mService.loginMember(m);
+		    session.setAttribute("loginUser", updateUser);
+		    return new Gson().toJson(updateUser);
+		} else {
+			return null;
+		}
+		
+	}
+	
 
 }
