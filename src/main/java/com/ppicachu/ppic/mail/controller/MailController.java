@@ -56,8 +56,21 @@ public class MailController {
 		return "mail/tempMailForm";
 	}
 	
+	@RequestMapping("binList.ml")
+	public String binMailList() {
+		return "mail/binMailListView";
+	}
+	
+	@RequestMapping("binDetail.ml")
+	public String selectBinMail() {
+		return "mail/binMailDetailView";
+	}
 	
 	
-	
+	//**************** 주소록 ****************
+	@RequestMapping("address.ml")
+	public String selectAddress() {
+		return "mail/addressList";
+	}
 	
 }
