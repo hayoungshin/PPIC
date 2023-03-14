@@ -140,7 +140,7 @@
 				받은메일 <span style="color:#6F50F8; font-weight:600">12</span>
 			</div>
 			<div class="mail-menu" onclick="location.href='sendList.ml'">보낸메일</div>
-			<div class="mail-menu">중요메일</div>
+			<div class="mail-menu" onclick="location.href='importantList.ml'">중요메일</div>
 			<div class="mail-menu">임시보관함</div>
 			<div class="mail-menu">휴지통</div>
 			<div id="mail-search-area" style="font-size:15px; margin-left:400px;">

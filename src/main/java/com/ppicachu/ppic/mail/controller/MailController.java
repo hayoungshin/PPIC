@@ -36,4 +36,14 @@ public class MailController {
 		return "mail/sendMailDetailView";
 	}
 	
+	@RequestMapping("importantList.ml")
+	public String importantMailList() {
+		return "mail/importantMailListView";
+	}
+	
+	@RequestMapping("importantDetail.ml")
+	public String selectimportantMail() {
+		return "mail/importantMailDetailView";
+	}
+	
 }
