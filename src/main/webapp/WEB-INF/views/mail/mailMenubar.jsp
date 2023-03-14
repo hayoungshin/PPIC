@@ -42,7 +42,7 @@
 	/* 테이블 */
 	.table>tbody>tr:hover{cursor:pointer; opacity: 0.7;}
 	.table td{
-		font-size:15px;
+		font-size:14px;
 		border-bottom: 1px solid rgb(200,200,200);
 	}
 	thead{background:rgb(240,240,240);}
@@ -233,8 +233,8 @@
 		
 				<!-- Modal footer -->
 				<div class="modal-footer" style="padding:25px 15px;">
-					<button type="button" data-dismiss="modal" style="width:70px;">취소</button>
-					<button class="btn-purple" style="width:70px;">검색</button>
+					<button type="button" data-dismiss="modal" style="font-size:14px; width:60px;">취소</button>
+					<button class="btn-purple" style="font-size:14px; width:60px;">검색</button>
 				</div>
 
 			</form>

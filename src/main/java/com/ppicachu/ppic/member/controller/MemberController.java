@@ -72,7 +72,7 @@ public class MemberController {
 		Member loginUser = mService.loginMember(m);
 		if(loginUser == null) { 
 			model.addAttribute("errorMsg", "로그인 실패");
-			return "common/errorPage"; 
+			return "common/errorPage";
 		} else { 
 			session.setAttribute("loginUser", loginUser);
 			return "common/menubar"; 

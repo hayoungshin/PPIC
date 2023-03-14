@@ -76,6 +76,57 @@
 		background: rgba(230, 230, 230, 0.543);
 	}
 
+
+	/* 모달 관련 */
+	#mail-address-modal{
+        height:500px;
+    }
+    #mail-address-modal>div{
+        border-right: 1px solid rgb(200,200,200);
+        float: left;
+        height:95%;
+        padding:10px;
+    }
+    #mail-address-group p, #mail-address-detail p{
+        margin:10px 0;
+        font-size: 14px;
+        cursor:pointer;
+    }
+    #mail-address-modal .header{
+        cursor: pointer;
+        font-size: 15px;
+        font-weight:600;
+        height:25%;
+        padding: 10px;
+    }
+    .select-area{
+        height:33.3%;
+    }
+    #mail-address-modal .selected-list{
+        height:75%;
+        padding:0px 10px;
+        overflow:auto;
+    }
+    .selected-list li{
+        margin:2px 0;
+        font-size: 14px;
+        width:265px;
+        display:inline-block;
+    }
+    .selected-list button{
+        height:25px;
+        border:0;
+        background:none;
+        padding: 1px 10px;
+        float: right;
+    }
+    .selected-list img{
+        width:7px;
+    }
+    #mail-address-modal .selected{
+        border:1.5px solid #00b5d1;
+    }
+
 </style>
 </head>
 <body>
@@ -100,7 +151,7 @@
 							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
 						</button>
 						<input type="text">
-						<button id="address-btn">주소록</button>
+						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
 					</td>
 				</tr>
 				<tr>
@@ -112,7 +163,7 @@
 							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
 						</button>
 						<input type="text">
-						<button id="address-btn">주소록</button>
+						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
 					</td>
 				</tr>
 				<tr>
@@ -123,7 +174,7 @@
 							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
 						</button>
 						<input type="text">
-						<button id="address-btn">주소록</button>
+						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
 					</td>
 				</tr>
 				<tr>
@@ -226,6 +277,98 @@
 		</form>
 		
 		</div>
+	</div>
+
+
+	<!-- The Modal -->
+	<div class="modal" id="myModal">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+		  
+			<!-- Modal Header -->
+			<div class="modal-header"><h4 class="modal-title">메일 주소록</h4></div>
+			
+			<!-- Modal body -->
+			<div class="modal-body" id="mail-address-modal">
+			  <div style="width:25%;" id="mail-address-group">
+				  <p>전체 <span><b>10</b></span></p>
+				  <p>미지정 <span><b>2</b></span></p>
+				  <hr style="margin:10px 0px;">
+				  <p>인사부 <span><b>4</b></span></p>
+				  <p>회계부 <span><b>4</b></span></p>
+				  <hr style="margin:10px 0px;">
+				  <p>즐겨찾기</p>
+			  </div>
+			  <div style="width:35%;" id="mail-address-detail">
+				  <p>전체</p>
+				  <hr style="margin:10px 0px;">
+				  <p>신하영 &ltuser01@ppic.kr&gt</p>
+				  <p>신하영 &ltuser01@ppic.kr&gt</p>
+				  <p>신하영 &ltuser01@ppic.kr&gt</p>
+			  </div>
+			  <div style="width:40%; padding:0; margin-bottom:10px;">
+
+				  <div class="select-area">
+					  <div class="header" onclick="select(this);">받는 사람 <span style="color:#00b5d1;">0</span></div>
+					  <ul class="selected-list">
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+					  </ul>
+				  </div>
+				  <div class="select-area">
+					  <div class="header" onclick="select(this);">참조 <span style="color:#00b5d1;">0</span></div>
+					  <ul class="selected-list">
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+					  </ul>
+				  </div>
+				  <div class="select-area">
+					  <div class="header" onclick="select(this);">숨은참조 <span style="color:#00b5d1;">0</span></div>
+					  <ul class="selected-list">
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+					  </ul>
+				  </div>
+
+			  </div>
+			  <br>
+			  <p style="font-size:13px; color:gray;">받는사람 / 참조 / 숨은참조 영역 선택 후 좌측의 주소를 선택하면 해당 영역에 입력됩니다.</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" style="font-size:14px; width:60px;">취소</button>
+				<button class="btn-purple" style="font-size:14px; width:60px;">추가</button>
+			</div>
+			
+		  </div>
+		</div>
+
+		<script>
+		  function select(e){
+			  let selectedArea = e.parentNode;
+			  const siblings = e.parentNode.parentNode.children;
+
+			  selectedArea.classList.add("selected");
+
+			  for(let i=0; i<siblings.length; i++){
+				  if(selectedArea != siblings[i]){
+					  siblings[i].classList.remove("selected");
+				  }
+			  }
+
+		  }
+		</script>
+
 	</div>
 
 </body>
