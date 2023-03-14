@@ -27,36 +27,20 @@
      position:sticky;
     }
     #chat-logo{padding:10px;}
-    .pro{
-    	display:inline-block;
-        background: rgb(111, 80, 248);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        text-align:center;
-        margin:0px;
+    .profileImg, .collegeProfileImg{
         cursor:pointer;
 	} 
 	.pro-small{
 		width: 25px;
         height: 25px;
-        font-size: small;
-        line-height:25px;
 	}
 	.pro-middle{
 		width: 70px;
         height: 70px;
-        line-height:70px;
-        font-size:20px;
 	}
 	.pro-big{
 		width: 25px;
         height: 25px;
-        line-height:25px;
-	}
-	.profileImg{
-		border-radius: 50%;
-		cursor:pointer;
 	}
 
     /* chat 메뉴 스타일 */
@@ -210,14 +194,7 @@
                 <b style="font-size:17px;">PPIC CHAT 💬</b>
                 <span style="float:right;">
                     ${ loginUser.userName }&nbsp;
-                    <c:choose>
-                		<c:when test="${ empty n.profileImg }">
-                			<span class="pro pro-small">${ fn:substring(loginUser.userName,0,1) } </span> 
-                		</c:when>
-                		<c:otherwise>
-                			<img src="${ loginUser.profileImg }" class="profileImg pro-small">
-                		</c:otherwise>
-                	</c:choose>
+                    <img class="profileImg pro-small rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.jpg' />">
                     <span class="conn-my"></span> 
                 </span>
             </div>
@@ -226,8 +203,7 @@
                 <img src="resources/icons/user.png" height="26px" onclick="showUser();"> 
                 <img src="resources/icons/chat.png" height="25px" onclick="showChatting();"> 
             </div> 
-        </div>
-        <div id="chat-body">
+            
             <table id="search-area">
                 <tr>
                     <td width="300px">
@@ -236,6 +212,9 @@
                     </td>
                 </tr>
             </table>
+        </div>
+        <div id="chat-body">
+            
             <div id="college-area">
                 <div class="detailView">
                     <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
@@ -277,6 +256,35 @@
                     내 부서
                 </div>
                 <div class="detail">
+                    <div>
+                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                        <span>
+                            김혜수
+                            <span class="conn online"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                        <span>
+                            
+                            김서형
+                            <span class="conn online"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                        <span>
+                            배수지&nbsp;
+                            <span class="conn out"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
+                        <span>
+                            차은우&nbsp;
+                            <span class="conn offline"></span>
+                        </span>
+                    </div>
                     <div>
                         <img src="resources/icons/profile.jpg" class="rounded-circle collegeProfileImg" width="25" height="25">
                         <span>
@@ -464,11 +472,52 @@
     </div>
     <script>
 	   	$(function(){
+	   		// chatheader에 표시되는 내 접속상태
 	   		myConnSta(${loginUser.connSta});
+	   		
+	   		// 주소록 불러오기 => ajax
+	   		$.ajax({
+	   			url:"memList.chat",
+        		success:function(map){
+        			value = "";
+        			for(let i=0; i<map.deptList.length; i++){
+        				value += "<div class='detailView'>"
+        					+ "<img src='resources/icons/right-arrow.png' height='15px' width='15px'>&nbsp;"
+        					+ map.deptList[i].departmentName
+        					+ "</div>"
+        					+ "<div class='detail'>";
+        				for(let j=0; j<map.memList.length; j++){
+        					if(map.memList[j].department == map.deptList[i].departmentName){
+        						value += "<div><img src='";
+        						if(map.memList[j].profilImg != null){
+        							value += map.memList[j].profileImg
+        						}else{
+        							value += "resources/icons/profile.jpg"
+        						}
+        						value += "' class='rounded-circle collegeProfileImg pro-small'>"
+        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+        						if(map.memList[j].connSta == 0){
+        			        		value += " online";
+        			       		} else if(map.memList[j].connSta == 1){
+        			       			value += " offline";
+        			       		} else if(map.memList[j].connSta == 2){
+        			       			value += " out";
+        			       		}
+        						value += "'></span></span></div>";
+        					}
+        				}
+        				value += "</div>"
+        			}
+        			$("#college-area").html(value);
+        		},error:function(){
+        			console.log("주소록 불러오기용 ajax 통신 실패");
+        		}
+	   			
+	   		})
 	   	})
 	   	
         // 내 프로필 보기
-        $(".profileImg, .pro").click(function(){
+        $(".profileImg").click(function(){
         	// 접속 상태 selected
         	$("#myProfile option").each(function(){
         		if($(this).val() == "${ loginUser.connSta}"){
@@ -478,7 +527,7 @@
             $("#myProfile").modal("show");
         })
         
-       	// 내 접속상태
+       	// 내 접속상태 표시/변경
         function myConnSta(no){
         	if(no == 0){
         		$(".conn-my").addClass("online");
@@ -526,7 +575,7 @@
         }
 
         // 주소록 펼쳐보기
-        $(".detailView").click(function(){
+        $(document).on("click", ".detailView", function(){
             $(this).next().slideToggle();
            	$img = $(this).children("img")
            	if($img.attr("src") == "resources/icons/up-arrow.png"){
@@ -577,14 +626,7 @@
                 <div class="modal-body">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <b>내 프로필</b><br><br>
-                    <c:choose>
-                		<c:when test="${ empty n.profileImg }">
-                			<span class="pro pro-middle">${ fn:substring(loginUser.userName,1,3) }</span> 
-                		</c:when>
-                		<c:otherwise>
-                			<img src="${ loginUser.profileImg }" class="profileImg pro-middle">
-                		</c:otherwise>
-                	</c:choose>
+                    <img class="profileImg pro-middle rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.jpg' />">
                     <b>${ loginUser.userName }</b>
                     <select name="connSta">
                         <option value="0">

@@ -1,5 +1,8 @@
 package com.ppicachu.ppic.chat.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.ppicachu.ppic.chat.model.service.ChatService;
 import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
 
 @Controller
@@ -36,5 +40,15 @@ public class ChatController {
 		
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="memList.chat", produces="application/json; charset=UTF-8")
+	public String ajaxSelectMemList() {
+		ArrayList<Member> list1 = mService.selectListMember();
+		ArrayList<Department> list2 = mService.selectDeptList();
+		HashMap<String, ArrayList> map = new HashMap<>();
+		map.put("memList", list1);
+		map.put("deptList", list2);
+		return new Gson().toJson(map);
+	}
 
 }
