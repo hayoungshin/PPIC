@@ -87,6 +87,8 @@
 			document.getElementById("menu-1").style = 'color:black; font-weight:600';
 			document.getElementById("menu-1-1").style = 'color:black; font-weight:600';
 			document.getElementById("menu-1-1-3").style = 'color:black; font-weight:600';
+
+			document.getElementById("menu-1-1-3").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 부서- none
 			const arr3 = document.getElementsByClassName("menu3");
@@ -110,16 +112,39 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- forEach -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                <c:choose>
+                	<c:when test="${ empty list }">
+                		<tr>
+                			<td colspan="7">임시저장된 문서가 없습니다.</td>
+                		</tr>
+                	</c:when>
+                	<c:otherwise>
+		                <c:forEach var="a" items="${ list }">
+			                <tr>
+			                    <td><input type="checkbox"></td>
+			                    <td>${ a.userName }</td>
+			                    <td>${ a.form }</td>
+			                    <td>${ a.title }</td>
+			                    <td>
+			                    	<c:if test="${ not empty a.originName }">
+			                    		<img src="resources/icons/clip.png" height="20px">
+			                    	</c:if>
+			                    </td>
+			                    <td>
+			                    	<c:choose>
+			                    		<c:when test="${ a.currentOrder eq 0 }">
+			                    			${ a.approvalStatus }
+			                    		</c:when>
+			                    		<c:otherwise>
+			                    			${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }
+			                    		</c:otherwise>
+			                    	</c:choose>
+			                    </td>
+			                    <td>${ a.createDate }</td>
+			                </tr>
+		                </c:forEach>
+		            </c:otherwise>
+                </c:choose>
 
             </tbody>
         </table>

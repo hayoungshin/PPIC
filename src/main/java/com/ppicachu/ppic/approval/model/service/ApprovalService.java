@@ -13,50 +13,21 @@ import com.ppicachu.ppic.member.model.vo.Member;
 
 public interface ApprovalService {
 	
-	// 1. 전자결재 리스트 페이지 조회 서비스 (페이징)
-	int selectListCount(MyDept md);
+	// 1. 개인-기안-진행중 / 개인-참조 / 개인-중요 / 부서-진행중 목록 페이지 조회 서비스 (페이징)
+	int selectListCount(MyDept md); // + 개인-기안-완료 / 부서-완료
 	ArrayList<Approval> selectList(MyDept md, PageInfo pi);
 	
+	// 2. 개인-기안-완료 / 부서-완료 목록 페이지 조회 서비스 (페이징)
+	ArrayList<Approval> selectEdList(MyDept md, PageInfo pi);
+	
+	// 3. 개인-기안-임시저장
+	int selectTemListCount(MyDept md);
+	ArrayList<Approval> selectTemList(MyDept md, PageInfo pi);
+	
+	
 	/*
-	// 1. 개인_기안_진행중 select (/승인필요) (+count)
-	int selectMyIngListCount(String userNo);
-	ArrayList<Approval> selectMyIngList(String userNo, PageInfo pi);
-	
-	// 2. 개인_기안_완료 select (+count)
-	int selectMyEdListCount(String userNo);
-	ArrayList<Approval> selectMyEdList(String userNo, PageInfo pi);
-	
-	// 3. 개인_기안_임시저장 select (+count)
-	int selectMyTemListCount(String userNo);
-	ArrayList<Approval> selectMyTemList(String userNo, PageInfo pi);
-	
-	// 4. 개인_참조 select (+count)
-	int selectMyRefListCount(String userNo);
-	ArrayList<Approval> selectMyRefList(String userNo, PageInfo pi);
-	
-	// 5. 개인_중요 select (+count)
-	int selectMyBookListCount(String userNo);
-	ArrayList<Approval> selectMyBookList(String userNo, PageInfo pi);
-	
 	// 6. 중요 update
 	int updateBook(Approval a);
-	
-	// 7.부서_진행중 select (+count)
-	int selectDeptIngCount(String deptNo);
-	ArrayList<Approval> selectDeptIngList(String deptNo, PageInfo pi);
-	
-	// 8.부서_완료 select (+count)
-	int selectDeptEdCount(String deptNo);
-	ArrayList<Approval> selectDeptEdList(String deptNo, PageInfo pi);
-	
-	// 20.전체관리_전체문서 select (+count)
-	int selectAllListCount(String userNo);
-	ArrayList<Approval> selectAllList(PageInfo pi);
-	
-	// 22.삭제관리_삭제문서 select (+count)
-	int selectDelListCount(String userNo);
-	ArrayList<Approval> selectDelList(PageInfo pi);
-	*/
 	
 	// 9.작성_회원 리스트 select (+회원명, 부서명, 직급명)
 	// 15.수정_회원 리스트 select (+회원명, 부서명, 직급명)
@@ -105,5 +76,5 @@ public interface ApprovalService {
 	
 	
 	// 24.삭제관리_영구삭제 delete
-
+	*/
 }

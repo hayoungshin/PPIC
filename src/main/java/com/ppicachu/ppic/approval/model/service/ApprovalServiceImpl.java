@@ -36,108 +36,18 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberList() {
-		return null;
+	public ArrayList<Approval> selectEdList(MyDept md, PageInfo pi) {
+		return aDao.selectEdList(sqlSession, md, pi);
 	}
 
 	@Override
-	public int insertApproval(Approval a) {
-		return 0;
+	public int selectTemListCount(MyDept md) {
+		return aDao.selectTemListCount(sqlSession, md);
 	}
 
 	@Override
-	public int insertFormDraft(FormDraft fdr) {
-		return 0;
-	}
-
-	@Override
-	public int insertFormTransfer(ArrayList<FormTransfer> ftrList) {
-		return 0;
-	}
-
-	@Override
-	public int insertFormConsume(ArrayList<FormDraft> fcoList) {
-		return 0;
-	}
-
-	@Override
-	public int insertFormCash(ArrayList<FormDraft> fcaList) {
-		return 0;
-	}
-
-	@Override
-	public int insertAppProcess(ArrayList<AppProcess> apList) {
-		return 0;
-	}
-
-	@Override
-	public int insertAppChange(ArrayList<AppChange> acList) {
-		return 0;
-	}
-
-	@Override
-	public Approval selectApproval(int approvalNo) {
-		return null;
-	}
-
-	@Override
-	public int insertAppChange(AppChange ac) {
-		return 0;
-	}
-
-	@Override
-	public int updateAppChange(int changeNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteAppChange(int changeNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteApproval(int approvalNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteFormDraft(int approvalNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteFormTransfer(int approvalNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteFormConsume(int approvalNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteFormCash(int approvalNo) {
-		return 0;
-	}
-
-	@Override
-	public int deleteAppProcess(int approvalNo) {
-		return 0;
-	}
-
-	@Override
-	public int selectSearchListCount() {
-		return 0;
-	}
-
-	@Override
-	public ArrayList<Approval> selectSearchList(PageInfo pi) {
-		return null;
-	}
-
-	@Override
-	public int updateApproval(int approvalNo) {
-		return 0;
+	public ArrayList<Approval> selectTemList(MyDept md, PageInfo pi) {
+		return aDao.selectTemList(sqlSession, md, pi);
 	}
 
 }
