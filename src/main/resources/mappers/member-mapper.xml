@@ -73,7 +73,6 @@
 		   and user_no = #{userNo}
 	</select>
 	
-	<!-- 로그인 대충 -->
 	<select id="loginMember" resultMap="memberResult">
 		select
 			   user_no
@@ -92,12 +91,11 @@
 		     , resign_date
 		     , status
 		     , authority_no
-		     , member_sign
 		     , conn_sta
 		  from member
 		 where status = 'Y'
 		   and user_id = #{userId}
-		   and user_pwd = #{userPwd}
+		   and member_sign = 'Y'
 	</select>
 	
 	<update id="updateProfileImg">

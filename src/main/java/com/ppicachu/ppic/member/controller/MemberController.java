@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ppicachu.ppic.common.template.FileUpload;
 import com.ppicachu.ppic.member.model.service.MemberService;
@@ -74,18 +75,19 @@ public class MemberController {
 		return "member/memberAuthView";
 	}
 	
-	// 로그인 대충
 	@RequestMapping("login.me")
-	public String loginMember(Member m, Model model, HttpSession session) {
+	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv) {
 		Member loginUser = mService.loginMember(m);
-		if(loginUser == null) { 
-			model.addAttribute("errorMsg", "로그인 실패");
-			return "common/errorPage";
-		} else { 
+		
+		if(loginUser != null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
 			session.setAttribute("loginUser", loginUser);
-			return "common/Home"; 
+			mv.setViewName("common/Home");
+		} else {
+			mv.addObject("errorMsg", "로그인 실패");
+			mv.setViewName("common/errorPage");
 		}
 		
+		return mv;
 	}
 	
 	/* 회원정보 update(세션 out 됨) */
@@ -163,7 +165,6 @@ public class MemberController {
 	@RequestMapping("insert.me")
 	public String insertMember(Member m, HttpSession session, Model model) {
 		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
-		//System.out.println(encPwd);
 		m.setUserPwd(encPwd);
 		int result = mService.insertMember(m);
 		if(result > 0) {
@@ -174,7 +175,6 @@ public class MemberController {
 			return "common/errorPage";
 		}
 	}
-	
 	
 	
 	
