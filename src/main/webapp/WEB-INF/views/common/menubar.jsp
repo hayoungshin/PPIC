@@ -170,7 +170,7 @@
 
             <hr style="margin:20px 0px;">
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='login.me'">
                 <img src="resources/icons/home.png">
                 <span>홈 피드</span>
             </div>

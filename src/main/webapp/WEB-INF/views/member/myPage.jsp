@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>PPIC</title>
+
+<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
 <style>
 	 /* content css */
 
@@ -84,6 +86,51 @@
         border-radius: 10%;
        
     }
+    
+    #phonep{
+    	background: white;
+    	border: 0.5px solid rgb(111, 80, 248);
+    	color: rgb(111, 80, 248);
+    	font-weight:bold;
+    	font-size:12px;
+    	width:100px;
+    	height:30px;
+    	padding:5px 5px 5px 10px;
+    	border-radius :15px; 
+    	position: absolute;
+        left: 125px;
+        top: 200px;
+    }
+    
+    #mail{
+    	background: white;
+    	border: 0.5px solid rgb(111, 80, 248);
+    	color: rgb(111, 80, 248);
+    	font-weight:bold;
+    	font-size:12px;
+    	width:120px;
+    	height:30px;
+    	padding:5px 5px 5px 13px;
+    	border-radius :15px; 
+    	position: absolute;
+        left: 150px;
+        top: 200px;
+    }
+    
+    #copy{
+    	background:rgb(111, 80, 248);
+    	width:230px;
+    	height:80px;
+    	position: fixed;
+    	bottom: 10px; right: 10px; 
+    	font-weight:bold;
+    	font-size:20px;
+    	color: white;
+    	padding :20px 30px 30px 10px;
+    	border-radius :15px; 
+    }
+    
+    #phonepop{width:80%; margin:1px 3px 3px 3px;}
 </style>
 </head>
 <body>
@@ -123,7 +170,8 @@
             			let uploadFile = this.files[0];
             			
             			formData.append("uploadFile", uploadFile);
-            			formData.append("userId", '${loginUser.userId}'); 
+            			formData.append("userId", '${loginUser.userId}');
+            			formData.append("userPwd", '${loginUser.userPwd}');
             			formData.append("originalFile", '${loginUser.profileImg}');
             			
             			$.ajax({
@@ -138,8 +186,6 @@
             					
             				}
             			})
-            			
-            			
             		})
             	})
             </script>
@@ -147,10 +193,54 @@
                 <div class="p_name" style="float:left" >
                     <h4 >${loginUser.userName }</h4>
                     <h5>${loginUser.department }</h5>
-                    <div class="phone" style="float:left;"> <img src="resources/icons/phone_white.png" style="width:80%; margin:1px 3px 3px 3px;"></div>
-                    <div class="email" style="float:left"> <img src="resources/icons/email_white.png" style="width:80%; margin:1px 3px 3px 3px;"></div>
+                    
+                    <div class="phone" style="float:left;"> 
+                    	<img src="resources/icons/phone_white.png" id="phonepop">
+                    </div>
+                    
+                    <div class="email" style="float:left"> 
+                    	<img src="resources/icons/email_white.png" id="mailpop"  style="width:80%; margin:1px 3px 3px 3px;">
+                    </div>
+                    
+                    <div id="phonep" onclick="copyCode1()" style="display:none"> ${ loginUser.phone } </div>
+                    <div id="mail" onclick="copyCode2()" style="display:none"> ${ loginUser.mail } </div>
+                    <div id="copy" style="display:none">복사완료</div>
                 </div>
             </div>
+            
+            <script>
+	            $(function(){
+	        		$("#phonepop").mouseover(function(){$('#phonep').show();})
+	        		$("#phonep").mouseover(function(){$('#phonep').show();})
+	        		$("#phonepop").mouseout(function(){$('#phonep').hide();})
+	        		$("#phonep").mouseout(function(){$('#phonep').hide();})
+	        		
+	        	});
+	            
+	            $(function(){
+	        		$("#mailpop").mouseover(function(){$('#mail').show();})
+	        		$("#mail").mouseover(function(){$('#mail').show();})
+	        		$("#mailpop").mouseout(function(){$('#mail').hide();})
+	        		$("#mail").mouseout(function(){$('#mail').hide();})
+	        		
+	        	});
+	            
+	            function copyCode1() {
+					const code = document.querySelector("#phonep");
+					window.navigator.clipboard.writeText(code.textContent).then(() => {
+						$('#copy').show(1000);
+						$('#copy').hide(2000);
+					});
+	            }
+	            
+				function copyCode2() {
+					const code = document.querySelector("#mail");
+					window.navigator.clipboard.writeText(code.textContent).then(() => {
+						$('#copy').show(1000);
+						$('#copy').hide(2000);
+					});
+				}
+            </script>
 
             <div class="myPagecategory" style="float:left" >
                 <a style="color:black">인사정보</a>
@@ -220,6 +310,7 @@
                         <div class="form-group" align="left">
                             
                             <input type="hidden" id="userId" name="userId" value="${ loginUser.userId }" >
+                            <input type="hidden" id="userPwd" name="userPwd" value="${ loginUser.userPwd }" >
                             <label id="p_title" for="">이름</label>
                             <input type="text" id="userName" name="userName" value="${loginUser.userName }"><br>
                             

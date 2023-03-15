@@ -53,4 +53,28 @@
 		  FROM HOLIDAY_APPLY H
 		  join member on (member.user_no = h.user_no)
 	</select>
+	
+	<select id="selectBeforeUseList" resultMap="holidayResult1" >
+		select 
+		       holiday_no
+		     , T1.user_no
+		     , user_name
+		     , h_type
+		     , h_sort
+		     , h_start
+		     , h_finish
+		     , h_date
+		     , h_reason
+		     , T1.status
+		  from holiday_apply T1
+		  join member T2 on (T1.user_no = T2.user_no)
+		 where T1.status='승인대기'
+	</select>
+	
+	<insert id="completeWorkInsert">
+		Insert into work (work_no, user_no, work_date, work_in, work_out, work_time, status )
+			     select seq_wno.nextval, m.user_no,to_date(sysdate,'YYYY-MM-DD hh24:mi:SS'),null, null, null, '결근'
+			     from member m
+			     where m.status ='Y'
+	</insert>
 </mapper>

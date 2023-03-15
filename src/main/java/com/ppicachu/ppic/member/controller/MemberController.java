@@ -79,7 +79,7 @@ public class MemberController {
 			return "common/errorPage";
 		} else { 
 			session.setAttribute("loginUser", loginUser);
-			return "common/menubar"; 
+			return "common/Home"; 
 		}
 		
 	}
@@ -91,6 +91,7 @@ public class MemberController {
 		
 		if(result >0) {
 			Member updateMem = mService.loginMember(m);
+			
 			session.setAttribute("loginUser", updateMem);
 			session.setAttribute("alertMsg", "성공적으로 회원정보를 변경하였습니다");
 			

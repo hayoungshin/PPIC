@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.service.WorkService;
 import com.ppicachu.ppic.work.model.vo.Holiday;
@@ -16,6 +18,9 @@ public class WorkController {
 	
 	@Autowired
 	private WorkService wService;
+	
+	@Autowired
+	private MemberService mService;
 	
 	/* 단순 페이지 오픈 */
 	
@@ -51,7 +56,15 @@ public class WorkController {
 	
 	/* 근무_구성원근무 */
 	@RequestMapping("memberWork.wo")
-	public String memberwork() {
+	public String memberwork(Model model) {
+		// 사용자 리스트
+		ArrayList<Member> list1 = mService.selectListMember();
+		// 휴가 
+		ArrayList<Member> list2 = wService.selectHolidayList();
+		
+		model.addAttribute("list1", list1);
+		model.addAttribute("list2", list2);
+		
 		return "work/workMemberView";
 	}
 	
@@ -73,13 +86,23 @@ public class WorkController {
 	
 	/* 근무_휴가지급 */
 	@RequestMapping("holiGive.ho")
-	public String holiGive() {
+	public String holiGive(Model model) {
+		
+		ArrayList<Member> list1 = mService.selectListMember();
+		model.addAttribute("list1", list1);
+		ArrayList<Department> list2 = mService.selectDeptList();
+		model.addAttribute("list2", list2);
+		
 		return "work/holidayGiveForm";
 	}
 	
 	/* 근무_휴가승인 */
 	@RequestMapping("holiApprove.ho")
-	public String holiApprove() {
+	public String holiApprove(Model model) {
+		
+		ArrayList<Holiday> list = wService.selectBeforeUseList(); 
+		model.addAttribute("list",list);
+		
 		return "work/holidayApproveView";
 	}
 

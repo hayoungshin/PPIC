@@ -194,11 +194,6 @@
                             </c:forEach>
                         </tbody>
                     </table>
-                    
-                    <script>
-					    /* td 클릭시 모달창 */
-					</script>
-					
 				</div>
 				
 			</div>
@@ -215,10 +210,7 @@
                 </div>
             </div>
                 
-            
-			
-
-            </div>
+		</div>
 			
 	</div>
     	
