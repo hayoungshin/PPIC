@@ -19,6 +19,34 @@
 		background:none;
 		border:none;
 	}
+	
+	#address-area{width:100%; height:650px;}
+	#address-area span{display: inline-block;}
+	#address-header{
+		height:5%;
+		background:rgb(230,230,230);
+	}
+	#address-group{
+		border-right:1.5px solid rgb(230,230,230);
+		width:15%; height:95%;
+		padding:70px 20px 0px;
+		float:left;
+	}
+	#address-group>div{margin-bottom:20px;}
+	#address-group img{
+		width:18px;
+		margin-bottom:5px;
+		margin-right:10px;
+	}
+	#address-group p{margin:10px 0px 0px 40px; font-size:15px;}
+	#address-group>.div:hover, #address-group p:hover{cursor:pointer; font-weight:600;}
+
+	#address-list-area{
+		float:left;
+		height:95%; width:85%;
+		padding:20px;
+		overflow:auto;
+	}
 </style>
 </head>
 <body>
@@ -39,50 +67,46 @@
 					</button>
 				</form>
 			</div>
+			<br><br>
 
-			<table border="1">
-				<tr>
-					<td></td>
-					<td></td>
-					<td>이름</td>
-					<td></td>
-					<td>부서</td>
-					<td>직급</td>
-					<td>전화번호</td>
-				</tr>
-				<tr>
-					<td>
-						<div>전체주소</div>
-						<div>
-							<p>인사부</p>
-							<p>인사부</p>
-							<p>인사부</p>
-							<p>인사부</p>
-							<p>인사부</p>
-							<p>미지정</p>
-						</div>
-						<div>즐겨찾기</div>
-					</td>
-					<td>
-						<img src="resources/icons/star.png" width="18px">
-					</td>
-					<td>
-						신하영
-					</td>
-					<td>
-						shin@ppic.kr
-					</td>
-					<td>
-						인사
-					</td>
-					<td>
-						과장
-					</td>
-					<td>
-						01011112222
-					</td>
-				</tr>
-			</table>
+			<div id="address-area">
+				<div id="address-header">
+					<span style="height:100%; margin-left:250px; padding:5px; width:70px;">
+						이름
+					</span>
+					<span style="height:100%; margin-left:275px; padding:5px; width:70px;">
+						부서
+					</span>
+					<span style="height:100%; margin-left:80px; padding:5px; width:70px;">
+						직급
+					</span>
+					<span style="height:100%; margin-left:80px; padding:5px; width:150px;">
+						전화번호
+					</span>
+				</div>
+				<div id="address-group">
+					<div class="div"><img src="resources/icons/addressBook.png">전체주소</div>
+					<div>
+						<p>└&nbsp&nbsp미지정</p>
+						<p>└&nbsp&nbsp인사부</p>
+						<p>└&nbsp&nbsp인사부</p>
+						<p>└&nbsp&nbsp인사부</p>
+						<p>└&nbsp&nbsp인사부</p>
+					</div>
+					<div class="div" style="margin-top:30px;"><img src="resources/icons/star-y.png">즐겨찾기</div>
+				</div>
+				<div id="address-list-area">
+					<p>
+						<img src="resources/icons/star-y.png" width="15px;" style="margin-bottom:5px;">
+						<span style="width:100px; padding-left:10px; font-weight:600;">신하영</span>
+						<span style="width:250px;">shin@ppic.kr</span>
+						<span style="width:150px;">인사부</span>
+						<span style="width:150px;">과장</span>
+						<span>01011112222</span>
+					</p>
+				</div>
+			</div>
+			
 
         </div>
     </div>
