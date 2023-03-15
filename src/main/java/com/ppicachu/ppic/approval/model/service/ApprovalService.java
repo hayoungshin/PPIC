@@ -24,11 +24,14 @@ public interface ApprovalService {
 	int selectTemListCount(MyDept md);
 	ArrayList<Approval> selectTemList(MyDept md, PageInfo pi);
 	
+	// 4. 전체관리 / 삭제관리
+	int selectMaListCount(MyDept md);
+	ArrayList<Approval> selectMaList(MyDept md, PageInfo pi);
 	
-	/*
-	// 6. 중요 update
+	// 5. 중요 update
 	int updateBook(Approval a);
 	
+	/*
 	// 9.작성_회원 리스트 select (+회원명, 부서명, 직급명)
 	// 15.수정_회원 리스트 select (+회원명, 부서명, 직급명)
 	ArrayList<Member> selectMemberList();

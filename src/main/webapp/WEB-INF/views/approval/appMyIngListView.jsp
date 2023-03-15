@@ -111,12 +111,11 @@
 						let arr = "";
 						if(map.agreePi.listCount == 0){
 							arr +=	"<tr>"
-								+		"<td colspan='8'>나의 승인이 필요한 문서가 없습니다</td>"
+								+		"<td colspan='7'>나의 승인이 필요한 문서가 없습니다</td>"
 								+	"</tr>";
 						}else{
 							for(let i=0; i<map.agreeList.length; i++){
 								arr +=	"<tr>"
-									+		"<td><input type='checkbox'></td>"
 									+		"<td>" + map.agreeList[i].userName + "</td>"
 									+		"<td>" + map.agreeList[i].form + "</td>"
 									+		"<td>" + map.agreeList[i].title + "</td>"
@@ -127,9 +126,9 @@
 								arr +=		"</td>"
 									+		"<td>";
 								if(map.agreeList[i].currentOrder == 0){
-									arr +=		map.agreeList[i].approvalStatus;
+									arr +=		"<span class='stt-gr'>" + map.agreeList[i].approvalStatus + "</span>";
 								}else{
-									arr +=		map.agreeList[i].approvalStatus + " " +  + map.agreeList[i].currentOrder + "/" +  + map.agreeList[i].finalOrder;
+									arr +=		"<span class='stt-pp'>" + map.agreeList[i].approvalStatus + " " +  + map.agreeList[i].currentOrder + "/" +  + map.agreeList[i].finalOrder + "</span>";
 								}
 								arr +=		"</td>"
 									+		"<td>" + map.agreeList[i].createDate + "</td>"
@@ -144,14 +143,28 @@
 							}
 						}
 						result.innerHTML = arr;
-					},
-					error:function(){
-						console.log("승인필요용 list ajax통신 실패");
+					}, error:function(){
+						console.log("승인필요용 ajax통신 실패");
 					}
 				});
 			}else{ // 승인필요가 checked가 아닌 경우
 				location.href="list.ap?myi=1";
 			}
+		}
+		
+		function ajaxStar(color){
+			const el = window.event.target;
+			const no = el.parentNode.parentNode.childNodes[1].value;
+			$.ajax({
+				url:"updateBook.ap?approvalNo=" + no + "&bookmark=color",
+				success:function(result){
+					if(result > 0){
+						location.reload;
+					}
+				}, error:function(){
+					console.log("중요용 ajax통신 실패");
+				}
+			});
 		}
 	</script>
 	
@@ -159,14 +172,13 @@
         <table id="tb" class="table-hover">
             <thead>
                 <tr class="purple">
-                    <th width="30px"><input type="checkbox"></th>
-                    <th>작성자</th>
-                    <th>문서양식</th>
+                    <th width="100px">작성자</th>
+                    <th width="200px">문서양식</th>
                     <th>제목</th>
-                    <th>첨부</th>
-                    <th>결재상태</th>
-                    <th>작성일</th>
-                    <th>중요</th>
+                    <th width="70px">첨부</th>
+                    <th width="150px">결재상태</th>
+                    <th width="150px">작성일</th>
+                    <th width="70px">중요</th>
                 </tr>
             </thead>
             <tbody id="ajaxResult">
@@ -174,13 +186,13 @@
                 <c:choose>
                 	<c:when test="${ empty list }">
                 		<tr>
-                			<td colspan="8">진행중인 문서가 없습니다.</td>
+                			<td colspan="7">진행중인 문서가 없습니다.</td>
                 		</tr>
                 	</c:when>
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
 			                <tr>
-			                    <td><input type="checkbox"></td>
+								<input type="hidden" name="approvalNo" value="${ a.approvalNo }">
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
 			                    <td>${ a.title }</td>
@@ -192,10 +204,10 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${ a.currentOrder eq 0 }">
-			                    			${ a.approvalStatus }
+			                    			<span class="stt-gr">${ a.approvalStatus }</span>
 			                    		</c:when>
 			                    		<c:otherwise>
-			                    			${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }
+			                    			<span class="stt-pp">${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }</span>
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>
@@ -203,10 +215,10 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${ empty a.bookmark }">
-			                    			<img src="resources/icons/star.png" height="20px">
+			                    			<img src="resources/icons/star.png" height="20px" class="as" onclick="ajaxStar('w');">
 			                    		</c:when>
 			                    		<c:otherwise>
-				                    		<img src="resources/icons/star-y.png" height="20px">
+				                    		<img src="resources/icons/star-y.png" height="20px" class="as" onclick="ajaxStar('y');">
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>
@@ -218,15 +230,20 @@
             </tbody>
         </table>
         
-        <div class="del-btn-area"><button class="btnn-rd">선택 문서 삭제</button></div>
-        <br clear="both">
+        <br>
 
         <div align="center">
-            <a href="" class="btnn-pp">이전</a>
-            <!-- forEach -->
-            <a href="" class="btnn-pp">1</a>
+        	<c:if test="${ pi.currentPage ne 1 }">
+            	<a href="list.ap?myi=1&cpage=${ pi.currentPage - 1 }" class="btnn-pp">이전</a>
+            </c:if>
+            
+			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				<a href="list.ap?myi=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+			</c:forEach>
 
-            <a href="" class="btnn-pp">다음</a>
+			<c:if test="${ pi.currentPage ne pi.maxPage and pi.maxPage ne 0 }">
+            	<a href="list.ap?myi=1&cpage=${ pi.currentPage + 1 }" class="btnn-pp">다음</a>
+            </c:if>
         </div>
     </div>
 </div> <!-- div 닫는 구문 하나 더 있음 -->
