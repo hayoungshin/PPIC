@@ -1,17 +1,24 @@
 package com.ppicachu.ppic.work.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.service.WorkService;
 import com.ppicachu.ppic.work.model.vo.Holiday;
+import com.ppicachu.ppic.work.model.vo.Work;
 
 @Controller
 public class WorkController {
@@ -86,12 +93,12 @@ public class WorkController {
 	
 	/* 근무_휴가지급 */
 	@RequestMapping("holiGive.ho")
-	public String holiGive(Model model) {
+	public String holiGive(Model model, HttpSession session) {
 		
 		ArrayList<Member> list1 = mService.selectListMember();
 		model.addAttribute("list1", list1);
 		ArrayList<Department> list2 = mService.selectDeptList();
-		model.addAttribute("list2", list2);
+		session.setAttribute("list2", list2);
 		
 		return "work/holidayGiveForm";
 	}
@@ -105,5 +112,30 @@ public class WorkController {
 		
 		return "work/holidayApproveView";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="workRecord.wo", produces="application/json; charset=utf-8")
+	public String ajaxSelectWork(int no, Model model) {
+      
+      Work w = wService.selectWorkRecord(no);
+      
+      HashMap<String,Object> map = new HashMap<String,Object>();
+      map.put("w", w);
+      
+	  return new Gson().toJson(map);
+	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

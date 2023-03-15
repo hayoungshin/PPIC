@@ -21,7 +21,17 @@
 		<result column ="give_day" property="giveDay" />
 		<result column ="use_day" property="useDay" />
 		<result column ="add_day" property="addDay" />
-		
+	</resultMap>
+	
+	<resultMap id="workResult" type="Work">
+		<id column="work_no" property="workNo" />
+		<result column="user_no" property="userNo" />
+		<result column="user_name" property="userName" />
+		<result column="work_date" property="workDate" />
+		<result column="work_in" property="workIn" />
+		<result column="work_out" property="workOut" />
+		<result column="work_time" property="workTime" />
+		<result column="status" property="status" />
 	</resultMap>
 
 	<select id="selectHolidayList" resultMap="holidayResult2" >
@@ -77,4 +87,19 @@
 			     from member m
 			     where m.status ='Y'
 	</insert>
+	
+	<select id="selectWorkRecor" resultMap="workResult">
+		select 
+		       work_no
+		     , user_name
+		     , to_char(work_date, 'yyyy/mm/dd') as work_date
+		     , to_char(work_in, 'hh24:MI') as work_in
+		     , to_char(work_out,'hh24:MI') as work_out
+		     , work_time
+		     , w.status
+		  from work w
+		  join member m on (w.user_no = m.user_no)
+		  where w.user_no = #{userNo}
+		    AND WORK_DATE = to_char(sysdate,'YYYY-MM-DD')
+	</select>
 </mapper>

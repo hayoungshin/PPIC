@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.work.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public int completeWorkInsert() {
 		return wDao.completeWorkInsert(sqlSession);
+	}
+
+	@Override
+	public Work selectWorkRecord(int userNo) {
+		return wDao.selectWorkRecord(sqlSession, userNo);
 	}
 
 }
