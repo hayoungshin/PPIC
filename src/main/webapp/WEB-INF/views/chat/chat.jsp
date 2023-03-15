@@ -41,9 +41,9 @@
         background:linear-gradient( to right, #6F50F8 5%, #FFCECE);;
     }
     #chat-menu>*{padding-left:18px;}
-    .menuClicked{opacity:0.7;}
-    #chat-menu>img:hover{cursor: pointer; opacity:0.7;}
-    
+    .menuClicked{filter: brightness(85%)}
+    #chat-menu>img{cursor: pointer;}
+    #chat-menu>img:active{cursor: pointer; filter: brightness(85%)}
 
     /* chat 검색 스타일 */
     #search-area tr{border-bottom:1px solid lightgray;} 
@@ -72,9 +72,9 @@
 	}
 
     /* 주소록&채팅생성 스타일 */
-    #college-area, #chatRoomCreate-area{padding:10px;}
-    #college-area>div, #chatRoomCreate-area div{padding:5px; cursor:pointer;} 
-    #college-area img, #chatRoomCreate-area img{margin-right:5px;}
+    #college-area, #chatRoomCreate{padding:10px;}
+    #college-area>div, #chatRoomCreate>div{padding:5px; cursor:pointer;} 
+    #college-area img, #chatRoomCreate img{margin-right:5px;}
     .detail>div{padding:5px;}
     .detail>div>span:hover, #chatRoomList-area tr:hover{opacity:0.7;}
     .detail{display: none;} 
@@ -84,7 +84,7 @@
     }
     .detail label{
         cursor: pointer; 
-        width:100%;
+        width:80%;
     }
     .conn, .conn-my{
         display:inline-block;
@@ -136,6 +136,7 @@
         top:540px;
         left:510px;
     }
+    #plus-btn:active{opacity:0.7;}
     #createChat{
         font-size: 10px;
         width:70px;
@@ -208,26 +209,6 @@
             </table>
         </div>
         <div id="chat-body">
-
-            <!-- chatRoomList
-            <div id="chatRoomList-area">
-                <table width="270">
-                    <tr>
-                        <td>
-                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
-                        </td>
-                        <td>
-                            <b>김혜수</b> <br>
-                            고마워요 길동씨~
-                        </td>
-                        <td class="table-time">
-                            <small>지금</small><br>
-                            <span>1</span>
-                        </td>
-                    </tr>
-                </table>
-                <div id="plus-btn">+</div>
-            </div> -->
             
             <!-- chatRoom create -->
             <!-- <div id="chatRoomCreate-area">
@@ -338,7 +319,7 @@
 	   		myConnSta(${loginUser.connSta});
 	   		
 	   		// 주소록 불러오기
-	   		memList();
+	   		showUser();
 	   	})
 	   	
 	   	// 채팅 메뉴바 클릭 (주소록)
@@ -346,6 +327,7 @@
         	memList();
         	$("#member-btn").addClass("menuClicked");
         	$("#chat-btn").removeClass("menuClicked");
+        	$("input[name=keyword]").val("");
         }
 
         // 채팅 메뉴바 클릭 (채팅목록)
@@ -353,6 +335,7 @@
             chatRoomList();
         	$("#chat-btn").addClass("menuClicked");
         	$("#member-btn").removeClass("menuClicked");
+        	$("input[name=keyword]").val("");
         }
 	   	
 	   	// 주소록 불러오기 => ajax
@@ -361,7 +344,7 @@
 	   			url:"memList.chat",
 	   			data:{userNo:${loginUser.userNo}},
         		success:function(map){
-        			let value1 = "<div class='detailView'>"
+        			let value1 = "<div class='detailView' id='memberList'>"
 		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
 		    					+ "내 부서"
 		    					+ "</div>"
@@ -379,7 +362,7 @@
 	        				for(let j=0; j<map.memList.length; j++){
 	        					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
 	        						if(map.memList[j].department == map.deptList[i].departmentName){
-		        						value1 += "<div><img src='";
+		        						value1 += "<div><input type='hidden'><img src='";
 		        						if(map.memList[j].profileImg != null){
 		        							value1 += map.memList[j].profileImg
 		        						}else{
@@ -414,7 +397,7 @@
 	        					+ "<div class='detail'>";
 	        				for(let j=0; j<map.memList.length; j++){
 	        					if(map.memList[j].department == map.deptList[i].departmentName){
-	        						value2 += "<div><img src='";
+	        						value2 += "<div><input type='hidden'><img src='";
 	        						if(map.memList[j].profilImg != null){
 	        							value2 += map.memList[j].profileImg
 	        						}else{
@@ -444,7 +427,7 @@
         			}
         			for(let k=0; k<map.memList.length; k++){
     					if(map.memList[k].chatLike != null){
-    						value3 += "<div><img src='";
+    						value3 += "<div><input type='hidden'><img src='";
     						if(map.memList[k].profilImg != null){
     							value3 += map.memList[k].profileImg
     						}else{
@@ -544,18 +527,18 @@
         // 동료 프로필 보기
        	$(document).on("click", ".collegeProfileImg", function(){
        		let $this = $(this).siblings();
-       		let info = "<p>💻 " + $this.eq(2).val() + "부 (" + $this.eq(3).val() + ")</p><p>✉️ " + $this.eq(4).val() + " </p><p>📞 " + $this.eq(5).val() + " </p>";
-            $("#collegeName").html($this.eq(1).val());
+       		let info = "<p>💻 " + $this.eq(3).val() + "부 (" + $this.eq(4).val() + ")</p><p>✉️ " + $this.eq(5).val() + " </p><p>📞 " + $this.eq(6).val() + " </p>";
+            $("#collegeName").html($this.eq(2).val());
             $("#collegeInfo").html(info);
             $("#modal-profile").attr("src", $(this).attr("src"));
-            if($this.eq(6).val() == "undefined"){
+            if($this.eq(7).val() == "undefined"){
             	$("#like-img").attr("src", "resources/icons/star.png");
             	$("#like-img").attr("class", "n");
             }else{
             	$("#like-img").attr("src", "resources/icons/star-y.png");
             	$("#like-img").attr("class", "y");
             }
-            $("#userNo").val($this.eq(0).val());
+            $("#userNo").val($this.eq(1).val());
        		$("#collegeProfile").modal("show");
         })
         
@@ -576,8 +559,10 @@
         					$("#like-img").attr("class", "n");
         					$("#like-img").attr("src", "resources/icons/star.png");
         				}
-        				if($("#college-area").html().includes("detailView")){
+        				if($("#chat-body").html().includes("memberList")){
         					memList();
+        				}else if($("#chat-body").html().includes("chatRoomCreate")){
+        					plusChatRoom();
         				}else{
         					nameSearch();
         				}
@@ -599,7 +584,7 @@
         			let value = "";
         			for(let i=0; i<list.length; i++){
         				value += "<div class='detail' style='display:block;'>"
-        					+ "<div><img src='"
+        					+ "<div><input type='hidden'><img src='"
         					if(list[i].profileImg != null){
     							value += list[i].profileImg
     						}else{
@@ -637,6 +622,7 @@
         	}
         })
         
+        // 날짜 포맷
         function dateFormat(no){
         	const d = new Date();
         	if(no == 1){
@@ -644,7 +630,6 @@
         	} else{
         		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
         	}
-            
         }
         
         // 채팅 리스트
@@ -723,13 +708,137 @@
         		}
         	})
         }
-        
 
-        // 대화방 상세보기
-        $("#chatRoomList-area tr").click(function(){
-            // ajax 이용
+        // 채팅방 생성 플러스 버튼
+        $(document).on("click", "#plus-btn", function(){
+        	plusChatRoom();
         })
-
+        function plusChatRoom(){
+        	$.ajax({
+        		url:"memList.chat",
+       			data:{userNo:${loginUser.userNo}},
+        		success:function(map){
+        			let value1 = "<div class='detailView'>"
+    	    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
+    	    					+ "내 부서"
+    	    					+ "</div>"
+    	    					+ "<div class='detail' style='display:block;'>";
+        			let value2 = "";
+        			let value3 = "<form action='' id='chatRoomCreate'><div class='detailView'>"
+    	    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
+    	    					+ "즐겨찾기"
+    	    					+ "</div>"
+    	    					+ "<div class='detail' style='display:block;'>";
+    	    		let likeCount = 0; // 즐겨찾는 사람수
+    	    		
+        			for(let i=0; i<map.deptList.length; i++){
+        				if(map.deptList[i].departmentNo == ${loginUser.department}){
+            				for(let j=0; j<map.memList.length; j++){
+            					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
+            						if(map.memList[j].department == map.deptList[i].departmentName){
+    	        						value1 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;<img src='";
+    	        						if(map.memList[j].profileImg != null){
+    	        							value1 += map.memList[j].profileImg
+    	        						}else{
+    	        							value1 += "resources/icons/profile.png"
+    	        						}
+    	        						value1 += "' class='rounded-circle collegeProfileImg pro-small'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].userNo +"'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].userName +"'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].department +"'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].position +"'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].mail +"'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].phone +"'>"
+    	        							+ "<input type='hidden' value='" + map.memList[j].chatLike +"'>"
+    	        							+ "<label for='" + map.memList[j].userNo + "'><span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+    	        						if(map.memList[j].connSta == 0){
+    	        			        		value1 += " online";
+    	        			       		} else if(map.memList[j].connSta == 1){
+    	        			       			value1 += " offline";
+    	        			       		} else if(map.memList[j].connSta == 2){
+    	        			       			value1 += " out";
+    	        			       		}
+    	        						value1 += "'></span></label></span></div>";
+    	        					}
+            					}
+            				}
+            				value1 += "</div>";
+        				} else{
+        					value2 += "<div class='detailView'>"
+            					+ "<img src='resources/icons/right-arrow.png' height='15px' width='15px'>&nbsp;"
+            					+ map.deptList[i].departmentName
+            					+ "</div>"
+            					+ "<div class='detail'>";
+            				for(let j=0; j<map.memList.length; j++){
+            					if(map.memList[j].department == map.deptList[i].departmentName){
+            						value2 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;<img src='";
+            						if(map.memList[j].profilImg != null){
+            							value2 += map.memList[j].profileImg
+            						}else{
+            							value2 += "resources/icons/profile.png"
+            						}
+            						value2 += "' class='rounded-circle collegeProfileImg pro-small'>"
+            							+ "<input type='hidden' value='" + map.memList[j].userNo +"'>"
+            							+ "<input type='hidden' value='" + map.memList[j].userName +"'>"
+            							+ "<input type='hidden' value='" + map.memList[j].department +"'>"
+            							+ "<input type='hidden' value='" + map.memList[j].position +"'>"
+            							+ "<input type='hidden' value='" + map.memList[j].mail +"'>"
+            							+ "<input type='hidden' value='" + map.memList[j].phone +"'>"
+            							+ "<input type='hidden' value='" + map.memList[j].chatLike +"'>"
+            							+ "<label for='" + map.memList[j].userNo + "'><span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+            						if(map.memList[j].connSta == 0){
+            			        		value2 += " online";
+            			       		} else if(map.memList[j].connSta == 1){
+            			       			value2 += " offline";
+            			       		} else if(map.memList[j].connSta == 2){
+            			       			value2 += " out";
+            			       		}
+            						value2 += "'></span></label></span></div>";
+            					}
+            				}
+            				value2 += "</div>"
+        				}
+        			}
+        			for(let k=0; k<map.memList.length; k++){
+    					if(map.memList[k].chatLike != null){
+    						value3 += "<div><input type='checkbox' id='" + map.memList[k].userNo + "' name='userNo' class='" + map.memList[k].userNo + "'>&nbsp;<img src='";
+    						if(map.memList[k].profilImg != null){
+    							value3 += map.memList[k].profileImg
+    						}else{
+    							value3 += "resources/icons/profile.png"
+    						}
+    						value3 += "' class='rounded-circle collegeProfileImg pro-small'>"
+    							+ "<input type='hidden' value='" + map.memList[k].userNo +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].userName +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].department +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].position +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].mail +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].phone +"'>"
+    							+ "<input type='hidden' value='" + map.memList[k].chatLike +"'>"
+    							+ "<label for='" + map.memList[k].userNo + "'><span>" + map.memList[k].userName + "&nbsp;<span class='conn";
+    						if(map.memList[k].connSta == 0){
+    			        		value3 += " online";
+    			       		} else if(map.memList[k].connSta == 1){
+    			       			value3 += " offline";
+    			       		} else if(map.memList[k].connSta == 2){
+    			       			value3 += " out";
+    			       		}
+    						value3 += "'></span></label></span></div>";
+    						likeCount += 1;
+    					}
+    				}
+        			if(likeCount == 0){
+        				value3 += "<div><small>즐겨찾는 멤버가 없습니다.<small></div>"
+        			}
+        			value2 += "</div>";
+    				value3 += "</div>";
+        			$("#chat-body").html(value3 + value1 + value2).append("<button type='submit' id='createChat'>채팅방 생성</button></form>");
+        		},error:function(){
+        			console.log("주소록 불러오기용 ajax 통신 실패");
+        		}
+        	})
+        }
+        	
         
         $("input[type=checkbox]").click(function(){
             const $class = $(this).attr("class");
@@ -750,6 +859,11 @@
 
         // 주소록 더블클릭시 채팅방 이동
         $(".detail>div>span").dblclick(function(){
+            // ajax 이용
+        })
+
+        // 대화방 상세보기
+        $("#chatRoomList-area tr").click(function(){
             // ajax 이용
         })
         
