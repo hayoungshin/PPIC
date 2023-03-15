@@ -15,7 +15,7 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Alertify 쓸 건지..? 아무도 안쓰면 나중에 삭제하기 -->
+<!-- Alert -->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <!-- include summernote css/js-->
@@ -170,7 +170,7 @@
 
             <hr style="margin:20px 0px;">
 
-            <div class="side-menu" onclick="location.href=''">
+            <div class="side-menu" onclick="location.href='login.me'">
                 <img src="resources/icons/home.png">
                 <span>홈 피드</span>
             </div>

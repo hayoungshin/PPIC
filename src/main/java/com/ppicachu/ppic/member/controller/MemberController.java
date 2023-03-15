@@ -79,7 +79,7 @@ public class MemberController {
 			return "common/errorPage";
 		} else { 
 			session.setAttribute("loginUser", loginUser);
-			return "common/menubar"; 
+			return "common/Home"; 
 		}
 		
 	}
@@ -91,6 +91,7 @@ public class MemberController {
 		
 		if(result >0) {
 			Member updateMem = mService.loginMember(m);
+			
 			session.setAttribute("loginUser", updateMem);
 			session.setAttribute("alertMsg", "성공적으로 회원정보를 변경하였습니다");
 			
@@ -124,6 +125,26 @@ public class MemberController {
 			}
 		}
 	}
+	
+	/* 회원가입 페이지1 (아이디 중복확인 페이지) */
+	@RequestMapping("idCheckForm.me")
+	public String idCheckForm() {
+		return "member/memberIdCheck";
+	}
+	
+	@RequestMapping("idCheck.me")
+	public String idCheck(String checkId, HttpSession session, Model model) {
+		int count = mService.idCheck(checkId);
+		if(count>0) {
+			session.setAttribute("alertMsg", "이미 사용중인 아이디거나 탈퇴한 회원의 아이디입니다.");
+			return "redirect:idCheckForm.me";
+		} else {
+			model.addAttribute("checkId", checkId);
+			return "member/memberEnrollForm";
+		}
+	}
+	
+	
 	
 	
 	

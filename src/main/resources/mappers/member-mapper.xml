@@ -40,6 +40,7 @@
 		     , employee_no
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
+		     , profile_img
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
@@ -60,6 +61,7 @@
 		     , mail
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
+		     , profile_img
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
@@ -109,5 +111,12 @@
 		     , address = #{address}
 		 where user_id = #{userId}
 	</update>
+	
+	<select id="idCheck" resultType="_int">
+		select
+			   count(*)
+		  from member
+		 where user_id = #{checkId}
+	</select>
 
 </mapper>

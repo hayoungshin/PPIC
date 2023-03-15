@@ -24,5 +24,11 @@ public interface MemberService {
 	
 	// 5. 프로필이미지 변경용 서비스
 	int updateProfileImg(Member m);
+	
+	/* 회원가입 */
+	// 6. 아이디 중복확인
+	int idCheck(String checkId);
+	
+	// 7. 회원가입
 
 }

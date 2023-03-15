@@ -28,7 +28,21 @@
 	
 	/* content */
 	
+	.workyear{
+		font-size: 18px;
+	    font-weight: bold;
+        float:right; 
+        margin: 30px 0px 0px 0px;
+        width:90%;
+        height: 50px;
+	}
 	
+	.worklist {width:1350px}
+	.worklisttitle {width:1350px}
+	
+	#memberList {overflow:auto; height:500px;}
+    #memberList::-webkit-scrollbar { width: 8px; }
+	#memberList::-webkit-scrollbar-thumb {background: lightgray; border-radius: 10px;}
 	
 </style>
 </head>
@@ -71,9 +85,86 @@
 			
 			<br>
 			<br><br>
+			
+			<div style="float:left;">
+			<select>
+				<option> 전체 </option>
+				<c:forEach var="m" items="${ list }" >
+					
+				</c:forEach>
+				
+				
+			</select>
+			</div>
+			
+			<div class="workyear" align="right">
+				<a>
+					<img src="resources/icons/left-arrow.png" style="width:20px; margin:1px 3px 3px 3px;">
+				</a> 
+			2023년 
+				<a>
+					<img src="resources/icons/right-arrow.png" style="width:20px; margin:1px 3px 3px 3px;">
+				</a>
+			</div>
 	
+			<div class="memberwork"  >
 			
-			
+	            <table class="worklisttitle" border="1">
+	                <thead>
+	                    <tr align="center">
+	                        <th colspan="2">정보</th>
+	                        <th colspan="3">휴가</th>
+	                        <th colspan="3">근태</th>
+	                        <th colspan="2">근무</th>
+	                    </tr>
+	                    <tr align="center">
+							<th width="200">이름(사번)</th>
+	                        <th width="150">소속</th>
+	                        <th width="150">지급</th>
+	                        <th width="150">사용</th>
+	                        <th width="150">잔여</th>
+	                        <th width="150">지각</th>
+	                        <th width="150">조기퇴근</th>
+	                        <th width="150">결근</th>
+	                        <th width="150">근무일</th>
+	                        <th width="150">총근무시간</th>
+	                    </tr>
+	                </thead>
+	                </table>
+	               
+	                <div id="memberList" >
+		                <table class="worklist" border="1" style="margin-top:1px;">
+			                <tbody align="center">
+								
+								<c:forEach var="list1" items="${ list1 }"  varStatus="status">
+				                    <tr >
+				                    	
+										<td  width="200"> ${ list1.userName }(사번)</td>
+										<td width="150">소속</td>
+										<td width="150">지급</td>
+										<td width="150">사용</td>
+										<td width="150">잔여</td>
+										<td width="150">지각</td>
+										<td width="150">조기퇴근</td>
+										<td width="150">결근</td>
+										<td width="150">근무일</td>
+										<td width="150">총근무시간</td>
+				                    </tr>
+			                    </c:forEach>
+			                </tbody>
+	                	</table>
+	                </div>
+	                
+	               
+	                
+	           
+	        
+	            <script>
+	                /* td 클릭시 상세페이지 이동  */
+	            </script>
+	
+	        </div>
+
 			
 			  
 

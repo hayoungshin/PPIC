@@ -51,5 +51,10 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.updateMember(sqlSession, m);
 	}
 
+	@Override
+	public int idCheck(String checkId) {
+		return mDao.idCheck(sqlSession, checkId);
+	}
+
 
 }

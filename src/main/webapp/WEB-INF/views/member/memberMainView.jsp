@@ -26,7 +26,7 @@
 	
 	/* content */
 	
-	.pro{
+	.mpro{
         width: 50px;
         height: 50px;
         background: rgb(111, 80, 248);
@@ -34,6 +34,14 @@
         border: none;
         border-radius: 10px;
         padding-top: 13px;
+        margin-left:5px
+    }
+    
+    #profileImg{
+        width:50px;
+        height:50px;
+        background: rgb(111, 80, 248);
+        border-radius: 10px;
         margin-left:5px
     }
     
@@ -93,6 +101,7 @@
     }
 
     .deptlist div{ margin-bottom: 10px; }
+    
 	
 </style>
 </head>
@@ -153,7 +162,14 @@
 								<tr>
 									<td width="80%">
 										<div class="bno" style="display:none;">${ m.userNo }</div>
-										<div class="pro" style="float:left" >${ m.userName }</div>
+										<c:choose>
+						              		<c:when test="${ empty m.profileImg }">
+						              			<div class="mpro" style="float:left" >${ m.userName }</div>
+						                  	</c:when>
+						                  	<c:otherwise>
+						                  		<img id="profileImg" src="${ m.profileImg }" style="float:left" >
+						                  	</c:otherwise>
+						                </c:choose>
 										<div class="proname" >${ m.userName }</div>
 									</td>
 									<td>

@@ -117,18 +117,43 @@
 				
 				<form action="">
 				    <label id="homem" >대상자</label>
-				    <select name="" id="">
-				        <option value="">소속</option>
+				    
+				    <select class="dept" name="dept" id="dept">
+				    	<option value="">소속</option>
+				    	<c:forEach var="d" items="${ list2 }">
+			            	<option value="${ d.departmentNo }"> ${ d.departmentName }</option>
+			            </c:forEach>
 				    </select>
-				    <select name="" id="">
-				        <option value="">이름(사번)</option>
-				    </select>
+				    
+				    <select name="member" id="member">
+				    	
+				    	<c:forEach var="m" items="${ list1 }">
+				    		<c:if test="${m.department eq '총무' }">
+				    			<option> ${ m.userName }(사번) </option>
+				    		</c:if>
+				    	</c:forEach>
+			        </select>
+			        
+			        <script>
+			        	
+		        		$("select[name=dept]").change(function(){
+		        			var dept =   $("select[name=dept] option:selected").text();
+		        			
+		        			
+		        			
+		        			console.log(dept);
+		        			
+		        			
+		        		});
+			      
+			        </script>
 				
 				    <br><br>
 				
 				    <label>지급내역</label>
 				    <select name="" id="">
 				        <option value="">연차</option>
+				        <option value="">반차</option>
 				    </select>
 				
 				    <br><br>
@@ -155,7 +180,9 @@
 			            <option value="">소속</option>
 			        </select>
 			        <select name="" id="">
-			            <option value="">이름(사번)</option>
+			        	<c:forEach var="m" items="${ list }">
+			            	<option value="${ m.userNo }"> ${ m.userName }(사번)</option>
+			            </c:forEach>
 			        </select>
 			
 			        <br><br>

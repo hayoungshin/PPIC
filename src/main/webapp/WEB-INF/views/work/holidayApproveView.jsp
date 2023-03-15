@@ -50,6 +50,10 @@
     #holidayList thead>tr {height:50px;}
     #holidayList tbody>tr {height:70px;}
 	
+	.inputcss{
+		width:150px;
+		border-radious:5px;
+	}
 </style>
 </head>
 <body>
@@ -98,50 +102,69 @@
                     <thead>
                         <tr align="center">
                             <th>이름</th>
-                            <th>항목</th>
-                            <th>기간</th>
+                            <th>종류</th>
+                            <th>일정</th>
                             <th>사용기간</th>
+                            <th>사유</th>
+                            <th>승인</th>
                         </tr>
                     </thead>
                     <tbody align="center">
+                        <c:forEach var="h" items="${ list }">
                         <tr >
                             <td>
-                                <div class="pro" style="float:left" >뫄뫄</div>
-                                <div style="float:left; margin-top: 10px; margin-left: 10px; font-size: 20px; font-weight: bold;" > 김뫄뫄</div>
+                                <div class="pro" style="float:left" >${h.userName }</div>
+                                <div style="float:left; margin-top: 10px; margin-left: 10px; font-size: 20px; font-weight: bold;" > ${h.userName }</div>
                             </td>
-                            <td>연차 / 반차</td>
-                            <td>0000.00.00 - 0000.00.00</td>
-                            <td>00 일  | 오전,오후 </td>
-                        </tr>
-                        <tr >
+                            <td id="holitype">${h.type }</td>
+                            <td><label id="holistart">${h.start }</label> - <label id="holifinish">${h.finish }</label></td>
+                            <c:choose>
+                            	<c:when test="${ h.type eq '연차'  }">
+                            		<td id="holidate">${h.datea}일</td>
+                            	</c:when>
+                            	<c:otherwise>
+                            		<td id="holisort">${h.sort} </td>
+                            	</c:otherwise>
+                            </c:choose>
+                            <td id="holireason">${ h.reason }</td>
                             <td>
-                                <div class="pro" style="float:left" >뫄뫄</div>
-                                <div style="float:left; margin-top: 10px; margin-left: 10px; font-size: 20px; font-weight: bold;" > 김뫄뫄</div>
+                            	<button type="button" name="type" class="btn-purple" data-toggle="modal" data-target="#holidayApprove" data-id="${ h.holidayNo }">휴가승인</button>
                             </td>
-                            <td>연차 / 반차</td>
-                            <td>0000.00.00 - 0000.00.00</td>
-                            <td>00 일  | 오전,오후 </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class="pro" style="float:left" >뫄뫄</div>
-                                <div style="float:left; margin-top: 10px; margin-left: 10px; font-size: 20px; font-weight: bold;" > 김뫄뫄</div>
-                            </td>
-                            <td>연차 / 반차</td>
-                            <td>0000.00.00 - 0000.00.00</td>
-                            <td>00 일  | 오전,오후 </td>
-                        </tr>
+                        </c:forEach>
                     </tbody>
                 </table>
-            
-                <script>
-                    /* td 클릭시 모달창  */
-                </script>
-
+            	
+            	<script>
+            	$(".btn-purple").click(function(){
+            		var data = $(this).data('id');
+            	    $("#contents.body-contents").val(data);
+            	    $("#text-contents.body-contents").html(data);
+            	    
+            	    var type =$('#holitype').text();
+            	    $("#type").val(type);
+            	    
+            	    var start =$('#holistart').text();
+            	    $("#start").val(start);
+            	    
+            	    var finish=$('#holifinish').text();
+            	    $("#finish").val(finish);
+            	    
+            	    var datea=$('#holidate').text();
+            	    $("#datea").val(datea);
+            	    
+            	    var sort=$('#holisort').text();
+            	    $("#sort").val(sort);
+            	    
+            	    var reason=$('#holireason').text();
+            	    $("#reason").val(reason);
+            	});
+            	</script>
+                
             </div>
                 
             <!-- 행 클릭시 보여질 휴가승인 Modal -->
-            <div class="modal" id="deleteForm">
+            <div class="modal" id="holidayApprove">
                 <div class="modal-dialog">
                     <div class="modal-content">
                     
@@ -156,26 +179,53 @@
                         
                             <form action="" method="post" onsubmit="">
                                 <div class="form-group">
-                                    
-                                    <input type="text" class="form-control" id="userId" name="" value="연차" readonly><br>
-                                    
-                                    <label for="">일정</label>
-                                    <input type="text" class="form-control" id="userName" name="" value="휴가 시작일" readonly><br>
-                                    <input type="text" class="form-control" id="userName" name="" value="휴가 종료일" readonly><br>
-                                    
-                                    <label for="">기간</label>
-                                    <input type="number" class="form-control" id="" name="" value="00일"><br>
-
-                                    <label for="email"> 사유 </label> <br>
-                                    <textarea name="" id="" cols="30" rows="10">휴가 사유 들어갈 자리 </textarea>
-
+                                 	<input type="hidden" class="body-contents" id="contents" />
+                                	<table>
+                                		<tr>
+                                			<td style="width:150px;">종류</td>
+                                			<td>
+                                				<input type="text" class="inputcss" id="type" name="type" value="" readonly>
+                                			</td>
+                                		</tr>
+                                		<tr>
+                                			<td>일정</td>
+                                			<td>
+                                				<input type="text" class="inputcss" id="start" name="" value="" readonly>-
+                                    			<input type="text" class="inputcss" id="finish" name="" value="" readonly>
+                                			</td>
+                                		</tr>
+                                		<c:if test="">
+                                			<tr>
+                                			<td>기간</td>
+                                			<td>
+                                				<input type="text" class="inputcss" id="datea" name="" value="" readonly>
+                                			</td>
+                                		</tr>
+                                		</c:if>
+                                		
+                                		<tr>
+                                			<td>사유</td>
+                                			<td>
+                                				
+                                				<input type="text" style="width:400px;" class="inputcss" id="reason" name="" value="" readonly>
+                                			</td>
+                                		</tr>
+                                	</table>
+                                   
+                                   <br><br>
+									
+									<select>
+										<option value="승인">승인하기</option>
+										<option value="거절">승인거부</option>
+									</select>
                                 </div>
                                 <br>
                                 <div class="btns" align="center">
-                                    <button type="submit" class="btn-purple btn-holi">수정하기</button>
-                                    
+                                    <button type="submit" class="btn-purple btn-holi">저장하기</button>
                                 </div>
                             </form>
+                            
+                           
 
                         </div>
                         
