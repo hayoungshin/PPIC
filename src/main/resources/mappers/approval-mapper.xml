@@ -3,6 +3,7 @@
 <mapper namespace="approvalMapper">
 	<resultMap type="Approval" id="approvalResult">
 		<id column="approval_no" property="approvalNo"/>
+		<result column="department_name" property="department"/>
 		<result column="user_name" property="userName"/>
 		<result column="form" property="form"/>
 		<result column="title" property="title"/>
@@ -40,16 +41,19 @@
 				and approval_status in ('대기', '진행중')
 			</if>
 			<if test="mye != 0 or dpe != 0">
+				and process_order <![CDATA[<=]]> current_order + 1 <!-- 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함 -->
 				and approval_status in ('승인', '반려')
 			</if>
-			<if test="myr == 0 or agr != 0">
+			<if test="myi != 0 or mye != 0 or agr != 0">
 				and approval_role != '참조'
 			</if>
 			<if test="myr != 0">
 				and approval_role = '참조'
+				and approval_status != '임시저장'
 			</if>
 			<if test="myb != 0">
 				and bookmark = 'Y'
+				and approval_status != '임시저장'
 			</if>
 		</where>
 			and a.status = 'Y'
@@ -96,17 +100,16 @@
 				and process_order = current_order + 1 <!-- 결재자의 순서가 본인일 경우 -->
 				and approval_status in ('대기', '진행중')
 			</if>
-			<if test="mye != 0">
-				and approval_status in ('승인', '반려')
-			</if>
-			<if test="myr == 0 or agr != 0">
+			<if test="myi != 0 or agr != 0">
 				and approval_role != '참조'
 			</if>
 			<if test="myr != 0">
 				and approval_role = '참조'
+				and approval_status != '임시저장'
 			</if>
 			<if test="myb != 0">
 				and bookmark = 'Y'
+				and approval_status != '임시저장'
 			</if>
 		</where>
 			and a.status = 'Y'
@@ -139,6 +142,7 @@
 		<where>
 			<if test="dpe == 0">
 				ap.user_no = #{userNo}
+				and approval_role != '참조'
 			</if>
 			<if test="dpe != 0">
 				ap.user_no in (
@@ -149,6 +153,7 @@
 			</if>
 		</where>
 			and approval_status in ('승인', '반려')
+			and process_order <![CDATA[<=]]> current_order + 1 <!-- 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함 -->
 			and a.status = 'Y'
 		 order
 		    by complete_date desc, complete_no desc
@@ -185,11 +190,21 @@
 		    by approval_no desc
 	</select>
 	
-	<!-- <select id="selectMaListCount" resultType="_int">
-		
-	</select> -->
+	<select id="selectMaListCount" resultType="_int">
+		select count(*)
+		  from approval
+		<where>
+			<if test="a != 0">
+				status = 'Y'
+			</if>
+			<if test="d != 0">
+				status = 'N'
+			</if>
+		</where>
+			and approval_status != '임시저장'
+	</select>
 	
-	<select id="selectMaListCount" resultMap="approvalResult">
+	<select id="selectMaList" resultMap="approvalResult">
 		select
 		       approval_no
 		     , department_name
@@ -208,19 +223,34 @@
 		     , create_date
 		     , complete_date
 		     , complete_no
-		  from approval
-		  join dept on (department = department_no)
+		  from approval a
+		  join dept using(department_no)
 		  join member using(user_no)
-		  join app_process using(approval_no)
 		<where>
 			<if test="a != 0">
-				status = 'Y'
+				a.status = 'Y'
 			</if>
 			<if test="d != 0">
-				status = 'N'
+				a.status = 'N'
 			</if>
 		</where>
+			and approval_status != '임시저장'
 		 order
 		    by approval_no desc
 	</select>
+	
+	<update id="updateBook">
+		update
+	       app_process
+		<set>
+	  		<if test="bookmark == 'w'">
+	  			bookmark = 'Y'
+	  		</if>
+	  		<if test="bookmark == 'y'">
+	  			bookmark = 'N'
+	  		</if>
+		</set>
+	 where approval_no = #{approvalNo}
+	   and user_no = #{userNo}
+	</update>
 </mapper>

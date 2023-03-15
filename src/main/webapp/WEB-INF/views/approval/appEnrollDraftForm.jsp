@@ -12,7 +12,6 @@
 
     .title-area{float: left;}
     #title-area-selop{float: left; margin-top: 5px; margin-left: 50px;}
-    #selop-pp{color: #6F50F8; border:1px solid #6F50F8; border-radius: 4px; padding: 4px; padding-right: 0px;}
     
     .second-1{width: 75%;}
     .form-area{padding: 30px;}

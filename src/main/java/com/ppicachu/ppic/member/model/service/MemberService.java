@@ -33,5 +33,8 @@ public interface MemberService {
 	ArrayList<Position> selectPositionList();
 	// 8. 회원가입 서비스
 	int insertMember(Member m);
+	
+	// 9. 아이디 찾기 서비스
+	String findId(Member m);
 
 }

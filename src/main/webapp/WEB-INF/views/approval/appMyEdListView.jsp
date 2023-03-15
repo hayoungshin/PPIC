@@ -102,16 +102,15 @@
         <table id="tb" class="table-hover">
             <thead>
                 <tr class="purple">
-                    <th width="30px"><input type="checkbox"></th>
-                    <th>작성자</th>
-                    <th>문서양식</th>
+                    <th width="100px">작성자</th>
+                    <th width="200px">문서양식</th>
                     <th>제목</th>
-                    <th>첨부</th>
-                    <th>결재상태</th>
-                    <th>작성일</th>
-                    <th>완료일</th>
-                    <th>문서번호</th>
-                    <th>중요</th>
+                    <th width="70px">첨부</th>
+                    <th width="150px">결재상태</th>
+                    <th width="130px">작성일</th>
+                    <th width="130px">완료일</th>
+                    <th width="180px">문서번호</th>
+                    <th width="70px">중요</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,13 +118,12 @@
                 <c:choose>
                 	<c:when test="${ empty list }">
                 		<tr>
-                			<td colspan="10">완료된 문서가 없습니다.</td>
+                			<td colspan="9">완료된 문서가 없습니다.</td>
                 		</tr>
                 	</c:when>
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
 			                <tr>
-			                    <td><input type="checkbox"></td>
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
 			                    <td>${ a.title }</td>
@@ -137,10 +135,10 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${ a.currentOrder lt a.finalOrder }">
-			                    			${ a.approvalStatus }
+			                    			<span class="stt-rd">${ a.approvalStatus }</span>
 			                    		</c:when>
 			                    		<c:otherwise>
-			                    			${ a.approvalStatus}
+			                    			<span class="stt-sb">${ a.approvalStatus}</span>
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>
@@ -165,15 +163,20 @@
             </tbody>
         </table>
 
-        <div class="del-btn-area"><button class="btnn-rd">선택 문서 삭제</button></div>
-        <br clear="both">
+        <br>
 
         <div align="center">
-            <a href="" class="btnn-pp">이전</a>
-            <!-- forEach -->
-            <a href="" class="btnn-pp">1</a>
+        	<c:if test="${ pi.currentPage ne 1 }">
+            	<a href="list.ap?mye=1&cpage=${ pi.currentPage - 1 }" class="btnn-pp">이전</a>
+            </c:if>
+            
+			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+				<a href="list.ap?mye=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+			</c:forEach>
 
-            <a href="" class="btnn-pp">다음</a>
+			<c:if test="${ pi.currentPage ne pi.maxPage and pi.maxPage ne 0 }">
+            	<a href="list.ap?mye=1&cpage=${ pi.currentPage + 1 }" class="btnn-pp">다음</a>
+            </c:if>
         </div>
     </div>
 </div> <!-- div 닫는 구문 하나 더 있음 -->

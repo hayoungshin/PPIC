@@ -50,4 +50,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return aDao.selectTemList(sqlSession, md, pi);
 	}
 
+	@Override
+	public int selectMaListCount(MyDept md) {
+		return aDao.selectMaListCount(sqlSession, md);
+	}
+
+	@Override
+	public ArrayList<Approval> selectMaList(MyDept md, PageInfo pi) {
+		return aDao.selectMaList(sqlSession, md, pi);
+	}
+
+	@Override
+	public int updateBook(Approval a) {
+		return aDao.updateBook(sqlSession, a);
+	}
+
 }
