@@ -41,4 +41,19 @@ public class ApprovalDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return (ArrayList)sqlSession.selectList("approvalMapper.selectTemList", md, rowBounds);
 	}
+
+	public int selectMaListCount(SqlSessionTemplate sqlSession, MyDept md) {
+		return sqlSession.selectOne("approvalMapper.selectMaListCount", md);
+	}
+
+	public ArrayList<Approval> selectMaList(SqlSessionTemplate sqlSession, MyDept md, PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("approvalMapper.selectMaList", md, rowBounds);
+	}
+
+	public int updateBook(SqlSessionTemplate sqlSession, Approval a) {
+		return sqlSession.update("approvalMapper.updateBook", a);
+	}
 }

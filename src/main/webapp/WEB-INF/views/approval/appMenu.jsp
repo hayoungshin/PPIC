@@ -34,7 +34,7 @@
 	/* 검색, 정렬, 필터 */
 	.two-btn-area{float: right;}
 	.two-btn{margin-left: 20px; margin-right: 10px; width: 32px;}
-	.two-btn:hover{cursor: pointer;}
+	.two-btn:hover, .as:hover{cursor: pointer;}
 	.btn-align{float: left;}
 	
 	/* 공통 */
@@ -48,10 +48,15 @@
     .btnn-sb:hover{text-decoration: none; background-color: #00b5d1; color: white; transition: 0.3s;}
     .btnn-rd{text-decoration: none; font-size: 14px; background-color: white; color: rgb(255, 100, 100); border:1px solid rgb(255, 100, 100); border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
     .btnn-rd:hover{text-decoration: none; background-color: rgb(255, 100, 100); color: white; transition: 0.3s;}
-    #selop-pp{color: black; border:1px solid gray; border-radius: 4px; padding: 2px; padding-right: 0px;}
     
-    .purple{background-color: #6F50F8; color: white;}
-	#tb{margin-top: 10px; width: 100%; text-align: center;}
+    .stt-pp{border-radius: 5px; border: 1px solid #6F50F8; background-color: #6F50F8; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
+    .stt-gr{border-radius: 5px; border: 1px solid gray; background-color: gray; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
+    .stt-pk{border-radius: 5px; border: 1px solid #fdbaba; background-color: #fdbaba; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
+    .stt-sb{border-radius: 5px; border: 1px solid #00b5d1; background-color: #00b5d1; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
+    .stt-rd{border-radius: 5px; border: 1px solid rgb(255, 100, 100); background-color: rgb(255, 100, 100); color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
+    
+    .purple{background-color: #b09eff; color: white;}
+	#tb{margin-top: 10px; margin-bottom: 7px; width: 100%; text-align: center;}
 	#tb tr{height: 35px;}
 	
 	.del-btn-area{float: right;}

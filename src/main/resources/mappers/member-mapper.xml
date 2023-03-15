@@ -77,7 +77,6 @@
 		     , mail
 		     , phone
 		     , address
-		     , company
 		     , position
 		     , department
 		     , employee_no

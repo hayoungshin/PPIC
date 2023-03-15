@@ -36,9 +36,9 @@ public class ApprovalController {
 		md.setDepartment(((Member)session.getAttribute("loginUser")).getDepartment());
 		
 		if(md.getA() != 0 || md.getD() != 0) { // 전체관리, 삭제관리
-			int listCount = aService.selectListCount(md);
+			int listCount = aService.selectMaListCount(md);
 			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-			ArrayList<Approval> list = aService.selectList(md, pi);
+			ArrayList<Approval> list = aService.selectMaList(md, pi);
 			m.addAttribute("pi", pi);
 			m.addAttribute("list", list);
 		} else if(md.getMye() != 0 || md.getDpe() != 0) { // 개인-기안-완료, 부서-완료
@@ -90,7 +90,9 @@ public class ApprovalController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="agreeList.ap", produces="application/json; charset=utf-8")
-	public String AjaxAgreeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, MyDept md) {
+	public String AjaxAgreeList(@RequestParam(value="cpage", defaultValue="1") int currentPage, MyDept md, HttpSession session) {
+		md.setUserNo(((Member)session.getAttribute("loginUser")).getUserNo());
+		
 		int listCount = aService.selectListCount(md);
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		ArrayList<Approval> list = aService.selectList(md, pi);
@@ -102,7 +104,19 @@ public class ApprovalController {
 		return new Gson().toJson(map);
 	}
 	
-	
+	/**
+	 * 중요 update
+	 * @return result
+	 */
+	@ResponseBody
+	@RequestMapping("updateBook.ap")
+	public int AjaxUpdateBook(Approval a, HttpSession session){
+		a.setUserName(((Member)session.getAttribute("loginUser")).getUserNo() + "");
+		
+		int result = aService.updateBook(a);
+		
+		return result;
+	}
 	
 	/**
 	 * 작성폼으로 이동
