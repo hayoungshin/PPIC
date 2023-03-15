@@ -30,8 +30,18 @@
         color:gray;
     }
 </style>
+<!-- Alert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
+
+	<c:if test="${ not empty alertMsg }">
+		<script>
+			swal('', "${ alertMsg }", 'success')
+		</script>
+		<c:remove var="alertMsg" scope="session" />
+	</c:if>
+	
 	<div id="wrapper" align="center" style="margin-top:250px;">
 
         <div style="height:70px; line-height:70px;">

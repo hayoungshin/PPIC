@@ -26,7 +26,11 @@
 	<resultMap id="departmentResult" type="Department">
 		<id column="department_no" property="departmentNo" />
 		<result column="department_name" property="departmentName" />
-		
+	</resultMap>
+	
+	<resultMap id="positionResult" type="Position">
+		<id column="position_no" property="positionNo" />
+		<result column="position_name" property="positionName" />
 	</resultMap>
 
 	<select id="selectListMember" resultMap="memberResult">
@@ -69,7 +73,6 @@
 		   and user_no = #{userNo}
 	</select>
 	
-	<!-- 로그인 대충 -->
 	<select id="loginMember" resultMap="memberResult">
 		select
 			   user_no
@@ -84,16 +87,15 @@
 		     , department
 		     , employee_no
 		     , profile_img
-		     , hire_date
-		     , resign_date
+		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
+		     , to_char(resign_date, 'YYYY.MM.DD') "resign_date"
 		     , status
 		     , authority_no
-		     , member_sign
 		     , conn_sta
 		  from member
 		 where status = 'Y'
 		   and user_id = #{userId}
-		   and user_pwd = #{userPwd}
+		   and member_sign = 'Y'
 	</select>
 	
 	<update id="updateProfileImg">
@@ -118,5 +120,42 @@
 		  from member
 		 where user_id = #{checkId}
 	</select>
+	
+	<select id="selectPositionList" resultMap="positionResult">
+		select
+			   position_no
+			 , position_name
+		  from position
+	</select>
+	
+	<insert id="insertMember">
+		insert
+		  into member
+		  (
+		  	user_no
+		  , user_id
+		  , user_pwd
+		  , user_name
+		  , mail
+		  , phone
+		  , birthday
+		  , position
+		  , department
+		  , employee_no
+		  )
+		values
+		  (
+		  	seq_memno.nextval
+		  , #{userId}
+		  , #{userPwd}
+		  , #{userName}
+		  , #{userId} || '@ppic.kr'
+		  , #{phone}
+		  , #{birthday}
+		  , #{position}
+		  , #{department}
+		  , #{employeeNo}
+		  )
+	</insert>
 
 </mapper>

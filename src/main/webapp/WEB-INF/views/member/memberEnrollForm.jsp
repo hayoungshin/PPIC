@@ -42,53 +42,53 @@
     
         <br>
     
-        <form>
+        <form action="insert.me" method="post">
         <input type="hidden" name="userId" value="${ checkId }">
             <table>
                 <tr>
                     <td>
                         <div>
-                            <img src="resources/icons/key.png" width="25px" style="vertical-align:middle;">
-                            <input type="password" id="userPwd" name="userPwd" placeholder="비밀번호" style="width:210px; height:90%; margin-left:5px; border: none;" required></input>
+                            <img src="resources/icons/key.png" width="23px" style="vertical-align:middle;">
+                            <input type="password" id="userPwd" name="userPwd" placeholder="* 비밀번호" style="width:212px; height:90%; margin-left:5px; border: none;" required></input>
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="resources/icons/office-c.png" width="25px" style="vertical-align:middle;">
-                            <input type="text" name="company" placeholder="회사명" style="width:210px; height:90%; margin-left:5px; border: none;" required></input>
+                            <img src="resources/icons/birthday.png" width="23px" style="vertical-align:middle;">
+                            <input type="date" name="birthday" style="width:212px; height:100%; margin-left:5px; border: none;"></input>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div>
-                            <img src="resources/icons/key.png" width="25px" style="vertical-align:middle;">
-                            <input type="password" id="pwd-check" placeholder="비밀번호 확인" style="width:210px; height:90%; margin-left:5px; border: none;" required></input>
+                            <img src="resources/icons/key.png" width="23px" style="vertical-align:middle;">
+                            <input type="password" id="pwd-check" placeholder="* 비밀번호 확인" style="width:212px; height:90%; margin-left:5px; border: none;" required></input>
                             <span id="pwd-check-result" style="font-size:10px;"></span>
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="resources/icons/office-c.png" width="25px" style="vertical-align:middle;">
-                            <input type="text" name="employeeNo" placeholder="사번" style="width:210px; height:90%; margin-left:5px; border: none;"></input>
+                            <img src="resources/icons/office-c.png" width="23px" style="vertical-align:middle;">
+                            <input type="text" name="employeeNo" placeholder="사번" style="width:212px; height:90%; margin-left:5px; border: none;"></input>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div>
-                            <img src="resources/icons/smile.png" width="25px" style="vertical-align:middle;">
-                            <input type="text" name="userName" placeholder="이름" style="width:210px; height:90%; margin-left:5px; border: none;" required></input>
+                            <img src="resources/icons/smile.png" width="23px" style="vertical-align:middle;">
+                            <input type="text" name="userName" placeholder="* 이름" style="width:212px; height:90%; margin-left:5px; border: none;" required></input>
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="resources/icons/suitcase.png" width="25px" style="vertical-align:middle;">
-                            <select name="department" style="width:210px; height:90%; margin-left:5px; border: none;" required>
-                                <option value="" disabled selected>부서</option>
-                                <option value="">무슨팀</option>
-                                <option value="">무슨팀</option>
-                                <option value="">무슨팀</option>
+                            <img src="resources/icons/suitcase.png" width="23px" style="vertical-align:middle;">
+                            <select name="department" style="width:212px; height:100%; margin-left:5px; border: none;" required>
+                                <option value="" disabled selected>* 부서</option>
+                                <c:forEach var="d" items="${ dList }">
+	                            	<option value="${ d.departmentNo }">${ d.departmentName }</option>
+	                            </c:forEach>
                             </select>
                         </div>
                     </td>
@@ -96,18 +96,18 @@
                 <tr>
                     <td>
                         <div>
-                            <img src="resources/icons/phone.png" width="25px" style="vertical-align:middle;">
-                            <input type="text" name="phone" maxlength="11" placeholder="휴대전화번호 (-생략)" style="width:210px; height:90%; margin-left:5px; border: none;"></input>
+                            <img src="resources/icons/phone.png" width="23px" style="vertical-align:middle;">
+                            <input type="text" name="phone" maxlength="11" placeholder="휴대전화번호 (-생략)" style="width:212px; height:90%; margin-left:5px; border: none;"></input>
                         </div>
                     </td>
                     <td>
                         <div>
-                            <img src="resources/icons/suitcase.png" width="25px" style="vertical-align:middle;">
-                            <select name="position" style="width:210px; height:90%; margin-left:5px; border: none;" required>
-                                <option value="" disabled selected>내 직급</option>
-                                <option value="">직급</option>
-                                <option value="">직급</option>
-                                <option value="">직그읍</option>
+                            <img src="resources/icons/suitcase.png" width="23px" style="vertical-align:middle;">
+                            <select name="position" style="width:212px; height:100%; margin-left:5px; border: none;" required>
+                                <option value="" disabled selected>* 직급</option>
+                                <c:forEach var="p" items="${ pList }">
+	                            	<option value="${ p.positionNo }">${ p.positionName }</option>
+	                            </c:forEach>
                             </select>
                         </div>
                     </td>

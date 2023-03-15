@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
+import com.ppicachu.ppic.member.model.vo.Position;
 
 @Repository
 public class MemberDao {
@@ -36,8 +37,17 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateMember", m);
 	}
 	
+	
 	public int idCheck(SqlSessionTemplate sqlSession, String checkId) {
 		return sqlSession.selectOne("memberMapper.idCheck", checkId);
+	}
+	
+	public ArrayList<Position> selectPositionList(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectPositionList");
+	}
+	
+	public int insertMember(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.insert("memberMapper.insertMember", m);
 	}
 
 }
