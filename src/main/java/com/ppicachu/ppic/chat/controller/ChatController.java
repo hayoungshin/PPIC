@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.ppicachu.ppic.chat.model.service.ChatService;
+import com.ppicachu.ppic.chat.model.vo.Chat;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
@@ -37,7 +38,6 @@ public class ChatController {
 		} else {
 			return null;
 		}
-		
 	}
 	
 	@ResponseBody
@@ -48,6 +48,36 @@ public class ChatController {
 		HashMap<String, ArrayList> map = new HashMap<>();
 		map.put("memList", list1);
 		map.put("deptList", list2);
+		return new Gson().toJson(map);
+	}
+	
+	@ResponseBody
+	@RequestMapping("likeMember.chat")
+	public String ajaxLikeMember(Member m, String star) {
+		int result = 0;
+		if(star.equals("n")) {
+			result = cService.insertChatLike(m);
+		}else {
+			result = cService.deleteChatLike(m);
+		}
+		return result > 0 ? "success" : "fail";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="searchName.chat", produces="application/json; charset=UTF-8")
+	public String ajaxSearchName(Member m) {
+		ArrayList<Member> list = cService.searchName(m);
+		return new Gson().toJson(list);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="chatRoomList.chat", produces="application/json; charset=UTF-8")
+	public String ajaxChatRoomList(int userNo) {
+		ArrayList<Chat> list1 = cService.selectChatRoomList(userNo);
+		ArrayList<Chat> list2 = cService.selectChatMemList(userNo);
+		HashMap<String, ArrayList<Chat>> map = new HashMap<>();
+		map.put("chatList", list1);
+		map.put("memList", list2);
 		return new Gson().toJson(map);
 	}
 
