@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ppicachu.ppic.chat.model.dao.ChatDao;
+import com.ppicachu.ppic.chat.model.vo.Chat;
 import com.ppicachu.ppic.member.model.vo.Member;
 
 @Service
@@ -41,5 +42,15 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public ArrayList<Member> searchName(Member m) {
 		return cDao.searchName(sqlSession, m);
+	}
+
+	@Override
+	public ArrayList<Chat> selectChatRoomList(int userNo) {
+		return cDao.selectChatRoomList(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Chat> selectChatMemList(int userNo) {
+		return cDao.selectChatMemList(sqlSession, userNo);
 	}
 }

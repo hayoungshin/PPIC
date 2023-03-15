@@ -28,18 +28,11 @@
     }
     #chat-logo{padding:10px;}
     .profileImg, .collegeProfileImg{cursor:pointer;} 
-	.pro-small{
-		width: 25px;
-        height: 25px;
-	}
-	.pro-middle{
-		width: 70px;
-        height: 70px;
-	}
-	.pro-big{
-		width: 150px;
-        height: 150px;
-	}
+	.pro-small{width: 25px;}
+	.pro-middle{width: 70px;}
+	.pro-big{width: 150px;}
+	.pro-chat{width:40px;}
+	.pro-group{width:20px;}
 
     /* chat 메뉴 스타일 */
     #chat-menu{
@@ -48,8 +41,9 @@
         background:linear-gradient( to right, #6F50F8 5%, #FFCECE);;
     }
     #chat-menu>*{padding-left:18px;}
-    #chat-menu>img{opacity: 0.7;}
-    #chat-menu>img:hover{cursor: pointer; opacity: 1;}
+    .menuClicked{opacity:0.7;}
+    #chat-menu>img:hover{cursor: pointer; opacity:0.7;}
+    
 
     /* chat 검색 스타일 */
     #search-area tr{border-bottom:1px solid lightgray;} 
@@ -200,8 +194,8 @@
             </div>
     
             <div id="chat-menu">
-                <img src="resources/icons/user.png" height="26px" id="member-btn" onclick="showUser();" style="opacity:1;"> 
-                <img src="resources/icons/chat.png" height="25px" id="chat-btn" onclick="showChatting();"> 
+                <img src="resources/icons/user.png" height="26px" id="member-btn" onclick="showUser();" class="menu"> 
+                <img src="resources/icons/chat.png" height="25px" id="chat-btn" onclick="showChatting();" class="menu"> 
             </div> 
             
             <table id="search-area">
@@ -214,8 +208,6 @@
             </table>
         </div>
         <div id="chat-body">
-            <div id="college-area">
-            </div>
 
             <!-- chatRoomList
             <div id="chatRoomList-area">
@@ -232,36 +224,6 @@
                             <small>지금</small><br>
                             <span>1</span>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
-                        </td>
-                        <td>
-                            <b>김서형</b><br>
-                            넵 과장님!
-                        </td>
-                        <td class="table-time"><small>오후 2:05</small></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
-                        </td>
-                        <td>
-                            <b>이지은</b><br>
-                            점심 뭐먹냐
-                        </td>
-                        <td class="table-time"><small>오전 11:30</small></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="resources/icons/profile.png" class="rounded-circle" width="40" height="40">
-                        </td>
-                        <td>
-                            <b>개발팀</b><br>
-                            내일 회식 취소입니다~불금!!!
-                        </td>
-                        <td class="table-time"><small>2022.12.20</small></td>
                     </tr>
                 </table>
                 <div id="plus-btn">+</div>
@@ -379,6 +341,20 @@
 	   		memList();
 	   	})
 	   	
+	   	// 채팅 메뉴바 클릭 (주소록)
+        function showUser(){
+        	memList();
+        	$("#member-btn").addClass("menuClicked");
+        	$("#chat-btn").removeClass("menuClicked");
+        }
+
+        // 채팅 메뉴바 클릭 (채팅목록)
+        function showChatting(){
+            chatRoomList();
+        	$("#chat-btn").addClass("menuClicked");
+        	$("#member-btn").removeClass("menuClicked");
+        }
+	   	
 	   	// 주소록 불러오기 => ajax
    		function memList(){
    			$.ajax({
@@ -391,7 +367,7 @@
 		    					+ "</div>"
 		    					+ "<div class='detail' style='display:block;'>";
         			let value2 = "";
-        			let value3 = "<div class='detailView'>"
+        			let value3 = "<div id='college-area'><div class='detailView'>"
 		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
 		    					+ "즐겨찾기"
 		    					+ "</div>"
@@ -497,8 +473,9 @@
         			if(likeCount == 0){
         				value3 += "<div><small>즐겨찾는 멤버가 없습니다.<small></div>"
         			}
-    				value3 += "</div>"
-        			$("#college-area").html(value3 + value1 + value2);
+        			value2 += "</div>";
+    				value3 += "</div>";
+        			$("#chat-body").html(value3 + value1 + value2);
         		},error:function(){
         			console.log("주소록 불러오기용 ajax 통신 실패");
         		}
@@ -616,7 +593,7 @@
         	$.ajax({
         		url:"searchName.chat",
         		data:{
-        			userName:$("input[name=keyword]").val(),
+        			userName:$("input[name=keyword]").val().replace(/ /g, ''), // 공백제거
         			userNo:${loginUser.userNo}
         		},success:function(list){
         			let value = "";
@@ -653,24 +630,100 @@
         	})
         }
         $("#nameSearch-btn").click(function(){
-        	if($("input[name=keyword]").val() != ""){
+        	if($("input[name=keyword]").val().replace(/ /g, '') != ""){ // 공백 입력시
         		nameSearch();
         	} else{
         		memList();
         	}
         })
         
-        // 채팅 메뉴바 클릭 (주소록)
-        function showUser(){
-        	memList();
-        	$("#member-btn").css("opacity", "1");
-        	$("#chat-btn").css("opacity", "0.7");
+        function dateFormat(no){
+        	const d = new Date();
+        	if(no == 1){
+        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
+        	} else{
+        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
+        	}
+            
         }
-
-        // 채팅 메뉴바 클릭 (채팅목록)
-        function showChatting(){
-            // ajax
+        
+        // 채팅 리스트
+        function chatRoomList(){
+        	$.ajax({
+        		url:"chatRoomList.chat",
+        		data:{userNo:${loginUser.userNo}},
+        		success:function(map){
+        			console.log(map)
+        			let value = "<div id='chatRoomList-area'><table width='270'>";
+        			let party = "";
+        			for(let i=0; i<map.chatList.length; i++){
+        				value += "<tr><td style='width:50px'>"
+        				for(let j=0; j<map.memList.length; j++){
+        					if(map.chatList[i].roomNo == map.memList[j].roomNo){
+        						if(map.chatList[i].groupCount <= 2){
+        							value += "<img src='"
+        							if(map.memList[j].profileImg != null){
+            							value += map.memList[j].profileImg
+            						}else{
+            							value += "resources/icons/profile.png"
+            						}
+        							value += "' class='rounded-circle chatProfileImg pro-chat'>"
+        						} else if(map.chatList[i].groupCount > 2 && map.chatList[i].groupCount <= 4){
+    								value += "<img src='"
+           							if(map.memList[j].profileImg != null){
+               							value += map.memList[j].profileImg
+               						}else{
+               							value += "resources/icons/profile.png"
+               						}
+           							value += "' class='rounded-circle chatProfileImg pro-group'>"
+        						}else if(map.chatList[i].groupCount > 4){
+    								value += "<img src='"
+           							if(map.memList[j].profileImg != null){
+               							value += map.memList[j].profileImg
+               						}else{
+               							value += "resources/icons/profile.png"
+               						}
+           							value += "' class='rounded-circle chatProfileImg pro-group'>"
+        						}
+        						party += map.memList[j].participantName + ","
+        					}
+        				}
+        				value += "</td><td><b>"
+        				if(map.chatList[i].roomName != null){
+        					value += map.chatList[i].roomName
+        				}else{
+        					if(i != map.chatList.length - 1){
+        						value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - 2, map.chatList[i+1].groupCount - map.chatList[i].groupCount)
+        					}else{
+        						value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - map.chatList[i-1].groupCount)
+        					}
+        				}
+        				value += "</b><br>"
+        						+ map.chatList[i].chatContent
+        						+ "</td>"
+        						+ "<td class='table-time'><small>"
+        					if(map.chatList[i].sendDate.includes(dateFormat(1))){
+        						value += map.chatList[i].sendDate.substring(map.chatList[i].sendDate.indexOf("오")) 
+        					}else if(map.chatList[i].sendDate.includes(dateFormat(2))){
+        						value += "어제"
+        					} else{
+        						value += map.chatList[i].sendDate.substring(0, map.chatList[i].sendDate.indexOf("오"))
+        					}
+        					value += "</small><br>"
+        					if(map.chatList[i].notreadChat != null){
+        						value += "<span>" + map.chatList[i].notreadChat + "</span>"
+        					}
+        						
+        				value += "</td></tr>"
+        			}
+        			value += "</table><div id='plus-btn'>+</div></div>"
+        			$("#chat-body").html(value);
+        		},error:function(){
+        			console.log("채팅 리스트 조회용 ajax 통신 실패");
+        		}
+        	})
         }
+        
 
         // 대화방 상세보기
         $("#chatRoomList-area tr").click(function(){

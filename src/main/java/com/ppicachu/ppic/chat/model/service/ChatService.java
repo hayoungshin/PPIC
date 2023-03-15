@@ -2,6 +2,7 @@ package com.ppicachu.ppic.chat.model.service;
 
 import java.util.ArrayList;
 
+import com.ppicachu.ppic.chat.model.vo.Chat;
 import com.ppicachu.ppic.member.model.vo.Member;
 
 public interface ChatService {
@@ -18,4 +19,8 @@ public interface ChatService {
 	
 	// 4. 주소록 이름 찾기
 	ArrayList<Member> searchName(Member m);
+	
+	// 5. 채팅목록
+	ArrayList<Chat> selectChatRoomList(int userNo);
+	ArrayList<Chat> selectChatMemList(int userNo);
 }
