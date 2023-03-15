@@ -176,6 +176,26 @@ public class MemberController {
 		}
 	}
 	
+	/* 아이디/비밀번호 찾기 */
+	/**
+	 * @return 아이디 찾기 페이지
+	 */
+	@RequestMapping("findIdForm.me")
+	public String findIdForm() {
+		return "member/findIdForm";
+	}
+	@RequestMapping("findId.me")
+	public String findId(Member m, Model model, HttpSession session) {
+		String userId = mService.findId(m);
+		if(userId != null) {
+			model.addAttribute("userId", userId);
+			return "member/findIdResultView";			
+		} else {
+			session.setAttribute("alertMsg", "일치하는 회원정보가 없습니다.");
+			return "redirect:findIdForm.me";
+		}
+	}
+	
 	
 	
 	

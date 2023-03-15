@@ -24,6 +24,8 @@
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Department" alias="Department" />
 		<typeAlias type="com.ppicachu.ppic.work.model.vo.Holiday" alias="Holiday" />
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Position" alias="Position" />
+		<typeAlias type="com.ppicachu.ppic.project.model.vo.Project" alias="Project" />
+		<typeAlias type="com.ppicachu.ppic.project.model.vo.Task" alias="Task" />
 	</typeAliases>
 
 	
@@ -40,6 +42,7 @@
 		<mapper resource="/mappers/work-mapper.xml" />
 		<mapper resource="/mappers/approval-mapper.xml" />
 		<mapper resource="/mappers/document-mapper.xml" />
+		<mapper resource="/mappers/project-mapper.xml" />
 	</mappers>
 	
 	

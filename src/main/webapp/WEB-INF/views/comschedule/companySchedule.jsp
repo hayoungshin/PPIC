@@ -202,7 +202,7 @@
 		    				    	    
 	    				    		}
 	    				    		value += "<img src='resources/icons/modify.png' width='20px' height='20px' class='modify-img'>"
-			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img'></td></tr>"
+			                    		+ "<img src='resources/icons/bin.png' width='20px' height='25px' class='delete-img' onclick='deleteSchedule(" + list[i].schNo + ");'></td></tr>"
 			                    		+ "<tr style='display:none;'>"
 			                    		+	"<td>" + list[i].schNo + "</td>"
 			                    		+	"<td>" + list[i].legalholiday + "</td>"
@@ -297,10 +297,10 @@
 	            $('#modifyModal').modal('show');
 	        })
 	        
-	        $(document).on("click", ".delete-img", function(){
-		        $("#delete-btn").attr("href", "delete.sch?no=" + $(this).parents("tr").next().children().eq(0).text());
+	        function deleteSchedule(no){
+	        	$("#delete-btn").attr("href", "delete.sch?no=" + no);
 		        $('#deleteModal').modal('show'); 
-		    })
+        	}
         </script>
 
         <!-- 삭제 확인용 Modal -->

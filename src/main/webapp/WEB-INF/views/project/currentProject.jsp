@@ -116,7 +116,7 @@
   /* 상태 */
   .status-wait{background:#ecd718; }
   .status-working{background:#04b43f;}
-  .status-done{background:#6F50F8;}
+  .status-done{background:#00b5d1;}
   .status-hold{background:lightgray;}
 
   /* 작업이동시 그림자 */

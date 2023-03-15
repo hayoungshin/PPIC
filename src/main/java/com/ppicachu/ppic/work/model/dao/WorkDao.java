@@ -27,5 +27,9 @@ public class WorkDao {
 	public int completeWorkInsert(SqlSessionTemplate sqlSession) {
 		return sqlSession.insert("workMapper.completeWorkInsert");
 	}
+	
+	public Work selectWorkRecord(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("workMapper.selectWorkRecor", userNo);
+	}
 
 }

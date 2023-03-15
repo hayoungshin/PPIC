@@ -67,5 +67,10 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.insertMember(sqlSession, m);
 	}
 
+	@Override
+	public String findId(Member m) {
+		return mDao.findId(sqlSession, m);
+	}
+
 
 }

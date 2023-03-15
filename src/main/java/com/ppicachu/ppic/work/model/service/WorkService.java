@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.work.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.vo.Holiday;
@@ -20,5 +21,7 @@ public interface WorkService {
 	
 	// 4. 매일 12시 전 사원 출근 insert 서비스 
 		int completeWorkInsert();
-
+		
+	// 5. 출퇴근기록 조회 서비스 (home.jsp)
+		Work selectWorkRecord(int userNo);
 }
