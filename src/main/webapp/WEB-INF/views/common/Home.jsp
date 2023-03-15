@@ -85,7 +85,7 @@
 			
 				$(function(){
 					selectWorkRecord();
-					init();
+					setInterval(selectWorkRecord, 1000); //1초
 				});
 				
 				function selectWorkRecord(){
@@ -151,11 +151,6 @@
 				    }
 				    //document.getElementById("clock").innerHTML =hours + ":" + minutes + ":" + seconds;
 				    return hours + ":" + minutes + ":" + seconds;
-				}
-	
-				function init() {
-					getClock();
-				    setInterval(getClock, 1000); //1초
 				}
 	
 				
