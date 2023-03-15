@@ -69,7 +69,7 @@
                     </td>
                     <td>
                         <div>
-                            <img src="resources/icons/office-c.png" width="23px" style="vertical-align:middle;">
+                            <img src="resources/icons/idCard.png" width="23px" style="vertical-align:middle;">
                             <input type="text" name="employeeNo" placeholder="사번" style="width:212px; height:90%; margin-left:5px; border: none;"></input>
                         </div>
                     </td>

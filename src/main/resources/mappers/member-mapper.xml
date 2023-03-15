@@ -157,5 +157,13 @@
 		  , #{employeeNo}
 		  )
 	</insert>
+	
+	<select id="findId" resultType="string">
+		select
+			   user_id
+		  from member
+		 where user_name = #{ userName }
+		   and employee_no = #{ employeeNo }
+	</select>
 
 </mapper>
