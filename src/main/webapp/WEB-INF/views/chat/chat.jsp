@@ -13,7 +13,7 @@
         width:300px;
         height:510px;
         border-radius:5px;
-        font-size: 12px;
+        font-size: 13px;
         background:white;
         position:fixed;
         z-index:100;
@@ -27,7 +27,7 @@
      position:sticky;
     }
     #chat-logo{padding:10px;}
-    .profileImg, .collegeProfileImg{cursor:pointer;} 
+    #chat .profileImg, #chat .collegeProfileImg{cursor:pointer;} 
 	.pro-small{width: 25px;}
 	.pro-middle{width: 70px;}
 	.pro-big{width: 150px;}
@@ -195,8 +195,8 @@
             </div>
     
             <div id="chat-menu">
-                <img src="resources/icons/user.png" height="26px" id="member-btn" onclick="showUser();" class="menu"> 
-                <img src="resources/icons/chat.png" height="25px" id="chat-btn" onclick="showChatting();" class="menu"> 
+                <img src="resources/icons/user.png" style="height:25px; width:45px;" id="member-btn" onclick="showUser();"> 
+                <img src="resources/icons/chat.png" style="height:25px; width:45px;" id="chat-btn" onclick="showChatting();"> 
             </div> 
             
             <table id="search-area">
@@ -500,7 +500,6 @@
         		data:{
         			userNo:${loginUser.userNo},
         			userId:"${loginUser.userId}",
-        			userPwd:"${loginUser.userPwd}", // 지우기
         			connSta:$("#myProfile select").val()
         		},success:function(updateUser){
         			if(updateUser != null){
@@ -641,6 +640,9 @@
         			console.log(map)
         			let value = "<div id='chatRoomList-area'><table width='270'>";
         			let party = "";
+        			if(map.chatList.length == 0){
+        				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
+        			}
         			for(let i=0; i<map.chatList.length; i++){
         				value += "<tr><td style='width:50px'>"
         				for(let j=0; j<map.memList.length; j++){
@@ -680,7 +682,12 @@
         					if(i != map.chatList.length - 1){
         						value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - 2, map.chatList[i+1].groupCount - map.chatList[i].groupCount)
         					}else{
-        						value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - map.chatList[i-1].groupCount)
+        						if(map.chatList.length != 1){
+        							value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - map.chatList[i-1].groupCount)
+        						}else{
+        							value += party.substring(0, party.length - 1).split(",")
+        						}
+        						
         					}
         				}
         				value += "</b><br>"
@@ -697,6 +704,8 @@
         					value += "</small><br>"
         					if(map.chatList[i].notreadChat != null){
         						value += "<span>" + map.chatList[i].notreadChat + "</span>"
+        					}else{
+        						value += "<span style='background:none;'></span>"
         					}
         						
         				value += "</td></tr>"
