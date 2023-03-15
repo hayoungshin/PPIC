@@ -88,8 +88,8 @@
 		     , department
 		     , employee_no
 		     , profile_img
-		     , hire_date
-		     , resign_date
+		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
+		     , to_char(resign_date, 'YYYY.MM.DD') "resign_date"
 		     , status
 		     , authority_no
 		     , member_sign

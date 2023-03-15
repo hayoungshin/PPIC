@@ -241,25 +241,174 @@
 
             <button class="certificate-docs btn-outline-purple" id="employment-doc">재직증명서 신청<img src="resources/icons/download.png"></button>
             <br>
-            <button class="certificate-docs btn-outline-purple" >경력증명서 신청<img src="resources/icons/download.png"></button>
+            <button class="certificate-docs btn-outline-purple" id="career-doc">경력증명서 신청<img src="resources/icons/download.png"></button>
         </div>
         <br><br>
 
+        <div id="empl-doc-area" style="display:none;">
+            <table border="1" style="width:800px;" id="empl-doc">
+                <tr>
+                    <th width="100px;">성명</th>
+                    <td width="300px;">${loginUser.userName}</td>
+                    <th width="100px;">생년월일</th>
+                    <td width="300px;">${loginUser.birthday}</td>
+                </tr>
+                <tr>
+                    <th>주소</th>
+                    <td colspan="3">${loginUser.address}</td>
+                </tr>
+                <tr>
+                    <th>연락처</th>
+                    <td>${loginUser.phone}</td>
+                    <th>부서</th>
+                    <td>${loginUser.department}</td>
+                </tr>
+                <tr>
+                    <th>입사일자</th>
+                    <td>${loginUser.hireDate}</td>
+                    <th>직책</th>
+                    <td>${loginUser.position}</td>
+                </tr>
+                <tr>
+                    <th>용도</th>
+                    <td colspan="3">제출용</td>
+                </tr>
+                <tr>
+                    <td colspan="4" id="empl-content">
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="career-doc-area" style="display:none;">
+            <table border="1" style="width:800px;" id="car-doc">
+                <tr>
+                    <th width="100px;">성명</th>
+                    <td width="300px;">${loginUser.userName}</td>
+                    <th width="100px;">생년월일</th>
+                    <td width="300px;">${loginUser.birthday}</td>
+                </tr>
+                <tr>
+                    <th>주소</th>
+                    <td colspan="3">${loginUser.address}</td>
+                </tr>
+                <tr>
+                    <th>연락처</th>
+                    <td>${loginUser.phone}</td>
+                </tr>
+                <tr>
+                    <th>재직 시 부서</th>
+                    <td>${loginUser.department}</td>
+                    <th>재직 시 직책</th>
+                    <td>${loginUser.position}</td>
+                </tr>
+                <tr>
+                    <th>재직기간</th>
+                    <c:choose>
+                        <c:when test="${not empty loginUser.resignDate}">
+                            <td colspan="3">${loginUser.hireDate} ~ ${loginUser.resignDate}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td colspan="3">${loginUser.hireDate} ~ 재직중</td>
+                        </c:otherwise>
+                    </c:choose>
+                </tr>
+                <tr>
+                    <th>용도</th>
+                    <td colspan="3">제출용</td>
+                </tr>
+                <tr>
+                    <td colspan="4" id="car-content">
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script>
+            $(function(){
+                let today = new Date();   
+                let year = today.getFullYear(); // 년도
+                let month = today.getMonth() + 1;  // 월
+                let date = today.getDate();  // 날짜
+
+                let emplValue = "<br><br><br><br><br><br>상기와 같이 재직하고 있음을 증명합니다. <br><br><br>";
+                    emplValue += year + "년 " + month + "월 " + date + "일 <br><br><br><br><br><br><br>";
+                    emplValue += "회사명 : (주)PPIC <br><br><br>";
+                    emplValue += "주소 : 서울시 금천구 가산디지털1로 151 세진 이노플렉스, 306호 <br><br><br>";
+                    emplValue += "대표자 : 강보람 &nbsp&nbsp&nbsp(인) <br><br><br><br><br><br><br>";
+                $("#empl-content").html(emplValue);
+
+                let careerValue = "<br><br><br><br><br><br>상기와 같이 경력사항이 있음을 증명합니다. <br><br><br>";
+                    careerValue += year + "년 " + month + "월 " + date + "일 <br><br><br><br><br><br><br>";
+                    careerValue += "회사명 : (주)PPIC <br><br><br>";
+                    careerValue += "주소 : 서울시 금천구 가산디지털1로 151 세진 이노플렉스, 306호 <br><br><br>";
+                    careerValue += "대표자 : 강보람 &nbsp&nbsp&nbsp(인) <br><br><br><br><br><br><br>";
+                $("#car-content").html(careerValue);
+
+            })
+        </script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdn.tutorialjinni.com/jspdf-autotable/3.5.23/jspdf.plugin.autotable.js"></script>
         <script type="module">
             import {_fonts} from '/ppic/resources/js/gulim.js';
+            
+            // 재직증명서
             $("#employment-doc").click(function(){
-                // ajax로 로그인 회원 정보 가져와서 출력해줘야 함
 
                 // PDF 그리기
                 window.jsPDF = window.jspdf.jsPDF;
-                var doc = new jsPDF("p", "mm", "a4");
+                var doc = new jspdf.jsPDF("p", "mm", "a4");
                 doc.addFileToVFS('malgun.ttf', _fonts);
                 doc.addFont('malgun.ttf','malgun', 'normal');
                 doc.setFont('malgun');
-                doc.line(15, 19, 195, 19); // 선그리기(시작x, 시작y, 종료x, 종료y)
-                doc.text(15, 40, '재직증명서'); // 글씨입력(시작x, 시작y, 내용)
-                doc.save('재직증명서.pdf');  //결과 출력
+                doc.text(15, 30, '재직증명서'); // 글씨입력(시작x, 시작y, 내용)
+                doc.line(15, 40, 195, 40); // 선그리기(시작x, 시작y, 종료x, 종료y)
+                doc.autoTable({
+                    html: '#empl-doc',
+                    theme: 'plain',
+                    startY: 50,
+                    styles: {
+                    font: 'malgun',
+                    fontStyle: 'normal'
+                    }})
+
+                var info = new Image();
+                info.src = '/ppic/resources/company_images/company_signature.png';
+                info.onload = function(){
+                    doc.addImage(info, 'PNG', 43, 176, 10, 10);
+                    doc.save('재직증명서.pdf');  //결과 출력
+                }
+
+            })
+
+            // 경력증명서
+            $("#career-doc").click(function(){
+
+                // PDF 그리기
+                window.jsPDF = window.jspdf.jsPDF;
+                var doc = new jspdf.jsPDF("p", "mm", "a4");
+                doc.addFileToVFS('malgun.ttf', _fonts);
+                doc.addFont('malgun.ttf','malgun', 'normal');
+                doc.setFont('malgun');
+                doc.text(15, 30, '경력증명서'); // 글씨입력(시작x, 시작y, 내용)
+                doc.line(15, 40, 195, 40); // 선그리기(시작x, 시작y, 종료x, 종료y)
+                doc.autoTable({
+                    html: '#car-doc',
+                    theme: 'plain',
+                    startY: 50,
+                    styles: {
+                    font: 'malgun',
+                    fontStyle: 'normal'
+                    }})
+
+                var info = new Image();
+                info.src = '/ppic/resources/company_images/company_signature.png';
+                info.onload = function(){
+                    doc.addImage(info, 'PNG', 43, 183, 10, 10);
+                    doc.save('경력증명서.pdf');  //결과 출력
+                }
+
             })
         </script>
 
