@@ -15,7 +15,7 @@
 		<result column ="user_id" property="userId" />
 		<result column ="user_pwd" property="userPwd" />
 		<result column ="address" property="address" />
-		<result column ="company" property="company" />
+		<result column ="birthday" property="birthday" />
 		<result column ="profile_img" property="profileImg" />
 		<result column ="status" property="status" />
 		<result column ="authority_no" property="authorityNo" />
@@ -79,7 +79,7 @@
 		     , mail
 		     , phone
 		     , address
-		     , company
+		     , birthday
 		     , position
 		     , department
 		     , employee_no

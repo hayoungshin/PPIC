@@ -18,7 +18,7 @@ public class Member {
 	private String mail;
 	private String phone;
 	private String address;
-	private String company;
+	private String birthday;
 	private String position;
 	private String department;
 	private String employeeNo;
