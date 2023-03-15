@@ -89,6 +89,27 @@
 	        	arr3[i].style = 'display:none';
 			}
 		}
+		
+		//  Ajax 중요 update
+		function ajaxStar(bk){
+			const el = window.event.target;
+			const no = el.parentNode.parentNode.childNodes[1].value;
+			$.ajax({
+				url:"updateBook.ap",
+				data:{
+					approvalNo:no,
+					bookmark:bk,
+					userName:${loginUser.userNo}
+				},
+				success:function(result){
+					if(result > 0){
+						location.reload();
+					}
+				}, error:function(){
+					console.log("중요용 ajax통신 실패");
+				}
+			});
+		}
 	</script>
 	
 	<div class="content-2">
@@ -117,6 +138,7 @@
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
 			                <tr>
+			                    <input type="hidden" name="approvalNo" value="${ a.approvalNo }">
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
 			                    <td>${ a.title }</td>
@@ -147,10 +169,10 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${ empty a.bookmark }">
-			                    			<img src="resources/icons/star.png" height="20px">
+			                    			<img src="resources/icons/star.png" height="20px" class="as" onclick="ajaxStar(0);">
 			                    		</c:when>
 			                    		<c:otherwise>
-				                    		<img src="resources/icons/star-y.png" height="20px">
+				                    		<img src="resources/icons/star-y.png" height="20px" class="as" onclick="ajaxStar(1);">
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>

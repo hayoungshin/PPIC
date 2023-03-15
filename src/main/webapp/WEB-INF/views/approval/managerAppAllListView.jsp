@@ -80,7 +80,7 @@
 			}
 		}
 		
-		// 개별체크시
+		// 개별체크
 		function isAllCk(){
 			const bx = document.getElementsByClassName("ckBoxes");
 			let ckedCnt = 0;

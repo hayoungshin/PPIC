@@ -39,15 +39,15 @@
 	
 	/* 공통 */
 	.btnn-pp{text-decoration: none; font-size: 14px; background-color: white; color: #6F50F8; border:1px solid #6F50F8; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-	.btnn-pp:hover{text-decoration: none; background-color: #6F50F8; color: white; transition: 0.3s;}
+	.btnn-pp:hover{cursor: pointer; text-decoration: none; background-color: #6F50F8; color: white; transition: 0.3s;}
 	.btnn-gr{text-decoration: none; font-size: 14px; background-color: white; color: gray; border:1px solid gray; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-gr:hover{text-decoration: none; background-color: gray; color: white; transition: 0.3s;}
+    .btnn-gr:hover{cursor: pointer; text-decoration: none; background-color: gray; color: white; transition: 0.3s;}
     .btnn-pk{text-decoration: none; font-size: 14px; background-color: white; color: #fdbaba; border:1px solid #fdbaba; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-pk:hover{text-decoration: none; background-color: #fdbaba; color: white; transition: 0.3s;}
+    .btnn-pk:hover{cursor: pointer; text-decoration: none; background-color: #fdbaba; color: white; transition: 0.3s;}
     .btnn-sb{text-decoration: none; font-size: 14px; background-color: white; color: #00b5d1; border:1px solid #00b5d1; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-sb:hover{text-decoration: none; background-color: #00b5d1; color: white; transition: 0.3s;}
+    .btnn-sb:hover{cursor: pointer; text-decoration: none; background-color: #00b5d1; color: white; transition: 0.3s;}
     .btnn-rd{text-decoration: none; font-size: 14px; background-color: white; color: rgb(255, 100, 100); border:1px solid rgb(255, 100, 100); border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-rd:hover{text-decoration: none; background-color: rgb(255, 100, 100); color: white; transition: 0.3s;}
+    .btnn-rd:hover{cursor: pointer; text-decoration: none; background-color: rgb(255, 100, 100); color: white; transition: 0.3s;}
     
     .stt-pp{border-radius: 5px; border: 1px solid #6F50F8; background-color: #6F50F8; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
     .stt-gr{border-radius: 5px; border: 1px solid gray; background-color: gray; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}

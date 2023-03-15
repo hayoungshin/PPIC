@@ -95,6 +95,46 @@
 			for(let i=0; i<arr3.length; i++){
 	        	arr3[i].style = 'display:none';
 			}
+			
+			// 삭제버튼 mouseover
+			const tr = document.getElementsByClassName("trOver");
+			for(let i=0; i<tr.length; i++){
+				tr[i].addEventListener("mouseover", function(){
+					const writer = this.childNodes[3].childNodes[1].childNodes[1].innerHTML;
+					const btn = this.childNodes[3].childNodes[1].childNodes[3]
+					if(writer == '${loginUser.userName}'){
+						btn.style = 'position:absolute; top:-4px; left:25px; display:block;';
+					}
+				});
+				tr[i].addEventListener("mouseout", function(){
+					const writer = this.childNodes[3].childNodes[1].childNodes[1].innerHTML;
+					const btn = this.childNodes[3].childNodes[1].childNodes[3]
+					if(writer == '${loginUser.userName}'){
+						btn.style = 'position:absolute; top:-4px; left:25px; display:none;';
+					}
+				});
+			}
+		}
+		
+		// Ajax 중요 update
+		function ajaxStar(bk){
+			const el = window.event.target;
+			const no = el.parentNode.parentNode.childNodes[1].value;
+			$.ajax({
+				url:"updateBook.ap",
+				data:{
+					approvalNo:no,
+					bookmark:bk,
+					userName:${loginUser.userNo}
+				},
+				success:function(result){
+					if(result > 0){
+						location.reload();
+					}
+				}, error:function(){
+					console.log("중요용 ajax통신 실패");
+				}
+			});
 		}
 	</script>
 	
@@ -123,8 +163,14 @@
                 	</c:when>
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
-			                <tr>
-			                    <td>${ a.userName }</td>
+			                <tr class="trOver">
+			                    <input type="hidden" name="approvalNo" value="${ a.approvalNo }">
+			                    <td>
+			                    	<div style="position:relative;">
+			                    		<span>${ a.userName }</span>
+				                    	<div class="btnn-rd" style="position:absolute; top:-4px; left:25px; display:none;">삭제</div>
+				                    </div>
+			                    </td>
 			                    <td>${ a.form }</td>
 			                    <td>${ a.title }</td>
 			                    <td>
@@ -148,10 +194,10 @@
 			                    <td>
 			                    	<c:choose>
 			                    		<c:when test="${ empty a.bookmark }">
-			                    			<img src="resources/icons/star.png" height="20px">
+			                    			<img src="resources/icons/star.png" height="20px" class="as" onclick="ajaxStar(0);">
 			                    		</c:when>
 			                    		<c:otherwise>
-				                    		<img src="resources/icons/star-y.png" height="20px">
+				                    		<img src="resources/icons/star-y.png" height="20px" class="as" onclick="ajaxStar(1);">
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>

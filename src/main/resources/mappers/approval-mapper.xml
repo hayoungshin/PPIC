@@ -243,14 +243,14 @@
 		update
 	       app_process
 		<set>
-	  		<if test="bookmark == 'w'">
+	  		<if test="bookmark == 0">
 	  			bookmark = 'Y'
 	  		</if>
-	  		<if test="bookmark == 'y'">
-	  			bookmark = 'N'
+	  		<if test="bookmark == 1">
+	  			bookmark = null
 	  		</if>
 		</set>
 	 where approval_no = #{approvalNo}
-	   and user_no = #{userNo}
+	   and user_no = #{userName}
 	</update>
 </mapper>

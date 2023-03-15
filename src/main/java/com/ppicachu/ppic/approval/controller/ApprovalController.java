@@ -105,18 +105,27 @@ public class ApprovalController {
 	}
 	
 	/**
-	 * 중요 update
-	 * @return result
+	 * 중요 update (=)
 	 */
 	@ResponseBody
 	@RequestMapping("updateBook.ap")
-	public int AjaxUpdateBook(Approval a, HttpSession session){
-		a.setUserName(((Member)session.getAttribute("loginUser")).getUserNo() + "");
-		
+	public int AjaxUpdateBook(Approval a){
 		int result = aService.updateBook(a);
 		
 		return result;
 	}
+	
+	/**
+	 * 삭제 update (in)
+	 */
+	
+	/**
+	 * 삭제 delete (in)
+	 */
+	
+	/**
+	 * 복원 update (in)
+	 */
 	
 	/**
 	 * 작성폼으로 이동
