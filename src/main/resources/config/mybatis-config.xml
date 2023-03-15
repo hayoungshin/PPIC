@@ -26,6 +26,7 @@
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Position" alias="Position" />
 		<typeAlias type="com.ppicachu.ppic.project.model.vo.Project" alias="Project" />
 		<typeAlias type="com.ppicachu.ppic.project.model.vo.Task" alias="Task" />
+		<typeAlias type="com.ppicachu.ppic.project.model.vo.ProjectParticipant" alias="ProjectParticipant" />
 	</typeAliases>
 
 	

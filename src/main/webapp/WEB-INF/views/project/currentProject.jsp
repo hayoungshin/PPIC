@@ -146,34 +146,15 @@
         <!-- Swiper -->
         <div class="swiper mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide active">
-              <div class="project-box">
-                <div class="project-title">PPIC 고도화</div>
-                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="project-box">
-                <div class="project-title">PPIC 고도화</div>
-                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="project-box">
-                <div class="project-title">PPIC 고도화</div>
-                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="project-box">
-                <div class="project-title">PPIC 고도화</div>
-                <div class="project-pm"> PM: 박은지 차장 / 기획팀</div>
-                <div class="project-schedule">기간: 2023.02.01 ~ 2023.03.30</div>
-              </div>
-            </div>
+	          <c:forEach var="p" items="${pList}">
+	            <div class="swiper-slide active">
+	              <div class="project-box">
+	                <div class="project-title">${p.projectName}</div>
+	                <div class="project-pm"> PM : ${p.projectManager}</div>
+	                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
+	              </div>
+	            </div>
+	          </c:forEach>
           </div>
           <div class="swiper-pagination"></div>
         </div>
@@ -189,6 +170,7 @@
             // Optional parameters
             slidesPerView: 4,
             spaceBetween: 30,
+            loopFillGroupWithBlank: true,
             freeMode: true,
             direction: 'horizontal',
             loop: true,

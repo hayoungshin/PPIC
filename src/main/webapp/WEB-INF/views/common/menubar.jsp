@@ -210,7 +210,7 @@
                 <span>예약</span>
             </div>
 
-            <div class="side-menu" onclick="location.href='list.pr'">
+            <div class="side-menu" onclick="location.href='list.pr?userNo=${loginUser.userNo}'">
                 <img src="resources/icons/monitor.png">
                 <span>업무</span>
             </div>

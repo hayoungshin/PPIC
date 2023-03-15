@@ -3,10 +3,44 @@
 <mapper namespace="projectMapper">
 
 <resultMap id="projectResult" type="Project">
-	<id column="" property="" />
+	<id column="project_no" property="projectNo"/>
+	<result column="project_manager" property="projectManager"/>
+	<result column="project_name" property="projectName"/>
+	<result column="start_date" property="startDate"/>
+	<result column="end_date" property="endDate"/>
+	<result column="detail" property="detail"/>
+	<result column="create_date" property="createDate"/>
+	<result column="modify_date" property="modifyDate"/>
+	<result column="delete_status" property="deleteStatus"/>
+	<collection property="projectParticipants" resultMap="proParticipantsResult"/>
 </resultMap>
 
-<select id="selectProjectList" resultMap="">
-	
+<resultMap id="proParticipantsResult" type="ProjectParticipant">
+	<result column="project_no" property="projectNo"/>
+	<result column="task_no" property="taskNo"/>
+	<result column="department_no" property="departmentNo"/>
+	<result column="user_no" property="userNo"/>
+</resultMap>
+
+<select id="selectProjectList" resultMap="projectResult">
+	select 	
+		   project_no
+		 , project_manager
+		 , project_name
+		 , start_date
+		 , end_date
+		 , detail
+		 , create_date
+		 , modify_date
+		 , delete_status
+		 , user_no
+		 , department_no
+      from project
+      left join p_participant using (project_no)
+     where user_no = #{userNo}
+       and delete_status = 'N'
+     order
+        by create_date desc
 </select>
+
 </mapper>
