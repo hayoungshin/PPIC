@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
+import com.ppicachu.ppic.member.model.vo.Position;
 
 public interface MemberService {
 	
@@ -26,9 +27,11 @@ public interface MemberService {
 	int updateProfileImg(Member m);
 	
 	/* 회원가입 */
-	// 6. 아이디 중복확인
+	// 6. 아이디 중복확인 서비스
 	int idCheck(String checkId);
-	
-	// 7. 회원가입
+	// 7. 직급 리스트 조회 서비스
+	ArrayList<Position> selectPositionList();
+	// 8. 회원가입 서비스
+	int insertMember(Member m);
 
 }

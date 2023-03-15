@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +17,15 @@ import com.ppicachu.ppic.common.template.FileUpload;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
+import com.ppicachu.ppic.member.model.vo.Position;
 
 @Controller
 public class MemberController {
 	
 	@Autowired
 	private MemberService mService;
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	/* 단순 페이지 불러오기*/
 	
@@ -126,12 +130,20 @@ public class MemberController {
 		}
 	}
 	
-	/* 회원가입 페이지1 (아이디 중복확인 페이지) */
+	/* 회원가입 */
+	/**
+	 * @return ID 생성 페이지
+	 */
 	@RequestMapping("idCheckForm.me")
 	public String idCheckForm() {
-		return "member/memberIdCheck";
+		return "member/memberIdCheckForm";
 	}
 	
+	/**
+	 * @param checkId 중복확인 할 아이디
+	 * @param model : 부서리스트, 직급리스트, 중복확인 완료된 아이디
+	 * @return 상세정보 작성 페이지
+	 */
 	@RequestMapping("idCheck.me")
 	public String idCheck(String checkId, HttpSession session, Model model) {
 		int count = mService.idCheck(checkId);
@@ -139,10 +151,31 @@ public class MemberController {
 			session.setAttribute("alertMsg", "이미 사용중인 아이디거나 탈퇴한 회원의 아이디입니다.");
 			return "redirect:idCheckForm.me";
 		} else {
+			ArrayList<Department> dList = mService.selectDeptList();
+			ArrayList<Position> pList = mService.selectPositionList();
+			model.addAttribute("dList", dList);
+			model.addAttribute("pList", pList);
 			model.addAttribute("checkId", checkId);
 			return "member/memberEnrollForm";
 		}
 	}
+	
+	@RequestMapping("insert.me")
+	public String insertMember(Member m, HttpSession session, Model model) {
+		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
+		//System.out.println(encPwd);
+		m.setUserPwd(encPwd);
+		int result = mService.insertMember(m);
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 회원가입 되었습니다.");
+			return "redirect:/";
+		} else {
+			model.addAttribute("errorMsg", "회원가입 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	
 	
 	
 	

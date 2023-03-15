@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ppicachu.ppic.member.model.dao.MemberDao;
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
+import com.ppicachu.ppic.member.model.vo.Position;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -54,6 +55,16 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int idCheck(String checkId) {
 		return mDao.idCheck(sqlSession, checkId);
+	}
+
+	@Override
+	public ArrayList<Position> selectPositionList() {
+		return mDao.selectPositionList(sqlSession);
+	}
+
+	@Override
+	public int insertMember(Member m) {
+		return mDao.insertMember(sqlSession, m);
 	}
 
 
