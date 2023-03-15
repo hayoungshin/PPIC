@@ -147,7 +147,7 @@
                         <br><br>
                         파일 첨부 : <input type="file" name="upfile">
                         <input type="hidden" name="docType" value="2">
-                        <input type="hidden" name="createUser" value="1"><%-- 로그인 구현 완료 시 ${loginUser.userNo}--%>
+                        <input type="hidden" name="createUser" value="${loginUser.userNo}">
                     </div>
             
                     <!-- Modal footer -->
@@ -183,7 +183,7 @@
                         <input type="hidden" name="savePath" value="${d.savePath}">
                         <input type="hidden" name="originName" value="${d.originName}">
                         <input type="hidden" name="docNo" value="${d.docNo}">
-                        <input type="hidden" name="createUser" value="1">
+                        <input type="hidden" name="createUser" value="${loginUser.userNo}">
 	                </div>
 	        
 	                <!-- Modal footer -->
