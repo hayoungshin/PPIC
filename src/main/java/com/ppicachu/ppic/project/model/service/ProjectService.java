@@ -8,6 +8,6 @@ import com.ppicachu.ppic.project.model.vo.Task;
 
 public interface ProjectService {
 	// 페이지 조회
-	ArrayList<Project> selectProjectList(Member m);
+	ArrayList<Project> selectProjectList(int userNo);
 	ArrayList<Task> selectTaskList(Project p);
 }
