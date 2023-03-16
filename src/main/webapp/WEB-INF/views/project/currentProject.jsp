@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +45,7 @@
   .swiper-pagination, .swiper-button-next, .swiper-button-prev{z-index:1 !important;}
 
   /* 프로젝트 박스 */
-  .project-box div{margin:10px; font-size:14px;}
+  .project-box div{margin:5px; font-size:13px;}
   .project-title{font-size:16px !important; font-weight:700;}
   .swiper-slide.active{border:1px solid #6F50F8;}
 
@@ -57,7 +58,7 @@
     position:relative;
     padding:0 5px;
     display:flex;
-    height:30px !important;
+    height:24px !important;
     width:100%;
   }
   .progress-bar {
@@ -65,7 +66,7 @@
     box-shadow: 0 10px 30px -10px #6F50F8 !important;
     border-radius: 100px;
     background:linear-gradient(to right, #00b5d1 60%, #FFCECE);
-    height: 20px;
+    height: 16px;
     width: 0;
   }
   @keyframes load {
@@ -138,6 +139,7 @@
         <br><br>
         <div class="sub-menu">
             <a href="#" class="active">프로젝트 현황</a>
+            <!-- 관리자일 때만 보여야 함 -->
             <a href="#">프로젝트 관리</a>
         </div>
         <hr>
@@ -146,11 +148,22 @@
         <!-- Swiper -->
         <div class="swiper mySwiper">
           <div class="swiper-wrapper">
-	          <c:forEach var="p" items="${pList}">
-	            <div class="swiper-slide active">
+            <div class="swiper-slide active">
+              <div class="project-box">
+                <input type="hidden" name="projectNo" value="${p.projectNo}">
+                <div class="project-title">${p.projectName}</div>
+                <div class="project-detail">${p.detail}</div>
+                <div class="project-pm">PM : ${p.projectManager} / ${p.projectParticipants[0].departmentName}</div>
+                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
+              </div>
+            </div>
+	          <c:forEach var="p" items="${pList}" begin="1">
+	            <div class="swiper-slide">
 	              <div class="project-box">
+                  <input type="hidden" name="projectNo" value="${p.projectNo}">
 	                <div class="project-title">${p.projectName}</div>
-	                <div class="project-pm"> PM : ${p.projectManager}</div>
+                  <div class="project-detail">${p.detail}</div>
+	                <div class="project-pm">PM : ${p.projectManager} / ${p.projectParticipants[0].departmentName}</div>
 	                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
 	              </div>
 	            </div>
@@ -166,163 +179,225 @@
 
         <!-- Initialize Swiper -->
         <script>
-          const swiper = new Swiper('.swiper', {
-            // Optional parameters
-            slidesPerView: 4,
-            spaceBetween: 30,
-            loopFillGroupWithBlank: true,
-            freeMode: true,
-            direction: 'horizontal',
-            loop: true,
-            autoplay: {
-              delay: 3000,
-              disableOnInteraction: false,
-            },
-            // If we need pagination
-            pagination: {
-              el: ".swiper-pagination",
-              clickable: true,
-            },
-            // And if we need scrollbar
-            scrollbar: {
-              el: '.swiper-scrollbar',
-            },
-          });
+          $(function(){
+            let option = {
+                slidesPerView: 4,
+                spaceBetween: 30,
+                // slidesPerGroup: 4,
+                loopFillGroupWithBlank: true,
+                freeMode: true,
+                direction: 'horizontal',
+                loop: true,
+                autoplay: {
+                  delay: 3500,
+                  disableOnInteraction: false,
+                },
+                // If we need pagination
+                pagination: {
+                  el: ".swiper-pagination",
+                  clickable: true,
+                },
+                // And if we need scrollbar
+                scrollbar: {
+                  el: '.swiper-scrollbar'
+                }
+            };
+
+            if($(".swiper-slide").length <= 4){
+              option.loop = false;
+            }
+
+            const swiper = new Swiper('.swiper', option)
+          })
       </script>
-         
-         
+      
+      <!-- 프로젝트 클릭 -->
+      <script>
+        $(function(){
 
-        <h4><b>PPIC ver.2</b></h4>
-        <br>
+          $(".swiper-slide").click(function(){
+            $(this).addClass("active");
+            $(this).siblings().removeClass("active");
+            let projectNo = $(this).find("input[name=projectNo]").val();
 
-        <div id="progress-area">
-          <span style="font-size:16px;"><b>진행률</b></span>
-          <br><br>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%</div>
-          </div>
+            $.ajax({
+              url:"detail.pr",
+              data:{"projectNo":projectNo},
+              success:function(ppList){
+                let member = "";
+                for(let i=0; i<ppList.length; i++){
+                  member += ppList[i].userName + " / " + ppList[i].departmentName + ", ";
+                }
+                member = member.substring(0, member.lastIndexOf(","));
+                $("#member-list").html(member);
+              }, error:function(){
+                console.log("참여자 정보 가져오기 실패");
+              }
+            })
+
+          })
+        })
+      </script>
+      <!-- 해당 프로젝트 참여자 정보 -->
+      <!-- <script>
+        let projectNo = '${p.projectNo}';
+        $(function(){
+          $.ajax({
+            url:"ppts.pr",
+            data:{"projectNo":projectNo},
+            success:function(ppList){
+              
+              let member = "";
+              for(let i=0; i<ppList.length; i++){
+                member += ppList[i].userName + " / " + ppList[i].departmentName + ", ";
+              }
+              member = member.substring(0, member.lastIndexOf(","));
+              $("#member-list").html(member);
+            }, error:function(){
+              console.log("참여자 정보 가져오기 실패");
+            }
+          })
+        })
+      </script> -->
+
+      <h4><b>프로젝트이름</b></h4>
+      <br>
+      <div id="participants-area" style="font-size:14px;">
+        <b>프로젝트 참여 멤버</b> <br><br>
+        <div id="member-list" style="font-size:12px;">
         </div>
-        <br><br><br>
-        <div id="task-area">
-          <span style="font-size:16px;"><b>작업 현황</b></span>
-          <button id="add-task" class="btn-purple">+ 작업 만들기</button>
-          <br><br>
-          <div class="row" id="task-category"">
-            <div class="col" id="wait"><div class="circle status-wait"></div>대기중</div>
-            <div class="col" id="working"><div class="circle status-working"></div>작업중</div>
-            <div class="col" id="done"><div class="circle status-done"></div>완료</div>
-            <div class="col" id="hold"><div class="circle status-hold"></div>보류</div>
-          </div>
-          <div class="row" id="task-list"">
-            <div class="col column wait-list">
-              <div class="task-box" data-toggle="modal" data-target="#task">
-                <div class="task-title">어쩌구저쩌구 작업ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-wait">대기중</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-wait">대기중</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-wait">대기중</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-            </div>
-            
-            <div class="col column working-list">
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-working">작업중</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-working">작업중</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-            </div>
-
-            <div class="col column done-list">
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-done">완료</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-done">완료</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-            </div>
-            
-            <div class="col column hold-list">
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-hold">보류</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-              <div class="task-box">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-                <div class="file">파일명.jpg</div>
-                <div class="status status-hold">보류</div>
-                <div class="ref-people">참조인 18명</div>
-              </div>
-            </div>
-          </div>
+      </div>
+      <br>
+      <div id="progress-area">
+        <span style="font-size:14px;"><b>진행률</b></span>
+        <br><br>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%</div>
         </div>
-        <br><br><br>
+      </div>
+      <br><br><br>
+      <div id="task-area">
+        <span style="font-size:16px;"><b>작업 현황</b></span>
+        <button id="add-task" class="btn-purple">+ 작업 만들기</button>
+        <br><br>
+        <div class="row" id="task-category">
+          <div class="col" id="wait"><div class="circle status-wait"></div>대기중</div>
+          <div class="col" id="working"><div class="circle status-working"></div>작업중</div>
+          <div class="col" id="done"><div class="circle status-done"></div>완료</div>
+          <div class="col" id="hold"><div class="circle status-hold"></div>보류</div>
+        </div>
+        <div class="row" id="task-list">
+          <div class="col column wait-list">
+            <div class="task-box" data-toggle="modal" data-target="#task">
+              <div class="task-title">어쩌구저쩌구 작업ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-wait">대기중</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-wait">대기중</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-wait">대기중</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+          </div>
+          
+          <div class="col column working-list">
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-working">작업중</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-working">작업중</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+          </div>
 
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-        <script>
-          $(function() {
-            $(".column").sortable({
-              // 그룹
-              connectWith: ".column",
-              // 움직일 요소
-              handle: ".task-title",
-              // 이동 시 배경
-              placeholder: "move-task"
-            });
-          });
-        </script>
-
-        <!-- The Modal -->
-        <div class="modal" id="task">
-          <div class="modal-dialog">
-            <div class="modal-content">
-
-              <!-- Modal Header -->
-              <div class="modal-header">
-                <h4 class="modal-title">작업 상세</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-              </div>
-
-              <!-- Modal body -->
-              <div class="modal-body">
-                <div class="task-title">어쩌구저쩌구 작업</div>
-              </div>
-
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              </div>
-
+          <div class="col column done-list">
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-done">완료</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-done">완료</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+          </div>
+          
+          <div class="col column hold-list">
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-hold">보류</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
+            <div class="task-box">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+              <div class="file">파일명.jpg</div>
+              <div class="status status-hold">보류</div>
+              <div class="ref-people">참조인 18명</div>
+            </div>
           </div>
         </div>
       </div>
+      <br><br><br>
+
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+      <script>
+        $(function() {
+          $(".column").sortable({
+            // 그룹
+            connectWith: ".column",
+            // 움직일 요소
+            handle: ".task-title",
+            // 이동 시 배경
+            placeholder: "move-task"
+          });
+        });
+      </script>
+
+      <!-- The Modal -->
+      <div class="modal" id="task">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">작업 상세</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="task-title">어쩌구저쩌구 작업</div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+      </div>
+    </div>
 
 
     </div>
+
+    
 </body>
 </html>

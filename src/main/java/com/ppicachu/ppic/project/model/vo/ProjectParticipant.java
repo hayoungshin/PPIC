@@ -15,6 +15,6 @@ public class ProjectParticipant {
 
 	private int projectNo;
 	private int taskNo;
-	private int departmentNo;
-	private int userNo;
+	private String departmentName;
+	private String userName;
 }
