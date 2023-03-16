@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.ppicachu.ppic.approval.model.service.ApprovalService;
+import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
@@ -118,14 +119,69 @@ public class ApprovalController {
 	/**
 	 * 삭제 update (in)
 	 */
+	@ResponseBody
+	@RequestMapping("deleteApproval.ap")
+	public int AjaxDeleteApproval(String no) {
+		String[] noArr = {no};
+		if(no.contains(",")) {
+			noArr = no.split(",");
+		}
+		
+		int result = aService.deleteApproval(noArr);
+		
+		return result;
+	}
 	
 	/**
 	 * 삭제 delete (in)
 	 */
+	/*@ResponseBody
+	@RequestMapping("recoverApproval.ap")
+	public int AjaxReMoveApproval(String no) {
+		String[] noArr = {no};
+		if(no.contains(",")) {
+			noArr = no.split(",");
+		}
+		
+		int result = aService.removeApproval(noArr);
+		
+		return result;
+	}*/
 	
 	/**
 	 * 복원 update (in)
 	 */
+	@ResponseBody
+	@RequestMapping("recoverApproval.ap")
+	public int AjaxRecoverApproval(String no) {
+		String[] noArr = {no};
+		if(no.contains(",")) {
+			noArr = no.split(",");
+		}
+		
+		int result = aService.recoverApproval(noArr);
+		
+		return result;
+	}
+	
+	/**
+	 * 상세폼으로 이동
+	 */
+	@RequestMapping("detail.ap")
+	public String selectApproval(int no, String form, Model m) {
+		AppDetail ad = null;
+		
+		switch(form) {
+		case "업무기안" : System.out.println(1); ad = aService.selectDraftApp(no); break;
+		case "인사발령품의서" : System.out.println(2);ad = aService.selectTransferApp(no); break;
+		case "비품신청서" : System.out.println(3);ad = aService.selectConsumeApp(no); break;
+		case "지출결의서" : System.out.println(4);ad = aService.selectCashApp(no); break;
+		}
+		
+		m.addAttribute("ad", ad);
+		
+		return "approval/appDetailView";
+	}
 	
 	/**
 	 * 작성폼으로 이동
@@ -139,7 +195,8 @@ public class ApprovalController {
 	 * 업무기안폼으로 이동
 	 */
 	@RequestMapping("enrollDraftForm.ap")
-	public String enrollDraftForm() {
+	public String enrollDraftForm(Model m) {
+		
 		return "approval/appEnrollDraftForm";
 	}
 	
@@ -170,14 +227,6 @@ public class ApprovalController {
 	/* 작성 */
 	@RequestMapping("insert.ap")
 	public String insertApproval() {
-		return "";
-	}
-	
-	/**
-	 * 상세폼으로 이동
-	 */
-	@RequestMapping("detail.ap")
-	public String selectApproval() {
 		return "";
 	}
 	

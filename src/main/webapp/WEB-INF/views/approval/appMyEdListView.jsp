@@ -136,6 +136,22 @@
 				}
 			});
 		}
+		
+		// Ajax 삭제 update
+		function del(){
+			if(confirm('결재문서를 삭제하시겠습니까?')){
+				const el = window.event.target;
+				const no = el.parentNode.parentNode.parentNode.childNodes[1].value;
+				$.ajax({
+					url:"deleteApproval.ap?no=" + no,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}
+				});
+			}
+		}
 	</script>
 	
 	<div class="content-2">
@@ -168,7 +184,7 @@
 			                    <td>
 			                    	<div style="position:relative;">
 			                    		<span>${ a.userName }</span>
-				                    	<div class="btnn-rd" style="position:absolute; top:-4px; left:25px; display:none;">삭제</div>
+				                    	<div class="btnn-rd" style="position:absolute; top:-4px; left:25px; display:none;" onclick="return del();">삭제</div>
 				                    </div>
 			                    </td>
 			                    <td>${ a.form }</td>

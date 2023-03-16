@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ppicachu.ppic.approval.model.dao.ApprovalDao;
 import com.ppicachu.ppic.approval.model.vo.AppChange;
+import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
@@ -63,6 +64,41 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public int updateBook(Approval a) {
 		return aDao.updateBook(sqlSession, a);
+	}
+
+	@Override
+	public int deleteApproval(String[] noArr) {
+		return aDao.deleteApproval(sqlSession, noArr);
+	}
+
+	/*@Override
+	public int removeApproval(String[] noArr) {
+		return aDao.removeApproval(sqlSession, noArr);
+	}*/
+
+	@Override
+	public int recoverApproval(String[] noArr) {
+		return aDao.recoverApproval(sqlSession, noArr);
+	}
+
+	@Override
+	public AppDetail selectDraftApp(int approvalNo) {
+		return aDao.selectDraftApp(sqlSession, approvalNo);
+	}
+
+	@Override
+	public AppDetail selectTransferApp(int approvalNo) {
+		return aDao.selectTransferApp(sqlSession, approvalNo);
+	}
+
+	@Override
+	public AppDetail selectConsumeApp(int approvalNo) {
+		return aDao.selectConsumeApp(sqlSession, approvalNo);
+	}
+
+	@Override
+	public AppDetail selectCashApp(int approvalNo) {
+		return aDao.selectCashApp(sqlSession, approvalNo);
 	}
 
 }

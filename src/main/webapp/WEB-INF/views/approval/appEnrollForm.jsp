@@ -88,23 +88,23 @@
                                 <th width="20%">작성일</th>
                                 <td width="20%" id="current-date"></td>
                                 <th width="20%">완료일</th>
-                                <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
+                                <td width="40%">기안 완료시 자동으로 생성됩니다</td>
                             </tr>
                             <tr>
                                 <th>부서</th>
-                                <td>${ loginUser.department }</td>
+                                <td>결재양식을 선택하세요</td>
                                 <th>문서번호</th>
-                                <td>기안 완료시 자동으로 생성됩니다.</td>
+                                <td>기안 완료시 자동으로 생성됩니다</td>
                             </tr>
                             <tr>
                                 <th>직급</th>
-                                <td>${ loginUser.position }</td>
+                                <td>결재양식을 선택하세요</td>
                                 <th>작성자</th>
-                                <td>${ loginUser.userId }</td>
+                                <td>결재양식을 선택하세요</td>
                             </tr>
                             <tr>
                                 <th>제목</th>
-                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" readonly></td>
+                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" readonly placeholder="결재양식을 선택하세요"></td>
                             </tr>
                         </thead>
                     </table>

@@ -97,6 +97,33 @@
 			
 			document.getElementById("allCkBox").checked = ckMode;
 		}
+		
+		// Ajax 삭제 update
+		function del(){
+			const bx = document.getElementsByClassName("ckBoxes");
+			let ckNoArr = [];
+			let ckedCnt = 0;
+			for(let i=0; i<bx.length; i++){
+				if(bx[i].checked){
+					ckedCnt += 1;
+					ckNoArr.push(bx[i].previousElementSibling.value);
+				}
+			}
+			if(ckedCnt == 0){
+				alert('선택된 결재문서가 없습니다.');
+				return false;
+			} else if(confirm(ckedCnt + '개의 결재문서를 삭제하시겠습니까?')){
+				$.ajax({
+					url:"deleteApproval.ap?no=" + ckNoArr,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}
+				});
+			}
+			return false;
+		}
 	</script>
 	
 	<div class="content-2">
@@ -126,7 +153,10 @@
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
 			                <tr>
-			                    <td><input type="checkbox" class="ckBoxes" onclick="isAllCk();"></td>
+			                    <td>
+			                    	<input type="hidden" name="approvalNo" value="${ a.approvalNo }">
+			                    	<input type="checkbox" class="ckBoxes" onclick="isAllCk();">
+			                    </td>
 			                    <td>${ a.department }부</td>
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
@@ -163,7 +193,7 @@
             </tbody>
         </table>
 
-		<div class="del-btn-area"><button class="btnn-rd">선택 문서 삭제</button></div>
+		<div class="del-btn-area"><button class="btnn-rd" onclick="return del();">선택 문서 삭제</button></div>
         <br clear="both">
 
         <div align="center">

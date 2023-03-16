@@ -4,6 +4,7 @@
 	<resultMap type="Approval" id="approvalResult">
 		<id column="approval_no" property="approvalNo"/>
 		<result column="department_name" property="department"/>
+		<result column="position_name" property="position"/>
 		<result column="user_name" property="userName"/>
 		<result column="form" property="form"/>
 		<result column="title" property="title"/>
@@ -15,6 +16,124 @@
 		<result column="complete_date" property="completeDate"/>
 		<result column="complete_no" property="completeNo"/>
 		<result column="bookmark" property="bookmark"/>
+	</resultMap>
+	
+	<resultMap type="AppDetail" id="draftResult">
+		<id column="app_no" property="approvalNo"/>
+		<association property="app" resultMap="approvalResult"/>
+		<association property="draft" javaType="FormDraft">
+			<id column="form_no" property="formNo"/>
+			<result column="effective_date" property="effectiveDate"/>
+			<result column="form_dep_name" property="departmentNo"/>
+			<result column="content" property="content"/>
+		</association>
+		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_name" property="userName"/>
+			<result column="pro_department_name" property="departmentName"/>
+			<result column="pro_position_name" property="positionName"/>
+			<result column="process_order" property="processOrder"/>
+			<result column="approval_role" property="approvalRole"/>
+			<result column="pro_status" property="status"/>
+			<result column="approval_date" property="approvalDate"/>
+			<result column="pro_bookmark" property="bookmark"/>
+		</collection>
+		<collection property="att" ofType="Attachment">
+			<id column="attachment_no" property="attachmentNo"/>
+			<result column="at_origin_name" property="originName"/>
+			<result column="change_name" property="changeName"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="AppDetail" id="transferResult">
+		<id column="app_no" property="approvalNo"/>
+		<association property="app" resultMap="approvalResult"/>
+		<collection property="transfer" ofType="FormTransfer">
+			<id column="form_no" property="formNo"/>
+			<result column="effective_date" property="effectiveDate"/>
+			<result column="form_user_name" property="userName"/>
+			<result column="form_dept_name" property="departmentName"/>
+			<result column="current_position" property="currentPosition"/>
+			<result column="promote_position" property="promotePosition"/>
+			<result column="remark" property="remark"/>
+		</collection>
+		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_name" property="userName"/>
+			<result column="pro_department_name" property="departmentName"/>
+			<result column="pro_position_name" property="positionName"/>
+			<result column="process_order" property="processOrder"/>
+			<result column="approval_role" property="approvalRole"/>
+			<result column="pro_status" property="status"/>
+			<result column="approval_date" property="approvalDate"/>
+			<result column="pro_bookmark" property="bookmark"/>
+		</collection>
+		<collection property="att" ofType="Attachment">
+			<id column="attachment_no" property="attachmentNo"/>
+			<result column="at_origin_name" property="originName"/>
+			<result column="change_name" property="changeName"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="AppDetail" id="consumeResult">
+		<association property="app" resultMap="approvalResult"/>
+		<collection property="consume" ofType="FormConsume">
+			<id column="form_no" property="formNo"/>
+			<result column="name" property="name"/>
+			<result column="reason" property="reason"/>
+			<result column="unit" property="unit"/>
+			<result column="count" property="count"/>
+			<result column="price" property="price"/>
+		</collection>
+		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_name" property="userName"/>
+			<result column="pro_department_name" property="departmentName"/>
+			<result column="pro_position_name" property="positionName"/>
+			<result column="process_order" property="processOrder"/>
+			<result column="approval_role" property="approvalRole"/>
+			<result column="pro_status" property="status"/>
+			<result column="approval_date" property="approvalDate"/>
+			<result column="pro_bookmark" property="bookmark"/>
+		</collection>
+		<collection property="att" ofType="Attachment">
+			<id column="attachment_no" property="attachmentNo"/>
+			<result column="at_origin_name" property="originName"/>
+			<result column="change_name" property="changeName"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="AppDetail" id="cashResult">
+		<association property="app" resultMap="approvalResult"/>
+		<collection property="cash" ofType="FormCash">
+			<id column="form_no" property="formNo"/>
+			<result column="account" property="account"/>
+			<result column="user_history" property="userHistory"/>
+			<result column="price" property="price"/>
+			<result column="vat" property="vat"/>
+		</collection>
+		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_name" property="userName"/>
+			<result column="pro_department_name" property="departmentName"/>
+			<result column="pro_position_name" property="positionName"/>
+			<result column="process_order" property="processOrder"/>
+			<result column="approval_role" property="approvalRole"/>
+			<result column="pro_status" property="status"/>
+			<result column="approval_date" property="approvalDate"/>
+			<result column="pro_bookmark" property="bookmark"/>
+		</collection>
+		<collection property="att" ofType="Attachment">
+			<id column="attachment_no" property="attachmentNo"/>
+			<result column="at_origin_name" property="originName"/>
+			<result column="change_name" property="changeName"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="AppChange" id="appChangeResult">
+		<id column="change_no" property="changeNo"/>
+		<result column="user_name" property="userName"/>
+		<result column="department_name" property="departmentName"/>
+		<result column="position_name" property="positionName"/>
+		<result column="content" property="content"/>
+		<result column="create_date" property="createDate"/>
+		<result column="role" property="role"/>
 	</resultMap>
 	
 	<select id="selectListCount" resultType="_int">
@@ -253,4 +372,266 @@
 	 where approval_no = #{approvalNo}
 	   and user_no = #{userName}
 	</update>
+	
+	<update id="deleteApproval">
+		update
+		       approval
+		   set status = 'N'
+		 where approval_no in
+			<foreach collection="array" item="no" separator="," open="(" close=")">
+            	#{no}
+			</foreach>
+	</update>
+	
+	<!-- <delete id=removeApproval">
+		
+	</delete> -->
+	
+	<update id="recoverApproval">
+		update
+		       approval
+		   set status = 'Y'
+		 where approval_no in
+			<foreach collection="array" item="no" separator="," open="(" close=")">
+            	#{no}
+			</foreach>
+	</update>
+	
+	<select id="selectDraftApp" resultMap="draftResult">
+		select
+		       approval_no
+		     , complete_no
+		     , am.user_name
+		     , ad.department_name
+		     , ap.position_name
+		     , form
+		     , title
+		     , create_date
+		     , complete_date
+		     , current_order
+		     , final_order
+		     , approval_status
+		     
+		     , form_no
+		     , effective_date
+		     , fd.department_name form_dep_name
+		     , content
+		     
+		     , pm.user_name pro_user_name
+		     , pd.department_name pro_department_name
+             , pp.position_name pro_position_name
+             , process_order
+		     , approval_role
+		     , p.status pro_status
+		     , approval_date
+		     , bookmark pro_bookmark
+		     
+		     , attachment_no
+		     , origin_name at_origin_name
+		     , change_name
+		     
+		  from approval a
+		  
+		  join member am on (a.user_no = am.user_no)
+		  join dept ad on (a.department_no = ad.department_no)
+		  join position ap using(position_no)
+		  
+		  join form_draft f using(approval_no)
+		  join dept fd on (f.department_no = fd.department_no)
+		  
+		  left
+		  join app_process p using(approval_no)
+		  join member pm on (p.user_no = pm.user_no)
+		  join dept pd on (pm.department = pd.department_no)
+          join position pp on (pm.position = pp.position_no)
+		  
+		  left
+		  join attachment on (category_no = 1 and approval_no = ref_no)
+		  
+		 where approval_no = #{approvalNo}
+	</select>
+	
+	<select id="selectTransferApp" resultMap="transferResult">
+		select
+		       approval_no app_no
+		     , complete_no
+		     , am.user_name
+		     , ad.department_name
+		     , ap.position_name
+		     , form
+		     , title
+		     , create_date
+		     , complete_date
+		     , current_order
+		     , final_order
+		     , approval_status
+		     
+		     , form_no
+		     , effective_date
+		     , f.user_name form_user_name
+		     , f.department_name form_dept_name
+		     , current_position
+		     , promote_position
+		     , remark
+		     
+		     , pm.user_name pro_user_name
+		     , pd.department_name pro_department_name
+             , pp.position_name pro_position_name
+             , process_order
+		     , approval_role
+		     , p.status pro_status
+		     , approval_date
+		     , bookmark pro_bookmark
+		     
+		     , attachment_no
+		     , origin_name at_origin_name
+		     , change_name
+		     
+		  from approval a
+		  
+		  join member am on (a.user_no = am.user_no)
+		  join dept ad on (a.department_no = ad.department_no)
+		  join position ap using(position_no)
+		  
+		  left
+		  join form_transfer f using(approval_no)
+		  
+		  left
+		  join app_process p using(approval_no)
+		  join member pm on (p.user_no = pm.user_no)
+          join dept pd on (pm.department = pd.department_no)
+          join position pp on (pm.position = pp.position_no)
+		  
+		  left
+		  join attachment on (category_no = 1 and approval_no = ref_no)
+		  
+		 where approval_no = #{approvalNo}
+	</select>
+	
+	<select id="selectConsumeApp" resultMap="consumeResult">
+		select
+		       approval_no
+		     , complete_no
+		     , am.user_name
+		     , ad.department_name
+		     , ap.position_name
+		     , form
+		     , title
+		     , create_date
+		     , complete_date
+		     , current_order
+		     , final_order
+		     , approval_status
+		     
+		     , form_no
+		     , name
+		     , reason
+		     , unit
+		     , count
+		     , price
+		     
+		     , pm.user_name pro_user_name
+             , pd.department_name pro_department_name
+             , pp.position_name pro_position_name
+             , process_order
+		     , approval_role
+		     , p.status pro_status
+		     , approval_date
+		     , bookmark pro_bookmark
+		     
+		     , attachment_no
+		     , origin_name at_origin_name
+		     , change_name
+		     
+		  from approval a
+		  
+		  join member am on (a.user_no = am.user_no)
+		  join dept ad on (a.department_no = ad.department_no)
+		  join position ap using(position_no)
+		  
+		  left
+		  join form_consume f using(approval_no)
+		  
+		  left
+		  join app_process p using(approval_no)
+		  join member pm on (p.user_no = pm.user_no)
+          join dept pd on (pm.department = pd.department_no)
+          join position pp on (pm.position = pp.position_no)
+		  
+		  left
+		  join attachment on (category_no = 1 and approval_no = ref_no)
+		  
+		 where approval_no = #{approvalNo}
+	</select>
+	
+	<select id="selectCashApp" resultMap="cashResult">
+		select
+		       approval_no
+		     , complete_no
+		     , am.user_name
+		     , ad.department_name
+		     , ap.position_name
+		     , form
+		     , title
+		     , create_date
+		     , complete_date
+		     , current_order
+		     , final_order
+		     , approval_status
+		     
+		     , form_no
+		     , account
+		     , user_history
+		     , price
+		     , vat
+		     
+		     , pm.user_name pro_user_name
+     		 , pd.department_name pro_department_name
+     		 , pp.position_name pro_position_name
+		     , process_order
+		     , approval_role
+		     , p.status pro_status
+		     , approval_date
+		     , bookmark pro_bookmark
+		     
+		     , attachment_no
+		     , origin_name at_origin_name
+		     , change_name
+		     
+		  from approval a
+		  
+		  join member am on (a.user_no = am.user_no)
+		  join dept ad on (a.department_no = ad.department_no)
+		  join position ap using(position_no)
+		  
+		  left
+		  join form_cash f using(approval_no)
+		  
+		  left
+		  join app_process p using(approval_no)
+		  join member pm on (p.user_no = pm.user_no)
+		  join dept pd on (pm.department = pd.department_no)
+		  join position pp on (pm.position = pp.position_no)
+		  
+		  left
+		  join attachment on (category_no = 1 and approval_no = ref_no)
+		  
+		 where approval_no = #{approvalNo}
+	</select>
+	
+	<select id="g" resultMap="appChangeResult">
+		select
+		       change_no
+		     , user_name
+		     , department_name
+		     , position_name
+		     , content
+		     , create_date
+		     , role
+		  from app_change
+		  join member using(user_no)
+		  join dept on (department = department_no)
+		  join position on (position = position_no)
+		 where approval_no = #{approvalNo}
+	</select>
 </mapper>

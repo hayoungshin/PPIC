@@ -19,7 +19,6 @@
 		<typeAlias type="com.ppicachu.ppic.common.model.vo.Attachment" alias="Attachment"/>
 		<typeAlias type="com.ppicachu.ppic.work.model.vo.Work" alias="Work" />
 		<typeAlias type="com.ppicachu.ppic.board.model.vo.Report" alias="Report" />
-		<typeAlias type="com.ppicachu.ppic.approval.model.vo.Approval" alias="Approval" />
 		<typeAlias type="com.ppicachu.ppic.document.model.vo.Document" alias="Document" />
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Department" alias="Department" />
 		<typeAlias type="com.ppicachu.ppic.work.model.vo.Holiday" alias="Holiday" />
@@ -27,6 +26,14 @@
 		<typeAlias type="com.ppicachu.ppic.project.model.vo.Project" alias="Project" />
 		<typeAlias type="com.ppicachu.ppic.project.model.vo.Task" alias="Task" />
 		<typeAlias type="com.ppicachu.ppic.project.model.vo.ProjectParticipant" alias="ProjectParticipant" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.Approval" alias="Approval" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.FormDraft" alias="FormDraft" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.FormTransfer" alias="FormTransfer" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.FormConsume" alias="FormConsume" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.FormCash" alias="FormCash" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppProcess" alias="AppProcess" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppChange" alias="AppChange" />
+		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppDetail" alias="AppDetail" />
 	</typeAliases>
 
 	

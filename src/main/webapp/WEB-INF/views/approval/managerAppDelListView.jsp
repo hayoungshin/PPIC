@@ -97,6 +97,32 @@
 			
 			document.getElementById("allCkBox").checked = ckMode;
 		}
+		
+		// Ajax 복원 update
+		function rec(){
+			const bx = document.getElementsByClassName("ckBoxes");
+			let ckNoArr = [];
+			let ckedCnt = 0;
+			for(let i=0; i<bx.length; i++){
+				if(bx[i].checked){
+					ckedCnt += 1;
+					ckNoArr.push(bx[i].previousElementSibling.value);
+				}
+			}
+			if(ckedCnt == 0){
+				alert('선택된 결재문서가 없습니다.');
+				return false;
+			} else if(confirm(ckedCnt + '개의 결재문서를 복원하시겠습니까?')){
+				$.ajax({
+					url:"recoverApproval.ap?no=" + ckNoArr,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}
+				});
+			}
+		}
 	</script>
 	
 	<div class="content-2">
@@ -126,7 +152,10 @@
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
 			                <tr>
-			                    <td><input type="checkbox" class="ckBoxes" onclick="isAllCk();"></td>
+			                    <td>
+			                    	<input type="hidden" name="approvalNo" value="${ a.approvalNo }">
+			                    	<input type="checkbox" class="ckBoxes" onclick="isAllCk();">
+			                    </td>
 			                    <td>${ a.department }부</td>
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
@@ -164,7 +193,7 @@
         </table>
 
 		<div class="two-btn-area">
-            <button class="btnn-pp">복원</button>
+            <button class="btnn-pp" onclick="return rec();">복원</button>
             <button class="btnn-rd">영구 삭제</button>
         </div>
         <br clear="both">

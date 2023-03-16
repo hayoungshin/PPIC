@@ -99,9 +99,10 @@
 			// 승인필요 block
 			document.getElementById("switch-area").style = 'display:block';
 			
-			// 삭제버튼 mouseover
+			// 각 행
 			const tr = document.getElementsByClassName("trOver");
 			for(let i=0; i<tr.length; i++){
+				// 삭제버튼 mouseover
 				tr[i].addEventListener("mouseover", function(){
 					const writer = this.childNodes[3].childNodes[1].childNodes[1].innerHTML;
 					const btn = this.childNodes[3].childNodes[1].childNodes[3]
@@ -116,10 +117,17 @@
 						btn.style = 'position:absolute; top:-4px; left:25px; display:none;';
 					}
 				});
+				
+				// 상세 onclick
+				tr[i].addEventListener("click", function(){
+					const no = this.childNodes[1].value;
+					const form = this.childNodes[5].innerHTML;
+					location.href="detail.ap?no=" + no + "&form=" + form;
+				});
 			}
 		}
 		
-		// 승인필요
+		// Ajax 승인필요 select
 		function switchBox(){
 			const stch = document.getElementById("switch1")
 			if(stch.checked == true){ // 승인필요가 checked인 경우
@@ -191,6 +199,22 @@
 				}
 			});
 		}
+		
+		// Ajax 삭제 update
+		function del(){
+			if(confirm('결재문서를 삭제하시겠습니까?')){
+				const el = window.event.target;
+				const no = el.parentNode.parentNode.parentNode.childNodes[1].value;
+				$.ajax({
+					url:"deleteApproval.ap?no=" + no,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}
+				});
+			}
+		}
 	</script>
 	
 	<div class="content-2">
@@ -221,7 +245,7 @@
 			                    <td>
 			                    	<div style="position:relative;">
 			                    		<span>${ a.userName }</span>
-				                    	<div class="btnn-rd" style="position:absolute; top:-4px; left:25px; display:none;">삭제</div>
+				                    	<div class="btnn-rd" style="position:absolute; top:-4px; left:25px; display:none;" onclick="return del();">삭제</div>
 				                    </div>
 			                    </td>
 			                    <td>${ a.form }</td>

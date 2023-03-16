@@ -2,14 +2,10 @@ package com.ppicachu.ppic.approval.model.service;
 
 import java.util.ArrayList;
 
-import com.ppicachu.ppic.approval.model.vo.AppChange;
-import com.ppicachu.ppic.approval.model.vo.AppProcess;
+import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.Approval;
-import com.ppicachu.ppic.approval.model.vo.FormDraft;
-import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
-import com.ppicachu.ppic.member.model.vo.Member;
 
 public interface ApprovalService {
 	
@@ -20,16 +16,38 @@ public interface ApprovalService {
 	// 2. 개인-기안-완료 / 부서-완료 목록 페이지 조회 서비스 (페이징)
 	ArrayList<Approval> selectEdList(MyDept md, PageInfo pi);
 	
-	// 3. 개인-기안-임시저장
+	// 3. 개인-기안-임시저장 목록 페이지 조회 서비스 (페이징)
 	int selectTemListCount(MyDept md);
 	ArrayList<Approval> selectTemList(MyDept md, PageInfo pi);
 	
-	// 4. 전체관리 / 삭제관리
+	// 4. 전체관리 / 삭제관리 목록 페이지 조회 서비스 (페이징)
 	int selectMaListCount(MyDept md);
 	ArrayList<Approval> selectMaList(MyDept md, PageInfo pi);
 	
 	// 5. 중요 update
 	int updateBook(Approval a);
+	
+	// 6. 삭제 update
+	int deleteApproval(String[] noArr);
+	
+	// 7. 영구삭제 delete (임시저장, 삭제관리)
+	/*int removeApproval(String[] noArr);*/
+	
+	// 8. 복원 update
+	int recoverApproval(String[] noArr);
+	
+	// 9. 업무기안 select
+	AppDetail selectDraftApp(int approvalNo);
+	
+	// 10. 인사발령품의서 select
+	AppDetail selectTransferApp(int approvalNo);
+	
+	// 11. 비품신청서 select
+	AppDetail selectConsumeApp(int approvalNo);
+	
+	// 12. 지출결의서 select
+	AppDetail selectCashApp(int approvalNo);
+	
 	
 	/*
 	// 9.작성_회원 리스트 select (+회원명, 부서명, 직급명)
@@ -71,13 +89,5 @@ public interface ApprovalService {
 	// 19.검색_검색결과 select (+count) 제일 후순위 (시간 남으면 다중조건 검색)
 	int selectSearchListCount(); // 매개변수 검색조건
 	ArrayList<Approval> selectSearchList(PageInfo pi); // 매개변수 검색조건 추가
-	
-	// 21.삭제 update
-	int updateApproval(int approvalNo); // 고민해보기 삭제인데 update..?
-	
-	// 23.삭제관리_복원 update
-	
-	
-	// 24.삭제관리_영구삭제 delete
 	*/
 }

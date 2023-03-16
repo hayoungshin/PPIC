@@ -14,6 +14,7 @@ import lombok.ToString;
 public class Approval {
 	private int approvalNo;
 	private String department;
+	private String position;
 	private String userName;
 	private String form;
 	private String title;
