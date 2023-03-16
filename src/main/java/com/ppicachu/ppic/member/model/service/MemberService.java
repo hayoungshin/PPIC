@@ -20,7 +20,7 @@ public interface MemberService {
 	// 4. 마이페이지 회원정보 변경 서비스
 	int updateMember(Member m);
 	
-	// 로그인 대충
+	// 로그인
 	Member loginMember(Member m);
 	
 	// 5. 프로필이미지 변경용 서비스
@@ -36,5 +36,7 @@ public interface MemberService {
 	
 	// 9. 아이디 찾기 서비스
 	String findId(Member m);
+	// 10. 비밀번호 변경 서비스
+	int resetPwd(Member m);
 
 }

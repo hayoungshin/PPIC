@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,12 @@ import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.member.model.vo.Position;
 
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
+
 @Controller
 public class MemberController {
 	
@@ -27,6 +34,13 @@ public class MemberController {
 	private MemberService mService;
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
+	
+	/* coolSMS */
+	final DefaultMessageService messageService;
+    public MemberController() {
+        // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
+        this.messageService = NurigoApp.INSTANCE.initialize("NCS2WBT3OJTYP0YK", "LOFXEP8MBXUNG5SPTIXEWK8Q5RREU52D", "https://api.coolsms.co.kr");
+    }
 	
 	/* 단순 페이지 불러오기*/
 	
@@ -76,18 +90,16 @@ public class MemberController {
 	}
 	
 	@RequestMapping("login.me")
-	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv) {
+	public String loginMember(Member m, HttpSession session) {
 		Member loginUser = mService.loginMember(m);
 		
 		if(loginUser != null && bcryptPasswordEncoder.matches(m.getUserPwd(), loginUser.getUserPwd())) {
 			session.setAttribute("loginUser", loginUser);
-			mv.setViewName("common/Home");
+			return "common/Home";
 		} else {
-			mv.addObject("errorMsg", "로그인 실패");
-			mv.setViewName("common/errorPage");
+			session.setAttribute("alertMsg", "로그인에 실패하였습니다.");
+			return "redirect:/";
 		}
-		
-		return mv;
 	}
 	
 	/* 회원정보 update(세션 out 됨) */
@@ -193,6 +205,61 @@ public class MemberController {
 		} else {
 			session.setAttribute("alertMsg", "일치하는 회원정보가 없습니다.");
 			return "redirect:findIdForm.me";
+		}
+	}
+	/**
+	 * @return 비밀번호 변경 페이지 (아이디 확인)
+	 */
+	@RequestMapping("resetPwdIdCheckForm.me")
+	public String resetPwdIdCheckForm() {
+		return "member/resetPwdIdCheckForm";
+	}
+	@RequestMapping("resetPwdIdCheck.me")
+	public String resetPwdIdCheck(String userId, HttpSession session, Model model) {
+		Member checkMem = new Member();
+		checkMem.setUserId(userId);
+		Member m = mService.loginMember(checkMem);
+		if(m != null) {
+			model.addAttribute("m", m);
+			return "member/resetPwdCertificationForm";
+		} else {
+			session.setAttribute("alertMsg", "일치하는 회원정보가 없습니다.");
+			return "redirect:resetPwdIdCheckForm.me";
+		}
+	}
+	// coolSMS 인증번호
+	@ResponseBody
+	@PostMapping("sendMsg.me")
+    public int ajaxSendMessage(String phone, Model model) {
+		int ranNum = (int)(Math.random() * 900000 + 100000);
+		/*
+        Message message = new Message();
+
+        message.setFrom("01043775019");
+        message.setTo(phone);
+        message.setText("[PPIC] 본인확인 인증번호 [" + ranNum + "]입니다.");
+
+        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        System.out.println(response);
+		*/
+		return ranNum;
+    }
+	@RequestMapping("resetPwdForm.me")
+	public String resetPwdForm(int userNo, Model model) {
+		model.addAttribute("userNo", userNo);
+		return "member/resetPwdForm";
+	}
+	@RequestMapping("resetPwd.me")
+	public String resetPwd(Member m, HttpSession session, Model model) {
+		String encPwd = bcryptPasswordEncoder.encode(m.getUserPwd());
+		m.setUserPwd(encPwd);
+		int result = mService.resetPwd(m);
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 비밀번호가 변경되었습니다.");
+			return "redirect:/";
+		} else {
+			model.addAttribute("errorMsg", "비밀번호 변경 실패");
+			return "common/errorPage";
 		}
 	}
 	

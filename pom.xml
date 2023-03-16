@@ -228,6 +228,14 @@
 		    <artifactId>jackson-mapper-asl</artifactId>
 		    <version>1.9.13</version>
 		</dependency>
+		
+		<!-- coolSMS -->
+		<dependency>
+		    <groupId>net.nurigo</groupId>
+		    <artifactId>sdk</artifactId>
+		    <version>4.2.9</version>
+		</dependency>
+		
 		       
 	</dependencies>
     <build>
