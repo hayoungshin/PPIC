@@ -35,8 +35,6 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.selectMember(sqlSession, userNo);
 	}
 
-	
-	// 로그인 대충
 	@Override
 	public Member loginMember(Member m) {
 		return mDao.loginMember(sqlSession, m);
@@ -70,6 +68,11 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public String findId(Member m) {
 		return mDao.findId(sqlSession, m);
+	}
+
+	@Override
+	public int resetPwd(Member m) {
+		return mDao.resetPwd(sqlSession, m);
 	}
 
 

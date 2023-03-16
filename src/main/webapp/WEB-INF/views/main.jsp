@@ -81,7 +81,7 @@
         <table>
             <tr>
                 <td>
-                    <a href="findIdForm.me">아이디</a> · <a href="findPwdIdCheckForm.me">비밀번호 찾기</a>
+                    <a href="findIdForm.me">아이디</a> · <a href="resetPwdIdCheckForm.me">비밀번호 찾기</a>
                 </td>
                 <td style="padding-left:100px;">
                     <a href="idCheckForm.me">회원가입</a>
