@@ -27,4 +27,7 @@ public interface ChatService {
 	// 6. 채팅생성
 	int insertChatRoom(HashMap<String, Integer> map);
 	int insertParticipant(ArrayList<Integer> checkNo);
+	
+	// 7. 채팅방 화면
+	ArrayList<Chat> selectChat(int roomNo);
 }

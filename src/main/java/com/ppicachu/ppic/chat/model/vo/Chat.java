@@ -31,5 +31,7 @@ public class Chat {
 	private int participantNo;
 	private String profileImg;
 	private int groupCount;
+	private int sendNo;
+	private String sendName;
 	private ArrayList<Member> memList;
 }

@@ -108,8 +108,7 @@ public class ChatController {
 		list1.add(userNo);
 		list1.add(clickNo);
 		int result2 = cService.insertParticipant(list1);
-		if(result1 > 0 && result2 > 0) {
-			/* ArrayList<Chat> list2 = cService.selectChatList(); */
-		}
+		ArrayList<Chat> list2 = cService.selectChat(result1);
+		System.out.println(list2);
 	}
 }

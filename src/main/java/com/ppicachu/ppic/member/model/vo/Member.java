@@ -36,5 +36,5 @@ public class Member {
 	
 	private String chatLike;
 	private int roomNo;
-
+	private int lastreadChat;
 }

@@ -60,4 +60,9 @@ public class ChatServiceImpl implements ChatService{
 		return cDao.insertParticipant(sqlSession, checkNo);
 	}
 
+	@Override
+	public ArrayList<Chat> selectChat(int roomNo) {
+		return cDao.selectChat(sqlSession, roomNo);
+	}
+
 }

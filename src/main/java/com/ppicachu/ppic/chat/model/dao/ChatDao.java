@@ -41,8 +41,12 @@ public class ChatDao {
 		return Integer.valueOf(String.valueOf(map.get("roomNo")));
 	}
 	
-	 public int insertParticipant(SqlSessionTemplate sqlSession,
-	 ArrayList<Integer> checkNo) { return
-	 sqlSession.insert("chatMapper.insertParticipant", checkNo); }
+	 public int insertParticipant(SqlSessionTemplate sqlSession, ArrayList<Integer> checkNo) { 
+		 return sqlSession.insert("chatMapper.insertParticipant", checkNo); 
+	 }
+	 
+	 public ArrayList<Chat> selectChat(SqlSessionTemplate sqlSession, int roomNo){
+		 return (ArrayList)sqlSession.selectList("chatMapper.selectChat", roomNo); 
+	 }
 	 
 }

@@ -9,6 +9,10 @@
 		<result column ="chat_content" property="chatContent" />
 		<result column ="send_date" property="sendDate" />
 		<result column ="group_count" property="groupCount" />
+		<result column ="send_no" property="sendNo" />
+		<result column ="chat_no" property="chatNo" />
+		<result column ="not_read" property="notRead" />
+		<result column ="send_name" property="sendName" />
 		<collection property="memList" resultMap="memberResult" />
 	</resultMap>
 	
@@ -23,6 +27,7 @@
 		<result column ="conn_sta" property="connSta" />
 		<result column ="chat_like" property="chatLike" />
 		<result column = "room_no" property="roomNo"/>
+		<result column = "lastread_chat" property="lastreadChat"/>
 	</resultMap>
 
 	<update id="updateConn">
@@ -168,5 +173,25 @@
 		  )
 	  	</foreach>
 	</insert>
+	
+	<select id="selectChat" resultMap="chatResult">
+		select 
+		       r.room_no
+		     , room_name
+		     , send_no
+		     , chat_no
+		     , chat_content
+		     , not_read
+		     , m.user_name "send_name"
+		     , p.user_no
+		     , mb.user_name
+		     , lastread_chat
+		  from chatroom r
+		  left join chat c on(r.room_no = c.room_no)
+		  left join member m on(send_no = user_no)
+		  join participant p on(r.room_no = p.room_no)
+		  join member mb on(p.user_no = mb.user_no)
+		  where r.room_no = #{roomNo}
+	</select>
 	
 </mapper>
