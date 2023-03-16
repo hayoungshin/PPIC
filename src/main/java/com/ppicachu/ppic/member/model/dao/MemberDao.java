@@ -53,5 +53,9 @@ public class MemberDao {
 	public String findId(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.selectOne("memberMapper.findId", m);
 	}
+	
+	public int resetPwd(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.resetPwd", m);
+	}
 
 }

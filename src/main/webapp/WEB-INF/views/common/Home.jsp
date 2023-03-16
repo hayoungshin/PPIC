@@ -44,40 +44,36 @@
         <div id="content" >
         
 			
-			
             <!-- 출퇴근 기록 -->
 			<div class="workRecord" >
 				<div><h4 style="font-weight:bold">근무체크</h4></div>
 				<div id="workRecord">
-					<!-- 
-					<table id="workInfo" >
-	                  <tr>
-	                     <th colspan="2">00월 00일(0)</th>
-	                  </tr>
-	                  <tr>
-	                     <th id="clock" width="130" ></th>
-	                     <th><div id="worktag">근무중</div></th>
-	                  </tr>
-	               </table>
-	               <table id="work"  align="center">
-	                  <tr align="center">
-	                     <td width="150px" height="100" >
-	                        <img src="resources/icons/working.png" >
-	                     </td>
-	                     <td width="150px" >
-	                        <img src="resources/icons/office-chair.png">
-	                     </td>
-	                  </tr>
-	                  <tr align="center">
-	                     <td>출근하기</td>
-	                     <td>퇴근하기</td>
-	                  </tr>
-	                  <tr align="center">
-	                     <td>00:00:00</td>
-	                     <td>00:00:00</td>
-	                  </tr>
-	               </table> 
-	                -->
+					<table style="margin-left:10px;">
+						<tr>
+							<th id="workDate" style="font-size:20px;"> </th>
+						</tr>
+						<tr>
+							<th style="font-size:20px;"><div id='clock'></div></th>
+						</tr>
+					</table>
+					<table  id='work'  align='center'>
+						<tr align='center'>
+							<td width='150px' height='100'>
+								<img onclick='workIn();' src='resources/icons/working.png'>
+							</td>
+							<td width='150px'>
+								<img onclick='workOut();' src='resources/icons/office-chair.png'>
+							</td>
+						</tr>
+						<tr align='center'>
+		                    <td>출근하기</td>
+		                    <td>퇴근하기</td></tr>
+	                    <tr align='center'>
+		                    <td id="workInTime"></td>
+		                    <td id="workOutTime"></td>
+	                    </tr>
+                    </table>
+							
 				</div>
 			</div>
 			
@@ -85,7 +81,7 @@
 			
 				$(function(){
 					selectWorkRecord();
-					setInterval(selectWorkRecord, 1000); //1초
+					init();
 				});
 				
 				function selectWorkRecord(){
@@ -94,34 +90,14 @@
 						data:{no:${loginUser.userNo}},
 						success:function(map){
 							
+							let date =map.w.workDate
+							let workIn =map.w.workIn
+							let workOut = map.w.workOut
 							
-							let value=""
+							$("#workDate").html(date);
+							$("#workInTime").html(workIn);
+							$("#workOutTime").html(workOut);
 							
-							value += "<table>"
-									+	"<tr>" 
-									+ 		"<th colspan='2'>" + map.w.workDate + "</th>"
-									+ 	"</tr>"
-									+	"<tr>" 
-									+ 		"<th>" + "<div id='clock'>"+ getClock() + "</div>" + "</th>"
-									+		"<th>" + "<div id='worktag'>" + "근무중" + "</div>" + "</th>"
-									+ 	"</tr>"
-									+ "</table>"
-									+ "<table  id='work'  align='center'>"
-									+	"<tr align='center'>"
-									+		"<td width='150px' height='100'>" + "<img src='resources/icons/working.png'>" + "</td>"
-									+		"<td width='150px'>" + "<img src='resources/icons/office-chair.png'>" + "</td>"
-									+	"</tr>"
-									+   "<tr align='center'>"
-				                    +   	"<td>" + "출근하기" + "</td>"
-				                    +   	"<td>" + "퇴근하기" + "</td>"
-				                    +	"</tr>"
-				                    +   "<tr align='center'>"
-				                    +   	"<td>" + map.w.workIn + "</td>"
-				                    +   	"<td>" + map.w.workOut + "</td>"
-				                    +	"</tr>"
-				                    + "</table>";
-							
-							$("#workRecord").html(value);
 						},error:function(){
 							console.log("출근기록조회실패")
 						}
@@ -129,8 +105,6 @@
 					
 				}
 				
-				
-			
 				function getClock() {
 					
 				    var date = new Date();
@@ -149,10 +123,47 @@
 				    if (("" + seconds).length == 1) {
 				    	seconds = "0" + seconds;
 				    }
-				    //document.getElementById("clock").innerHTML =hours + ":" + minutes + ":" + seconds;
-				    return hours + ":" + minutes + ":" + seconds;
+				    
+				    document.getElementById("clock").innerHTML =hours + ":" + minutes + ":" + seconds;
+				    //return hours + ":" + minutes + ":" + seconds;
+				    
 				}
-	
+				
+				function init() {
+					getClock();
+				    setInterval(getClock, 1000); //1초
+				}
+				
+				function workIn(){
+					
+					$.ajax({
+						url:"workIn.wo",
+						data:{no:${loginUser.userNo}},
+						success:function(){
+						},error:function(){
+						}
+					});
+					
+					location.reload();
+					alert("${loginUser.userName}님 환영합니다.");
+					
+				}
+				
+				
+				function workOut(){
+					$.ajax({
+						url:"workOut.wo",
+						data:{no:${loginUser.userNo}},
+						success:function(){
+						},error:function(){
+						}
+					});
+					
+					location.reload();
+					
+					alert("${loginUser.userName}님 수고하셨습니다.");
+					
+				}
 				
 			</script>
 

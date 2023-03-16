@@ -22,7 +22,7 @@
     }
 
    
-    label{font-size:18px;margin:5px 50px 30px 5px;}
+    .member label, #deleteForm label{font-size:18px;margin:5px 50px 30px 5px;}
     select{width: 150px; height: 30px;}
     .profile{width: 100%;height: 110px;}
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.vo.Holiday;
+import com.ppicachu.ppic.work.model.vo.HolidayApply;
 import com.ppicachu.ppic.work.model.vo.Work;
 
 @Repository
@@ -31,5 +32,26 @@ public class WorkDao {
 	public Work selectWorkRecord(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.selectOne("workMapper.selectWorkRecor", userNo);
 	}
-
+	
+	public int updateWorkIn(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkIn", userNo);
+	}
+	
+	public int updateWorkOut(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkOut", userNo);
+	}
+	
+//	public ArrayList<HolidayApply> selectMemberHoliday(SqlSessionTemplate sqlSession, int userNo ) {
+//		return (ArrayList)sqlSession.selectList("workMapper.selectMemberHoliday", userNo);
+//	}
+	
+	public int holiApplyEnroll(SqlSessionTemplate sqlSession, Holiday h) {
+		return sqlSession.insert("workMapper.holiApplyEnroll", h);
+				
+	}
+	
+	public ArrayList<Holiday> selectHoliList(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.selectHoliList", userNo);
+	}
+	
 }

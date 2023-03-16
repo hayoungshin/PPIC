@@ -21,6 +21,5 @@ public interface ChatService {
 	ArrayList<Member> searchName(Member m);
 	
 	// 5. 채팅목록
-	ArrayList<Chat> selectChatRoomList(int userNo);
-	ArrayList<Chat> selectChatMemList(int userNo);
+	ArrayList<Chat> selectChatRoomList(Chat c);
 }

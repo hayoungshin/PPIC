@@ -34,6 +34,7 @@
 		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppProcess" alias="AppProcess" />
 		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppChange" alias="AppChange" />
 		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppDetail" alias="AppDetail" />
+		<typeAlias type="com.ppicachu.ppic.work.model.vo.HolidayApply" alias="HolidayApply" />
 	</typeAliases>
 
 	

@@ -29,20 +29,21 @@
 	
 	
 	.holiday{
-	    width: 50%;
+	    width: 49%;
 	    margin-top : 50px;
 	}
 	
 	.holidayList{
 	    
-	    width:100%;
+	    width:98%;
 	    height: 400px;
 	    padding: 2px;
+	    background : rightgray;
 	   
 	}
 	
 	.holidayList table {
-		width:100%;
+		width:95%;
 		margin-left:20px;
 		font-size : 20px;
 	}
@@ -61,6 +62,14 @@
 	    margin-left: 6px;
 	}
 	
+	#listnone{font-size: 20px;}
+	#none{margin-top:50px;}
+	#sort{margin-top:20px;}
+	#so1{margin-bottom :5px;}
+	
+	.holidayList {overflow:auto; height:500px;}
+    .holidayList::-webkit-scrollbar { width: 8px; }
+	.holidayList::-webkit-scrollbar-thumb {background: lightgray; border-radius: 10px;}
 </style>
 </head>
 <body>
@@ -101,32 +110,34 @@
 			
 			<br>
 	
-			
-			
-            
-            <!-- 연차 -->
             <div class="holiday" style="float:left">
                 <h5 style="margin-bottom:30px">휴가등록</h5>
-                <form>
-	                <select style="width:150px;">
-	                    <option> 연차</option>
-	                    <option> 반차</option>
+                <form action="holiEnroll.ho" method="post">
+                	<input type="hidden" value="${loginUser.userNo }" name="userNo">
+	                <select id="type" name="type" onchange="changehtml();" style="width:150px;">
+	                    <option value="연차"> 연차</option>
+	                    <option value="반차"> 반차</option>
 	                </select>
 	                <br>
+	                <div id="sort"></div>
 	                <br>
+
 	
 	                <label>휴가일정</label> <br>
-	                <input type="text" class="H_date" name="date"> &nbsp;&nbsp;-&nbsp;&nbsp; <input type="text" class="H_date" name="date">
-					
+	                <input type="date" class="H_start" name="start"> &nbsp;&nbsp;-&nbsp;&nbsp; 
+	                <input type="date" class="H_finish" name="finish">
 					<br>
 	                <br>
 	                
 					<label>휴가기간</label> <br>
-	                <input type="number" class="H_date" name="">
+					<div id="datea">
+						<input  type="number" class="H_date" name="datea" >
+					</div>
+	                
 	                
 	                <br><br>
 	                <label>사유</label> <br>
-	                <textarea  cols="80" rows="5" style="resize:none;"></textarea>
+	                <textarea  cols="80" rows="5" style="resize:none;" id="reason" name="reason"></textarea>
 	
 	                <br><br>
 	                <div style="margin-left:250px">
@@ -135,74 +146,135 @@
                 </form>
             </div>
 
-            <!-- 반차 -->
-            <!-- <div class="holidayinsert" style="float:left">
-                <h5 style="margin-bottom:20px">휴가등록</h5>
-                
-                <select>
-                    <option> 연차</option>
-                    <option> 반차</option>
-                </select>
-                <br>
-                <br>
-
-                <label>휴가일정</label> <br>
-                <input type="text" class="H_date" name="date"> &nbsp;&nbsp;-&nbsp;&nbsp; <input type="text" class="H_date" name="date">
-
-                <br><br>
-                <input type="radio" > 오전 <input type="radio" > 오후 <br>
-                <input type="text" class="H_date" name="date"> &nbsp;&nbsp;-&nbsp;&nbsp; <input type="text" class="H_date" name="date">
-
-                <br><br>
-                <label>사유</label> <br>
-                <textarea></textarea>
-
-                <br><br>
-                <button>휴가신청</button>
-            </div>
-
-            <div class="holidaylist" style="float:left">
-                <h5>예정휴가</h5>
-                <div>
-
-                </div>
-            </div> -->
-
+            
             <div class="holiday" style="float:left">
                 <h5 style="margin-bottom:20px">예정휴가</h5>
                 
                 <div class="holidayList">
-
-                    <table  >
-                        <tr height="100px">
-                            <td width="100px">
-                            	<img src="resources/icons/vacations.png" width="90%">
-							</td>
-                            <td>연차 | 2023.03.20 - 2023.03.20</td>
-                            <td><div class="holidaystatus" align="center">승인완료</div></td>
-                        </tr>
-                         <tr height="100px">
-                            <td width="100px">
-                            	<img src="resources/icons/vacations.png" width="90%">
-							</td>
-                            <td>연차 | 2023.03.20 - 2023.03.20</td>
-                            <td><div class="holidaystatus" align="center">승인완료</div></td>
-                        </tr>
-                         <tr height="100px">
-                            <td width="100px">
-                            	<img src="resources/icons/vacations.png" width="90%">
-							</td>
-                            <td>연차 | 2023.03.20 - 2023.03.20</td>
-                            <td><div class="holidaystatus" align="center">승인완료</div></td>
-                        </tr>
-                    </table>
-
+                    
                 </div>
             </div>
-			 
 			
-			  
-
+			<script>
+				$(function(){
+					selectHoliList();
+				});
+				
+				function selectHoliList(){
+					$.ajax({
+						url:"selectHoliList.ho",
+						data:{no:${loginUser.userNo}},
+						success:function(map){
+							console.log("정보조회성공");
+							
+							let value=""
+							if(map.list.length == 0 ){
+								value += "<div id='listnone' align='center'>"
+									+		"<img id='none' src='resources/icons/smile.png' width='200'>" + "<br>"
+									+		"휴가 목록이 없습니다";
+									+	 "</div>"
+							}else {
+								for(let i=0; i<map.list.length; i++){
+									value += "<table >"
+										+	"<tr id='holilist'>" 
+										+		"<td width='100px'>"
+				                        +    		"<img src='resources/icons/vacations.png' width='90%'>"
+										+		"</td>"
+					                    +       "<td>" + map.list[i].type  + "|" +  map.list[i].start + "-" +  map.list[i].finish + "</td>"
+					                    +       "<td>"
+					                    +			"<div class='holidaystatus' id='status' name='status' align='center'>" + map.list[i].status + "</div>"
+					                    +		"</td>"
+										+ 	"</tr>"
+					                    + "</table>";
+									}
+							}	
+						
+							$(".holidayList").html(value);
+							
+							
+							
+						},error:function(){
+							console.log("휴가기록조회실패")
+						}
+					});
+					
+				};
+				
+				/*
+				$(function(){
+					$(document).on("click","#holilist",function(){ 
+						
+						var status= document.getElementById('status');
+						
+						var sta = $(".holidaystatus").text();
+						
+						console.log(status.innerText);
+						console.log(sta);
+						if( status =='승인'){
+							alert("!");
+						}else{
+							alert("?");
+						}
+						
+					})
+				});
+				*/
+				
+				$(function(){
+					var a = $("#type option:selected").val();
+					console.log(a);
+				})
+				
+				function changehtml(){
+					var type = document.getElementById('type').value;
+					var sort = document.getElementById('sort');
+					var datea = document.getElementById('datea');
+					
+					if(type=="연차"){
+						console.log("연차");
+						show.innerHTML ='<input type="text" title="텍스트입력" />';
+					}else if(type=="반차") {
+						console.log("반차");
+						sort.innerHTML ='<input type="radio" name="sort" id="so1" value="오전" checked="checked"/>오전(09:00 - 13:00) <br> <input type="radio" id="so2" name="sort" value="오후" />오후(13:00 - 18:00)';
+						datea.innerHTML ='<input id="datea" type="number" class="H_date" name="datea" value=0.5 readonly>';
+					}
+				}
+				
+				
+			</script>
+			
+			<!-- 신청한 연차 삭제하기  -->
+			<div class="modal" id="deleteForm">
+        		<div class="modal-dialog">
+	           		<div class="modal-content">
+	            
+		                <!-- Modal Header -->
+		                <div class="modal-header">
+		                <h4 class="modal-titlQSe">회원탈퇴</h4>
+		                <button type="button" class="close" data-dismiss="modal">&times;</button>
+		                </div>
+                
+		                <!-- Modal body -->
+		                <div class="modal-body" align="center">
+		                
+		                    <b>
+					                        탈퇴 후 복구가 불가능합니다. <br>   
+					                        정말로 탈퇴 하시겠습니까?
+		                    </b>
+		
+		                    <form action="delete.me" method="post">
+		                        비밀번호 : 
+		                        <input type="password" name="userPwd" required>
+		                        <input type="hidden" name="userId" value="${ loginUser.userId }">
+		
+		                        <button type="submit" class="btn btn-danger">탈퇴하기</button>
+		                    </form>
+		
+		                </div>
+	            	</div>
+	        	</div>
+	    	</div>
+			
         </div>
     </div>	
 

@@ -15,9 +15,18 @@
 		<result column ="status" property="status" />
 	</resultMap>
 	
+	<resultMap id="holiResult" type="HolidayApply">
+		<id column="holi_no" property="holiNo" />
+		<result column="user_no" property="userNo" />
+		<result column ="h_give" property="give" />
+		<result column ="h_date" property="date" />
+		<result column ="h_cause" property="cause" />
+		<result column ="h_remain" property="remain" />
+	</resultMap>
+	
 	<resultMap id="holidayResult2" type="Member">
 		<id column="user_no" property="userNo" />
-		<result column ="user_name" property="userName" />
+		<result column ="user_name" property="userName" />	
 		<result column ="give_day" property="giveDay" />
 		<result column ="use_day" property="useDay" />
 		<result column ="add_day" property="addDay" />
@@ -83,7 +92,7 @@
 	
 	<insert id="completeWorkInsert">
 		Insert into work (work_no, user_no, work_date, work_in, work_out, work_time, status )
-			     select seq_wno.nextval, m.user_no,to_date(sysdate,'YYYY-MM-DD hh24:mi:SS'),null, null, null, '결근'
+			     select seq_wno.nextval, m.user_no,to_char(sysdate,'YYYY-MM-DD hh24:mi:SS'),null, null, null, '결근'
 			     from member m
 			     where m.status ='Y'
 	</insert>
@@ -92,7 +101,7 @@
 		select 
 		       work_no
 		     , user_name
-		     , to_char(work_date, 'yyyy/mm/dd') as work_date
+		     , to_char(work_date, 'YYYY"년"MM"월"DD"일"' ) as work_date
 		     , to_char(work_in, 'hh24:MI') as work_in
 		     , to_char(work_out,'hh24:MI') as work_out
 		     , work_time
@@ -101,5 +110,73 @@
 		  join member m on (w.user_no = m.user_no)
 		  where w.user_no = #{userNo}
 		    AND WORK_DATE = to_char(sysdate,'YYYY-MM-DD')
+	</select>
+	
+	<update id="updateWorkIn">
+		update 
+		       work
+		   set work_in = sysdate
+		 where USER_NO = #{userNo}
+		   AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD')
+	</update>
+	
+	<update id="updateWorkOut">
+		update 
+		       work
+		   set work_out = sysdate
+		     , work_time = (select 
+		                           ROUND(((work_out-work_in)*24)-1) 
+		                      FROM work 
+		                     where  USER_NO = 3
+		                     AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD'))
+		 where  USER_NO = #{userNo}
+		  AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD')
+	</update>
+	
+	<select id="selectMemberHoliday" resultMap="holiResult">
+		select 
+		       holi_no
+		     , h_give
+		     , h_date
+		     , h_cause
+		     , h_remain
+		  from holiday
+		  where user_no=#{userNo}
+	</select>
+	
+	<insert id="holiApplyEnroll">
+		insert 
+		  into holiday_apply
+		     ( holiday_no
+		     , user_no
+		     , h_type
+		     , h_sort
+		     , h_start
+		     , h_finish
+		     , h_date
+		     , h_reason
+		     ) 
+		 values
+		      ( SEQ_HANO.nextval
+		      , #{userNo}
+		      , #{type}
+		      , #{sort}
+		      , #{start}
+		      , #{finish}
+		      , #{datea}
+		      , #{reason}
+		      )
+	</insert>
+	
+	<select id="selectHoliList" resultMap="holidayResult1">
+		select
+		       holiday_no
+		     , h_type
+		     , h_sort
+		     , h_start
+		     , h_finish
+		     , status
+		  from holiday_apply
+		 where user_no=#{userNo}
 	</select>
 </mapper>

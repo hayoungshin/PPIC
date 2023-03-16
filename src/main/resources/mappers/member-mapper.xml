@@ -165,5 +165,11 @@
 		 where user_name = #{ userName }
 		   and employee_no = #{ employeeNo }
 	</select>
+	<update id="resetPwd">
+		update
+			   member
+		   set user_pwd = #{ userPwd }
+		 where user_no = #{ userNo }
+	</update>
 
 </mapper>

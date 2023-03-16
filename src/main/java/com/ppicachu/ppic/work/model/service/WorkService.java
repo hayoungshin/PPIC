@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.vo.Holiday;
+import com.ppicachu.ppic.work.model.vo.HolidayApply;
 import com.ppicachu.ppic.work.model.vo.Work;
 
 
@@ -24,4 +25,19 @@ public interface WorkService {
 		
 	// 5. 출퇴근기록 조회 서비스 (home.jsp)
 		Work selectWorkRecord(int userNo);
+	
+	// 6. 출근등록 서비스 
+		int updateWorkIn(int userNo);
+		
+	// 7. 퇴근등록 서비스 
+		int updateWorkOut(int userNo);
+		
+	// 8. 사원의 휴가 정보 조회 서비스 
+		//ArrayList<HolidayApply> selectMemberHoliday(int userNo);
+	
+	// 9. 사원의 휴가 신청 서비스
+		int holiApplyEnroll(Holiday h);
+	
+	// 10. 사원의 휴가리스트 조회 서비스 
+		ArrayList<Holiday> selectHoliList(int userNo);
 }

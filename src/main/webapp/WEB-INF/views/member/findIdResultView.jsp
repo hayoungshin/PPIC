@@ -51,7 +51,7 @@
         <br>
         
         <button class="btn-gray" onclick="location.href='${ pageContext.request.contextPath }'">로그인 하기</button>
-        <button onclick="location.href='findPwdIdCheckForm.me'">비밀번호 찾기</button>
+        <button onclick="location.href='resetPwdIdCheckForm.me'">비밀번호 찾기</button>
     
     </div>
 

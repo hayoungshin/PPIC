@@ -1,5 +1,9 @@
 package com.ppicachu.ppic.chat.model.vo;
 
+import java.util.ArrayList;
+
+import com.ppicachu.ppic.member.model.vo.Member;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,4 +31,5 @@ public class Chat {
 	private int participantNo;
 	private String profileImg;
 	private int groupCount;
+	private ArrayList<Member> memList;
 }

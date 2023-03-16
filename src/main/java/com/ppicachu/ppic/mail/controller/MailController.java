@@ -1,15 +1,24 @@
 package com.ppicachu.ppic.mail.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ppicachu.ppic.mail.model.service.MailService;
-import com.ppicachu.ppic.mail.model.vo.Mail;
+import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.service.MemberServiceImpl;
+import com.ppicachu.ppic.member.model.vo.Member;
 
 @Controller
 public class MailController {
 	
+	@Autowired
+	private MailService mService;
+	@Autowired
+	private MemberService memService;
 	
 	@RequestMapping("recieveList.ml")
 	public String recieveMailList() {
@@ -22,7 +31,9 @@ public class MailController {
 	}
 	
 	@RequestMapping("sendForm.ml")
-	public String sendMailForm() {
+	public String sendMailForm(Model model) {
+		ArrayList<Member> memList = memService.selectListMember();
+		model.addAttribute("memList", memList);
 		return "mail/sendMailForm";
 	}
 	

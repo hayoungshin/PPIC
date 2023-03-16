@@ -18,29 +18,43 @@
 <resultMap id="proParticipantsResult" type="ProjectParticipant">
 	<result column="project_no" property="projectNo"/>
 	<result column="task_no" property="taskNo"/>
-	<result column="department_no" property="departmentNo"/>
-	<result column="user_no" property="userNo"/>
+	<result column="department_name" property="departmentName"/>
+	<result column="user_name" property="userName"/>
 </resultMap>
 
 <select id="selectProjectList" resultMap="projectResult">
 	select 	
 		   project_no
-		 , project_manager
+		 , m.user_name "project_manager"
 		 , project_name
 		 , start_date
 		 , end_date
 		 , detail
 		 , create_date
 		 , modify_date
-		 , delete_status
-		 , user_no
-		 , department_no
-      from project
-      left join p_participant using (project_no)
-     where user_no = #{userNo}
+		 , user_name
+		 , department_name
+      from project pj
+      left join p_participant pp using (project_no)
+      left join dept d using (department_no)
+      join member m on (pj.project_manager = m.user_no)
+     where pp.user_no = #{userNo}
        and delete_status = 'N'
      order
         by create_date desc
+</select>
+
+<select id="selectProjectParticipants" resultMap="proParticipantsResult">
+	select
+	        project_no
+	      , task_no
+	      , d.department_name "department_name"
+	      , m.user_name "user_name"
+	  from p_participant pp
+	  join project p using (project_no)
+	  left join member m using (user_no)
+	  left join dept d using (department_no)
+	 where project_no = #{projectNo}
 </select>
 
 </mapper>

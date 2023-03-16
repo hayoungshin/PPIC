@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ppicachu.ppic.project.model.dao.ProjectDao;
 import com.ppicachu.ppic.project.model.vo.Project;
+import com.ppicachu.ppic.project.model.vo.ProjectParticipant;
 import com.ppicachu.ppic.project.model.vo.Task;
 
 @Service
@@ -24,6 +25,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return pDao.selectProjectList(sqlSession, userNo);
 	}
 
+	@Override
+	public ArrayList<ProjectParticipant> selectProjectParticipants(int projectNo) {
+		return pDao.selectProjectParticipants(sqlSession, projectNo);
+	}
+	
 	@Override
 	public ArrayList<Task> selectTaskList(Project p) {
 		return null; 
