@@ -18,6 +18,7 @@ import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.service.WorkService;
 import com.ppicachu.ppic.work.model.vo.Holiday;
+import com.ppicachu.ppic.work.model.vo.HolidayApply;
 import com.ppicachu.ppic.work.model.vo.Work;
 
 @Controller
@@ -52,6 +53,7 @@ public class WorkController {
 	/* 근무_휴가현황 */
 	@RequestMapping("holiInfo.ho")
 	public String holiInfo() {
+		
 		return "work/holidayInfoView";
 	}
 	
@@ -59,6 +61,14 @@ public class WorkController {
 	@RequestMapping("holiApply.ho")
 	public String holidayEnroll() {
 		return "work/holidayEnrollForm";
+	}
+	
+	@RequestMapping("holiEnroll.ho")
+	public String holiApplyEnroll(Holiday h) {
+		
+		int result = wService.holiApplyEnroll(h);
+		
+		return "redirect:holiApply.ho";		
 	}
 	
 	/* 근무_구성원근무 */
@@ -113,6 +123,7 @@ public class WorkController {
 		return "work/holidayApproveView";
 	}
 	
+	// home 출근기록 조회하기 
 	@ResponseBody
 	@RequestMapping(value="workRecord.wo", produces="application/json; charset=utf-8")
 	public String ajaxSelectWork(int no, Model model) {
@@ -124,10 +135,37 @@ public class WorkController {
       
 	  return new Gson().toJson(map);
 	}
+	
+	// home 출근등록하기 
+	@ResponseBody
+	@RequestMapping(value="workIn.wo", produces="application/json; charset=utf-8" )
+	public void ajaxUpdateWorkIn(int no){
+		
+		int result = wService.updateWorkIn(no);
+	}
 
-	
-	
-	
+	// home 퇴근등록하기 
+	@ResponseBody
+	@RequestMapping(value="workOut.wo", produces="application/json; charset=utf-8" )
+	public void ajaxUpdateWorkOut(int no){
+		
+		int result = wService.updateWorkOut(no);
+		
+		}
+
+	@ResponseBody
+	@RequestMapping(value="selectHoliList.ho", produces="application/json; charset=utf-8")
+	public String ajaxSelectHoliList(int no, Model model) {
+      
+      ArrayList<Holiday> list = wService.selectHoliList(no);
+      
+      
+      HashMap<String,Object> map = new HashMap<String,Object>();
+      map.put("list", list);
+      
+      
+	  return new Gson().toJson(map);
+	}
 	
 	
 	

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.work.model.dao.WorkDao;
 import com.ppicachu.ppic.work.model.vo.Holiday;
+import com.ppicachu.ppic.work.model.vo.HolidayApply;
 import com.ppicachu.ppic.work.model.vo.Work;
 
 @Service
@@ -45,5 +46,30 @@ public class WorkServiceImpl implements WorkService {
 	public Work selectWorkRecord(int userNo) {
 		return wDao.selectWorkRecord(sqlSession, userNo);
 	}
+
+	@Override
+	public int updateWorkIn(int userNo) {
+		return wDao.updateWorkIn(sqlSession, userNo);
+	}
+
+	@Override
+	public int updateWorkOut(int userNo) {
+		return wDao.updateWorkOut(sqlSession, userNo);
+	}
+
+	@Override
+	public int holiApplyEnroll(Holiday h) {
+		return wDao.holiApplyEnroll(sqlSession, h);
+	}
+
+	@Override
+	public ArrayList<Holiday> selectHoliList(int userNo) {
+		return wDao.selectHoliList(sqlSession, userNo);
+	}
+
+//	@Override
+//	public ArrayList<HolidayApply> selectMemberHoliday(int userNo) {
+//		return wDao.selectMemberHoliday(sqlSession, userNo);
+//	}
 
 }
