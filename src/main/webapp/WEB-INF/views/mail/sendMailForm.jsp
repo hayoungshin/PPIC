@@ -13,7 +13,7 @@
 	}
 	.reciever-list input{
 		width:1000px; height:30px;
-		border: 1px solid rgb(200,200,200);
+		border: none;
 		border-radius:5px;
 	}
 	.reciever-name{
@@ -39,7 +39,7 @@
 		font-size:12px;
 		right:0;
 		border:1px solid rgb(230,230,230);
-		background:none;
+		background:white;
 	}
 	#address-btn:hover{
 		background:rgb(230,230,230);
@@ -126,8 +126,28 @@
     #mail-address-modal .selected{
         border:1.5px solid #00b5d1;
     }
-
+    
+    /* 자동완성 */
+    .reciever-list{
+    	position:relative;
+    }
+    .autocomplete-area {
+        width:500px;
+        height:200px; 
+        background:white;
+        border:1px solid rgb(200,200,200);
+        border-radius:5px; 
+        z-index:3;
+        position:absolute;
+        top:40px;
+     }
+     input:focus {outline: none;}
 </style>
+<!-- autocomplete -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 <body>
 	<jsp:include page="../common/menubar.jsp" />
@@ -139,9 +159,13 @@
 	<div class="outer">
 		<div id="content">
 		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
-
+		<div>
+			<c:forEach var="mem" items="${ memList }">
+				<p class="mail-list">${ mem.userName } &lt${ mem.mail }&gt</p>
+			</c:forEach>
+		</div>
 		<form action="" style="padding:0px 20px;">
-
+			
 			<button class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;">보내기</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">미리보기</button>
@@ -149,36 +173,41 @@
 			<table style="margin:20px 0; font-size:14px;" id="mail-send-form">
 				<tr>
 					<th colspan="2" style="width:150px;">받는사람</th>
-					<td class="reciever-list" style="width:1200px;">
+					<td class="reciever-list" style="width:1200px; border-bottom:1px solid rgb(200,200,200);">
 						<button class="reciever-name">
 							신하영 &ltuser01@ppic.kr&gt
 							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
 						</button>
-						<input type="text">
+						<input id="reciever-input" type="text" placeholder="메일 주소 사이에 콤마(,) 또는 세미콜론(;)으로 구분하여 입력하세요">
 						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
+						<div class="autocomplete-area" style="display:none;">
+						
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<th>참조</th>
 					<td></td>
-					<td class="reciever-list">
-						<button class="reciever-name">
-							신하영 &ltuser01@ppic.kr&gt
-							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
-						</button>
-						<input type="text">
+					<td class="reciever-list" style="width:1200px; border-bottom:1px solid rgb(200,200,200);">
+						<input type="text" style="width:1198px;">
 						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
+						<div class="autocomplete-area" style="display:none;">
+							
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<th colspan="2">숨은참조</th>
-					<td class="reciever-list">
+					<td class="reciever-list" style="width:1200px; border-bottom:1px solid rgb(200,200,200);">
 						<button class="reciever-name">
 							신하영 &ltuser01@ppic.kr&gt
 							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
 						</button>
 						<input type="text">
 						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
+						<div class="autocomplete-area" style="display:none;">
+						
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -218,6 +247,34 @@
 					</td>
 				</tr>
 			</table>
+			
+			<script>
+				let recieverInput = document.getElementById("reciever-input");
+				/*
+				recieverInput.onkeyup = function(e){
+					if(e.key == ',' || e.key == ';'){
+						// , 또는 ;으로 구분
+						
+					}
+				}
+				*/
+				let mailListArr = $(".mail-list");
+				let mailArr = new Array();
+				for(let i=0; i<mailListArr.length; i++){
+	                mailArr[i] = mailListArr[i].innerText;
+	            }
+				console.log(mailArr);
+				
+				$(document).ready(function() {
+					
+			        $('#reciever-input').autocomplete({
+			            source : mailArr,
+			            minLength : 1
+			        });
+			        
+			    });
+				
+			</script>
 
 			<script>
 				const fileArea = document.getElementById("input-file-area");
@@ -263,8 +320,6 @@
 			      });
 			  });
 			</script>
-
-
 
 		</form>
 		
