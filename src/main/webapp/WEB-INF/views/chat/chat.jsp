@@ -350,7 +350,7 @@
     					}
     				}
         			if(likeCount == 0){
-        				value3 += "<div><small>즐겨찾는 멤버가 없습니다.<small></div>"
+        				value3 += "<div><small>즐겨찾는 멤버가 없습니다.</small></div>"
         			}
         			value2 += "</div>";
     				value3 += "</div>";
