@@ -72,13 +72,10 @@ public class ChatController {
 	
 	@ResponseBody
 	@RequestMapping(value="chatRoomList.chat", produces="application/json; charset=UTF-8")
-	public String ajaxChatRoomList(int userNo) {
-		ArrayList<Chat> list1 = cService.selectChatRoomList(userNo);
-		ArrayList<Chat> list2 = cService.selectChatMemList(userNo);
-		HashMap<String, ArrayList<Chat>> map = new HashMap<>();
-		map.put("chatList", list1);
-		map.put("memList", list2);
-		return new Gson().toJson(map);
+	public String ajaxChatRoomList(Chat c) {
+		ArrayList<Chat> list = cService.selectChatRoomList(c);
+		return new Gson().toJson(list);
 	}
 
+	
 }

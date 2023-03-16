@@ -8,10 +8,8 @@
 		<result column ="notread_chat" property="notreadChat" />
 		<result column ="chat_content" property="chatContent" />
 		<result column ="send_date" property="sendDate" />
-		<result column ="user_no" property="participantNo" />
-		<result column ="user_name" property="participantName" />
-		<result column ="profile_img" property="profileImg" />
 		<result column ="group_count" property="groupCount" />
+		<collection property="memList" resultMap="memberResult" />
 	</resultMap>
 	
 	<resultMap id="memberResult" type="Member">
@@ -101,28 +99,24 @@
 		       cr.room_no
 		     , room_name
 		     , group_count
-		     , notread_chat
+		     , (select notread_chat
+                  from participant
+                where user_no = 5
+                  and room_no = cr.room_no) "notread_chat"
 		     , chat_content
 		     , to_char(send_date, 'YYYY.MM.DD PM HH:mm') "send_date"
+             , user_name
+             , profile_img
 		  from chatroom cr
-		  join participant cp on(cr.room_no = cp.room_no)
+		  right join participant cp on(cr.room_no = cp.room_no)
 		  left join chat c on(cr.last_chat = c.chat_no)
-		 where cp.user_no = #{userNo}
+          left join member m on(m.user_no = cp.user_no)
+		 where cp.room_no in (select room_no
+                                      from participant
+                                     where user_no = #{participantNo})
+            and cp.user_no != #{participantNo}
 		 order
 		    by chat_no desc
-	</select>
-	
-	<select id="selectChatMemList" resultMap="chatResult">
-		select room_no
-		     , m.user_no
-		     , user_name
-		     , profile_img
-		  from member m
-		  join participant p on(m.user_no = p.user_no)
-		 where p.room_no in (select room_no
-		                      from participant
-		                     where user_no = #{userNo})
-		   and p.user_no != #{userNo}
 	</select>
 	
 </mapper>

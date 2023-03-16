@@ -31,11 +31,11 @@ public class ChatDao {
 		return (ArrayList)sqlSession.selectList("chatMapper.searchName", m);
 	}
 	
-	public ArrayList<Chat> selectChatRoomList(SqlSessionTemplate sqlSession, int userNo){
-		return (ArrayList)sqlSession.selectList("chatMapper.selectChatRoomList", userNo);
+	public ArrayList<Chat> selectChatRoomList(SqlSessionTemplate sqlSession, Chat c){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectChatRoomList", c);
 	}
 	
-	public ArrayList<Chat> selectChatMemList(SqlSessionTemplate sqlSession, int userNo){
-		return (ArrayList)sqlSession.selectList("chatMapper.selectChatMemList", userNo);
+	public ArrayList<Chat> selectChatMemList(SqlSessionTemplate sqlSession, Chat c){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectChatMemList", c);
 	}
 }

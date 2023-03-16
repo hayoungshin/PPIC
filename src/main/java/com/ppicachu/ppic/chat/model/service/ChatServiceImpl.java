@@ -45,12 +45,8 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	@Override
-	public ArrayList<Chat> selectChatRoomList(int userNo) {
-		return cDao.selectChatRoomList(sqlSession, userNo);
+	public ArrayList<Chat> selectChatRoomList(Chat c) {
+		return cDao.selectChatRoomList(sqlSession, c);
 	}
 
-	@Override
-	public ArrayList<Chat> selectChatMemList(int userNo) {
-		return cDao.selectChatMemList(sqlSession, userNo);
-	}
 }

@@ -28,11 +28,11 @@
     }
     #chat-logo{padding:10px;}
     #chat .profileImg, #chat .collegeProfileImg{cursor:pointer;} 
-	.pro-small{width: 25px;}
-	.pro-middle{width: 70px;}
-	.pro-big{width: 150px;}
-	.pro-chat{width:40px;}
-	.pro-group{width:20px;}
+	.pro-small{width: 25px; height:25px;}
+	.pro-middle{width: 70px; height:70px;}
+	.pro-big{width: 150px; height:150px;}
+	.pro-chat{width:40px; height:40px;}
+	.pro-group{width:20px; height:20px;}
 
     /* chat 메뉴 스타일 */
     #chat-menu{
@@ -140,7 +140,6 @@
     #createChat{
         font-size: 10px;
         width:70px;
-        height:25px;
         border:none;
         border-radius: 5px;
         top:540px;
@@ -201,117 +200,12 @@
             
             <table id="search-area">
                 <tr>
-                    <td width="300px">
-                        <input type="text" name="keyword" placeholder="&nbsp;이름으로 검색하세요">
-                        <button id="nameSearch-btn"><img src="resources/icons/search.png" height="25px" width="25px"></button>
+                    <td width="300px" id="search-change">
                     </td>
                 </tr>
             </table>
         </div>
-        <div id="chat-body">
-            
-            <!-- chatRoom create -->
-            <!-- <div id="chatRoomCreate-area">
-                <form action="">
-                    <div class="detailView">
-                        <img src="resources/icons/up-arrow.png" height="15px" width="15px">&nbsp;
-                        즐겨찾기
-                    </div>
-                    <div class="detail" style="display:block;">
-                        <div>
-                            <input type="checkbox" id="1" name="" class="1">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="1">
-                                    김혜수
-                                    <span class="conn online"></span>
-                                </label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="2" name="" class="2">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="2">
-                                    김서형&nbsp;
-                                    <span class="conn online"></span>
-                                </label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="3" name="" class="3">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="3">
-                                    배수지&nbsp;
-                                    <span class="conn out"></span>
-                                </label>
-                                
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="4" name="" class="4">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="4">
-                                    차은우&nbsp;
-                                    <span class="conn offline"></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-        
-                    <div class="detailView">
-                        <img src="resources/icons/right-arrow.png" height="15px" width="15px">&nbsp;
-                        내 부서
-                    </div>
-                    <div class="detail">
-                        <div>
-                            <input type="checkbox" id="1" name="" class="1">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="1">
-                                    김혜수
-                                    <span class="conn online"></span>
-                                </label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="2" name="" class="2">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="2">
-                                    김서형&nbsp;
-                                    <span class="conn online"></span>
-                                </label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="3" name="" class="3">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="3">
-                                    배수지&nbsp;
-                                    <span class="conn out"></span>
-                                </label>
-                                
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="4" name="" class="4">&nbsp;
-                            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
-                            <span>
-                                <label for="4">
-                                    차은우&nbsp;
-                                    <span class="conn offline"></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-                    <button type="submit" id="createChat">채팅방 생성</button>
-                </form>
-            </div> -->
-        </div>
+        <div id="chat-body"></div>
     </div>
     <script>
 	   	$(function(){
@@ -355,6 +249,8 @@
 		    					+ "즐겨찾기"
 		    					+ "</div>"
 		    					+ "<div class='detail' style='display:block;'>";
+		    		let value4 = "<input type='text' name='keyword' placeholder='&nbsp;이름으로 검색하세요'>"
+                    			+ "<button id='nameSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
 		    		let likeCount = 0; // 즐겨찾는 사람수
 		    		
         			for(let i=0; i<map.deptList.length; i++){
@@ -363,7 +259,7 @@
 	        					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
 	        						if(map.memList[j].department == map.deptList[i].departmentName){
 		        						value1 += "<div><input type='hidden'><img src='";
-		        						if(map.memList[j].profileImg != null){
+		        						if(map.memList[j].profileImg != undefined){
 		        							value1 += map.memList[j].profileImg
 		        						}else{
 		        							value1 += "resources/icons/profile.png"
@@ -398,7 +294,7 @@
 	        				for(let j=0; j<map.memList.length; j++){
 	        					if(map.memList[j].department == map.deptList[i].departmentName){
 	        						value2 += "<div><input type='hidden'><img src='";
-	        						if(map.memList[j].profilImg != null){
+	        						if(map.memList[j].profileImg != undefined){
 	        							value2 += map.memList[j].profileImg
 	        						}else{
 	        							value2 += "resources/icons/profile.png"
@@ -426,9 +322,9 @@
         				}
         			}
         			for(let k=0; k<map.memList.length; k++){
-    					if(map.memList[k].chatLike != null){
+    					if(map.memList[k].chatLike != undefined){
     						value3 += "<div><input type='hidden'><img src='";
-    						if(map.memList[k].profilImg != null){
+    						if(map.memList[k].profileImg != undefined){
     							value3 += map.memList[k].profileImg
     						}else{
     							value3 += "resources/icons/profile.png"
@@ -459,6 +355,7 @@
         			value2 += "</div>";
     				value3 += "</div>";
         			$("#chat-body").html(value3 + value1 + value2);
+        			$("#search-change").html(value4);
         		},error:function(){
         			console.log("주소록 불러오기용 ajax 통신 실패");
         		}
@@ -580,11 +477,12 @@
         			userName:$("input[name=keyword]").val().replace(/ /g, ''), // 공백제거
         			userNo:${loginUser.userNo}
         		},success:function(list){
+        			console.log(list[0].profileImg)
         			let value = "";
         			for(let i=0; i<list.length; i++){
         				value += "<div class='detail' style='display:block;'>"
         					+ "<div><input type='hidden'><img src='"
-        					if(list[i].profileImg != null){
+        					if(list[i].profileImg != undefined){
     							value += list[i].profileImg
     						}else{
     							value += "resources/icons/profile.png"
@@ -635,55 +533,54 @@
         function chatRoomList(){
         	$.ajax({
         		url:"chatRoomList.chat",
-        		data:{userNo:${loginUser.userNo}},
-        		success:function(map){
-        			console.log(map)
+        		data:{participantNo:${loginUser.userNo}},
+        		success:function(list){
         			let value = "<div id='chatRoomList-area'><table width='270'>";
+        			let value2 = "<input type='text' name='keyword' placeholder='&nbsp;이름 또는 채팅방이름으로 검색하세요'>"
+            					+ "<button id='chatRoomSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
         			let party = "";
-        			if(map.chatList.length == 0){
+        			if(list.length == 0){
         				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
         			}
-        			for(let i=0; i<map.chatList.length; i++){
+        			for(let i=0; i<list.length; i++){
         				value += "<tr><td style='width:50px'>"
-        				for(let j=0; j<map.memList.length; j++){
-        					if(map.chatList[i].roomNo == map.memList[j].roomNo){
-        						if(map.chatList[i].groupCount <= 2){
-        							value += "<img src='"
-        							if(map.memList[j].profileImg != null){
-            							value += map.memList[j].profileImg
-            						}else{
-            							value += "resources/icons/profile.png"
-            						}
-        							value += "' class='rounded-circle chatProfileImg pro-chat'>"
-        						} else if(map.chatList[i].groupCount > 2 && map.chatList[i].groupCount <= 4){
-    								value += "<img src='"
-           							if(map.memList[j].profileImg != null){
-               							value += map.memList[j].profileImg
-               						}else{
-               							value += "resources/icons/profile.png"
-               						}
-           							value += "' class='rounded-circle chatProfileImg pro-group'>"
-        						}else if(map.chatList[i].groupCount > 4){
-    								value += "<img src='"
-           							if(map.memList[j].profileImg != null){
-               							value += map.memList[j].profileImg
-               						}else{
-               							value += "resources/icons/profile.png"
-               						}
-           							value += "' class='rounded-circle chatProfileImg pro-group'>"
-        						}
-        						party += map.memList[j].participantName + ","
-        					}
+        				for(let j=0; j<list[i].memList.length; j++){
+       						if(list[i].groupCount <= 2){
+       							value += "<img src='"
+       							if(list[i].memList[j].profileImg != undefined){
+           							value += list[i].memList[j].profileImg
+           						}else{
+           							value += "resources/icons/profile.png"
+           						}
+       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
+       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 4){
+   								value += "<img src='"
+          							if(list[i].memList[j].profileImg != undefined){
+              							value += list[i].memList[j].profileImg
+              						}else{
+              							value += "resources/icons/profile.png"
+              						}
+          							value += "' class='rounded-circle chatProfileImg pro-group'>"
+       						}else if(list[i].groupCount > 4){
+   								value += "<img src='"
+          							if(list[i].memList[j].profileImg != undefined){
+              							value += list[i].memList[j].profileImg
+              						}else{
+              							value += "resources/icons/profile.png"
+              						}
+          							value += "' class='rounded-circle chatProfileImg pro-group'>"
+       						}
+       						party += list[i].memList[j].userName + ","
         				}
         				value += "</td><td><b>"
-        				if(map.chatList[i].roomName != null){
-        					value += map.chatList[i].roomName
+        				if(list[i].roomName != undefined){
+        					value += list[i].roomName
         				}else{
-        					if(i != map.chatList.length - 1){
-        						value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - 2, map.chatList[i+1].groupCount - map.chatList[i].groupCount)
+        					if(i != list.length - 1){
+        						value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - 2, list[i+1].groupCount - list[i].groupCount)
         					}else{
-        						if(map.chatList.length != 1){
-        							value += party.substring(0, party.length - 1).split(",").slice(map.chatList[i].groupCount - map.chatList[i-1].groupCount)
+        						if(list.length != 1){
+        							value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - list[i-1].groupCount)
         						}else{
         							value += party.substring(0, party.length - 1).split(",")
         						}
@@ -691,19 +588,19 @@
         					}
         				}
         				value += "</b><br>"
-        						+ map.chatList[i].chatContent
+        						+ list[i].chatContent
         						+ "</td>"
         						+ "<td class='table-time'><small>"
-        					if(map.chatList[i].sendDate.includes(dateFormat(1))){
-        						value += map.chatList[i].sendDate.substring(map.chatList[i].sendDate.indexOf("오")) 
-        					}else if(map.chatList[i].sendDate.includes(dateFormat(2))){
+        					if(list[i].sendDate.includes(dateFormat(1))){
+        						value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+        					}else if(list[i].sendDate.includes(dateFormat(2))){
         						value += "어제"
         					} else{
-        						value += map.chatList[i].sendDate.substring(0, map.chatList[i].sendDate.indexOf("오"))
+        						value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
         					}
         					value += "</small><br>"
-        					if(map.chatList[i].notreadChat != null){
-        						value += "<span>" + map.chatList[i].notreadChat + "</span>"
+        					if(list[i].notreadChat != undefined){
+        						value += "<span>" + list[i].notreadChat + "</span>"
         					}else{
         						value += "<span style='background:none;'></span>"
         					}
@@ -712,12 +609,14 @@
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
+        			$("#search-change").html(value2);
         		},error:function(){
         			console.log("채팅 리스트 조회용 ajax 통신 실패");
         		}
         	})
         }
-
+        
+  
         // 채팅방 생성 플러스 버튼
         $(document).on("click", "#plus-btn", function(){
         	plusChatRoom();
@@ -745,8 +644,8 @@
             				for(let j=0; j<map.memList.length; j++){
             					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
             						if(map.memList[j].department == map.deptList[i].departmentName){
-    	        						value1 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;<img src='";
-    	        						if(map.memList[j].profileImg != null){
+    	        						value1 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;&nbsp;<img src='";
+    	        						if(map.memList[j].profileImg != undefined){
     	        							value1 += map.memList[j].profileImg
     	        						}else{
     	        							value1 += "resources/icons/profile.png"
@@ -780,8 +679,8 @@
             					+ "<div class='detail'>";
             				for(let j=0; j<map.memList.length; j++){
             					if(map.memList[j].department == map.deptList[i].departmentName){
-            						value2 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;<img src='";
-            						if(map.memList[j].profilImg != null){
+            						value2 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;&nbsp;<img src='";
+            						if(map.memList[j].profileImg != undefined){
             							value2 += map.memList[j].profileImg
             						}else{
             							value2 += "resources/icons/profile.png"
@@ -809,9 +708,9 @@
         				}
         			}
         			for(let k=0; k<map.memList.length; k++){
-    					if(map.memList[k].chatLike != null){
-    						value3 += "<div><input type='checkbox' id='" + map.memList[k].userNo + "' name='userNo' class='" + map.memList[k].userNo + "'>&nbsp;<img src='";
-    						if(map.memList[k].profilImg != null){
+    					if(map.memList[k].chatLike != undefined){
+    						value3 += "<div><input type='checkbox' id='" + map.memList[k].userNo + "' name='userNo' class='" + map.memList[k].userNo + "'>&nbsp;&nbsp;<img src='";
+    						if(map.memList[k].profileImg != undefined){
     							value3 += map.memList[k].profileImg
     						}else{
     							value3 += "resources/icons/profile.png"
@@ -849,7 +748,7 @@
         }
         	
         
-        $("input[type=checkbox]").click(function(){
+        $(document).on("click", "input[type=checkbox]", function(){
             const $class = $(this).attr("class");
             if($(this).prop("checked")){
                 $.each($("input[type=checkbox]"), function(){
@@ -875,7 +774,6 @@
         $("#chatRoomList-area tr").click(function(){
             // ajax 이용
         })
-        
     </script>
     
     <!-- 내 프로필 Modal -->
