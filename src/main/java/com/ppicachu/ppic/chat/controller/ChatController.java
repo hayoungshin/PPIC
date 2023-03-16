@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -84,4 +85,31 @@ public class ChatController {
 		return new Gson().toJson(list);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="createGroup.chat", produces="application/json; charset=UTF-8")
+	public void ajaxCreateGroup(int userNo, @RequestParam(value="checkNo[]") ArrayList<Integer> checkNo) {
+		checkNo.add(userNo);
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("groupCount", checkNo.size());
+		int result1 = cService.insertChatRoom(map);
+		/* int result2 = cService.insertParticipant(checkNo); */
+		
+		System.out.println(result1);
+		/* System.out.println(result2); */
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="create.chat", produces="application/json; charset=UTF-8")
+	public void ajaxCreateChat(int userNo, int clickNo) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("groupCount", 2);
+		int result1 = cService.insertChatRoom(map);
+		ArrayList<Integer> list1 = new ArrayList<>();
+		list1.add(userNo);
+		list1.add(clickNo);
+		int result2 = cService.insertParticipant(list1);
+		if(result1 > 0 && result2 > 0) {
+			/* ArrayList<Chat> list2 = cService.selectChatList(); */
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.chat.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,16 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public ArrayList<Chat> selectChatRoomList(Chat c) {
 		return cDao.selectChatRoomList(sqlSession, c);
+	}
+
+	@Override
+	public int insertChatRoom(HashMap<String, Integer> map) {
+		return cDao.insertChatRoom(sqlSession, map);
+	}
+
+	@Override
+	public int insertParticipant(ArrayList<Integer> checkNo) {
+		return cDao.insertParticipant(sqlSession, checkNo);
 	}
 
 }

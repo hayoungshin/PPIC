@@ -272,7 +272,7 @@
 		        							+ "<input type='hidden' value='" + map.memList[j].mail +"'>"
 		        							+ "<input type='hidden' value='" + map.memList[j].phone +"'>"
 		        							+ "<input type='hidden' value='" + map.memList[j].chatLike +"'>"
-		        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+		        							+ "<span ondblclick='chatOne(" + map.memList[j].roomNo + ", " + map.memList[j].userNo + ")'>" + map.memList[j].userName + "&nbsp;<span class='conn";
 		        						if(map.memList[j].connSta == 0){
 		        			        		value1 += " online";
 		        			       		} else if(map.memList[j].connSta == 1){
@@ -307,7 +307,7 @@
 	        							+ "<input type='hidden' value='" + map.memList[j].mail +"'>"
 	        							+ "<input type='hidden' value='" + map.memList[j].phone +"'>"
 	        							+ "<input type='hidden' value='" + map.memList[j].chatLike +"'>"
-	        							+ "<span>" + map.memList[j].userName + "&nbsp;<span class='conn";
+	        							+ "<span ondblclick='chatOne(" + map.memList[j].roomNo + ", " + map.memList[j].userNo + ")'>" + map.memList[j].userName + "&nbsp;<span class='conn";
 	        						if(map.memList[j].connSta == 0){
 	        			        		value2 += " online";
 	        			       		} else if(map.memList[j].connSta == 1){
@@ -337,7 +337,7 @@
     							+ "<input type='hidden' value='" + map.memList[k].mail +"'>"
     							+ "<input type='hidden' value='" + map.memList[k].phone +"'>"
     							+ "<input type='hidden' value='" + map.memList[k].chatLike +"'>"
-    							+ "<span>" + map.memList[k].userName + "&nbsp;<span class='conn";
+    							+ "<span ondblclick='chatOne(" + map.memList[k].roomNo + ", " + map.memList[k].userNo + ")'>" + map.memList[k].userName + "&nbsp;<span class='conn";
     						if(map.memList[k].connSta == 0){
     			        		value3 += " online";
     			       		} else if(map.memList[k].connSta == 1){
@@ -477,7 +477,6 @@
         			userName:$("input[name=keyword]").val().replace(/ /g, ''), // 공백제거
         			userNo:${loginUser.userNo}
         		},success:function(list){
-        			console.log(list[0].profileImg)
         			let value = "";
         			for(let i=0; i<list.length; i++){
         				value += "<div class='detail' style='display:block;'>"
@@ -495,7 +494,7 @@
     							+ "<input type='hidden' value='" + list[i].mail +"'>"
     							+ "<input type='hidden' value='" + list[i].phone +"'>"
     							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
-    							+ "<span>" + list[i].userName + "&nbsp;<span class='conn";
+    							+ "<span ondblclick='chatOne(" + list[i].roomNo + ", " + list[i].userNo + ")'>" + list[i].userName + "&nbsp;<span class='conn";
     						if(list[i].connSta == 0){
     			        		value += " online";
     			       		} else if(list[i].connSta == 1){
@@ -544,67 +543,83 @@
         			}
         			for(let i=0; i<list.length; i++){
         				value += "<tr><td style='width:50px'>"
-        				for(let j=0; j<list[i].memList.length; j++){
+        				
        						if(list[i].groupCount <= 2){
-       							value += "<img src='"
-       							if(list[i].memList[j].profileImg != undefined){
-           							value += list[i].memList[j].profileImg
-           						}else{
-           							value += "resources/icons/profile.png"
-           						}
-       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
-       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 4){
-   								value += "<img src='"
+       							for(let j=0; j<list[i].memList.length; j++){
+	       							value += "<img src='"
+	       							if(list[i].memList[j].profileImg != undefined){
+	           							value += list[i].memList[j].profileImg
+	           						}else{
+	           							value += "resources/icons/profile.png"
+	           						}
+	       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
+       							}
+       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 5){
+       							for(let j=0; j<list[i].memList.length; j++){
+   									value += "<img src='"
           							if(list[i].memList[j].profileImg != undefined){
               							value += list[i].memList[j].profileImg
               						}else{
               							value += "resources/icons/profile.png"
               						}
           							value += "' class='rounded-circle chatProfileImg pro-group'>"
-       						}else if(list[i].groupCount > 4){
-   								value += "<img src='"
+       							}
+       						}else{
+       							for(let j=0; j<4; j++){
+   									value += "<img src='"
           							if(list[i].memList[j].profileImg != undefined){
               							value += list[i].memList[j].profileImg
               						}else{
               							value += "resources/icons/profile.png"
               						}
           							value += "' class='rounded-circle chatProfileImg pro-group'>"
+       							}
        						}
-       						party += list[i].memList[j].userName + ","
+        				for(let j=0; j<list[i].memList.length; j++){
+        					party += list[i].memList[j].userName + ","
         				}
         				value += "</td><td><b>"
         				if(list[i].roomName != undefined){
         					value += list[i].roomName
         				}else{
+        					let sub = party.substring(0, party.length - 1).split(",")
         					if(i != list.length - 1){
-        						value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - 2, list[i+1].groupCount - list[i].groupCount)
+        						if(sub.slice(sub.length - list[i].groupCount + 1).length < 4){
+        							value += sub.slice(sub.length - list[i].groupCount + 1)
+        						}else{
+        							value += sub.slice(sub.length - list[i].groupCount + 1).slice(0, 3) + ",..."
+        						}
         					}else{
         						if(list.length != 1){
-        							value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - list[i-1].groupCount)
+        							value += sub.slice(sub.length - list[i].groupCount + 1)
         						}else{
-        							value += party.substring(0, party.length - 1).split(",")
+        							value += sub
         						}
-        						
         					}
         				}
         				value += "</b><br>"
-        						+ list[i].chatContent
-        						+ "</td>"
-        						+ "<td class='table-time'><small>"
-        					if(list[i].sendDate.includes(dateFormat(1))){
-        						value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
-        					}else if(list[i].sendDate.includes(dateFormat(2))){
-        						value += "어제"
-        					} else{
-        						value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+        				if(list[i].chatContent != undefined){
+        					value += list[i].chatContent
+        				}else{
+        					value += "<br>"
+        				}
+       						value += "</td>"
+        							+ "<td class='table-time'><small>"
+        					if(list[i].sendDate != undefined){
+				        		if(list[i].sendDate.includes(dateFormat(1))){
+									value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+								}else if(list[i].sendDate.includes(dateFormat(2))){
+									value += "어제"
+								} else{
+									value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+								}
+								value += "</small><br>"
+								if(list[i].notreadChat != undefined){
+									value += "<span>" + list[i].notreadChat + "</span>"
+								}else{
+									value += "<span style='background:none;'></span>"
+								}
         					}
-        					value += "</small><br>"
-        					if(list[i].notreadChat != undefined){
-        						value += "<span>" + list[i].notreadChat + "</span>"
-        					}else{
-        						value += "<span style='background:none;'></span>"
-        					}
-        						
         				value += "</td></tr>"
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
@@ -631,67 +646,83 @@
         			}
         			for(let i=0; i<list.length; i++){
         				value += "<tr><td style='width:50px'>"
-        				for(let j=0; j<list[i].memList.length; j++){
+        				
        						if(list[i].groupCount <= 2){
-       							value += "<img src='"
-       							if(list[i].memList[j].profileImg != undefined){
-           							value += list[i].memList[j].profileImg
-           						}else{
-           							value += "resources/icons/profile.png"
-           						}
-       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
-       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 4){
-   								value += "<img src='"
+       							for(let j=0; j<list[i].memList.length; j++){
+	       							value += "<img src='"
+	       							if(list[i].memList[j].profileImg != undefined){
+	           							value += list[i].memList[j].profileImg
+	           						}else{
+	           							value += "resources/icons/profile.png"
+	           						}
+	       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
+       							}
+       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 5){
+       							for(let j=0; j<list[i].memList.length; j++){
+   									value += "<img src='"
           							if(list[i].memList[j].profileImg != undefined){
               							value += list[i].memList[j].profileImg
               						}else{
               							value += "resources/icons/profile.png"
               						}
           							value += "' class='rounded-circle chatProfileImg pro-group'>"
-       						}else if(list[i].groupCount > 4){
-   								value += "<img src='"
+       							}
+       						}else{
+       							for(let j=0; j<4; j++){
+   									value += "<img src='"
           							if(list[i].memList[j].profileImg != undefined){
               							value += list[i].memList[j].profileImg
               						}else{
               							value += "resources/icons/profile.png"
               						}
           							value += "' class='rounded-circle chatProfileImg pro-group'>"
+       							}
        						}
-       						party += list[i].memList[j].userName + ","
+        				for(let j=0; j<list[i].memList.length; j++){
+        					party += list[i].memList[j].userName + ","
         				}
         				value += "</td><td><b>"
         				if(list[i].roomName != undefined){
         					value += list[i].roomName
         				}else{
+        					let sub = party.substring(0, party.length - 1).split(",")
         					if(i != list.length - 1){
-        						value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - 2, list[i+1].groupCount - list[i].groupCount)
+        						if(sub.slice(sub.length - list[i].groupCount + 1).length < 4){
+        							value += sub.slice(sub.length - list[i].groupCount + 1)
+        						}else{
+        							value += sub.slice(sub.length - list[i].groupCount + 1).slice(0, 3) + ",..."
+        						}
         					}else{
         						if(list.length != 1){
-        							value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - list[i-1].groupCount)
+        							value += sub.slice(sub.length - list[i].groupCount + 1)
         						}else{
-        							value += party.substring(0, party.length - 1).split(",")
+        							value += sub
         						}
-        						
         					}
         				}
         				value += "</b><br>"
-        						+ list[i].chatContent
-        						+ "</td>"
-        						+ "<td class='table-time'><small>"
-        					if(list[i].sendDate.includes(dateFormat(1))){
-        						value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
-        					}else if(list[i].sendDate.includes(dateFormat(2))){
-        						value += "어제"
-        					} else{
-        						value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+        				if(list[i].chatContent != undefined){
+        					value += list[i].chatContent
+        				}else{
+        					value += "<br>"
+        				}
+       						value += "</td>"
+        							+ "<td class='table-time'><small>"
+        					if(list[i].sendDate != undefined){
+				        		if(list[i].sendDate.includes(dateFormat(1))){
+									value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+								}else if(list[i].sendDate.includes(dateFormat(2))){
+									value += "어제"
+								} else{
+									value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+								}
+								value += "</small><br>"
+								if(list[i].notreadChat != undefined){
+									value += "<span>" + list[i].notreadChat + "</span>"
+								}else{
+									value += "<span style='background:none;'></span>"
+								}
         					}
-        					value += "</small><br>"
-        					if(list[i].notreadChat != undefined){
-        						value += "<span>" + list[i].notreadChat + "</span>"
-        					}else{
-        						value += "<span style='background:none;'></span>"
-        					}
-        						
         				value += "</td></tr>"
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
@@ -736,7 +767,7 @@
             				for(let j=0; j<map.memList.length; j++){
             					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
             						if(map.memList[j].department == map.deptList[i].departmentName){
-    	        						value1 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;&nbsp;<img src='";
+    	        						value1 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "' value='" + map.memList[j].userNo + "'>&nbsp;&nbsp;<img src='";
     	        						if(map.memList[j].profileImg != undefined){
     	        							value1 += map.memList[j].profileImg
     	        						}else{
@@ -771,7 +802,7 @@
             					+ "<div class='detail'>";
             				for(let j=0; j<map.memList.length; j++){
             					if(map.memList[j].department == map.deptList[i].departmentName){
-            						value2 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "'>&nbsp;&nbsp;<img src='";
+            						value2 += "<div><input type='checkbox' id='" + map.memList[j].userNo + "' name='userNo' class='" + map.memList[j].userNo + "' value='" + map.memList[j].userNo + "'>&nbsp;&nbsp;<img src='";
             						if(map.memList[j].profileImg != undefined){
             							value2 += map.memList[j].profileImg
             						}else{
@@ -801,7 +832,7 @@
         			}
         			for(let k=0; k<map.memList.length; k++){
     					if(map.memList[k].chatLike != undefined){
-    						value3 += "<div><input type='checkbox' id='" + map.memList[k].userNo + "' name='userNo' class='" + map.memList[k].userNo + "'>&nbsp;&nbsp;<img src='";
+    						value3 += "<div><input type='checkbox' id='" + map.memList[k].userNo + "' name='userNo' class='" + map.memList[k].userNo + "' value='" + map.memList[k].userNo + "'>&nbsp;&nbsp;<img src='";
     						if(map.memList[k].profileImg != undefined){
     							value3 += map.memList[k].profileImg
     						}else{
@@ -838,8 +869,8 @@
         		}
         	})
         }
-        	
         
+     	// 채팅 생성 체크박스 이벤트
         $(document).on("click", "input[type=checkbox]", function(){
             const $class = $(this).attr("class");
             if($(this).prop("checked")){
@@ -856,11 +887,45 @@
                 });
             }
         })
+        
+        // 단체 채팅방 생성
+        $(document).on("click", "#createChat", function(){
+        	let arr = [];
+        	$("input[name=userNo]:checked").each(function(){
+        		arr.push($(this).val())
+            })
+            let arrDup = [...new Set(arr)]
+        	$.ajax({
+        		url:"createGroup.chat",
+       			data:{
+       				userNo:${loginUser.userNo},
+       				checkNo:arrDup
+        		},success:function(){
+        			
+        		},error:function(){
+        			
+        		}
+        	})
+        })
 
         // 주소록 더블클릭시 채팅방 이동
-        $(".detail>div>span").dblclick(function(){
-            // ajax 이용
-        })
+        function chatOne(no, clickNo){
+     		if(no == 0){ // 전에 생성된 1:1 채팅이 없을 때
+     			$.ajax({
+     				url:"create.chat",
+           			data:{
+           				userNo:${loginUser.userNo},
+           				clickNo:clickNo
+            		},success:function(){
+            			
+            		},error:function(){
+            			
+            		}
+     			})
+     		}else{ // 이미 생성된 1:1 채팅이 있을 때
+     			
+     		}
+     	}
 
         // 대화방 상세보기
         $("#chatRoomList-area tr").click(function(){

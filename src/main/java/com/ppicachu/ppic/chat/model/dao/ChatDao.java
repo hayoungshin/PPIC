@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.chat.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,4 +35,14 @@ public class ChatDao {
 	public ArrayList<Chat> selectChatRoomList(SqlSessionTemplate sqlSession, Chat c){
 		return (ArrayList)sqlSession.selectList("chatMapper.selectChatRoomList", c);
 	}
+	
+	public int insertChatRoom(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		sqlSession.insert("chatMapper.insertChatRoom", map);
+		return Integer.valueOf(String.valueOf(map.get("roomNo")));
+	}
+	
+	 public int insertParticipant(SqlSessionTemplate sqlSession,
+	 ArrayList<Integer> checkNo) { return
+	 sqlSession.insert("chatMapper.insertParticipant", checkNo); }
+	 
 }

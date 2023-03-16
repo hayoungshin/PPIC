@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.chat.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.ppicachu.ppic.chat.model.vo.Chat;
 import com.ppicachu.ppic.member.model.vo.Member;
@@ -22,4 +23,8 @@ public interface ChatService {
 	
 	// 5. 채팅목록
 	ArrayList<Chat> selectChatRoomList(Chat c);
+	
+	// 6. 채팅생성
+	int insertChatRoom(HashMap<String, Integer> map);
+	int insertParticipant(ArrayList<Integer> checkNo);
 }

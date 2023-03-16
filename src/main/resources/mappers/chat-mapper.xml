@@ -22,6 +22,7 @@
 		<result column ="profile_img" property="profileImg" />
 		<result column ="conn_sta" property="connSta" />
 		<result column ="chat_like" property="chatLike" />
+		<result column = "room_no" property="roomNo"/>
 	</resultMap>
 
 	<update id="updateConn">
@@ -45,9 +46,19 @@
                   from chat_like
                  where myuser_no = #{userNo}
                    and likeuser_no = user_no) "chat_like"
-		  from member
-		  join dept on (member.department = dept.department_no) 
-		  join position on (member.position = position.position_no)
+             , (select room_no
+                 from participant
+                where user_no = #{userNo} 
+                  and room_no in (select
+                                         room_no 
+                                    from participant 
+                                    join chatroom using(room_no)
+                                    where user_no = m.user_no
+                                      and user_no != #{userNo} 
+                                      and group_count = 2)) "room_no"
+		  from member m
+		  join dept on (m.department = dept.department_no) 
+		  join position on (m.position = position.position_no)
 		 where status='Y'
 	</select>
 	
@@ -101,7 +112,7 @@
 		     , group_count
 		     , (select notread_chat
                   from participant
-                where user_no = 5
+                where user_no = ${participantNo}
                   and room_no = cr.room_no) "notread_chat"
 		     , chat_content
 		     , to_char(send_date, 'YYYY.MM.DD PM HH:mm') "send_date"
@@ -109,7 +120,7 @@
              , profile_img
 		  from chatroom cr
 		  join participant cp on(cr.room_no = cp.room_no)
-		  join chat c on(cr.last_chat = c.chat_no)
+		  left join chat c on(cr.last_chat = c.chat_no)
           join member m on(m.user_no = cp.user_no)
 		 where cp.room_no in (select room_no
                                       from participant
@@ -117,13 +128,45 @@
             and cp.user_no != #{participantNo}
             <if test="roomName != null">
 			   	and (room_name like '%' || #{roomName} || '%'
-            	 or room_no in (select room_no
+            	 or cp.room_no in (select room_no
                             	  from participant
                                   join member using(user_no)
                                   where user_name like '%' || #{roomName} || '%'))
 		   	</if>
 		 order
-		    by chat_no desc
+		    by modify_date desc
 	</select>
+	
+	<insert id="insertChatRoom" parameterType="java.util.HashMap" useGeneratedKeys="true" keyColumn="room_no" keyProperty="roomNo">
+		insert 
+		  into chatRoom
+		  (
+		    room_no
+		  , group_count
+		  )
+		  values
+		  (
+		    seq_chatroomno.nextval
+		  , #{groupCount}
+		  )
+	</insert>
+	
+	<insert id="insertParticipant">
+		<selectKey keyProperty="no" order="BEFORE" resultType="_int">
+			select seq_chatroomno.currval from dual
+		</selectKey>
+		<foreach collection="list" item="item" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+		  into participant
+		  (
+		    room_no
+		  , user_no
+		  )
+		  values
+		  (
+		    #{no}
+		  , #{item}
+		  )
+	  	</foreach>
+	</insert>
 	
 </mapper>

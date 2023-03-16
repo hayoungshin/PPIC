@@ -35,5 +35,6 @@ public class Member {
 	private String addDay;
 	
 	private String chatLike;
+	private int roomNo;
 
 }
