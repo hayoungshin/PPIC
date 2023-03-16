@@ -77,5 +77,11 @@ public class ChatController {
 		return new Gson().toJson(list);
 	}
 
+	@ResponseBody
+	@RequestMapping(value="searchChatRoom.chat", produces="application/json; charset=UTF-8")
+	public String ajaxChatRoomSearch(Chat c) {
+		ArrayList<Chat> list = cService.selectChatRoomList(c);
+		return new Gson().toJson(list);
+	}
 	
 }

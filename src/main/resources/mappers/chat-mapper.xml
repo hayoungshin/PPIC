@@ -108,13 +108,20 @@
              , user_name
              , profile_img
 		  from chatroom cr
-		  right join participant cp on(cr.room_no = cp.room_no)
-		  left join chat c on(cr.last_chat = c.chat_no)
-          left join member m on(m.user_no = cp.user_no)
+		  join participant cp on(cr.room_no = cp.room_no)
+		  join chat c on(cr.last_chat = c.chat_no)
+          join member m on(m.user_no = cp.user_no)
 		 where cp.room_no in (select room_no
                                       from participant
                                      where user_no = #{participantNo})
             and cp.user_no != #{participantNo}
+            <if test="roomName != null">
+			   	and (room_name like '%' || #{roomName} || '%'
+            	 or room_no in (select room_no
+                            	  from participant
+                                  join member using(user_no)
+                                  where user_name like '%' || #{roomName} || '%'))
+		   	</if>
 		 order
 		    by chat_no desc
 	</select>

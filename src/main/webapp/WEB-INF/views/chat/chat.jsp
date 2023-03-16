@@ -511,7 +511,7 @@
         		}
         	})
         }
-        $("#nameSearch-btn").click(function(){
+        $(document).on("click", "#nameSearch-btn", function(){
         	if($("input[name=keyword]").val().replace(/ /g, '') != ""){ // 공백 입력시
         		nameSearch();
         	} else{
@@ -615,8 +615,100 @@
         		}
         	})
         }
-        
   
+     	// 채팅 리스트 검색
+        function chatRoomSearch(){
+        	$.ajax({
+        		url:"searchChatRoom.chat",
+        		data:{
+        			roomName:$("input[name=keyword]").val().replace(/ /g, ''), // 공백제거
+        			participantNo:${loginUser.userNo}
+        		},success:function(list){
+        			let value = "<div id='chatRoomList-area'><table width='270'>";
+        			let party = "";
+        			if(list.length == 0){
+        				value += "<tr><td>검색 내역이 없습니다.</td></tr>"
+        			}
+        			for(let i=0; i<list.length; i++){
+        				value += "<tr><td style='width:50px'>"
+        				for(let j=0; j<list[i].memList.length; j++){
+       						if(list[i].groupCount <= 2){
+       							value += "<img src='"
+       							if(list[i].memList[j].profileImg != undefined){
+           							value += list[i].memList[j].profileImg
+           						}else{
+           							value += "resources/icons/profile.png"
+           						}
+       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
+       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 4){
+   								value += "<img src='"
+          							if(list[i].memList[j].profileImg != undefined){
+              							value += list[i].memList[j].profileImg
+              						}else{
+              							value += "resources/icons/profile.png"
+              						}
+          							value += "' class='rounded-circle chatProfileImg pro-group'>"
+       						}else if(list[i].groupCount > 4){
+   								value += "<img src='"
+          							if(list[i].memList[j].profileImg != undefined){
+              							value += list[i].memList[j].profileImg
+              						}else{
+              							value += "resources/icons/profile.png"
+              						}
+          							value += "' class='rounded-circle chatProfileImg pro-group'>"
+       						}
+       						party += list[i].memList[j].userName + ","
+        				}
+        				value += "</td><td><b>"
+        				if(list[i].roomName != undefined){
+        					value += list[i].roomName
+        				}else{
+        					if(i != list.length - 1){
+        						value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - 2, list[i+1].groupCount - list[i].groupCount)
+        					}else{
+        						if(list.length != 1){
+        							value += party.substring(0, party.length - 1).split(",").slice(list[i].groupCount - list[i-1].groupCount)
+        						}else{
+        							value += party.substring(0, party.length - 1).split(",")
+        						}
+        						
+        					}
+        				}
+        				value += "</b><br>"
+        						+ list[i].chatContent
+        						+ "</td>"
+        						+ "<td class='table-time'><small>"
+        					if(list[i].sendDate.includes(dateFormat(1))){
+        						value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+        					}else if(list[i].sendDate.includes(dateFormat(2))){
+        						value += "어제"
+        					} else{
+        						value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+        					}
+        					value += "</small><br>"
+        					if(list[i].notreadChat != undefined){
+        						value += "<span>" + list[i].notreadChat + "</span>"
+        					}else{
+        						value += "<span style='background:none;'></span>"
+        					}
+        						
+        				value += "</td></tr>"
+        			}
+        			value += "</table><div id='plus-btn'>+</div></div>"
+        			$("#chat-body").html(value);
+        		},error:function(){
+        			console.log("채팅 리스트 검색용 ajax 통신 실패");
+        		}
+     		})
+     	}
+     	$(document).on("click", "#chatRoomSearch-btn", function(){
+     		if($("input[name=keyword]").val().replace(/ /g, '') != ""){ // 공백 입력시
+        		chatRoomSearch();
+        	} else{
+        		chatRoomList();
+        	}
+     	})
+     	
         // 채팅방 생성 플러스 버튼
         $(document).on("click", "#plus-btn", function(){
         	plusChatRoom();

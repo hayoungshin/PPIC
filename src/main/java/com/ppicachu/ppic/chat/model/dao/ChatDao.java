@@ -34,8 +34,4 @@ public class ChatDao {
 	public ArrayList<Chat> selectChatRoomList(SqlSessionTemplate sqlSession, Chat c){
 		return (ArrayList)sqlSession.selectList("chatMapper.selectChatRoomList", c);
 	}
-	
-	public ArrayList<Chat> selectChatMemList(SqlSessionTemplate sqlSession, Chat c){
-		return (ArrayList)sqlSession.selectList("chatMapper.selectChatMemList", c);
-	}
 }
