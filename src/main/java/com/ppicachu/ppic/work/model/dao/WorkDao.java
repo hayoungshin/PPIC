@@ -41,17 +41,31 @@ public class WorkDao {
 		return sqlSession.update("workMapper.updateWorkOut", userNo);
 	}
 	
-//	public ArrayList<HolidayApply> selectMemberHoliday(SqlSessionTemplate sqlSession, int userNo ) {
-//		return (ArrayList)sqlSession.selectList("workMapper.selectMemberHoliday", userNo);
-//	}
+	public Member selectMemberHoliday(SqlSessionTemplate sqlSession, int userNo ) {
+		return sqlSession.selectOne("workMapper.selectMemberHoliday", userNo);
+	}
 	
 	public int holiApplyEnroll(SqlSessionTemplate sqlSession, Holiday h) {
 		return sqlSession.insert("workMapper.holiApplyEnroll", h);
-				
 	}
 	
 	public ArrayList<Holiday> selectHoliList(SqlSessionTemplate sqlSession, int userNo){
 		return (ArrayList)sqlSession.selectList("workMapper.selectHoliList", userNo);
 	}
 	
+	public int holidayApplyDelete(SqlSessionTemplate sqlSession, Holiday h) {
+		return sqlSession.delete("workMapper.holidayApplyDelete",h);
+	}
+	
+	public ArrayList<Holiday> selectMemberHolidayList(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.selectMemberHolidayList", userNo);
+	}
+	
+	public int holidayApprove(SqlSessionTemplate sqlSession, Holiday h) {
+		return sqlSession.update("workMapper.holidayApprove", h);
+	}
+	
+	public int holidayInsert(SqlSessionTemplate sqlSession, Holiday h) {
+		return sqlSession.insert("workMapper.holidayInsert", h);
+	}
 }

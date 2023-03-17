@@ -21,5 +21,6 @@ public class Holiday {
 	private String reason;
 	private String status;
 	private String userName;
+	private String cause;
 
 }

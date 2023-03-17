@@ -33,11 +33,20 @@ public interface WorkService {
 		int updateWorkOut(int userNo);
 		
 	// 8. 사원의 휴가 정보 조회 서비스 
-		//ArrayList<HolidayApply> selectMemberHoliday(int userNo);
+		Member selectMemberHoliday(int userNo);
+		ArrayList<Holiday> selectMemberHolidayList(int userNo);
 	
 	// 9. 사원의 휴가 신청 서비스
 		int holiApplyEnroll(Holiday h);
 	
-	// 10. 사원의 휴가리스트 조회 서비스 
+	// 10. 사원의 휴가예정 리스트 조회 서비스 
 		ArrayList<Holiday> selectHoliList(int userNo);
+	
+	// 11. 승인 전 휴가신청 목록 삭제 서비스
+		int holidayApplyDelete(Holiday h);
+	
+	// 12. 관리자의 휴가 승인 서비스 
+		int holidayApprove(Holiday h);
+		int holidayInsert(Holiday h);
+	
 }

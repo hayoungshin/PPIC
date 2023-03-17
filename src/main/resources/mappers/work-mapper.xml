@@ -91,10 +91,24 @@
 	</select>
 	
 	<insert id="completeWorkInsert">
-		Insert into work (work_no, user_no, work_date, work_in, work_out, work_time, status )
-			     select seq_wno.nextval, m.user_no,to_char(sysdate,'YYYY-MM-DD hh24:mi:SS'),null, null, null, '결근'
-			     from member m
-			     where m.status ='Y'
+		Insert 
+		  into work 
+		     ( work_no
+		     , user_no
+		     , work_date
+		     , work_in
+		     , work_out
+		     , work_time
+		     , status 
+		     )
+		select seq_wno.nextval
+			 , m.user_no,to_(sysdate,'YYYY-MM-DD hh24:mi:SS')
+			 , null
+			 , null
+			 , null
+			 , '결근'
+		  from member m
+		 where m.status ='Y'
 	</insert>
 	
 	<select id="selectWorkRecor" resultMap="workResult">
@@ -133,15 +147,33 @@
 		  AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD')
 	</update>
 	
-	<select id="selectMemberHoliday" resultMap="holiResult">
-		select 
-		       holi_no
-		     , h_give
-		     , h_date
-		     , h_cause
-		     , h_remain
-		  from holiday
-		  where user_no=#{userNo}
+	<select id="selectMemberHoliday" resultMap="holidayResult2">
+		SELECT T1.USER_NO  
+		     , T1.USER_NAME 
+		     , SUM ( CASE WHEN T2.H_CAUSE = '연차지급' THEN T2.H_GIVE ELSE 0 END ) AS GIVE_DAY
+		     , SUM ( CASE WHEN T2.H_CAUSE = '연차사용' THEN T2.H_GIVE ELSE 0 END ) AS USE_DAY
+		     , SUM ( CASE WHEN T2.H_CAUSE = '추가지급' THEN T2.H_GIVE ELSE 0 END ) AS ADD_DAY
+		  FROM MEMBER T1
+		  LEFT OUTER JOIN HOLIDAY T2  
+		    ON T1.USER_NO = T2.USER_NO
+		 WHERE T1.USER_NO= #{userNo}
+		 GROUP BY T1.USER_NO  
+		       , T1.USER_NAME
+	</select>
+	
+	<select id="selectMemberHolidayList" resultMap="holidayResult1">
+		select
+			   user_no
+		     , holiday_no
+		     , h_type
+		     , h_sort
+		     , h_start
+		     , h_finish
+		     , status
+		  from holiday_apply
+		 where user_no= #{userNo}
+		 order
+			by holiday_no desc
 	</select>
 	
 	<insert id="holiApplyEnroll">
@@ -178,5 +210,41 @@
 		     , status
 		  from holiday_apply
 		 where user_no=#{userNo}
+		   and status='승인대기'
+		 order
+			by holiday_no desc
 	</select>
+	
+	<delete id="holidayApplyDelete" >
+		delete 
+		  from holiday_apply
+		 where holiday_no = #{holidayNo}
+	</delete>
+	
+	<update id="holidayApprove">
+		update holiday_apply
+		   set status = #{status}
+		 where holiday_no = #{holidayNo}
+	</update>
+	
+	<insert id="holidayInsert">
+		insert 
+		  into holiday
+		     ( holi_no
+		     , user_no
+		     , h_give
+		     , h_date
+		     , h_cause
+		     , h_remain
+		     )
+		values
+			 ( SEQ_HNO.nextval
+			 , #{userNo}
+			 , -#{datea}
+			 , sysdate
+			 , #{cause}
+			 , null
+  )
+	</insert>
+	
 </mapper>

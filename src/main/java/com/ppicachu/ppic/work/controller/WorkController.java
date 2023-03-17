@@ -52,7 +52,11 @@ public class WorkController {
 	
 	/* 근무_휴가현황 */
 	@RequestMapping("holiInfo.ho")
-	public String holiInfo() {
+	public String holiInfo(int no, Model model) {
+		Member m = wService.selectMemberHoliday(no);
+		model.addAttribute("m",m);
+		ArrayList<Holiday> list = wService.selectMemberHolidayList(no);
+		model.addAttribute("list", list);
 		
 		return "work/holidayInfoView";
 	}
@@ -132,7 +136,7 @@ public class WorkController {
       
       HashMap<String,Object> map = new HashMap<String,Object>();
       map.put("w", w);
-      
+      System.out.println(w);
 	  return new Gson().toJson(map);
 	}
 	
@@ -153,6 +157,7 @@ public class WorkController {
 		
 		}
 
+	// 사용자 예정 휴가 조회하기 
 	@ResponseBody
 	@RequestMapping(value="selectHoliList.ho", produces="application/json; charset=utf-8")
 	public String ajaxSelectHoliList(int no, Model model) {
@@ -167,9 +172,32 @@ public class WorkController {
 	  return new Gson().toJson(map);
 	}
 	
+	/* 미승인 휴가 삭제하기  */
+	@RequestMapping("holiyApplyDelete.ho")
+	public String holidayApplyDelete(Holiday h) {
+		int result = wService.holidayApplyDelete(h);
+		
+		return "redirect:holiApply.ho";
+	}
 	
-	
-	
+	/* 미승인 휴가 승인,거절하기 */
+	@RequestMapping("approve.ho")
+	public String holidayApprove(Holiday h) {
+		// holiday_apply 테이블 업데이트
+		int result = wService.holidayApprove(h);
+		
+		if(result>0) { 
+			// holiday insert
+			int result2 = wService.holidayInsert(h);
+			
+			return "redirect:holiApprove.ho";
+			
+		}else { 
+			return "redirect:holiApprove.ho";
+		}
+		
+		
+	}
 	
 	
 	
