@@ -31,8 +31,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 	
 	@Override
-	public ArrayList<Task> selectTaskList(Project p) {
-		return null; 
+	public ArrayList<Task> selectTaskList(int projectNo) {
+		return pDao.selectTaskList(sqlSession, projectNo); 
 	}
 
 }
