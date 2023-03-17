@@ -39,4 +39,6 @@ public interface MemberService {
 	// 10. 비밀번호 변경 서비스
 	int resetPwd(Member m);
 
+	// 11. ajax멤버조회 서비스(이름, 메일만 - 메일자동완성용)
+	ArrayList<Member> selectMemForMail();
 }

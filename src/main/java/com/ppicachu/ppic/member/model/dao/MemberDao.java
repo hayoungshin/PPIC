@@ -57,5 +57,9 @@ public class MemberDao {
 	public int resetPwd(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.update("memberMapper.resetPwd", m);
 	}
+	
+	public ArrayList<Member> selectMemForMail(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectMemForMail");
+	}
 
 }
