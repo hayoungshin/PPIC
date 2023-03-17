@@ -96,9 +96,10 @@
 	        	arr3[i].style = 'display:none';
 			}
 			
-			// 삭제버튼 mouseover
+			// 각 행
 			const tr = document.getElementsByClassName("trOver");
 			for(let i=0; i<tr.length; i++){
+				// 삭제버튼 mouseover
 				tr[i].addEventListener("mouseover", function(){
 					const writer = this.childNodes[3].childNodes[1].childNodes[1].innerHTML;
 					const btn = this.childNodes[3].childNodes[1].childNodes[3]
@@ -112,6 +113,13 @@
 					if(writer == '${loginUser.userName}'){
 						btn.style = 'position:absolute; top:-4px; left:25px; display:none;';
 					}
+				});
+
+				// 상세 onclick
+				tr[i].childNodes[7].addEventListener("click", function(){
+					const no = this.parentNode.childNodes[1].value;
+					const form = this.parentNode.childNodes[5].innerHTML;
+					location.href="detail.ap?no=" + no + "&form=" + form;
 				});
 			}
 		}
@@ -188,7 +196,7 @@
 				                    </div>
 			                    </td>
 			                    <td>${ a.form }</td>
-			                    <td>${ a.title }</td>
+			                    <td class="titleTd">${ a.title }</td>
 			                    <td>
 			                    	<c:if test="${ not empty a.originName }">
 			                    		<img src="resources/icons/clip.png" height="20px">
@@ -233,7 +241,14 @@
             </c:if>
             
 			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-				<a href="list.ap?mye=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+				<c:choose>
+					<c:when test="${ p eq pi.currentPage }">
+						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
+					</c:when>
+					<c:otherwise>
+						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
 
 			<c:if test="${ pi.currentPage ne pi.maxPage and pi.maxPage ne 0 }">

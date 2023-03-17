@@ -172,12 +172,11 @@ public class ApprovalController {
 		AppDetail ad = null;
 		
 		switch(form) {
-		case "업무기안" : System.out.println(1); ad = aService.selectDraftApp(no); break;
-		case "인사발령품의서" : System.out.println(2);ad = aService.selectTransferApp(no); break;
-		case "비품신청서" : System.out.println(3);ad = aService.selectConsumeApp(no); break;
-		case "지출결의서" : System.out.println(4);ad = aService.selectCashApp(no); break;
+		case "업무기안" : ad = aService.selectDraftApp(no); break;
+		case "인사발령품의서" : ad = aService.selectTransferApp(no); break;
+		case "비품신청서" : ad = aService.selectConsumeApp(no); break;
+		case "지출결의서" : ad = aService.selectCashApp(no); break;
 		}
-		
 		m.addAttribute("ad", ad);
 		
 		return "approval/appDetailView";

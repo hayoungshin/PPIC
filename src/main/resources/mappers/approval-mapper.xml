@@ -74,6 +74,7 @@
 	</resultMap>
 	
 	<resultMap type="AppDetail" id="consumeResult">
+		<id column="app_no" property="approvalNo"/>
 		<association property="app" resultMap="approvalResult"/>
 		<collection property="consume" ofType="FormConsume">
 			<id column="form_no" property="formNo"/>
@@ -101,6 +102,7 @@
 	</resultMap>
 	
 	<resultMap type="AppDetail" id="cashResult">
+		<id column="app_no" property="approvalNo"/>
 		<association property="app" resultMap="approvalResult"/>
 		<collection property="cash" ofType="FormCash">
 			<id column="form_no" property="formNo"/>
@@ -399,21 +401,21 @@
 	
 	<select id="selectDraftApp" resultMap="draftResult">
 		select
-		       approval_no
+		       approval_no app_no
 		     , complete_no
 		     , am.user_name
 		     , ad.department_name
 		     , ap.position_name
 		     , form
 		     , title
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
 		     
 		     , form_no
-		     , effective_date
+		     , to_char(to_date(effective_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') effective_date
 		     , fd.department_name form_dep_name
 		     , content
 		     
@@ -423,7 +425,7 @@
              , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , approval_date
+		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -449,6 +451,8 @@
 		  join attachment on (category_no = 1 and approval_no = ref_no)
 		  
 		 where approval_no = #{approvalNo}
+         order
+            by process_order
 	</select>
 	
 	<select id="selectTransferApp" resultMap="transferResult">
@@ -460,14 +464,14 @@
 		     , ap.position_name
 		     , form
 		     , title
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
 		     
 		     , form_no
-		     , effective_date
+		     , to_char(to_date(effective_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') effective_date
 		     , f.user_name form_user_name
 		     , f.department_name form_dept_name
 		     , current_position
@@ -480,7 +484,7 @@
              , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , approval_date
+		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -506,19 +510,21 @@
 		  join attachment on (category_no = 1 and approval_no = ref_no)
 		  
 		 where approval_no = #{approvalNo}
+         order
+            by form_no, process_order
 	</select>
 	
 	<select id="selectConsumeApp" resultMap="consumeResult">
 		select
-		       approval_no
+		       approval_no app_no
 		     , complete_no
 		     , am.user_name
 		     , ad.department_name
 		     , ap.position_name
 		     , form
 		     , title
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
@@ -536,7 +542,7 @@
              , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , approval_date
+		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -562,19 +568,21 @@
 		  join attachment on (category_no = 1 and approval_no = ref_no)
 		  
 		 where approval_no = #{approvalNo}
+         order
+            by form_no, process_order
 	</select>
 	
 	<select id="selectCashApp" resultMap="cashResult">
 		select
-		       approval_no
+		       approval_no app_no
 		     , complete_no
 		     , am.user_name
 		     , ad.department_name
 		     , ap.position_name
 		     , form
 		     , title
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
@@ -591,7 +599,7 @@
 		     , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , approval_date
+		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -617,6 +625,8 @@
 		  join attachment on (category_no = 1 and approval_no = ref_no)
 		  
 		 where approval_no = #{approvalNo}
+         order
+            by form_no, process_order
 	</select>
 	
 	<select id="g" resultMap="appChangeResult">

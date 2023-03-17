@@ -7,12 +7,13 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+	.t-area{height: 30px;}
 	.title-area{float: left;}
 	.title-area-enroll{float: left; padding-top: 5px; padding-left: 50px;}
 	
 	.menu{float: left; margin: 0px 40px 10px 10px;}
 	.menu a{text-decoration: none;}
-	.m0, .m1{height: 25px;}
+	.m0, .m1{height: 30px;}
 	.m2, .m3{height: 20px;}
 	
 	#menu-1
@@ -34,7 +35,7 @@
 	/* 검색, 정렬, 필터 */
 	.two-btn-area{float: right;}
 	.two-btn{margin-left: 20px; margin-right: 10px; width: 32px;}
-	.two-btn:hover, .as:hover{cursor: pointer;}
+	.two-btn:hover, .as:hover, .titleTd:hover{cursor: pointer;}
 	.btn-align{float: left;}
 	
 	/* 공통 */
@@ -65,10 +66,11 @@
 <body>
 	<div id="content">
 		<div class="content-1">
-	    	<div class="title-area"><h2><b>전자결재</b></h2></div>
-	
-		    <div class="title-area-enroll"><button type="button" class="btnn-pp" onclick="location.href='enrollForm.ap';">+ 작성하기</button></div>    
-			<br clear="both"><br>
+			<div class="t-area">
+		    	<div class="title-area"><h2><b>전자결재</b></h2></div>
+			    <div class="title-area-enroll"><button type="button" class="btnn-pp" onclick="location.href='enrollForm.ap';">+ 작성하기</button></div>    
+			</div>
+			<br clear="both">
 			
 			<div class="menu"><a href="list.ap?myi=1"><h4 id="menu-1">개인 문서함</h4></a></div>
 			<div class="menu"><a href="list.ap?dpi=1"><h4 id="menu-2">부서 문서함</h4></a></div>

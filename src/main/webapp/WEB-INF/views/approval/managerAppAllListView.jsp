@@ -70,6 +70,17 @@
 			for(let i=0; i<arr3.length; i++){
 	        	arr3[i].style = 'display:none';
 			}
+			
+			// 각 행
+			const tr = document.getElementsByClassName("trOver");
+			for(let i=0; i<tr.length; i++){
+				// 상세 onclick
+				tr[i].childNodes[11].addEventListener("click", function(){
+					const no = this.parentNode.childNodes[1].value;
+					const form = this.parentNode.childNodes[9].innerHTML;
+					location.href="detail.ap?no=" + no + "&form=" + form;
+				});
+			}
 		}
 		
 		// 전체체크, 전체해제
@@ -104,12 +115,13 @@
 			let ckNoArr = [];
 			let ckedCnt = 0;
 			for(let i=0; i<bx.length; i++){
-				if(bx[i].checked){
+				/* if(bx[i].checked){
 					ckedCnt += 1;
 					ckNoArr.push(bx[i].previousElementSibling.value);
-				}
+				} */
+				console.log(bx[i]);
 			}
-			if(ckedCnt == 0){
+			/* if(ckedCnt == 0){
 				alert('선택된 결재문서가 없습니다.');
 				return false;
 			} else if(confirm(ckedCnt + '개의 결재문서를 삭제하시겠습니까?')){
@@ -121,7 +133,7 @@
 						}
 					}
 				});
-			}
+			} */
 			return false;
 		}
 	</script>
@@ -152,15 +164,13 @@
                 	</c:when>
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
-			                <tr>
-			                    <td>
-			                    	<input type="hidden" name="approvalNo" value="${ a.approvalNo }">
-			                    	<input type="checkbox" class="ckBoxes" onclick="isAllCk();">
-			                    </td>
+			                <tr class="trOver">
+			                    <input type="hidden" name="approvalNo" value="${ a.approvalNo }">
+			                    <td><input type="checkbox" class="ckBoxes" onclick="isAllCk();"></td>
 			                    <td>${ a.department }부</td>
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
-			                    <td>${ a.title }</td>
+			                    <td class="titleTd">${ a.title }</td>
 			                    <td>
 			                    	<c:if test="${ not empty a.originName }">
 			                    		<img src="resources/icons/clip.png" height="20px">
@@ -202,7 +212,14 @@
             </c:if>
             
 			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
-				<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+				<c:choose>
+					<c:when test="${ p eq pi.currentPage }">
+						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
+					</c:when>
+					<c:otherwise>
+						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
 
 			<c:if test="${ pi.currentPage ne pi.maxPage and pi.maxPage ne 0 }">
