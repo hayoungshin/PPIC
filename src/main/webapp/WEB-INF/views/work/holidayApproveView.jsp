@@ -79,18 +79,26 @@
 			<div class="workcategory" style="float:left;" >
                 <a href="workList.wo" >출퇴근기록</a>
                 <a href="workInfo.wo" >올해근무정보</a>
-				<a href="holiInfo.ho" >휴가현황</a>
-                <a href="holiApply.ho">휴가신청</a>
+				<a id="info" >휴가현황</a>
+                <a href="holiApply.ho" style="color:black;">휴가신청</a>
                 
                 
                 <!-- 관리자만 보이게 할거임 -->
                 <a href="memberWork.wo">구성원근무</a>
                 <a href="memberHoli.ho">전사원휴가현황</a>
-                <a href="holiGive.ho" >휴가지급|회수</a>
-                <a href="holiApprove.ho" style="color:black;">휴가승인</a>
+                <a href="holiGive.ho">휴가지급|회수</a>
+                <a href="holiApprove.ho">휴가승인</a>
                 
                 <br>
             </div>
+            
+            <script>
+            $(function(){
+        		$("#info").click(function(){
+        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
+        		})
+        	})
+            </script>
 
 			
 			<br>
@@ -113,6 +121,7 @@
                         <c:forEach var="h" items="${ list }">
                         <tr >
                             <td>
+                            	<div id="holidayNo" style="float:left; display:none;" >${h.holidayNo }</div>
                                 <div class="pro" style="float:left" >${h.userName }</div>
                                 <div style="float:left; margin-top: 10px; margin-left: 10px; font-size: 20px; font-weight: bold;" > ${h.userName }</div>
                             </td>
@@ -128,42 +137,46 @@
                             </c:choose>
                             <td id="holireason">${ h.reason }</td>
                             <td>
-                            	<button type="button" name="type" class="btn-purple" data-toggle="modal" data-target="#holidayApprove" data-id="${ h.holidayNo }">휴가승인</button>
+                            	<button type="button" name="type" 
+                            	onClick="a(${h.holidayNo}, '${h.type}', '${h.start }', '${h.finish }','${h.datea}','${h.sort}','${ h.reason }', ${h.userNo})" 
+                            	class="btn-purple" data-toggle="modal" data-target="#holidayApprove" >휴가승인</button>
                             </td>
                         </tr>
                         </c:forEach>
                     </tbody>
                 </table>
-            	
-            	<script>
-            	$(".btn-purple").click(function(){
-            		var data = $(this).data('id');
-            	    $("#contents.body-contents").val(data);
-            	    $("#text-contents.body-contents").html(data);
-            	    
-            	    var type =$('#holitype').text();
-            	    $("#type").val(type);
-            	    
-            	    var start =$('#holistart').text();
-            	    $("#start").val(start);
-            	    
-            	    var finish=$('#holifinish').text();
-            	    $("#finish").val(finish);
-            	    
-            	    var datea=$('#holidate').text();
-            	    $("#datea").val(datea);
-            	    
-            	    var sort=$('#holisort').text();
-            	    $("#sort").val(sort);
-            	    
-            	    var reason=$('#holireason').text();
-            	    $("#reason").val(reason);
-            	});
-            	</script>
                 
+                <script>
+                	function a(a, b, c, d, e, f, g, h){
+                		var holidayNo = a;
+                 	    $("#no").val(holidayNo);
+                 	    
+                 		var type =b;
+               	    	$("#type").val(type);
+               	    	
+	               	    var start =c;
+	             	    $("#start").val(start);
+               	    	
+	             	    var finish=d;
+	            	    $("#finish").val(finish);
+	            	    
+	            	    var datea=e;
+	            	    $("#datea").val(datea);
+	            	    
+	            	    var sort=f;
+	            	    $("#sort").val(sort);
+	            	    
+	            	    var reason=g;
+	            	    $("#reason").text(reason);
+	            	    
+	            	    var userNo=h;
+	            	    $("#uNo").val(userNo);
+                	}
+                </script>
+            	
             </div>
                 
-            <!-- 행 클릭시 보여질 휴가승인 Modal -->
+            <!-- 버튼 클릭시 보여질 휴가승인 Modal -->
             <div class="modal" id="holidayApprove">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -177,44 +190,44 @@
                         <!-- Modal body -->
                         <div class="modal-body" align="center">
                         
-                            <form action="" method="post" onsubmit="">
+                            <form action="approve.ho" method="post" onsubmit="">
                                 <div class="form-group">
-                                 	<input type="hidden" class="body-contents" id="contents" />
+                                 			<input type="hidden" id="uNo" name=userNo value="" >
                                 	<table>
                                 		<tr>
                                 			<td style="width:150px;">종류</td>
                                 			<td>
-                                				<input type="text" class="inputcss" id="type" name="type" value="" readonly>
+                                				<input type="hidden" class="inputcss" id="no" name="holidayNo" value="" readonly>
+                                				<input type="text" class="inputcss" id="type" style="border:none" name="" value="" readonly>
                                 			</td>
                                 		</tr>
                                 		<tr>
                                 			<td>일정</td>
                                 			<td>
-                                				<input type="text" class="inputcss" id="start" name="" value="" readonly>-
-                                    			<input type="text" class="inputcss" id="finish" name="" value="" readonly>
+                                				<input type="text" class="inputcss" id="start" style="border:none" name="" value="" readonly>-
+                                    			<input type="text" class="inputcss" id="finish" style="border:none" name="" value="" readonly>
                                 			</td>
                                 		</tr>
-                                		<c:if test="">
+                                		
                                 			<tr>
                                 			<td>기간</td>
                                 			<td>
-                                				<input type="text" class="inputcss" id="datea" name="" value="" readonly>
+                                				<input type="text" class="inputcss" id="datea" name="" style="border:none" value="datea" readonly>
                                 			</td>
                                 		</tr>
-                                		</c:if>
                                 		
                                 		<tr>
-                                			<td>사유</td>
-                                			<td>
-                                				
-                                				<input type="text" style="width:400px;" class="inputcss" id="reason" name="" value="" readonly>
+                                			<td>사유 
+                                				<input type="hidden" style="width:100px;" class="inputcss"  name="cause" value="연차사용" readonly>
                                 			</td>
+                                			<td id="reason"></td>
                                 		</tr>
+                                		
                                 	</table>
                                    
                                    <br><br>
 									
-									<select>
+									<select name="status">
 										<option value="승인">승인하기</option>
 										<option value="거절">승인거부</option>
 									</select>

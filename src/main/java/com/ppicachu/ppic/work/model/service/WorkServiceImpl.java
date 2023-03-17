@@ -67,9 +67,29 @@ public class WorkServiceImpl implements WorkService {
 		return wDao.selectHoliList(sqlSession, userNo);
 	}
 
-//	@Override
-//	public ArrayList<HolidayApply> selectMemberHoliday(int userNo) {
-//		return wDao.selectMemberHoliday(sqlSession, userNo);
-//	}
+	@Override
+	public int holidayApplyDelete(Holiday h) {
+		return wDao.holidayApplyDelete(sqlSession, h);
+	}
+
+	@Override
+	public Member selectMemberHoliday(int userNo) {
+		return wDao.selectMemberHoliday(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Holiday> selectMemberHolidayList(int userNo) {
+		return wDao.selectMemberHolidayList(sqlSession,userNo);
+	}
+
+	@Override
+	public int holidayApprove(Holiday h) {
+		return wDao.holidayApprove(sqlSession, h);
+	}
+
+	@Override
+	public int holidayInsert(Holiday h) {
+		return wDao.holidayInsert(sqlSession, h);
+	}
 
 }

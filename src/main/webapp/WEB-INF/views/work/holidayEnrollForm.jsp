@@ -95,8 +95,8 @@
 			<div class="workcategory" style="float:left;" >
                 <a href="workList.wo" >출퇴근기록</a>
                 <a href="workInfo.wo" >올해근무정보</a>
-				<a href="holiInfo.ho" >휴가현황</a>
-                <a href="holiApply.ho" style="color:black;">휴가신청</a>
+				<a id="info" >휴가현황</a>
+                <a href="holiApply.ho">휴가신청</a>
                 
                 
                 <!-- 관리자만 보이게 할거임 -->
@@ -107,6 +107,14 @@
                 
                 <br>
             </div>
+            
+            <script>
+            $(function(){
+        		$("#info").click(function(){
+        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
+        		})
+        	})
+            </script>
 			
 			<br>
 	
@@ -171,22 +179,25 @@
 							if(map.list.length == 0 ){
 								value += "<div id='listnone' align='center'>"
 									+		"<img id='none' src='resources/icons/smile.png' width='200'>" + "<br>"
-									+		"휴가 목록이 없습니다";
-									+	 "</div>"
+									+		"휴가 목록이 없습니다"
+									+	 "</div>";
 							}else {
+								value += "<table id='test'>";
 								for(let i=0; i<map.list.length; i++){
-									value += "<table >"
-										+	"<tr id='holilist'>" 
+									value += "<tr id='holilist' onClick='a("+ map.list[i].holidayNo + ")'>" 
 										+		"<td width='100px'>"
 				                        +    		"<img src='resources/icons/vacations.png' width='90%'>"
 										+		"</td>"
 					                    +       "<td>" + map.list[i].type  + "|" +  map.list[i].start + "-" +  map.list[i].finish + "</td>"
+					                    +		"<td width='100px'>"
+				                        +    		"<div class='holidayNo' id='holidayNo' name='no' style='display:none;'>" + map.list[i].holidayNo + "</div>"
+										+		"</td>"		
 					                    +       "<td>"
 					                    +			"<div class='holidaystatus' id='status' name='status' align='center'>" + map.list[i].status + "</div>"
 					                    +		"</td>"
-										+ 	"</tr>"
-					                    + "</table>";
+										+ 	"</tr>";
 									}
+								value += "</table>";
 							}	
 						
 							$(".holidayList").html(value);
@@ -200,25 +211,22 @@
 					
 				};
 				
-				/*
-				$(function(){
-					$(document).on("click","#holilist",function(){ 
-						
-						var status= document.getElementById('status');
-						
-						var sta = $(".holidaystatus").text();
-						
-						console.log(status.innerText);
-						console.log(sta);
-						if( status =='승인'){
-							alert("!");
-						}else{
-							alert("?");
-						}
-						
-					})
-				});
-				*/
+				function a (b) {
+					
+					var no1 = b;
+					console.log(b);
+			
+					$('#deleteForm').show();
+					
+					$(document).on("click",".close",function(){ 
+						$('#deleteForm').hide();
+					});
+					
+					var no = document.getElementById('holiNo');
+	    			
+	    			$(no).val(no1);
+				}
+			
 				
 				$(function(){
 					var a = $("#type option:selected").val();
@@ -244,39 +252,34 @@
 			</script>
 			
 			<!-- 신청한 연차 삭제하기  -->
-			<div class="modal" id="deleteForm">
+			<div class="modal" id="deleteForm" style="position: fixed; top: 300px; right: 600px; ">
         		<div class="modal-dialog">
 	           		<div class="modal-content">
+		                 <button type="button" class="close" style="font-size:18px; width:30px; height:30px; margin:10px; margin-left:450px;" data-dismiss="modal">X</button>
 	            
-		                <!-- Modal Header -->
-		                <div class="modal-header">
-		                <h4 class="modal-titlQSe">회원탈퇴</h4>
-		                <button type="button" class="close" data-dismiss="modal">&times;</button>
-		                </div>
-                
 		                <!-- Modal body -->
 		                <div class="modal-body" align="center">
 		                
 		                    <b>
-					                        탈퇴 후 복구가 불가능합니다. <br>   
-					                        정말로 탈퇴 하시겠습니까?
+					                        사용 승인 전입니다 <br>   
+					                        정말로 삭제 하시겠습니까? <br><br>
 		                    </b>
-		
-		                    <form action="delete.me" method="post">
-		                        비밀번호 : 
-		                        <input type="password" name="userPwd" required>
-		                        <input type="hidden" name="userId" value="${ loginUser.userId }">
-		
-		                        <button type="submit" class="btn btn-danger">탈퇴하기</button>
+							<br>
+		                    <form action="holiyApplyDelete.ho" method="post">
+		                        <input type="hidden" name="holidayNo" id="holiNo" value=""> 
+		                        <input type="hidden" name="userNo" value="${ loginUser.userNo }">
+								
+		                        <button type="submit" class="btn-purple" > 삭제하기</button>
 		                    </form>
 		
 		                </div>
+		               
 	            	</div>
 	        	</div>
 	    	</div>
-			
+	    	
         </div>
-    </div>	
+    
 
 </body>
 </html>

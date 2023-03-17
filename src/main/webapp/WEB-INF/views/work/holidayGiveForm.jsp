@@ -92,18 +92,26 @@
 			<div class="workcategory" style="float:left;" >
                 <a href="workList.wo" >출퇴근기록</a>
                 <a href="workInfo.wo" >올해근무정보</a>
-				<a href="holiInfo.ho" >휴가현황</a>
+				<a id="info" >휴가현황</a>
                 <a href="holiApply.ho">휴가신청</a>
                 
                 
                 <!-- 관리자만 보이게 할거임 -->
                 <a href="memberWork.wo">구성원근무</a>
                 <a href="memberHoli.ho">전사원휴가현황</a>
-                <a href="holiGive.ho" style="color:black;">휴가지급|회수</a>
+                <a href="holiGive.ho">휴가지급|회수</a>
                 <a href="holiApprove.ho">휴가승인</a>
                 
                 <br>
             </div>
+            
+            <script>
+            $(function(){
+        		$("#info").click(function(){
+        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
+        		})
+        	})
+            </script>
 
 			
 			<br>
@@ -126,22 +134,18 @@
 				    </select>
 				    
 				    <select name="member" id="member">
-				    	
 				    	<c:forEach var="m" items="${ list1 }">
-				    		<c:if test="${m.department eq '총무' }">
-				    			<option> ${ m.userName }(사번) </option>
-				    		</c:if>
+				    			<option value="${m.userNo}"> ${ m.userName }(사번) </option>
 				    	</c:forEach>
 			        </select>
 			        
 			        <script>
 			        	
 		        		$("select[name=dept]").change(function(){
-		        			var dept =   $("select[name=dept] option:selected").text();
-		        			
-		        			
-		        			
+		        			var dept = $("select[name=dept] option:selected").text();
 		        			console.log(dept);
+		        			
+		        			
 		        			
 		        			
 		        		});
@@ -151,9 +155,9 @@
 				    <br><br>
 				
 				    <label>지급내역</label>
-				    <select name="" id="">
+				    <select name="cause" id="cause">
 				        <option value="">연차</option>
-				        <option value="">반차</option>
+				        <option value="">여름휴가</option>
 				    </select>
 				
 				    <br><br>
@@ -188,8 +192,9 @@
 			        <br><br>
 			
 			        <label>지급내역</label>
-			        <select name="" id="">
-			            <option value="">연차</option>
+			        <select name="cause" id="cause">
+			            <option value="1">연차</option>
+			            <option value="1">여름휴가</option>
 			        </select>
 			
 			        <br><br>

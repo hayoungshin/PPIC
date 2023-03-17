@@ -263,7 +263,11 @@ public class MemberController {
 		}
 	}
 	
-	
+	@ResponseBody
+	@RequestMapping("select.me")
+	public ArrayList<Member> ajaxselectMemForMail(){
+		return mService.selectMemForMail();
+	}
 	
 	
 	

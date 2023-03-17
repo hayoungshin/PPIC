@@ -33,5 +33,6 @@ public class Chat {
 	private int groupCount;
 	private int sendNo;
 	private String sendName;
+	private String sendProfile;
 	private ArrayList<Member> memList;
 }

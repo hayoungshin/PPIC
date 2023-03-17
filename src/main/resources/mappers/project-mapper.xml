@@ -22,6 +22,20 @@
 	<result column="user_name" property="userName"/>
 </resultMap>
 
+<resultMap id="taskResult" type="Task">
+	<id column="task_no" property="taskNo"/>
+	<result column="project_no" property="projectNo"/>
+	<result column="assign_user" property="assignUser"/>
+	<result column="task_name" property="taskName"/>
+	<result column="task_content" property="taskContent"/>
+	<result column="file_path" property="filePath"/>
+	<result column="file_origin_name" property="originName"/>
+	<result column="task_status" property="taskStatus"/>
+	<result column="create_date" property="createDate"/>
+	<result column="modify_date" property="modifyDate"/>
+	<result column="delete_status" property="deleteStatus"/>
+</resultMap>
+
 <select id="selectProjectList" resultMap="projectResult">
 	select 	
 		   project_no
@@ -38,8 +52,10 @@
       left join p_participant pp using (project_no)
       left join dept d using (department_no)
       join member m on (pj.project_manager = m.user_no)
-     where pp.user_no = #{userNo}
-       and delete_status = 'N'
+     where delete_status = 'N'
+       and end_date >= sysdate
+       and (pp.user_no = #{userNo}
+        or pj.project_manager = #{userNo})
      order
         by create_date desc
 </select>
@@ -56,5 +72,22 @@
 	  left join dept d using (department_no)
 	 where project_no = #{projectNo}
 </select>
+
+<select id="selectTaskList" resultMap="taskResult">
+	select
+		   task_no
+		 , assign_user
+		 , task_name
+		 , task_content
+		 , file_path
+		 , file_origin_name
+		 , task_status
+		 , create_date
+		 , modify_date
+      from task
+     where project_no = #{projectNo}
+       and delete_status = 'N'
+</select>
+
 
 </mapper>

@@ -76,7 +76,7 @@
 			<div class="workcategory" style="float:left;" >
                 <a href="workList.wo" >출퇴근기록</a>
                 <a href="workInfo.wo" >올해근무정보</a>
-				<a href="holiInfo.ho" style="color:black;">휴가현황</a>
+				<a id="info" style="color:black;">휴가현황</a>
                 <a href="holiApply.ho">휴가신청</a>
                 
                 
@@ -88,6 +88,16 @@
                 
                 <br>
             </div>
+            
+            <script>
+            $(function(){
+        		$("#info").click(function(){
+        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
+        		})
+        	})
+            </script>
+           
+           
 			
 			<br>
 	
@@ -109,9 +119,9 @@
                         <th width="200px">남은연차</th>
                     </tr>
                     <tr height="50px" align="center">
-                        <td>00일</td>
-                        <td>00일</td>
-                        <td>00일</td>
+                        <td>${ m.giveDay + m.addDay }일</td>
+                        <td>${ m.useDay }일</td>
+                        <td>${ m.giveDay + m.addDay + m.useDay }</td>
                     </tr>
                 </table>
             </div>
@@ -119,35 +129,26 @@
             <div class="holilist" align="center">
                 <table border="1" >
                     <tr height="50px" align="center" >
-                        <th width="180px">날짜</th>
-                        <th width="180px">지급</th>
-                        <th width="180px">사용</th>
-                        <th width="180px">잔여</th>
+                        <th width="180px">종류</th>
+                        <th width="180px">시작일</th>
+                        <th width="180px">종료일</th>
+                        <th width="180px">승인여부</th>
                     </tr>
-                    <tr height="50px" align="center">
-                        <td>2022-02-03</td>
-                        <td>00일</td>
-                        <td>00일</td>
-                        <td>00일</td>
-                    </tr>
-                    <tr height="50px" align="center">
-                        <td>2022-02-03</td>
-                        <td>00일</td>
-                        <td>00일</td>
-                        <td>00일</td>
-                    </tr>
-                    <tr height="50px" align="center">
-                        <td>2022-02-03</td>
-                        <td>00일</td>
-                        <td>00일</td>
-                        <td>00일</td>
-                    </tr>
+                   
+                    <c:forEach var="h" items= "${ list }" >
+	                    <tr height="50px" align="center">
+	                        <td>${h.type }</td>
+	                        <td>${h.start }</td>
+	                        <td>${h.finish }</td>
+	                        <td>${h.status }</td>
+                    	</tr>
+			         </c:forEach>
+                   
+                    
                 </table>
             </div>
-			 
 			
 			  
-
         </div>
     </div>	
 

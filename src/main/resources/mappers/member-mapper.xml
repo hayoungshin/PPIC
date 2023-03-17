@@ -171,5 +171,17 @@
 		   set user_pwd = #{ userPwd }
 		 where user_no = #{ userNo }
 	</update>
+	
+	<select id="selectMemForMail" resultMap="memberResult">
+		select
+			   user_name
+			 , mail
+			 , department
+		  from member
+		 where status = 'Y'
+		   and member_sign = 'Y'
+		 order
+			by user_name
+	</select>
 
 </mapper>

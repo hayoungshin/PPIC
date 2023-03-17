@@ -86,29 +86,20 @@ public class ChatController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="createGroup.chat", produces="application/json; charset=UTF-8")
-	public void ajaxCreateGroup(int userNo, @RequestParam(value="checkNo[]") ArrayList<Integer> checkNo) {
-		checkNo.add(userNo);
+	@RequestMapping("create.chat")
+	public String ajaxCreateChat(@RequestParam(value="participant[]") ArrayList<Integer> participant) {
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("groupCount", checkNo.size());
+		map.put("groupCount", participant.size());
 		int result1 = cService.insertChatRoom(map);
-		/* int result2 = cService.insertParticipant(checkNo); */
+		int result2 = cService.insertParticipant(participant);
 		
-		System.out.println(result1);
-		/* System.out.println(result2); */
+		return String.valueOf(result1);
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="create.chat", produces="application/json; charset=UTF-8")
-	public void ajaxCreateChat(int userNo, int clickNo) {
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("groupCount", 2);
-		int result1 = cService.insertChatRoom(map);
-		ArrayList<Integer> list1 = new ArrayList<>();
-		list1.add(userNo);
-		list1.add(clickNo);
-		int result2 = cService.insertParticipant(list1);
-		ArrayList<Chat> list2 = cService.selectChat(result1);
-		System.out.println(list2);
+	@RequestMapping(value="open.chat", produces="application/json; charset=UTF-8")
+	public String ajaxOpenChat(int roomNo) {
+		ArrayList<Chat> list = cService.selectChat(roomNo);
+		return new Gson().toJson(list);
 	}
 }

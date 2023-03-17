@@ -14,5 +14,5 @@ public interface ProjectService {
 	ArrayList<ProjectParticipant> selectProjectParticipants(int projectNo);
 	
 	// 프로젝트 하위 작업 조회
-	ArrayList<Task> selectTaskList(Project p);
+	ArrayList<Task> selectTaskList(int projectNo);
 }
