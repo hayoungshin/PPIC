@@ -178,6 +178,50 @@
     	margin-bottom:5px;
     	cursor:pointer;
     }
+    
+    /* 채팅영역 스타일 */
+    .chat-area{
+        height:280px; 
+        overflow: auto; 
+        display: flex;
+        flex-direction: column;
+    }
+    .chat-area::-webkit-scrollbar {width: 8px;}
+	
+	.chat-area::-webkit-scrollbar-thumb {
+	    background: lightgray; 
+	    border-radius: 10px;
+	}
+    .chat-area::before {
+        content: "";
+        display: block;
+        flex: 1;
+    }
+    .send-user{margin-left:10px;}
+    .send-user>*{margin-right:5px;}
+    .chat-message.mine{display: flex; justify-content:flex-end;}
+    .chat-message.other{display: flex; justify-content:flex-start;}
+    .chat-message{margin:5px 15px;}
+    .chat-message .send-message{
+        padding: 5px 7px;
+        border-radius: 5px;
+        max-width: 180px;
+        font-size:0.9em;
+        white-space: pre-line;
+    }
+    .chat-message.other .send-message{background: rgb(240, 240, 240); margin:3px 25px;}
+    .chat-message.mine .send-message{background: rgb(111, 80, 248); color:white;}
+    .form-group{padding:10px;}
+    .form-group>*{float: left;}
+    .form-group>textarea{margin-right:5px;}
+    .form-group button{
+        width:45px;
+        height:87px;
+        border: none;
+        background:rgb(111, 80, 248); 
+        color:white;
+        border-radius:5px;
+    }
 </style>
 </head>
 <body>
@@ -591,15 +635,28 @@
         						}
         					}else{
         						if(list.length != 1){
-        							value += sub.slice(sub.length - list[i].groupCount + 1)
+        							if(sub.slice(sub.length - list[i].groupCount + 1).length < 4){
+            							value += sub.slice(sub.length - list[i].groupCount + 1)
+            						}else{
+            							value += sub.slice(sub.length - list[i].groupCount + 1).slice(0, 3) + ",..."
+            						}
         						}else{
         							value += sub
+        							if(sub.length < 4){
+            							value += sub
+            						}else{
+            							value += sub.slice(0, 3) + ",..."
+            						}
         						}
         					}
         				}
         				value += "</b><br>"
         				if(list[i].chatContent != undefined){
-        					value += list[i].chatContent
+        					if(list[i].chatContent.length > 20){
+        						value += list[i].chatContent.substr(0,21) + "..."
+        					}else{
+        						value += list[i].chatContent
+        					}
         				}else{
         					value += "<br>"
         				}
@@ -892,39 +949,75 @@
         $(document).on("click", "#createChat", function(){
         	let arr = [];
         	$("input[name=userNo]:checked").each(function(){
-        		arr.push($(this).val())
+        		arr.push($(this).val());
             })
+            arr.push(${loginUser.userNo});
             let arrDup = [...new Set(arr)]
-        	$.ajax({
-        		url:"createGroup.chat",
-       			data:{
-       				userNo:${loginUser.userNo},
-       				checkNo:arrDup
-        		},success:function(){
-        			
-        		},error:function(){
-        			
-        		}
-        	})
+        	newChat(arrDup);
         })
 
         // 주소록 더블클릭시 채팅방 이동
         function chatOne(no, clickNo){
      		if(no == 0){ // 전에 생성된 1:1 채팅이 없을 때
-     			$.ajax({
-     				url:"create.chat",
-           			data:{
-           				userNo:${loginUser.userNo},
-           				clickNo:clickNo
-            		},success:function(){
-            			
-            		},error:function(){
-            			
-            		}
-     			})
+     			let arr = [];
+            	arr.push(${loginUser.userNo});
+            	arr.push(clickNo);
+     			newChat(arr);
      		}else{ // 이미 생성된 1:1 채팅이 있을 때
-     			
+     			openChat(no);
      		}
+     	}
+     	
+     	function newChat(arr){
+            $.ajax({
+   				url:"create.chat",
+       			data:{
+       				participant:arr
+           		},success:function(list){
+           			
+           		},error:function(){
+           			console.log("새로운 채팅 생성용 ajax 통신 실패")
+           		}
+   			})
+     	}
+     	
+     	function openChat(no){
+     		$.ajax({
+   				url:"open.chat",
+       			data:{
+       				roomNo:no
+           		},success:function(list){
+           			value1 = "<div class='chat-area'>"
+           			for(let i=0; i<list.length; i++){
+           				if(list[i].sendNo != ${loginUser.userNo}){
+           					value1 += "<div><span class='send-user'>"
+	           						+		 "<img src='"
+	       							if(list[i].profileImg != undefined){
+	           							value1 += list[i].profileImg
+	          						}else{
+	          							value1 += "resources/icons/profile.png"
+	          						}
+	      							value1 += "' class='rounded-circle chatProfileImg pro-small'>"
+	    									+ list[i].sendName + "</span>"
+           									+ "<div class='chat-message other'>"
+               								+ "<div class='send-message'>" + list[i].chatContent + "</div></div></div>"
+           				}else{
+           					value1 += "<div class='chat-message mine'>"
+           							+ "<div class='send-message'>" + list[i].chatContent + "</div></div>"
+           					
+           				}
+           			}
+           			value1 += "</div><div class='input-area'>"
+               			   	+ "<div class='form-group'>"
+                   			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;'></textarea>"
+                    		+ "<button type='button' onclick='sendMessage();'>전송</button>"
+                			+ "</div></div>"
+                	$("#chat-body").html(value1);
+           			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+           		},error:function(){
+           			console.log("채팅 열기용 ajax 통신 실패")
+           		}
+   			})
      	}
 
         // 대화방 상세보기

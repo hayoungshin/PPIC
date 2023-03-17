@@ -192,6 +192,7 @@
 		  join participant p on(r.room_no = p.room_no)
 		  join member mb on(p.user_no = mb.user_no)
 		  where r.room_no = #{roomNo}
+		 order by chat_no
 	</select>
 	
 </mapper>
