@@ -197,6 +197,7 @@
         display: block;
         flex: 1;
     }
+    .chat-area img{cursor:pointer}
     .send-user{margin-left:10px;}
     .send-user>*{margin-right:5px;}
     .chat-message.mine{display: flex; justify-content:flex-end;}
@@ -209,19 +210,43 @@
         font-size:0.9em;
         white-space: pre-line;
     }
-    .chat-message.other .send-message{background: rgb(240, 240, 240); margin:3px 25px;}
+    .chat-message.other .send-message{background: rgb(240, 240, 240); margin-top:3px; margin-left:25px;;}
     .chat-message.mine .send-message{background: rgb(111, 80, 248); color:white;}
-    .form-group{padding:10px;}
+    .form-group{padding:10px 0px 10px 10px;}
     .form-group>*{float: left;}
     .form-group>textarea{margin-right:5px;}
     .form-group button{
-        width:45px;
+        width:54px;
         height:87px;
         border: none;
         background:rgb(111, 80, 248); 
         color:white;
         border-radius:5px;
     }
+    .notreadCount{
+    	display:flex; 
+    	align-items: flex-end;
+    	font-size:10px;
+    	margin:0px 5px;
+    }
+    
+    /* chat profile-area 스타일 */
+    #profile-area{padding:5px; line-height: 30px; border-bottom: 1px solid lightgray;}
+    #profile-area button{border:none; background:none;}
+    #profile-area>img{
+    	margin:0px 5px;
+    	height:15px;
+    	width:15px;
+   	}
+    #profile-area>span>img{
+    	float: right; 
+    	margin-top:5px;
+    	margin-left:5px;
+    	height:20px;
+    	width:20px;
+    	opacity:0.8;
+   	}
+   	#profile-area img{cursor:pointer;}
 </style>
 </head>
 <body>
@@ -242,12 +267,8 @@
                 <img src="resources/icons/chat.png" style="height:25px; width:45px;" id="chat-btn" onclick="showChatting();"> 
             </div> 
             
-            <table id="search-area">
-                <tr>
-                    <td width="300px" id="search-change">
-                    </td>
-                </tr>
-            </table>
+            <div id="search-div">
+            </div>
         </div>
         <div id="chat-body"></div>
     </div>
@@ -293,8 +314,12 @@
 		    					+ "즐겨찾기"
 		    					+ "</div>"
 		    					+ "<div class='detail' style='display:block;'>";
-		    		let value4 = "<input type='text' name='keyword' placeholder='&nbsp;이름으로 검색하세요'>"
-                    			+ "<button id='nameSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
+		    		let value4 = "<table id='search-area'>"
+		    					+	"<tr>"
+		    					+		"<td width='300px' id='search-change'>"
+		    					+			"<input type='text' name='keyword' placeholder='&nbsp;이름으로 검색하세요'>"
+                    			+ 			"<button id='nameSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
+                    			+		"</td></tr></table>"
 		    		let likeCount = 0; // 즐겨찾는 사람수
 		    		
         			for(let i=0; i<map.deptList.length; i++){
@@ -399,7 +424,7 @@
         			value2 += "</div>";
     				value3 += "</div>";
         			$("#chat-body").html(value3 + value1 + value2);
-        			$("#search-change").html(value4);
+        			$("#search-div").html(value4);
         		},error:function(){
         			console.log("주소록 불러오기용 ajax 통신 실패");
         		}
@@ -579,14 +604,18 @@
         		data:{participantNo:${loginUser.userNo}},
         		success:function(list){
         			let value = "<div id='chatRoomList-area'><table width='270'>";
-        			let value2 = "<input type='text' name='keyword' placeholder='&nbsp;이름 또는 채팅방이름으로 검색하세요'>"
-            					+ "<button id='chatRoomSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
+        			let value2 = "<table id='search-area'>"
+	    					+	"<tr>"
+	    					+		"<td width='300px' id='search-change'>"
+	    					+			"<input type='text' name='keyword' placeholder='&nbsp;이름 또는 채팅방이름으로 검색하세요'>"
+	            			+ 			"<button id='chatRoomSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
+	            			+		"</td></tr></table>"
         			let party = "";
         			if(list.length == 0){
         				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
         			}
         			for(let i=0; i<list.length; i++){
-        				value += "<tr><td style='width:50px'>"
+        				value += "<tr ondblclick='openChat(" + list[i].roomNo + ")'><td style='width:50px'>"
         				
        						if(list[i].groupCount <= 2){
        							for(let j=0; j<list[i].memList.length; j++){
@@ -641,7 +670,6 @@
             							value += sub.slice(sub.length - list[i].groupCount + 1).slice(0, 3) + ",..."
             						}
         						}else{
-        							value += sub
         							if(sub.length < 4){
             							value += sub
             						}else{
@@ -671,7 +699,7 @@
 									value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
 								}
 								value += "</small><br>"
-								if(list[i].notreadChat != undefined){
+								if(list[i].notreadChat != 0){
 									value += "<span>" + list[i].notreadChat + "</span>"
 								}else{
 									value += "<span style='background:none;'></span>"
@@ -681,7 +709,7 @@
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
-        			$("#search-change").html(value2);
+        			$("#search-div").html(value2);
         		},error:function(){
         			console.log("채팅 리스트 조회용 ajax 통신 실패");
         		}
@@ -742,7 +770,7 @@
         				if(list[i].roomName != undefined){
         					value += list[i].roomName
         				}else{
-        					let sub = party.substring(0, party.length - 1).split(",")
+        					let sub = party.substring(0, party.length - 1).split(",");
         					if(i != list.length - 1){
         						if(sub.slice(sub.length - list[i].groupCount + 1).length < 4){
         							value += sub.slice(sub.length - list[i].groupCount + 1)
@@ -751,15 +779,27 @@
         						}
         					}else{
         						if(list.length != 1){
-        							value += sub.slice(sub.length - list[i].groupCount + 1)
+        							if(sub.slice(sub.length - list[i].groupCount + 1).length < 4){
+            							value += sub.slice(sub.length - list[i].groupCount + 1)
+            						}else{
+            							value += sub.slice(sub.length - list[i].groupCount + 1).slice(0, 3) + ",..."
+            						}
         						}else{
-        							value += sub
+        							if(sub.length < 4){
+            							value += sub
+            						}else{
+            							value += sub.slice(0, 3) + ",..."
+            						}
         						}
         					}
         				}
         				value += "</b><br>"
         				if(list[i].chatContent != undefined){
-        					value += list[i].chatContent
+        					if(list[i].chatContent.length > 20){
+        						value += list[i].chatContent.substr(0,21) + "..."
+        					}else{
+        						value += list[i].chatContent
+        					}
         				}else{
         					value += "<br>"
         				}
@@ -774,7 +814,7 @@
 									value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
 								}
 								value += "</small><br>"
-								if(list[i].notreadChat != undefined){
+								if(list[i].notreadChat != 0){
 									value += "<span>" + list[i].notreadChat + "</span>"
 								}else{
 									value += "<span style='background:none;'></span>"
@@ -973,8 +1013,8 @@
    				url:"create.chat",
        			data:{
        				participant:arr
-           		},success:function(list){
-           			
+           		},success:function(boardNo){
+           			openChat(boardNo);
            		},error:function(){
            			console.log("새로운 채팅 생성용 ajax 통신 실패")
            		}
@@ -987,43 +1027,74 @@
        			data:{
        				roomNo:no
            		},success:function(list){
+           			console.log(list);
            			value1 = "<div class='chat-area'>"
+           			value2 = ""
            			for(let i=0; i<list.length; i++){
            				if(list[i].sendNo != ${loginUser.userNo}){
            					value1 += "<div><span class='send-user'>"
 	           						+		 "<img src='"
-	       							if(list[i].profileImg != undefined){
-	           							value1 += list[i].profileImg
+	       							if(list[i].sendProfile != undefined){
+	           							value1 += list[i].sendProfile
 	          						}else{
 	          							value1 += "resources/icons/profile.png"
 	          						}
 	      							value1 += "' class='rounded-circle chatProfileImg pro-small'>"
 	    									+ list[i].sendName + "</span>"
            									+ "<div class='chat-message other'>"
-               								+ "<div class='send-message'>" + list[i].chatContent + "</div></div></div>"
+               								+ "<div class='send-message'>" + list[i].chatContent + "</div>"
+               						if(list[i].notRead != 0){
+               							value1 += "<span class='notreadCount'>" + list[i].notRead + "</span>"
+               						}
+               						value1 += "</div></div>"
            				}else{
            					value1 += "<div class='chat-message mine'>"
-           							+ "<div class='send-message'>" + list[i].chatContent + "</div></div>"
-           					
+       						if(list[i].notRead != 0){
+       							value1 += "<span class='notreadCount'>" + list[i].notRead + "</span>"
+       						}
+           					value1 += "<div class='send-message'>" + list[i].chatContent + "</div></div>"
+           				}
+           				if(list[i].chatContent == undefined){
+           					value1 = "<div class='chat-area'>";
+           				}
+           				for(let j=0; j<list[i].memList.length; j++){
+           					if(list[i].groupCount == 2){
+           						if(list[i].memList[j].userNo != ${loginUser.userNo}){
+           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn'>"
+           									+ list[i].memList[j].userName
+           									+ "&nbsp;<span class='conn";
+            						if(list[i].memList[j].connSta == 0){
+            			        		value2 += " online";
+            			       		} else if(list[i].memList[j].connSta == 1){
+            			       			value2 += " offline";
+            			       		} else if(list[i].memList[j].connSta == 2){
+            			       			value2 += " out";
+            			       		}
+            						value2 += "'></span>"
+           						}
+           					}else{
+           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn'>그룹채팅 " + list[i].groupCount
+           					}
            				}
            			}
            			value1 += "</div><div class='input-area'>"
                			   	+ "<div class='form-group'>"
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;'></textarea>"
                     		+ "<button type='button' onclick='sendMessage();'>전송</button>"
-                			+ "</div></div>"
+                			+ "</div></div>";
+                	value2 += "<span><img src='resources/icons/dots.png'><img src='resources/icons/search.png'></span></div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+           			$("#search-div").html(value2);
            		},error:function(){
            			console.log("채팅 열기용 ajax 통신 실패")
            		}
    			})
      	}
-
-        // 대화방 상세보기
-        $("#chatRoomList-area tr").click(function(){
-            // ajax 이용
-        })
+     	
+     	$(document).on("click", "#toList-btn", function(){
+     		chatRoomList();
+     	})
     </script>
     
     <!-- 내 프로필 Modal -->

@@ -86,14 +86,14 @@ public class ChatController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="create.chat", produces="application/json; charset=UTF-8")
+	@RequestMapping("create.chat")
 	public String ajaxCreateChat(@RequestParam(value="participant[]") ArrayList<Integer> participant) {
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("groupCount", 2);
+		map.put("groupCount", participant.size());
 		int result1 = cService.insertChatRoom(map);
 		int result2 = cService.insertParticipant(participant);
-		ArrayList<Chat> list = cService.selectChat(result1);
-		return new Gson().toJson(list);
+		
+		return String.valueOf(result1);
 	}
 	
 	@ResponseBody

@@ -13,6 +13,7 @@
 		<result column ="chat_no" property="chatNo" />
 		<result column ="not_read" property="notRead" />
 		<result column ="send_name" property="sendName" />
+		<result column ="send_profile" property="sendProfile" />
 		<collection property="memList" resultMap="memberResult" />
 	</resultMap>
 	
@@ -178,13 +179,17 @@
 		select 
 		       r.room_no
 		     , room_name
+		     , group_count
 		     , send_no
 		     , chat_no
 		     , chat_content
 		     , not_read
 		     , m.user_name "send_name"
+		     , m.profile_img "send_profile"
 		     , p.user_no
 		     , mb.user_name
+		     , mb.profile_img
+		     , mb.conn_sta
 		     , lastread_chat
 		  from chatroom r
 		  left join chat c on(r.room_no = c.room_no)
