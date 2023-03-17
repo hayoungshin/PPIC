@@ -71,7 +71,14 @@
   }
   @keyframes load {
     0% { width: 0; }
-    100% { width: 75%; }
+    100% { width: 95%; }
+  }
+
+  .p-summary{
+    font-size:13px;
+  }
+  #p-detail{
+    line-height:20px;
   }
 
   /* 작업 추가 버튼 */
@@ -148,22 +155,13 @@
         <!-- Swiper -->
         <div class="swiper mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide active">
-              <div class="project-box">
-                <input type="hidden" name="projectNo" value="${p.projectNo}">
-                <div class="project-title">${p.projectName}</div>
-                <div class="project-detail">${p.detail}</div>
-                <div class="project-pm">PM : ${p.projectManager} / ${p.projectParticipants[0].departmentName}</div>
-                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
-              </div>
-            </div>
-	          <c:forEach var="p" items="${pList}" begin="1">
-	            <div class="swiper-slide">
+	          <c:forEach var="p" items="${pList}">
+	            <div class="swiper-slide" onclick="detailLoad(this);">
 	              <div class="project-box">
                   <input type="hidden" name="projectNo" value="${p.projectNo}">
+                  <input type="hidden" name="projectDetail" value="${p.detail}">
 	                <div class="project-title">${p.projectName}</div>
-                  <div class="project-detail">${p.detail}</div>
-	                <div class="project-pm">PM : ${p.projectManager} / ${p.projectParticipants[0].departmentName}</div>
+	                <div class="project-manager">PM : ${p.projectManager} / ${p.projectParticipants[0].departmentName}</div>
 	                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
 	              </div>
 	            </div>
@@ -184,7 +182,7 @@
                 slidesPerView: 4,
                 spaceBetween: 30,
                 // slidesPerGroup: 4,
-                loopFillGroupWithBlank: true,
+                // loopFillGroupWithBlank: true,
                 freeMode: true,
                 direction: 'horizontal',
                 loop: true,
@@ -214,65 +212,93 @@
       <!-- 프로젝트 클릭 -->
       <script>
         $(function(){
+          var firstSlide = $(".swiper-slide-active");
+          detailLoad(firstSlide);
+        })
 
-          $(".swiper-slide").click(function(){
-            $(this).addClass("active");
-            $(this).siblings().removeClass("active");
-            let projectNo = $(this).find("input[name=projectNo]").val();
+        function detailLoad(e){
 
+            $(e).addClass("active");
+            $(e).siblings().removeClass("active");
+            
+            let projectName = $(e).find(".project-title").text();
+            $("#p-title").html("<b>" + projectName + "</b>");
+
+            let projectDetail = $(e).find("input[name=projectDetail]").val();
+            $("#p-detail").text(projectDetail);
+
+            let pm = $(e).find(".project-manager").text();
+            $("#pm").text(pm);
+            
+            let projectNo = $(e).find("input[name=projectNo]").val();
+            
             $.ajax({
               url:"detail.pr",
               data:{"projectNo":projectNo},
-              success:function(ppList){
+              success:function(obj){
+                let ppList = obj.ppList;
+                let tList = obj.tList
+                
                 let member = "";
                 for(let i=0; i<ppList.length; i++){
                   member += ppList[i].userName + " / " + ppList[i].departmentName + ", ";
                 }
-                member = member.substring(0, member.lastIndexOf(","));
+                member = "참여자 : " + member.substring(0, member.lastIndexOf(","));
                 $("#member-list").html(member);
+
+                let status = "";
+                let task = "";
+                for(let i=0; i<tList.length; i++){
+                  task += "<div class='task-box'>"
+                        + "<div class='task-title'>" + tList[i].taskName + "</div>"
+                        + "<div class='file'>파일명.jpg</div>";
+                  
+                  status = tList[i].taskStatus;
+                  switch(status){
+                    case "1": status = "대기";
+                            task += "<div class='status status-wait'>";
+                            break;
+                    case "2": status = "진행중";
+                            task += "<div class='status status-working'>";
+                            break;
+                    case "3": status = "완료";
+                            task += "<div class='status status-done'>";
+                            break;
+                    case "4": status = "보류";
+                            task += "<div class='status status-hold'>";
+                            break;
+                  }
+
+                  task += status + "</div>"
+                        + "<div class='ref-people'>참조인 18명</div>"
+                        + "</div>";
+                  
+                  $("#task-list .wait-list").append(task);
+                  
+                }
+
+
               }, error:function(){
-                console.log("참여자 정보 가져오기 실패");
+                console.log("정보 가져오기 실패");
               }
             })
 
-          })
-        })
+        }
       </script>
-      <!-- 해당 프로젝트 참여자 정보 -->
-      <!-- <script>
-        let projectNo = '${p.projectNo}';
-        $(function(){
-          $.ajax({
-            url:"ppts.pr",
-            data:{"projectNo":projectNo},
-            success:function(ppList){
-              
-              let member = "";
-              for(let i=0; i<ppList.length; i++){
-                member += ppList[i].userName + " / " + ppList[i].departmentName + ", ";
-              }
-              member = member.substring(0, member.lastIndexOf(","));
-              $("#member-list").html(member);
-            }, error:function(){
-              console.log("참여자 정보 가져오기 실패");
-            }
-          })
-        })
-      </script> -->
 
-      <h4><b>프로젝트이름</b></h4>
-      <br>
-      <div id="participants-area" style="font-size:14px;">
-        <b>프로젝트 참여 멤버</b> <br><br>
-        <div id="member-list" style="font-size:12px;">
-        </div>
+      <h5 id="p-title"></h5>
+      <div class="p-summary">
+        <div id="p-detail"></div>
+        <br>
+        <div id="pm"></div>
+        <div id="member-list"></div>
       </div>
       <br>
       <div id="progress-area">
         <span style="font-size:14px;"><b>진행률</b></span>
         <br><br>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%</div>
+          <div class="progress-bar" role="progressbar" style="width: 95%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%</div>
         </div>
       </div>
       <br><br><br>
@@ -281,7 +307,7 @@
         <button id="add-task" class="btn-purple">+ 작업 만들기</button>
         <br><br>
         <div class="row" id="task-category">
-          <div class="col" id="wait"><div class="circle status-wait"></div>대기중</div>
+          <div class="col" id="wait"><div class="circle status-wait"></div>대기</div>
           <div class="col" id="working"><div class="circle status-working"></div>작업중</div>
           <div class="col" id="done"><div class="circle status-done"></div>완료</div>
           <div class="col" id="hold"><div class="circle status-hold"></div>보류</div>
@@ -290,12 +316,6 @@
           <div class="col column wait-list">
             <div class="task-box" data-toggle="modal" data-target="#task">
               <div class="task-title">어쩌구저쩌구 작업ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</div>
-              <div class="file">파일명.jpg</div>
-              <div class="status status-wait">대기중</div>
-              <div class="ref-people">참조인 18명</div>
-            </div>
-            <div class="task-box">
-              <div class="task-title">어쩌구저쩌구 작업</div>
               <div class="file">파일명.jpg</div>
               <div class="status status-wait">대기중</div>
               <div class="ref-people">참조인 18명</div>

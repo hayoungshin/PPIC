@@ -11,27 +11,31 @@
 	#mail-send-form tr{
 		height:40px;
 	}
-	.reciever-list input{
-		width:1000px; height:30px;
+	.td{
+		width:1160px;
+		border-bottom:1px solid rgb(200,200,200);
+	}
+	.td input{
+		width:1100px; height:30px;
 		border: none;
 		border-radius:5px;
 	}
-	.reciever-name{
+	.recipient-btn{
 		border:none;
 		border-radius:10px;
 		background:#FFCECE;
 	}
-	.reciever-name:hover{
+	.recipient-btn:hover{
 		background:#f6c1c1;
 		font-weight:500;
 		color: rgb(60, 60, 60);
 	}
 	
 	/* 주소록 버튼 */
-	.reciever-list{
+	.td{
 		position:relative;
 	}
-	#address-btn {
+	.address-btn {
 		position:absolute;
 		cursor:pointer;
 		height:23px;
@@ -41,7 +45,7 @@
 		border:1px solid rgb(230,230,230);
 		background:white;
 	}
-	#address-btn:hover{
+	.address-btn:hover{
 		background:rgb(230,230,230);
 	}
 
@@ -128,42 +132,33 @@
     }
     
     /* 자동완성 */
-    .reciever-list{
+    .td{
     	position:relative;
     }
-    .autocomplete-area {
-        width:500px;
-        height:200px; 
-        background:white;
-        border:1px solid rgb(200,200,200);
-        border-radius:5px; 
-        z-index:3;
-        position:absolute;
-        top:40px;
-     }
-     input:focus {outline: none;}
+    .autocomplete-area{
+    	position:absolute;
+    	max-height:150px;
+    	width:400px;
+    	z-index:3;
+    	background:white;
+    	border:1px solid rgb(200,200,200);
+    	border-radius:5px;
+    	overflow:auto;
+    }
+    .autocomplete-items{padding:2px 5px; margin:0;}
+    .autocomplete-items:hover{
+    	cursor:pointer;
+    	background:rgb(230,230,230);
+    }
+    input:focus {outline:none;}
 </style>
-<!-- autocomplete -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 <body>
 	<jsp:include page="../common/menubar.jsp" />
-	<!-- include summernote css/js-->
-	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> 
-	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-	<script src=" https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 	
 	<div class="outer">
 		<div id="content">
 		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
-		<div>
-			<c:forEach var="mem" items="${ memList }">
-				<p class="mail-list">${ mem.userName } &lt${ mem.mail }&gt</p>
-			</c:forEach>
-		</div>
 		<form action="" style="padding:0px 20px;">
 			
 			<button class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;">보내기</button>
@@ -171,43 +166,38 @@
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">미리보기</button>
 
 			<table style="margin:20px 0; font-size:14px;" id="mail-send-form">
-				<tr>
+				<tr id="recipient-area">
 					<th colspan="2" style="width:150px;">받는사람</th>
-					<td class="reciever-list" style="width:1200px; border-bottom:1px solid rgb(200,200,200);">
-						<button class="reciever-name">
+					<td class="td">
+						<button class="recipient-btn">
 							신하영 &ltuser01@ppic.kr&gt
 							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
 						</button>
-						<input id="reciever-input" type="text" placeholder="메일 주소 사이에 콤마(,) 또는 세미콜론(;)으로 구분하여 입력하세요">
-						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
-						<div class="autocomplete-area" style="display:none;">
+						<input type="text" class="mailInput" onkeyup="selectAutoComplete(0, this);"  placeholder="메일 주소 사이에 콤마(,) 또는 세미콜론(;)으로 구분하여 입력하세요" style="width:900px;">
+						<button type="button" class="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
 						
-						</div>
+						<div class="autocomplete-area" style="display:none;"></div>
+						
 					</td>
 				</tr>
-				<tr>
-					<th>참조</th>
-					<td></td>
-					<td class="reciever-list" style="width:1200px; border-bottom:1px solid rgb(200,200,200);">
-						<input type="text" style="width:1198px;">
-						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
-						<div class="autocomplete-area" style="display:none;">
-							
-						</div>
+				<tr id="ref-area">
+					<th colspan='2'>참조</th>
+					<td class="td">
+						<input class="mailInput" onkeyup="selectAutoComplete(1, this);" type="text">
+						<button type="button" class="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
+						
+						<div class="autocomplete-area" style="display:none;"></div>
+						
 					</td>
 				</tr>
-				<tr>
+				<tr id="hid-ref-area">
 					<th colspan="2">숨은참조</th>
-					<td class="reciever-list" style="width:1200px; border-bottom:1px solid rgb(200,200,200);">
-						<button class="reciever-name">
-							신하영 &ltuser01@ppic.kr&gt
-							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
-						</button>
-						<input type="text">
-						<button type="button" id="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
-						<div class="autocomplete-area" style="display:none;">
+					<td class="td">
+						<input class="mailInput" onkeyup="selectAutoComplete(2, this);" type="text">
+						<button type="button" class="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
 						
-						</div>
+						<div class="autocomplete-area" style="display:none;"></div>
+						
 					</td>
 				</tr>
 				<tr>
@@ -216,8 +206,8 @@
 						<input type="checkbox" id="important-check" style="vertical-align: middle;">
 						<label for="important-check" style="margin:0;">중요</label>
 					</td>
-					<td>
-						<input type="text" style="width:1190px; height:30px; border: 1px solid rgb(200,200,200); border-radius:5px;">
+					<td class="td">
+						<input type="text" style="height:30px; border:none;">
 					</td>
 				</tr>
 				<tr>
@@ -225,7 +215,7 @@
 					<td>
 						
 					</td>
-					<td class="reciever-list">
+					<td class="recipient-list">
 						<label class="input-file-btn">
 							파일첨부
 							<input type="file" onchange="loadFiles(this);" style="display:none;" multiple>
@@ -248,31 +238,85 @@
 				</tr>
 			</table>
 			
+			
+			<!-- 자동완성 -->
 			<script>
-				let recieverInput = document.getElementById("reciever-input");
+				/* 페이지 로딩되자마자 전체 회원의 이름, 메일주소 조회 */
+				$(function(){selectMemberList();})				
+				let memArr = [];
+				let autocompleteArea = document.getElementsByClassName("autocomplete-area");
+				function selectMemberList(){
+					$.ajax({
+	        			url:"select.me",
+	        			data:{},
+	        			type:"post",
+	        			success:function(mList){	//회원조회성공
+	        				
+	        				for(let i=0; i<mList.length; i++){
+		        				memArr.push({
+		        					name:mList[i].userName,
+		        					mail:mList[i].mail,
+		        					dept:mList[i].department
+		        				});
+	        				}
+	        				console.log(memArr);
+	        			}, error:function(){
+	        				console.log("회원조회용 ajax 통신실패")
+	        			}
+	        		})
+				}
+				
+				/* 키업때마다 자동완성 조회 */
+				function selectAutoComplete(type, e){
+					
+					let result = "";
+					let count = 0;
+       				for(let i in memArr){
+       					// 포함되어있을 경우 area에 추가
+       					if(memArr[i].name.indexOf(e.value) != -1 || memArr[i].mail.indexOf(e.value) != -1){
+       						count += 1;
+       						result += "<p class='autocomplete-items'>"
+        						   +	memArr[i].name + " " + "&lt" + memArr[i].mail + "&gt"
+        						   + "</p>";
+       					}
+       					// 결과 있을 경우 area 보이게, 없을 경우 안보이게
+       					if(count > 0){
+       						autocompleteArea[type].style.display = "block";
+       					} else {
+       						autocompleteArea[type].style.display = "none";
+       					}
+       				}
+       				autocompleteArea[type].innerHTML = result;
+				}
+				
+				$(document).on("click", ".autocomplete-items", function(){
+        			console.log($(this));
+        		})
+				
+				$(document).on("click", function(e){
+					console.log(e.target);
+					if(!$(e.target).hasClass("mailInput")){
+						// mailInput 클래스를 갖고 있는 영역을 클릭했을 때 빼고 area 안보이게
+						for(let i=0; i<autocompleteArea.length; i++){
+							autocompleteArea[i].style.display = "none";
+						}
+						//console.log(e.target.innerHTML);
+					}
+				})
+				
+				
+				
+				
 				/*
-				recieverInput.onkeyup = function(e){
+				recipientInput.onkeyup = function(e){
 					if(e.key == ',' || e.key == ';'){
 						// , 또는 ;으로 구분
 						
 					}
-				}
-				*/
-				let mailListArr = $(".mail-list");
-				let mailArr = new Array();
-				for(let i=0; i<mailListArr.length; i++){
-	                mailArr[i] = mailListArr[i].innerText;
-	            }
-				console.log(mailArr);
+				}*/
 				
-				$(document).ready(function() {
-					
-			        $('#reciever-input').autocomplete({
-			            source : mailArr,
-			            minLength : 1
-			        });
-			        
-			    });
+				
+				
 				
 			</script>
 
@@ -309,6 +353,10 @@
 					fileArea.innerHTML += "<p class='input-file-list'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[0].name + "</p>";
 				})
 			</script>
+			<!-- include summernote css/js-->
+			<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> 
+			<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+			<script src=" https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 			<script>
 			  $(function(){
 			      $('#summernote').summernote({

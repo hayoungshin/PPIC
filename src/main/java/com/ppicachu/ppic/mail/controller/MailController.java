@@ -32,8 +32,6 @@ public class MailController {
 	
 	@RequestMapping("sendForm.ml")
 	public String sendMailForm(Model model) {
-		ArrayList<Member> memList = memService.selectListMember();
-		model.addAttribute("memList", memList);
 		return "mail/sendMailForm";
 	}
 	

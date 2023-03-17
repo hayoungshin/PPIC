@@ -75,5 +75,10 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.resetPwd(sqlSession, m);
 	}
 
+	@Override
+	public ArrayList<Member> selectMemForMail() {
+		return mDao.selectMemForMail(sqlSession);
+	}
+
 
 }

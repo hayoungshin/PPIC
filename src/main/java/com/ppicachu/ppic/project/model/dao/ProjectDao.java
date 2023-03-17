@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ppicachu.ppic.project.model.vo.Project;
 import com.ppicachu.ppic.project.model.vo.ProjectParticipant;
+import com.ppicachu.ppic.project.model.vo.Task;
 
 @Repository
 public class ProjectDao {
@@ -17,5 +18,9 @@ public class ProjectDao {
 	
 	public ArrayList<ProjectParticipant> selectProjectParticipants(SqlSessionTemplate sqlSession, int projectNo) {
 		return (ArrayList)sqlSession.selectList("projectMapper.selectProjectParticipants", projectNo);
+	}
+	
+	public ArrayList<Task> selectTaskList(SqlSessionTemplate sqlSession, int projectNo)	{
+		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskList", projectNo);
 	}
 }
