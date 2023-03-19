@@ -39,18 +39,16 @@
 	-->
 	
 	<!-- websocket 관련 구문 추가 -->
-	<!-- 
-	<beans:bean id="chatEchoHandler" class="com.ppicachu.ppic." />
+	<beans:bean id="chatEchoHandler" class="com.ppicachu.ppic.chat.controller.ChatEchoHandler" />
+	<beans:bean id="alarmEchoHandler" class="com.ppicachu.ppic.alarm.controller.AlarmEchoHandler" />
 	<websocket:handlers>
 		<websocket:mapping handler="chatEchoHandler" path="/chat" />
-		
+		<websocket:mapping handler="alarmEchoHandler" path="/alarm" />
 		<websocket:handshake-interceptors>
 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
 		</websocket:handshake-interceptors>
-		
 		<websocket:sockjs />
 	</websocket:handlers>
-	-->
 	
 	
 	<!-- 스케줄링 관련 구문 추가 -->

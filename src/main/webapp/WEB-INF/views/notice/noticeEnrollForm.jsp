@@ -130,7 +130,15 @@
 	          lang: "ko-KR",					// 한글 설정
 	          placeholder: '내용을 입력해주세요.'	//placeholder 설정
 	      });
+	      console.log(socket)
 	  });
+	  $("#enroll-btn").click(function(){
+		  if(socket){
+			  // websocket에 보내기!!
+			  let socketMsg = "11,${loginUser.userNo},${loginUser.userName},4,4,''";
+			  socket.send(socketMsg);
+		  }
+	  })
 	</script>
 	
     <script>
