@@ -142,6 +142,7 @@
 		 background:rgb(244, 89, 89);
 		 color:white;
 		 font-size:11px;
+		 display:none;
 	}
 </style>
 </head>
@@ -265,7 +266,7 @@
         <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
         <script>
 	        let socket = null;
-	        
+	        let newAlarm = [];
 	     	// 날짜 포맷
 	        function dateFormat(no){
 	        	const d = new Date();
@@ -279,6 +280,9 @@
 	     	// 알람 조회
 			$(function(){
 				connectAlarm();
+				selectAlarm();
+			})
+	     	function selectAlarm(){
 				$.ajax({
 					url:"select.noti",
 					data:{userNo:${loginUser.userNo}},
@@ -291,7 +295,7 @@
 						            + "<td class='icon'>🔔</td>"
 						            + "<td>"
 						            + list[i].nfContent + "<br>"
-						            + "<small>"
+						            + "<small>";
 						            if(list[i].nfDate.includes(dateFormat(1))){
 						            	result1 += list[i].nfDate.substring(list[i].nfDate.indexOf("오")) 
 									}else if(list[i].nfDate.includes(dateFormat(2))){
@@ -301,7 +305,8 @@
 									}
 						            result1 += "</small>"
 						            	+ "</td>"
-						        		+ "</tr>"
+						        		+ "</tr>";
+						        	newAlarm.push(list[i].nfNo);
 							}else{
 								result2 += "<tr>"
 						            + "<td class='icon'>✔️</td>"
@@ -315,27 +320,28 @@
 									} else{
 										result2 += list[i].nfDate.substring(0, list[i].nfDate.indexOf("오"))
 									}
-						            result1 += "</small>"
+						            result2 += "</small>"
 						            	+ "</td>"
 						        		+ "</tr>"
 							}
 						}
 						if(result1 == ""){
 							result1 += "<tr><td colspan='2'>새로운 알림이 없습니다.</td></tr>";
+							$("#alarm-count").css("display", "none");
+						}else{
+							$("#alarm-count").text(list[0].nfCount);
+							$("#alarm-count").css("display", "block");
 						}
 						if(result2 == ""){
 							result2 += "<tr><td colspan='2'>지난 알림이 없습니다.</td></tr>";
 						}
 						$("#newalarm").html(result1);
 						$("#checkalarm").html(result2);
-						if(list.length > 0){
-							$("#alarm-count").text(list[0].nfCount);
-						}
 					},error:function(){
 						console.log("알람 조회용 ajax통신실패")
 					}
 				})
-			})
+	     	}
         </script>
 		
 </body>

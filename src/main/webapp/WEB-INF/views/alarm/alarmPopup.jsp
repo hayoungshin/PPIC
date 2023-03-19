@@ -49,71 +49,15 @@
 <body>
     <div id="alarm-popup">
 	    <b style="font-size:17px;">새로운 알림</b>
-	    <a href="" class="btn btn-sm" style="float:right" id="allRead">모두 읽음</a>
+	    <button class="btn btn-sm" style="float:right" id="allRead">모두 읽음</button>
 	    <br><br>
 	    <table id="newalarm">
-	        <!-- <tr>
-	            <td class="icon">🔔</td>
-	            <td>
-	                '회의실 사용' 승인이 완료되었어요. <br>
-	                <small>1분전</small>
-	            </td>
-	        </tr> -->
 	    </table>
 	    <br>
 	    <b style="font-size:17px;">지난 알림</b>
 	    <a href="" class="btn btn-sm" style="float:right;"><small>전체조회</small></a>
 	    <br><br>
 	    <table id="checkalarm">
-	        <!-- <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td class="icon">✔️</td>
-	            <td>
-	                하니님이 '계약서 검토 요청' 승인을 요청했어요. <br>
-	                <small>50분전</small>
-	            </td>
-	        </tr> -->
 	    </table>
     </div>
     <script>
@@ -131,20 +75,29 @@
 			 	
 	   		function onMessage(evt){
 	   			console.log(evt.data + '\n');
-	   			let value = "<tr>"
-		            + "<td class='icon'>🔔</td>"
-		            + "<td>"
-		            + evt.data + "<br>"
-		            + "</td>"
-		        	+ "</tr>"
-	   			$("#newalarm").prepend(value);
-	   			$("#alarm-count").text(Number($("#alarm-count").text()) + 1);
+	   			selectAlarm();
 			}
 	   		
 	    	function onClose(){
 	    		console.log('Info : connection closed.');
 			}
 		}
+	    $("#allRead").click(function(){
+	    	if(newAlarm.length != 0){
+	    		$.ajax({
+					url:"update.noti",
+					data:{nfArr:newAlarm},
+					success:function(result){
+						if(result == "success"){
+							selectAlarm();
+						}
+					},error:function(){
+						console.log("모두읽음 처리용 ajax통신 실패")
+					}
+	    		})
+	    	}
+	    })
+	    
     </script>
     
 </body>

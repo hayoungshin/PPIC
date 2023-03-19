@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -23,5 +24,12 @@ public class AlarmController {
 		ArrayList<Alarm> list = aService.selectNoti(userNo);
 		
 		return new Gson().toJson(list);
+	}
+	
+	@ResponseBody
+	@RequestMapping("update.noti")
+	public String ajaxUpdateNoti(@RequestParam(value="nfArr[]") ArrayList<Integer> nfArr) {
+		int result = aService.updateNoti(nfArr);
+		return result != 0 ? "success" : "fail";
 	}
 }

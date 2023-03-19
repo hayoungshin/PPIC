@@ -50,4 +50,13 @@
 		 order
 		    by nf_no desc
 	</select> 
+	
+	<update id="updateNoti">
+		<foreach collection="list" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+		update
+		       notification
+		   set check_sta = 'Y'
+		 where nf_no = #{item}
+		</foreach>
+	</update>
 </mapper>
