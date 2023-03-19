@@ -55,7 +55,7 @@
         background: rgb(190, 190, 190);
     }
     #allDeleteModal-btn, #allDelete-btn, #delete-btn{background: rgb(111, 80, 248);}
-    a:hover, .delete-img:hover{opacity:0.7;}
+    .delete-img:hover{opacity:0.7;}
     .delete-img{cursor:pointer; float:right;}
 </style>
 </head>
@@ -81,23 +81,17 @@
 		            <br>
 		            <div style="width:1000px">
 		            	<span style="font-size:17px;" id="alarm-name">전체 알림</span>
-		            	<a href="" class="btn" id="allDeleteModal-btn" style="float:right" data-toggle="modal" data-target="#allDeleteModal">전체 삭제</a>
+		            	<button class="btn" id="allDeleteModal-btn" style="float:right; margin-left:5px;" data-toggle="modal" data-target="#allDeleteModal">전체 삭제</button>
 		            </div>
 		            <br><br>
 		            <div id="alarm-list-area">
 			            <table width="1000px" id="alarm-content">
-			                <tr class="line">
-			                    <td>🔔 '회의실 사용' 승인이 완료되었어요.   2023-02-17 16:34</td>
-			                    <td><img src="resources/icons/delete.png" width="8px" height="8px" class="delete-img"></td>
-			                </tr>
-			                <tr class="line">
-			                    <td>✔️ 하니님이 '계약서 검토 요청' 승인을 요청했어요.  2023-02-17 16:34</td>
-			                    <td><img src="resources/icons/delete.png" width="8px" height="8px" class="delete-img"></td>
-			                </tr>
 			            </table>
 		            </div>
 		        </div>
 		        <script>
+		        	let alarmList = [];
+		        	
 		        	$(function(){
 		        		selectListNoti();
 		        	})
@@ -129,8 +123,9 @@
 			        							}
 			        					value += list[i].nfContent + "&nbsp;"
 			        							+ list[i].nfDate + "</td>"
-			        							+ '<td><img src="resources/icons/delete.png" width="8px" height="8px" class="delete-img"></td>'
+			        							+ '<td><img src="resources/icons/delete.png" width="8px" height="8px" class="delete-img" id="' + list[i].nfNo + '"></td>'
 			        							+ "</tr>"
+			        					alarmList.push(list[i].nfNo);
 			        				}
 		        				}
 		        				$("#alarm-content").html(value);
@@ -139,11 +134,43 @@
 		        			}
 		        		})
 		        	}
+		        	$(document).on("click", ".delete-img", function(){
+		        		$("input[name=nfNo]").val($(this).attr("id"));
+		        		$('#deleteModal').modal('show'); 
+		        	})
 		        	
-		            $(document).on("click", ".delete-img", function(){
-		                // 알림 번호 넘기면서
-		                $('#deleteModal').modal('show'); 
-		            })
+		        	$(document).on("click", "#delete-btn", function(){
+		        		
+		        		alarmList = [$("input[name=nfNo]").val()]
+		        		$.ajax({
+		        			url:"delete.noti",
+		        			data:{nfArr:alarmList}
+		        			,success:function(result){
+		        				if(result == "success"){
+		        					selectAlarm();
+			        				selectListNoti();
+		        				}
+		        				console.log(result)
+		        			},error:function(){
+		        				console.log("알림 삭제용 ajax통신 실패")
+		        			}
+		        		})
+		        	})
+		        	
+		        	$(document).on("click", "#allDelete-btn", function(){
+		        		if(alarmList.length != 0){
+			        		$.ajax({
+			        			url:"delete.noti",
+			        			data:{nfArr:alarmList}
+			        			,success:function(){
+			        				selectAlarm();
+			        				selectListNoti();
+			        			}
+			        		})
+		        		}
+		        	})
+		        	
+		            
 		        </script>
 		        <!-- 전체 삭제 확인용 Modal -->
 		        <div class="modal" id="allDeleteModal" data-backdrop='static' data-keyboard='false'>
@@ -153,8 +180,8 @@
 		                <b>알림 전체 삭제</b> <br><br>
 		                <div align="center">
 		                    전체 삭제하시겠습니까?<br><br>
-		                    <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-		                    <a href="" class="btn" id="allDelete-btn">확인</a>
+		                    <button class="btn" data-dismiss="modal" id="exit-btn">취소</button>
+		                    <button class="btn" id="allDelete-btn" data-dismiss="modal">확인</button>
 		                </div>
 		                </div>
 		            </div>
@@ -169,8 +196,9 @@
 		                <b>알림 삭제</b> <br><br>
 		                <div align="center">
 		                    삭제하시겠습니까?<br><br>
-		                    <a class="btn" data-dismiss="modal" id="exit-btn">취소</a>
-		                    <a href="" class="btn" id="delete-btn">확인</a>
+		                    <button class="btn" data-dismiss="modal" id="exit-btn">취소</button>
+		                    <button class="btn" id="delete-btn" data-dismiss="modal">확인</button>
+		                    <input type="hidden" name="nfNo">
 		                </div>
 		                </div>
 		            </div>

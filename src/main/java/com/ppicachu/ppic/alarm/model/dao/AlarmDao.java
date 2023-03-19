@@ -25,4 +25,8 @@ public class AlarmDao {
 	public ArrayList<Alarm> selectNotiList(SqlSessionTemplate sqlSession, Alarm a) {
 		return (ArrayList)sqlSession.selectList("notificationMapper.selectNotiList", a);
 	}
+	
+	public int deleteNoti(SqlSessionTemplate sqlSession, ArrayList<Integer> nfNo) {
+		return sqlSession.update("notificationMapper.deleteNoti", nfNo);
+	}
 }

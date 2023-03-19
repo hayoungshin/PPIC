@@ -13,4 +13,6 @@ public interface AlarmService {
 	int updateNoti(ArrayList<Integer> nfNo);
 	
 	ArrayList<Alarm> selectNotiList(Alarm a);
+	
+	int deleteNoti(ArrayList<Integer> nfNo);
 }

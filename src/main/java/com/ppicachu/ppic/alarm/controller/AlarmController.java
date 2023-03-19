@@ -45,4 +45,10 @@ public class AlarmController {
 		return new Gson().toJson(list);
 	}
 	
+	@ResponseBody
+	@RequestMapping("delete.noti")
+	public String ajaxDeleteNoti(@RequestParam(value="nfArr[]") ArrayList<Integer> nfArr) {
+		int result = aService.deleteNoti(nfArr);
+		return result != 0 ? "success" : "fail";
+	}
 }

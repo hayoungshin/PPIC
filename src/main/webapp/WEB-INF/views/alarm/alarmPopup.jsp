@@ -90,6 +90,7 @@
 					success:function(result){
 						if(result == "success"){
 							selectAlarm();
+							selectListNoti();
 						}
 					},error:function(){
 						console.log("모두읽음 처리용 ajax통신 실패")
