@@ -59,4 +59,27 @@
 		 where nf_no = #{item}
 		</foreach>
 	</update>
+	
+	<select id="selectNotiList" resultMap="notificationResult">
+		select
+			   nf_no
+		     , nf_content
+             , check_sta
+             , to_char(nf_date, 'YYYY-MM-DD PM HH:mm') "nf_date"
+		  from notification
+		 where receive_no = #{receiveNo}
+		   and delete_sta = 'N'
+		   <if test="catNo != 'all'">
+		   	<choose>
+		   		<when test='catNo == "N"'>
+		   			and check_sta = 'N'
+		   		</when>
+		   		<otherwise>
+		   			and cat_no = #{catNo}
+		   		</otherwise>
+		   	</choose>
+		   </if>
+		 order
+		    by nf_no desc
+	</select>
 </mapper>

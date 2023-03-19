@@ -22,4 +22,7 @@ public class AlarmDao {
 		return sqlSession.update("notificationMapper.updateNoti", nfNo);
 	}
 
+	public ArrayList<Alarm> selectNotiList(SqlSessionTemplate sqlSession, Alarm a) {
+		return (ArrayList)sqlSession.selectList("notificationMapper.selectNotiList", a);
+	}
 }

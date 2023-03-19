@@ -55,7 +55,7 @@
 	    </table>
 	    <br>
 	    <b style="font-size:17px;">지난 알림</b>
-	    <a href="" class="btn btn-sm" style="float:right;"><small>전체조회</small></a>
+	    <a href="list.noti" class="btn btn-sm" style="float:right;"><small>전체조회</small></a>
 	    <br><br>
 	    <table id="checkalarm">
 	    </table>

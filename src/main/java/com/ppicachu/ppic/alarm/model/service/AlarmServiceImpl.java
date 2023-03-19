@@ -32,4 +32,9 @@ public class AlarmServiceImpl implements AlarmService{
 	public int updateNoti(ArrayList<Integer> nfNo) {
 		return aDao.updateNoti(sqlSession, nfNo);
 	}
+
+	@Override
+	public ArrayList<Alarm> selectNotiList(Alarm a) {
+		return aDao.selectNotiList(sqlSession, a);
+	}
 }

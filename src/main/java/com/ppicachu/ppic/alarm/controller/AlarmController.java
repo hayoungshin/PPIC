@@ -32,4 +32,17 @@ public class AlarmController {
 		int result = aService.updateNoti(nfArr);
 		return result != 0 ? "success" : "fail";
 	}
+	
+	@RequestMapping("list.noti")
+	public String notiList() {
+		return "alarm/alarmListView";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="selectList.noti", produces="application/json; charset=UTF-8")
+	public String ajaxNotiList(Alarm a) {
+		ArrayList<Alarm> list = aService.selectNotiList(a);
+		return new Gson().toJson(list);
+	}
+	
 }

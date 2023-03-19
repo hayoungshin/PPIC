@@ -26,14 +26,12 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		System.out.println("afterConnectionEstablished : " + session);
 		sessionList.add(session);
 		userSessions.put(String.valueOf(((Member)session.getAttributes().get("loginUser")).getUserNo()), session);
 	}
 	
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception { 
-		System.out.println("handleTextMessage : " + session + " : " + message);
 		String msg =  (String) message.getPayload();
 		String[] strs = msg.split(",");
 		if(strs != null) {
@@ -68,7 +66,6 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		System.out.println("afterConnectionClosed : " + session + " : " + status);
 		sessionList.remove(session);
 	}
 }
