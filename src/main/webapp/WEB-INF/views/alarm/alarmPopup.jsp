@@ -82,6 +82,42 @@
 	    		console.log('Info : connection closed.');
 			}
 		}
+	    
+	    function selectListNoti(){
+    		$.ajax({
+    			url:"selectList.noti",
+    			data:{
+    				receiveNo:${loginUser.userNo},
+    				catNo:$("input[name=kind]:checked").val()
+    			},
+    			success:function(list){
+    				$("#alarm-name").text($("input[name=kind]:checked").next().text())
+    				let value = "";
+    				if(list.length == 0){
+    					value = "<tr><td colspan='2'>조회된 알림이 없습니다.</td></tr>"
+    				}else{
+    					for(let i=0; i<list.length; i++){
+        					value += "<tr class='line'>"
+        							+ "<td>"
+        							if(list[i].checkSta == 'N'){
+        								value += "🔔"
+        							}else{
+        								value += "✔️"
+        							}
+        					value += list[i].nfContent + "&nbsp;"
+        							+ list[i].nfDate + "</td>"
+        							+ '<td><img src="resources/icons/delete.png" width="8px" height="8px" class="delete-img" id="' + list[i].nfNo + '"></td>'
+        							+ "</tr>"
+        					alarmList.push(list[i].nfNo);
+        				}
+    				}
+    				$("#alarm-content").html(value);
+    			},error:function(){
+    				console.log("알림 리스트 조회용 ajax통신 실패")
+    			}
+    		})
+    	}
+	    
 	    $("#allRead").click(function(){
 	    	if(newAlarm.length != 0){
 	    		$.ajax({

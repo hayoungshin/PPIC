@@ -44,16 +44,18 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			
 			TextMessage tmpMsg = null;
 			WebSocketSession receiveSession = userSessions.get(receiveNo);
-			System.out.println(receiveSession);
+			
+			switch(dcatNo) {
+			case "0": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
+			case "1": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 반려했어요."); break;
+			case "9": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
+			case "10": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 거절했어요."); break;
+			}
+			
 			if(receiveSession != null) {
-				if(dcatNo.equals("0")) {
-					tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); 
-				}else if(dcatNo.equals("1")) {
-					tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 반려했어요."); 
-				}
 				receiveSession.sendMessage(tmpMsg);
 			}
-			 
+			
 			Alarm a = new Alarm(); 
 			a.setDcatNo(dcatNo); 
 			a.setSendNo(sendNo);
