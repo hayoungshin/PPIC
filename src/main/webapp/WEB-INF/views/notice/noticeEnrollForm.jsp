@@ -132,13 +132,6 @@
 	      });
 	      console.log(socket)
 	  });
-	  $("#enroll-btn").click(function(){
-		  if(socket){
-			  // websocket에 보내기!!
-			  let socketMsg = "11,${loginUser.userNo},${loginUser.userName},4,5";
-			  socket.send(socketMsg);
-		  }
-	  })
 	</script>
 	
     <script>

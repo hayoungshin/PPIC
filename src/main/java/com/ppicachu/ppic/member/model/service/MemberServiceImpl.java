@@ -80,5 +80,10 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.selectMemForMail(sqlSession);
 	}
 
+	@Override
+	public ArrayList<Member> selectAuthorityMemList(int authoNo) {
+		return mDao.selectAuthorityMemList(sqlSession, authoNo);
+	}
+
 
 }

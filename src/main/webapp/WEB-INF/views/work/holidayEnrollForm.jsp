@@ -149,7 +149,7 @@
 	
 	                <br><br>
 	                <div style="margin-left:250px">
-	                	<input class="btn-purple" type="submit" value="휴가신청">
+	                	<input class="btn-purple" type="submit" id="holiday-btn" value="휴가신청">
 	                </div>
                 </form>
             </div>
@@ -280,6 +280,30 @@
 	    	
         </div>
     
+    	<!-- 알림 관련 -->
+    	<script>
+    		let receiveList = "";
+    		$(function(){
+    			$.ajax({
+    				url:"authorityMemList.me",
+    				data:{
+    					authoNo:2
+    				},success:function(list){
+    					for(let i=0; i<list.length; i++){
+    						receiveList += list[i].userNo + "/"
+    					}
+    				},error:function(){
+    					console.log("알림 권한자 리스트 조회용 ajax통신 실패")
+    				}
+    			})
+    		})
+    		$("#holiday-btn").click(function(){
+    			if(socket){
+					let socketMsg = "11,${loginUser.userNo},${loginUser.userName}," + receiveList + ",3," + $("select[name=type]").val();
+					socket.send(socketMsg);
+				}
+    		})
+    	</script>
 
 </body>
 </html>

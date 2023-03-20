@@ -246,6 +246,7 @@
                 </div>
             </div>
 			
+			<!-- 알림 관련 -->
 			<script>
 				$("#holidayApprove button").click(function(){
 					

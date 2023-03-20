@@ -269,6 +269,13 @@ public class MemberController {
 		return mService.selectMemForMail();
 	}
 	
+	// 권한 있는 멤버 리스트 조회
+	@ResponseBody 
+	@RequestMapping("authorityMemList.me")
+	public ArrayList<Member> ajaxSelectAuthorityMemList(int authoNo){
+		return mService.selectAuthorityMemList(authoNo);
+	}
+	
 	
 	
 	

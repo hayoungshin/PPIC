@@ -74,7 +74,6 @@
 			 	}
 			 	
 	   		function onMessage(evt){
-	   			console.log(evt.data + '\n');
 	   			selectAlarm();
 			}
 	   		

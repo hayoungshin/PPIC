@@ -195,5 +195,12 @@
 		 order
 			by user_name
 	</select>
-
+	
+	<select id="selectAuthorityMemList" resultMap="memberResult">
+		select
+		       user_no
+		  from member
+		 where authority_no like '%' || #{authoNo} || '%'
+		    or authority_no like '%' || 0 || '%'
+	</select>
 </mapper>
