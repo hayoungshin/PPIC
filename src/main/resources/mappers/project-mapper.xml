@@ -48,16 +48,15 @@
 		 , detail
 		 , create_date
 		 , modify_date
-		 , user_name
-		 , department_name
+		 , d.department_name "department_name"
       from project pj
       left join p_participant pp using (project_no)
-      left join dept d using (department_no)
-      join member m on (pj.project_manager = m.user_no)
+      left join member m on (pj.project_manager = m.user_no)
+      left join dept d on (m.department = d.department_no)
      where delete_status = 'N'
        and end_date >= sysdate
-       and (pp.user_no = #{userNo}
-        or pj.project_manager = #{userNo})
+       and pp.user_no = #{userNo}
+        or project_manager = #{userNo}
      order
         by create_date desc
 </select>
