@@ -52,5 +52,21 @@ public class ChatDao {
 	public int insertChat(SqlSessionTemplate sqlSession, Chat c) { 
 		return sqlSession.insert("chatMapper.insertChat", c); 
 	}
+	
+	public int updateChatRoom(SqlSessionTemplate sqlSession, int roomNo) { 
+		return sqlSession.update("chatMapper.updateChatRoom", roomNo); 
+	}
+	
+	public Chat selectChatRoom(SqlSessionTemplate sqlSession, int roomNo) {
+		return sqlSession.selectOne("chatMapper.selectChatRoom", roomNo); 
+	}
+	
+	public int deleteParticipant(SqlSessionTemplate sqlSession, int roomNo) { 
+		return sqlSession.delete("chatMapper.deleteParticipant", roomNo); 
+	}
+	
+	public int deleteChatRoom(SqlSessionTemplate sqlSession, int roomNo) { 
+		return sqlSession.delete("chatMapper.deleteChatRoom", roomNo); 
+	}
 	 
 }
