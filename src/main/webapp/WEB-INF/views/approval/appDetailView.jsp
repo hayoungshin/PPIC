@@ -207,6 +207,15 @@
 					if(result > 0){
 						location.reload();
 					}
+					if(socket){
+						if(app == 'Y'){
+							let socketMsg = "0,${loginUser.userNo},${loginUser.userName},${ad.app.userNo},0,${ ad.app.title }";
+							socket.send(socketMsg);
+						}else{
+							let socketMsg = "1,${loginUser.userNo},${loginUser.userName},${ad.app.userNo},0,${ ad.app.title }";
+							socket.send(socketMsg);
+						}
+					}
 				},error:function(){
 					console.log("결재선용 ajax통신 오류");
 				}

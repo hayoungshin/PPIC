@@ -40,27 +40,26 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			String sendName = strs[2];
 			String receiveNo = strs[3];
 			String catNo = strs[4];
+			String title = strs[5];
 			
 			TextMessage tmpMsg = null;
-			if(dcatNo.equals("11")) {
-				tmpMsg = new TextMessage(sendName + "님이 공지사항을 등록했습니다.");
-				for(WebSocketSession sss : sessionList) { 
-					sss.sendMessage(tmpMsg);
-				}
-			}else {
-				WebSocketSession receiveSession = userSessions.get(receiveNo);
-				if(dcatNo.equals("") && receiveSession != null) {
-					
+			WebSocketSession receiveSession = userSessions.get(receiveNo);
+			System.out.println(receiveSession);
+			if(receiveSession != null) {
+				if(dcatNo.equals("0")) {
+					tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); 
+				}else if(dcatNo.equals("1")) {
+					tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 반려했어요."); 
 				}
 				receiveSession.sendMessage(tmpMsg);
 			}
-			Alarm a = new Alarm();
-			a.setDcatNo(dcatNo);
+			 
+			Alarm a = new Alarm(); 
+			a.setDcatNo(dcatNo); 
 			a.setSendNo(sendNo);
-			a.setReceiveNo(catNo);
+			a.setReceiveNo(receiveNo); 
 			a.setCatNo(catNo);
-			a.setNfContent(tmpMsg.getPayload());
-			aService.insertAlarm(a);
+			a.setNfContent(tmpMsg.getPayload()); aService.insertAlarm(a);
 		}
 	}
 
