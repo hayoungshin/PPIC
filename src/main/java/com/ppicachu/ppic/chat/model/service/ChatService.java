@@ -30,4 +30,7 @@ public interface ChatService {
 	
 	// 7. 채팅방 화면
 	ArrayList<Chat> selectChat(int roomNo);
+	
+	// 8. 채팅 입력
+	int insertChat(Chat c);
 }

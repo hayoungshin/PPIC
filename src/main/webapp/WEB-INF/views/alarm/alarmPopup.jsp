@@ -70,15 +70,15 @@
 			sock.onclose = onClose; 
 			 	
 	   		function onOpen(){
-			 		console.log('Info : connection opened.');
-			 	}
+		 		console.log('Info : alarm connection opened.');
+		 	}
 			 	
 	   		function onMessage(evt){
 	   			selectAlarm();
 			}
 	   		
 	    	function onClose(){
-	    		console.log('Info : connection closed.');
+	    		console.log('Info : alarm connection closed.');
 			}
 		}
 	    

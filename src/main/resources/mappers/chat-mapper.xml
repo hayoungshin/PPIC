@@ -145,7 +145,7 @@
 	
 	<insert id="insertChatRoom" parameterType="java.util.HashMap" useGeneratedKeys="true" keyColumn="room_no" keyProperty="roomNo">
 		insert 
-		  into chatRoom
+		  into chatroom
 		  (
 		    room_no
 		  , group_count
@@ -199,5 +199,25 @@
 		  where r.room_no = #{roomNo}
 		 order by chat_no
 	</select>
+	
+	<insert id="insertChat">
+		insert 
+		  into chat
+		  (
+		    chat_no
+		  , room_no
+		  , send_no
+		  , chat_content
+		  , not_read
+		  )
+		  values
+		  (
+		    seq_chatno.nextval
+		  , #{roomNo}
+		  , #{sendNo}
+		  , #{chatContent}
+		  , #{notRead}
+		  )
+	</insert>
 	
 </mapper>
