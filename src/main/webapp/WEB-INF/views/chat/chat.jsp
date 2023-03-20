@@ -587,16 +587,6 @@
         	}
         })
         
-        // 날짜 포맷
-        function dateFormat(no){
-        	const d = new Date();
-        	if(no == 1){
-        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
-        	} else{
-        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
-        	}
-        }
-        
         // 채팅 리스트
         function chatRoomList(){
         	$.ajax({
@@ -996,7 +986,7 @@
         	newChat(arrDup);
         })
 
-        // 주소록 더블클릭시 채팅방 이동
+        // 주소록 더블클릭시 이벤트
         function chatOne(no, clickNo){
      		if(no == 0){ // 전에 생성된 1:1 채팅이 없을 때
      			let arr = [];
@@ -1008,6 +998,7 @@
      		}
      	}
      	
+     	// 새로운 채팅 생성
      	function newChat(arr){
             $.ajax({
    				url:"create.chat",
@@ -1020,14 +1011,14 @@
            		}
    			})
      	}
-     	
+    	
+     	// 채팅방 열기
      	function openChat(no){
      		$.ajax({
    				url:"open.chat",
        			data:{
        				roomNo:no
            		},success:function(list){
-           			console.log(list);
            			value1 = "<div class='chat-area'>"
            			value2 = ""
            			for(let i=0; i<list.length; i++){
@@ -1060,7 +1051,7 @@
            				for(let j=0; j<list[i].memList.length; j++){
            					if(list[i].groupCount == 2){
            						if(list[i].memList[j].userNo != ${loginUser.userNo}){
-           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn'>"
+           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' onclick='onClose();'>"
            									+ list[i].memList[j].userName
            									+ "&nbsp;<span class='conn";
             						if(list[i].memList[j].connSta == 0){
@@ -1073,28 +1064,31 @@
             						value2 += "'></span>"
            						}
            					}else{
-           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn'>그룹채팅 " + list[i].groupCount
+           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn'>"
+           						if(list[i].roomName == undefined){
+           							value2 += "그룹채팅 "
+           						}else{
+           							value2 += list[i].roomName + " "
+           						}
+           						value2 += list[i].groupCount
            					}
            				}
            			}
            			value1 += "</div><div class='input-area'>"
                			   	+ "<div class='form-group'>"
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;'></textarea>"
-                    		+ "<button type='button' onclick='sendMessage();'>전송</button>"
+                    		+ "<button type='button' id='send-btn'>전송</button>"
                 			+ "</div></div>";
                 	value2 += "<span><img src='resources/icons/dots.png'><img src='resources/icons/search.png'></span></div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
+           			connect();
            		},error:function(){
-           			console.log("채팅 열기용 ajax 통신 실패")
-           		}
-   			})
-     	}
-     	
-     	$(document).on("click", "#toList-btn", function(){
-     		chatRoomList();
-     	})
+          			console.log("채팅 열기용 ajax 통신 실패")
+          		}
+  			})
+    	}
     </script>
     
     <!-- 내 프로필 Modal -->

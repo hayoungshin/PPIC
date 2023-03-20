@@ -1,4 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="notificationMapper">
+
+	<resultMap id="notificationResult" type="Alarm">
+		<id column="nf_no" property="nfNo"/>
+		<result column="nf_count" property="nfCount"/>
+		<result column="nf_content" property="nfContent"/>
+		<result column="check_sta" property="checkSta"/>
+		<result column="nf_date" property="nfDate"/>
+	</resultMap>
+	
+	<insert id="insertAlarm">
+		insert 
+		  into notification
+		  (
+		    nf_no
+		  , send_no
+		  , receive_no
+		  , cat_no
+		  , dcat_no
+		  , nf_content
+		  )
+	      values
+		  (
+		    seq_notno.nextval
+		  , #{sendNo}
+		  , #{receiveNo}
+		  , #{catNo}
+		  , #{dcatNo}
+		  , #{nfContent}
+		  )
+	</insert>
+	
+	<select id="selectNoti" resultMap="notificationResult">
+		select
+			   nf_no
+			 , (select 
+		               count(*)
+		          from notification
+		          where receive_no = #{userNo}
+		            and check_sta = 'N'
+		            and delete_sta = 'N') nf_count
+		     , nf_content
+             , check_sta
+             , to_char(nf_date, 'YYYY.MM.DD PM HH:mm') "nf_date"
+		  from notification
+		 where receive_no = #{userNo}
+		   and delete_sta = 'N'
+		 order
+		    by nf_no desc
+	</select> 
+	
+	<update id="updateNoti">
+		<foreach collection="list" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+		update
+		       notification
+		   set check_sta = 'Y'
+		 where nf_no = #{item}
+		</foreach>
+	</update>
+	
+	<select id="selectNotiList" resultMap="notificationResult">
+		select
+			   nf_no
+		     , nf_content
+             , check_sta
+             , to_char(nf_date, 'YYYY-MM-DD PM HH:mm') "nf_date"
+		  from notification
+		 where receive_no = #{receiveNo}
+		   and delete_sta = 'N'
+		   <if test="catNo != 'all'">
+		   	<choose>
+		   		<when test='catNo == "N"'>
+		   			and check_sta = 'N'
+		   		</when>
+		   		<otherwise>
+		   			and cat_no = #{catNo}
+		   		</otherwise>
+		   	</choose>
+		   </if>
+		 order
+		    by nf_no desc
+	</select>
+	
+	<update id="deleteNoti">
+		<foreach collection="list" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+		update
+		       notification
+		   set delete_sta = 'Y'
+		 where nf_no = #{item}
+		</foreach>
+	</update>
 </mapper>

@@ -132,7 +132,18 @@
 	    border-radius:5px;
 	    font-weight:600;
 	}
-	
+	#alarm-count{
+		 border-radius:50%; 
+		 height:25px; 
+		 width:25px; 
+		 left:170px; 
+		 text-align:center; 
+		 line-height:25px;
+		 background:rgb(244, 89, 89);
+		 color:white;
+		 font-size:11px;
+		 display:none;
+	}
 </style>
 </head>
 <body>
@@ -166,6 +177,7 @@
             <div class="side-menu" onclick="alarmPopup();" style="margin-top:20px;">
                 <img src="resources/icons/bell.png" style="margin:5px 10px; width:23px;">
                 <span style="left:50px;">새로운 알림</span>
+                <span id="alarm-count">0</span>
             </div>
 
             <hr style="margin:20px 0px;">
@@ -231,7 +243,6 @@
         	/* 마이페이지 url로 이동 */
             function toMyPage(){
             	location.href="myPage.me"
-                
             }
             
             /* 새로운 알람 클릭 */
@@ -251,6 +262,86 @@
             		$("#chat").css("display", "none");
             	}
             }
+        </script>
+        <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+        <script>
+	        let socket = null;
+	        let newAlarm = [];
+	     	// 날짜 포맷
+	        function dateFormat(no){
+	        	const d = new Date();
+	        	if(no == 1){
+	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
+	        	} else{
+	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
+	        	}
+	        }
+	     	
+	     	// 알람 조회
+			$(function(){
+				connectAlarm();
+				selectAlarm();
+			})
+	     	function selectAlarm(){
+				$.ajax({
+					url:"select.noti",
+					data:{userNo:${loginUser.userNo}},
+					success:function(list){
+						let result1 = "";
+						let result2 = "";
+						for(let i=0; i<list.length; i++){
+							if(list[i].checkSta == "N"){
+								result1 += "<tr>"
+						            + "<td class='icon'>🔔</td>"
+						            + "<td>"
+						            + list[i].nfContent + "<br>"
+						            + "<small>";
+						            if(list[i].nfDate.includes(dateFormat(1))){
+						            	result1 += list[i].nfDate.substring(list[i].nfDate.indexOf("오")) 
+									}else if(list[i].nfDate.includes(dateFormat(2))){
+										result1 += "어제"
+									} else{
+										result1 += list[i].nfDate.substring(0, list[i].nfDate.indexOf("오"))
+									}
+						            result1 += "</small>"
+						            	+ "</td>"
+						        		+ "</tr>";
+						        	newAlarm.push(list[i].nfNo);
+							}else{
+								result2 += "<tr>"
+						            + "<td class='icon'>✔️</td>"
+						            + "<td>"
+						            + list[i].nfContent + "<br>"
+						            + "<small>"
+						            if(list[i].nfDate.includes(dateFormat(1))){
+						            	result2 += list[i].nfDate.substring(list[i].nfDate.indexOf("오")) 
+									}else if(list[i].nfDate.includes(dateFormat(2))){
+										result2 += "어제"
+									} else{
+										result2 += list[i].nfDate.substring(0, list[i].nfDate.indexOf("오"))
+									}
+						            result2 += "</small>"
+						            	+ "</td>"
+						        		+ "</tr>"
+							}
+						}
+						if(result1 == ""){
+							result1 += "<tr><td colspan='2'>새로운 알림이 없습니다.</td></tr>";
+							$("#alarm-count").css("display", "none");
+						}else{
+							$("#alarm-count").text(list[0].nfCount);
+							$("#alarm-count").css("display", "block");
+						}
+						if(result2 == ""){
+							result2 += "<tr><td colspan='2'>지난 알림이 없습니다.</td></tr>";
+						}
+						$("#newalarm").html(result1);
+						$("#checkalarm").html(result2);
+					},error:function(){
+						console.log("알람 조회용 ajax통신실패")
+					}
+				})
+	     	}
         </script>
 		
 </body>
