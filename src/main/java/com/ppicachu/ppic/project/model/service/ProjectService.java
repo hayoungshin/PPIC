@@ -17,7 +17,7 @@ public interface ProjectService {
 	ArrayList<Task> selectTaskList(int projectNo);
 	
 	// 작업 참조자정보 조회
-	ArrayList<ProjectParticipant> selectTaskParticipants(ArrayList<Task> tList);
+	ArrayList<ProjectParticipant> selectTaskParticipants(int taskNo);
 	// 작업 참조자 수
 	int selectCountTaskParticipants(int taskNo);
 	

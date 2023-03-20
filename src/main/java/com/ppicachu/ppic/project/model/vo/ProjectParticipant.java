@@ -18,4 +18,6 @@ public class ProjectParticipant {
 	private String departmentName;
 	private String userName;
 	
+	private String userImg;
+	
 }

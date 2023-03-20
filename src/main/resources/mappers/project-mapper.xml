@@ -20,6 +20,7 @@
 	<result column="task_no" property="taskNo"/>
 	<result column="department_name" property="departmentName"/>
 	<result column="user_name" property="userName"/>
+	<result column="profile_img" property="userImg"/>
 </resultMap>
 
 <resultMap id="taskResult" type="Task">
@@ -34,6 +35,7 @@
 	<result column="create_date" property="createDate"/>
 	<result column="modify_date" property="modifyDate"/>
 	<result column="delete_status" property="deleteStatus"/>
+	<result column="profile_img" property="userImg"/>
 </resultMap>
 
 <select id="selectProjectList" resultMap="projectResult">
@@ -84,17 +86,19 @@
 		 , task_status
 		 , create_date
 		 , modify_date
+		 , profile_img
       from task t
       join member m on (t.assign_user = m.user_no)
      where project_no = #{projectNo}
        and delete_status = 'N'
 </select>
 
-<select id="selectTaskParticipants" parameterType="java.util.ArrayList" resultMap="proParticipantsResult">
+<!-- <select id="selectTaskParticipants" parameterType="java.util.ArrayList" resultMap="proParticipantsResult">
 	select
 		   task_no
 		 , department_name
 		 , user_name
+		 , profile_img
 	  from p_participant p
 	  join member using (user_no)
       join dept using (department_no)
@@ -104,6 +108,19 @@
 	      </foreach>
 	      and task_assign = 'N'
       </where>
+</select> -->
+
+<select id="selectTaskParticipants" resultMap="proParticipantsResult">
+	select
+		   task_no
+		 , department_name
+		 , user_name
+		 , profile_img
+	  from p_participant p
+	  join member using (user_no)
+      join dept using (department_no)
+     where task_no = #{taskNo}
+	   and task_assign = 'N'
 </select>
 
 <select id="selectCountTaskParticipants" resultType="_int">

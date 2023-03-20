@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,7 +23,7 @@ public class ProjectController {
 	private ProjectService pService;
 	
 	@RequestMapping("list.pr")
-	public ModelAndView selectProjectList(int userNo, ModelAndView mv) {
+	public ModelAndView selectProjectList(@RequestParam(value="no")int userNo, ModelAndView mv) {
 		ArrayList<Project> pList = pService.selectProjectList(userNo);
 		mv.addObject("pList", pList).setViewName("project/currentProject");
 		
@@ -36,8 +37,6 @@ public class ProjectController {
 		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
 		// task 리스트
 		ArrayList<Task> tList = pService.selectTaskList(projectNo);
-		// task 참조자 리스트
-		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(tList);
 		// task 참조자 수
 		int tpCount = 0;
 		for(int i=0; i<tList.size(); i++) {
@@ -45,14 +44,24 @@ public class ProjectController {
 			tList.get(i).setRefPeopleCnt(tpCount);
 		}
 		
-		
 		JSONObject jObj = new JSONObject();
 		jObj.put("ppList", ppList);
 		jObj.put("tList", tList);
-		jObj.put("tpList", tpList);
 		
 		return new Gson().toJson(jObj);
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="tpList.tk", produces="application/json; charset=UTF-8")
+	public String selectTaskParticipants(int taskNo) {
+		// task 참조자 리스트
+		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(taskNo);
+		
+		JSONObject jObj = new JSONObject();
+		jObj.put("tpList", tpList);
+		
+		return new Gson().toJson(jObj);
 	}
 	
 	
