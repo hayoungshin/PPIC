@@ -24,8 +24,8 @@ public class ProjectDao {
 		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskList", projectNo);
 	}
 	
-	public ArrayList<ProjectParticipant> selectTaskParticipants(SqlSessionTemplate sqlSession, ArrayList<Task> tList) {
-		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskParticipants", tList);
+	public ArrayList<ProjectParticipant> selectTaskParticipants(SqlSessionTemplate sqlSession, int taskNo) {
+		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskParticipants", taskNo);
 	}
 	
 	public int selectCountTaskParticipants(SqlSessionTemplate sqlSession, int taskNo) {

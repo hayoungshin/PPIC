@@ -25,6 +25,7 @@ public class Task {
 	private String modifyDate;
 	private String deleteStatus;
 	
+	private String userImg;
 	private int refPeopleCnt;
 	
 }

@@ -68,10 +68,6 @@
     background:linear-gradient(to right, #00b5d1 60%, #FFCECE);
     height: 16px;
   }
-  @keyframes load {
-    0% { width: 0; }
-  }
-
   .p-summary{
     font-size:13px;
   }
@@ -115,9 +111,11 @@
     -webkit-line-clamp:2;
     -webkit-box-orient: vertical;
   }
+  .userImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
   .file{color:gray; margin-bottom:10px;}
   .ref-people{display:inline-block; width:180px; text-align:right; font-size:12px;}
   .status{display:inline-block; color:white; width:50px; border-radius:5px; text-align:center; font-size:12px;}
+  .tp-userImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
 
   /* 상태 */
   .status-wait{background:#ecd718; }
@@ -133,6 +131,14 @@
     margin-right:auto;
     background-color: rgba(240, 240, 240, 0.671);
   }
+
+  /* 업무 추가 모달 */
+  .add-form{font-size:14px; width:100%;}
+  .add-form tr{height:50px;}
+  .add-form th{width:20%;}
+  .add-form td{width:80%;}
+  .add-form input, .add-form textarea{width:80%; border:0.5px solid lightgray; border-radius:4px;}
+  #select-area{width:80%; height:150px; border:0.5px solid lightgray; border-radius:4px;}
 </style>
 </head>
 <body>
@@ -143,7 +149,7 @@
         <h2 class="title"><b>업무</b></h2>
         <br><br>
         <div class="sub-menu">
-            <a href="#" class="active">프로젝트 현황</a>
+            <a href="list.pr?no=${loginUser.userNo}" class="active">프로젝트 현황</a>
             <!-- 관리자일 때만 보여야 함 -->
             <a href="#">프로젝트 관리</a>
         </div>
@@ -159,7 +165,7 @@
                   <input type="hidden" name="projectNo" value="${p.projectNo}">
                   <input type="hidden" name="projectDetail" value="${p.detail}">
 	                <div class="project-title">${p.projectName}</div>
-	                <div class="project-manager">PM : ${p.projectManager} / ${p.projectParticipants[0].departmentName}</div>
+	                <div class="project-manager">PM : ${p.projectManager} (${p.projectParticipants[0].departmentName})</div>
 	                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
 	              </div>
 	            </div>
@@ -248,12 +254,11 @@
               success:function(obj){
                 let ppList = obj.ppList;
                 let tList = obj.tList;
-                let tpList = obj.tpList;
 
                 // 참여자 정보 출력
                 let member = "";
                 for(let i=0; i<ppList.length; i++){
-                  member += ppList[i].userName + " / " + ppList[i].departmentName + ", ";
+                  member += ppList[i].userName + " (" + ppList[i].departmentName + "), ";
                 }
                 member = "참여자 : " + member.substring(0, member.lastIndexOf(","));
                 $("#member-list").html(member);
@@ -266,37 +271,37 @@
                 let task4 = "";
                 // let tasks = ["", "", "", ""]; // 상태별 task
 
-                let tpCount = tpList.length;
                 for(let i=0; i<tList.length; i++){
+                  if(tList[i].userImg == null){
+                    tList[i].userImg = "resources/icons/none-profile.png";
+                  }
+
                   // 상태별 div
-                  task = "<div class='task-box'>"
+                  task = "<div class='task-box' onclick='taskDetailLoad(this);'>"
                          + "<input type='hidden' name='taskNo' value='" + tList[i].taskNo + "'>"
-                         + "<div class='task-title'>" + tList[i].taskName + "</div>";
+                         + "<div class='task-title'>" + tList[i].taskName + "</div>"
+                         + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + "</div>";
                   if(tList[i].originName != null){
                     task += "<div class='file'>" + tList[i].originName + "</div>"; 
                   }
 
                   switch(tList[i].taskStatus){
-                    case "1": task1 += task + "<div>" + tList[i].assignUser + "</div>"
-                                     + "<div class='status status-wait'>대기</div>"
+                    case "1": task1 += task + "<div class='status status-wait'>대기</div>"
                                      + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
                                      + "</div>";
                               task = "";
                               break;
-                    case "2": task2 += task + "<div>" + tList[i].assignUser + "</div>"
-                                     + "<div class='status status-working'>진행중</div>"
+                    case "2": task2 += task + "<div class='status status-working'>진행중</div>"
                                      + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
                                      + "</div>";
                               task = "";
                               break;
-                    case "3": task3 += task + "<div>" + tList[i].assignUser + "</div>"
-                                     + "<div class='status status-done'>완료</div>"
+                    case "3": task3 += task + "<div class='status status-done'>완료</div>"
                                      + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
                                      + "</div>";
                               task = "";
                               break;
-                    case "4": task4 += task + "<div>" + tList[i].assignUser + "</div>"
-                                     + "<div class='status status-hold'>보류</div>"
+                    case "4": task4 += task + "<div class='status status-hold'>보류</div>"
                                      + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
                                      + "</div>";
                               task = "";
@@ -310,6 +315,7 @@
                 $("#task-list .done-list").append(task3);
                 $("#task-list .hold-list").append(task4);
                 
+                // 진행률 표시
                 taskProgress();
 
               }, error:function(){
@@ -367,7 +373,7 @@
 
       <div id="task-area">
         <span style="font-size:16px;"><b>업무 현황</b></span>
-        <button id="add-task" class="btn-purple">+ 업무 추가</button>
+        <button id="add-task" class="btn-purple" data-toggle="modal" data-target="#add-task-modal">+ 업무 추가</button>
         <br><br>
         <div class="row" id="task-category">
           <div class="col" id="wait"><div class="circle status-wait"></div>대기</div>
@@ -393,6 +399,43 @@
       </div>
       <br><br><br>
 
+      <script>
+        // 참조인 리스트 popover
+        let taskNo = "";
+        let taskRefList = "";
+        $(document).on("click", ".ref-people", function(){
+          taskNo = $(this).siblings("input[name=taskNo]").val();
+          clickRp = $(this);
+          taskRefList = "";
+
+          $.ajax({
+            url:"tpList.tk",
+            data:{"taskNo":taskNo},
+            success:function(obj){
+              let tpList = obj.tpList;
+              for(let i=0; i<tpList.length; i++){
+                if(tpList[i].userImg == null){
+                  tpList[i].userImg = "resources/icons/none-profile.png";
+                }
+                taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>" + tpList[i].userName + "</div>";
+              }
+              clickRp.popover ({
+              content: taskRefList,
+              html: true
+            })
+            }, error:function(){
+              console.log("참조자 리스트 조회 실패");
+            }
+          })
+
+          // console.log($(this));
+
+          
+          
+        })
+      </script>
+
+      <!-- drag&drop sorting -->
       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
       <script>
         $(function() {
@@ -458,32 +501,68 @@
       </script>
 
       <!-- The Modal -->
-      <div class="modal" id="task">
+      <div class="modal" id="add-task-modal">
         <div class="modal-dialog">
           <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">업무 상세</h4>
+              <h4 class="modal-title">업무 추가</h4>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <!-- Modal body -->
             <div class="modal-body">
-              <div class="task-title">어쩌구저쩌구 작업</div>
+              <form action="" method="post" enctype="multipart/form-data">
+                <table class="add-form">
+                  <tr>
+                    <th width="100px;">업무명 : </th>
+                    <td><input type="text" class="task-title-inpt"></td>
+                  </tr>
+                  <tr>
+                    <th>업무상세 :</th>
+                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;"></textarea></td>
+                  </tr>
+                  <tr>
+                    <th>첨부파일 :</th>
+                    <td><input type="file"></td>
+                  </tr>
+                  <tr>
+                    <th>담당자 : </th>
+                    <td>${loginUser.userName}</td>
+                  </tr>
+                  <tr>
+                    <th>참조자 : </th>
+                    <td>
+                      <select name="" id="">
+                        <option value="">부서1</option>
+                        <option value="">부서2</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <td><div id="select-area">dddddddd</div></td>
+                  </tr>
+                </table>
+              </form>
             </div>
 
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-purple" data-dismiss="modal">추가</button>
             </div>
 
           </div>
         </div>
       </div>
-
+      
       <script>
-        
+        function taskDetailLoad(){
+          // console.log("하하");
+
+        }
+
       </script>
     </div>
     </div>
