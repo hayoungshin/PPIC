@@ -101,4 +101,29 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return aDao.selectCashApp(sqlSession, approvalNo);
 	}
 
+	@Override
+	public ArrayList<AppChange> selectChange(int approvalNo) {
+		return aDao.selectChange(sqlSession, approvalNo);
+	}
+
+	@Override
+	public int updateProcess(AppProcess ap) {
+		return aDao.updateProcess(sqlSession, ap);
+	}
+
+	@Override
+	public int updateCurrentOrder(Approval a) {
+		return aDao.updateCurrentOrder(sqlSession, a);
+	}
+
+	@Override
+	public int insertChange(AppChange ac) {
+		return aDao.insertChange(sqlSession, ac);
+	}
+
+	@Override
+	public ArrayList<Member> selectMemberList() {
+		return aDao.selectMemberList(sqlSession);
+	}
+
 }

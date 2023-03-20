@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,18 +15,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.ppicachu.ppic.approval.model.service.ApprovalService;
+import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
+import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.common.template.Pagination;
+import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
+import com.ppicachu.ppic.member.model.vo.Position;
 
 @Controller
 public class ApprovalController {
 	
 	@Autowired
 	private ApprovalService aService;
+	
+	@Autowired
+	private MemberService mService;
 	
 	/**
 	 * 개인-기안-(진행중, 완료, 임시저장) / 개인-참조 / 개인-중요 / 부서-(진행중,완료) / 전체관리 / 삭제관리 목록
@@ -137,7 +146,7 @@ public class ApprovalController {
 	 */
 	/*@ResponseBody
 	@RequestMapping("recoverApproval.ap")
-	public int AjaxReMoveApproval(String no) {
+	public int AjaxRemoveApproval(String no) {
 		String[] noArr = {no};
 		if(no.contains(",")) {
 			noArr = no.split(",");
@@ -183,6 +192,58 @@ public class ApprovalController {
 	}
 	
 	/**
+	 * 상세-변경사항 select (=)
+	 */
+	@ResponseBody
+	@RequestMapping(value="selectChange.ap", produces="application/json; charset=utf-8")
+	public String AjaxSelectChange(int no) {
+		ArrayList<AppChange> changeList = aService.selectChange(no);
+		
+		return new Gson().toJson(changeList);
+	}
+	
+	/**
+	 * 상세-결재선 update (=)
+	 */
+	@ResponseBody
+	@RequestMapping("updateProcess.ap")
+	public int AjaxUpdateProcess(AppProcess ap, int currentOrder, int finalOrder) {
+		int result = aService.updateProcess(ap);
+		
+		if(result > 0) {
+			Approval a = new Approval();
+			a.setApprovalNo(ap.getApprovalNo());
+			a.setApprovalStatus(ap.getStatus());
+			a.setCurrentOrder(currentOrder);
+			a.setFinalOrder(finalOrder);
+			int result1 = aService.updateCurrentOrder(a);
+			
+			AppChange ac = new AppChange();
+			ac.setApprovalNo(ap.getApprovalNo());
+			ac.setUserName(ap.getUserName());
+			if(ap.getStatus().equals("승인")) {
+				ac.setContent("님이 승인했어요.");
+			} else {
+				ac.setContent("님이 <span style=\'color:red;\'>반려</span>했어요.");
+			}
+			ac.setRole("변경");
+			int result2 = aService.insertChange(ac);
+		}
+		return result;
+	}
+	
+	/**
+	 * 상세-변경사항 insert
+	 */
+	@ResponseBody
+	@RequestMapping("insertChange.ap")
+	public int AjaxInsertChange(AppChange ac) {
+		int result = aService.insertChange(ac);
+		
+		return result;
+	}
+	
+	/**
 	 * 작성폼으로 이동
 	 */
 	@RequestMapping("enrollForm.ap")
@@ -191,35 +252,50 @@ public class ApprovalController {
 	}
 	
 	/**
-	 * 업무기안폼으로 이동
+	 * 작성-업무기안폼으로 이동
 	 */
 	@RequestMapping("enrollDraftForm.ap")
 	public String enrollDraftForm(Model m) {
+		ArrayList<Member> memberList = aService.selectMemberList();
+		ArrayList<Department> deptList = mService.selectDeptList();
+		m.addAttribute("mList", memberList);
+		m.addAttribute("dList", deptList);
 		
 		return "approval/appEnrollDraftForm";
 	}
 	
 	/**
-	 * 인사발령품의서폼으로 이동 
+	 * 작성-인사발령품의서폼으로 이동 
 	 */
 	@RequestMapping("enrollTransferForm.ap")
-	public String enrollTransferForm() {
+	public String enrollTransferForm(Model m) {
+		ArrayList<Member> memberList = aService.selectMemberList();
+		ArrayList<Position> positionList = mService.selectPositionList();
+		m.addAttribute("mList", memberList);
+		m.addAttribute("pList", positionList);
+		
 		return "approval/appEnrollTransferForm";
 	}
 	
 	/** 
-	 * 비품신청서폼으로 이동
+	 * 작성-비품신청서폼으로 이동
 	 */
 	@RequestMapping("enrollConsumeForm.ap")
-	public String enrollConsumeForm() {
+	public String enrollConsumeForm(Model m) {
+		ArrayList<Member> memberList = aService.selectMemberList();
+		m.addAttribute("mList", memberList);
+		
 		return "approval/appEnrollConsumeForm";
 	}
 	
 	/**
-	 * 지출결의서폼으로 이동
+	 * 작성-지출결의서폼으로 이동
 	 */
 	@RequestMapping("enrollCashForm.ap")
-	public String enrollCashForm() {
+	public String enrollCashForm(Model m) {
+		ArrayList<Member> memberList = aService.selectMemberList();
+		m.addAttribute("mList", memberList);
+		
 		return "approval/appEnrollCashForm";
 	}
 	
@@ -233,7 +309,17 @@ public class ApprovalController {
 	 * 수정폼으로 이동
 	 */
 	@RequestMapping("updateForm.ap")
-	public String updateForm() {
+	public String updateForm(int no, String form, Model m) {
+		AppDetail ad = null;
+		
+		switch(form) {
+		case "업무기안" : ad = aService.selectDraftApp(no); break;
+		case "인사발령품의서" : ad = aService.selectTransferApp(no); break;
+		case "비품신청서" : ad = aService.selectConsumeApp(no); break;
+		case "지출결의서" : ad = aService.selectCashApp(no); break;
+		}
+		m.addAttribute("ad", ad);
+		
 		return "approval/appUpdateForm";
 	}
 	

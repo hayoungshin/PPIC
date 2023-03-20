@@ -70,6 +70,17 @@
 			for(let i=0; i<arr3.length; i++){
 	        	arr3[i].style = 'display:none';
 			}
+			
+			// 각 행
+			const tr = document.getElementsByClassName("trOver");
+			for(let i=0; i<tr.length; i++){
+				// 상세 onclick
+				tr[i].childNodes[11].addEventListener("click", function(){
+					const no = this.parentNode.childNodes[1].value;
+					const form = this.parentNode.childNodes[9].innerHTML;
+					location.href="detail.ap?no=" + no + "&form=" + form;
+				});
+			}
 		}
 		
 		// 전체체크, 전체해제
@@ -119,6 +130,8 @@
 						if(result > 0){
 							location.reload();
 						}
+					}, error:function(){
+						console.log("복원용 ajax통신 실패");
 					}
 				});
 			}
@@ -151,13 +164,13 @@
                 	</c:when>
                 	<c:otherwise>
 		                <c:forEach var="a" items="${ list }">
-			                <tr>
+			                <tr class="trOver">
 			                    <input type="hidden" name="approvalNo" value="${ a.approvalNo }">
 			                    <td><input type="checkbox" class="ckBoxes" onclick="isAllCk();"></td>
 			                    <td>${ a.department }부</td>
 			                    <td>${ a.userName }</td>
 			                    <td>${ a.form }</td>
-			                    <td>${ a.title }</td>
+			                    <td class="titleTd">${ a.title }</td>
 			                    <td>
 			                    	<c:if test="${ not empty a.originName }">
 			                    		<img src="resources/icons/clip.png" height="20px">

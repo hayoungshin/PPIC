@@ -3,9 +3,9 @@
 <mapper namespace="approvalMapper">
 	<resultMap type="Approval" id="approvalResult">
 		<id column="approval_no" property="approvalNo"/>
+		<result column="user_name" property="userName"/>
 		<result column="department_name" property="department"/>
 		<result column="position_name" property="position"/>
-		<result column="user_name" property="userName"/>
 		<result column="form" property="form"/>
 		<result column="title" property="title"/>
 		<result column="origin_name" property="originName"/>
@@ -345,8 +345,8 @@
 		     , complete_date
 		     , complete_no
 		  from approval a
-		  join dept using(department_no)
-		  join member using(user_no)
+		  join member m using(user_no)
+          join dept d on (m.department = d.department_no)
 		<where>
 			<if test="a != 0">
 				a.status = 'Y'
@@ -368,7 +368,7 @@
 	  			bookmark = 'Y'
 	  		</if>
 	  		<if test="bookmark == 1">
-	  			bookmark = null
+	  			bookmark = 'N'
 	  		</if>
 		</set>
 	 where approval_no = #{approvalNo}
@@ -404,18 +404,18 @@
 		       approval_no app_no
 		     , complete_no
 		     , am.user_name
-		     , ad.department_name
-		     , ap.position_name
+		     , md.department_name
+		     , mp.position_name
 		     , form
 		     , title
-		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
-		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
 		     
 		     , form_no
-		     , to_char(to_date(effective_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') effective_date
+		     , to_char(to_date(effective_date, 'YY/MM/DD'), 'YYYY-MM-DD') effective_date
 		     , fd.department_name form_dep_name
 		     , content
 		     
@@ -425,7 +425,7 @@
              , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
+		     , to_char(to_date(approval_date, 'YY/MM/DD'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -435,8 +435,8 @@
 		  from approval a
 		  
 		  join member am on (a.user_no = am.user_no)
-		  join dept ad on (a.department_no = ad.department_no)
-		  join position ap using(position_no)
+          join dept md on (am.department = md.department_no)
+		  join position mp on (am.position = mp.position_no)
 		  
 		  join form_draft f using(approval_no)
 		  join dept fd on (f.department_no = fd.department_no)
@@ -460,18 +460,18 @@
 		       approval_no app_no
 		     , complete_no
 		     , am.user_name
-		     , ad.department_name
-		     , ap.position_name
+		     , md.department_name
+		     , mp.position_name
 		     , form
 		     , title
-		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
-		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
 		     
 		     , form_no
-		     , to_char(to_date(effective_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') effective_date
+		     , to_char(to_date(effective_date, 'YY/MM/DD'), 'YYYY-MM-DD') effective_date
 		     , f.user_name form_user_name
 		     , f.department_name form_dept_name
 		     , current_position
@@ -484,7 +484,7 @@
              , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
+		     , to_char(to_date(approval_date, 'YY/MM/DD'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -494,8 +494,8 @@
 		  from approval a
 		  
 		  join member am on (a.user_no = am.user_no)
-		  join dept ad on (a.department_no = ad.department_no)
-		  join position ap using(position_no)
+          join dept md on (am.department = md.department_no)
+		  join position mp on (am.position = mp.position_no)
 		  
 		  left
 		  join form_transfer f using(approval_no)
@@ -519,12 +519,12 @@
 		       approval_no app_no
 		     , complete_no
 		     , am.user_name
-		     , ad.department_name
-		     , ap.position_name
+		     , md.department_name
+		     , mp.position_name
 		     , form
 		     , title
-		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
-		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
@@ -542,7 +542,7 @@
              , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
+		     , to_char(to_date(approval_date, 'YY/MM/DD'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -552,8 +552,8 @@
 		  from approval a
 		  
 		  join member am on (a.user_no = am.user_no)
-		  join dept ad on (a.department_no = ad.department_no)
-		  join position ap using(position_no)
+          join dept md on (am.department = md.department_no)
+		  join position mp on (am.position = mp.position_no)
 		  
 		  left
 		  join form_consume f using(approval_no)
@@ -577,12 +577,12 @@
 		       approval_no app_no
 		     , complete_no
 		     , am.user_name
-		     , ad.department_name
-		     , ap.position_name
+		     , md.department_name
+		     , mp.position_name
 		     , form
 		     , title
-		     , to_char(to_date(create_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') create_date
-		     , to_char(to_date(complete_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , current_order
 		     , final_order
 		     , approval_status
@@ -599,7 +599,7 @@
 		     , process_order
 		     , approval_role
 		     , p.status pro_status
-		     , to_char(to_date(approval_date, 'MM/DD/YYYY'), 'YYYY-MM-DD') approval_date
+		     , to_char(to_date(approval_date, 'YY/MM/DD'), 'YYYY-MM-DD') approval_date
 		     , bookmark pro_bookmark
 		     
 		     , attachment_no
@@ -609,8 +609,8 @@
 		  from approval a
 		  
 		  join member am on (a.user_no = am.user_no)
-		  join dept ad on (a.department_no = ad.department_no)
-		  join position ap using(position_no)
+          join dept md on (am.department = md.department_no)
+		  join position mp on (am.position = mp.position_no)
 		  
 		  left
 		  join form_cash f using(approval_no)
@@ -618,8 +618,8 @@
 		  left
 		  join app_process p using(approval_no)
 		  join member pm on (p.user_no = pm.user_no)
-		  join dept pd on (pm.department = pd.department_no)
-		  join position pp on (pm.position = pp.position_no)
+          join dept pd on (pm.department = pd.department_no)
+          join position pp on (pm.position = pp.position_no)
 		  
 		  left
 		  join attachment on (category_no = 1 and approval_no = ref_no)
@@ -629,19 +629,80 @@
             by form_no, process_order
 	</select>
 	
-	<select id="g" resultMap="appChangeResult">
+	<select id="selectChange" resultMap="appChangeResult">
 		select
 		       change_no
 		     , user_name
 		     , department_name
 		     , position_name
 		     , content
-		     , create_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
 		     , role
-		  from app_change
+		  from app_change ac
 		  join member using(user_no)
 		  join dept on (department = department_no)
 		  join position on (position = position_no)
 		 where approval_no = #{approvalNo}
+           and ac.status = 'Y'
+         order
+            by change_no
 	</select>
+	
+	<update id="updateProcess">
+		update
+		       app_process
+		   set status = #{status}
+		     , approval_date = sysdate
+		 where approval_no = #{approvalNo}
+		   and user_no = #{userName}
+	</update>
+	
+	<update id="updateCurrentOrder">
+		update
+			   approval
+		<set>
+			<choose>
+		  		<when test="approvalStatus == '반려'">
+		  			approval_status = '반려'
+		  		  , complete_date = sysdate
+		  		  , complete_no = 'PPIC-230302-' || lpad(seq_cono.nextval, 5, '0')
+		  		</when>
+		  		<when test="currentOrder + 1 == finalOrder">
+		  		    current_order = current_order + 1
+		  		  , approval_status = '승인'
+		  		  , complete_date = sysdate
+		  		  , complete_no = 'PPIC-' || to_char(sysdate, 'YYMMDD') || '-' || lpad(seq_cono.nextval, 5, '0')
+		  		</when>
+		  		<when test="currentOrder == 0">
+		  			current_order = current_order + 1
+		  		  , approval_status = '진행중'
+		  		</when>
+		  		<otherwise>
+		  			current_order = current_order + 1
+		  		</otherwise>
+	  		</choose>
+		</set>
+		  where approval_no = #{approvalNo}
+	</update>
+	
+	<insert id="insertChange">
+		insert
+		  into app_change
+		  (
+		    change_no
+		  , approval_no
+		  , user_no
+		  , content
+		  , role
+		  )
+		  values
+		  (
+		    seq_chno.nextval
+		  , #{approvalNo}
+		  , #{userName}
+		  , #{content}
+		  , #{role}
+		  )
+			   
+	</insert>
 </mapper>

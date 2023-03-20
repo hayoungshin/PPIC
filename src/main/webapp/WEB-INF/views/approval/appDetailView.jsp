@@ -13,7 +13,7 @@
     .first-1{width: 75%; padding-left: 35px; padding-right: 35px;}
     .first-1-1{float: left; visibility: hidden;}
     .first-1-2{float: right;}
-	/*.three-btn{padding-left: 30px; font-size: 20px;}*/
+	.three-btn{padding-left: 20px;}
 	.btn-align{float: left;}
 	
 	.second-1{width: 75%;}
@@ -37,6 +37,10 @@
 	.btnn-pp:hover{cursor: pointer; text-decoration: none; background-color: #6F50F8; color: white; transition: 0.3s;}
 	.btnn-gr{text-decoration: none; font-size: 14px; background-color: white; color: gray; border:1px solid gray; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
     .btnn-gr:hover{cursor: pointer; text-decoration: none; background-color: gray; color: white; transition: 0.3s;}
+    .btnn-sb{text-decoration: none; font-size: 14px; background-color: white; color: #00b5d1; border:1px solid #00b5d1; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
+    .btnn-sb:hover{cursor: pointer; text-decoration: none; background-color: #00b5d1; color: white; transition: 0.3s;}
+    .btnn-rd{text-decoration: none; font-size: 14px; background-color: white; color: rgb(255, 100, 100); border:1px solid rgb(255, 100, 100); border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
+    .btnn-rd:hover{cursor: pointer; text-decoration: none; background-color: rgb(255, 100, 100); color: white; transition: 0.3s;}
     
     .stt-pp{border-radius: 5px; border: 1px solid #6F50F8; background-color: #6F50F8; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
     .stt-gr{border-radius: 5px; border: 1px solid gray; background-color: gray; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
@@ -84,6 +88,129 @@
 					need_agree_area.style.visibility = 'visible';
 				}
 			}
+			
+			// Ajax 변경사항 select
+			ajaxSelectChange();
+		}
+		
+		// Ajax 중요 update
+		function ajaxStar(bk){
+			$.ajax({
+				url:"updateBook.ap",
+				data:{
+					approvalNo:${ad.approvalNo},
+					bookmark:bk,
+					userName:${loginUser.userNo}
+				},
+				success:function(result){
+					if(result > 0){
+						location.reload();
+					}
+				}, error:function(){
+					console.log("중요용 ajax통신 실패");
+				}
+			});
+		}
+		
+		// Ajax 삭제 update
+		function ajaxDel(){
+			if(confirm('결재문서를 삭제하시겠습니까?')){
+				$.ajax({
+					url:"deleteApproval.ap?no=" + ${ad.approvalNo},
+					success:function(result){
+						if(result > 0){
+							location.href = "list.ap?myi=1";
+						}
+					}, error:function(){
+						console.log("삭제용 ajax통신 실패");
+					}
+				});
+			}
+		}
+		
+		// Ajax 변경사항 select
+		function ajaxSelectChange(){
+			$.ajax({
+				url:"selectChange.ap?no=" + ${ad.approvalNo},
+				success:function(list){
+					let value = "";
+					for(let i=0; i<list.length; i++){
+						if(list[i].role == '변경'){
+							value += "<tr height='35px;'>"
+							       +	"<th>" + list[i].userName + "</th>"
+							       +	"<td colspan='2'>"
+							       +		list[i].content
+							       + 		"<span style='font-size:14px; color:gray;'>&nbsp;&nbsp;&nbsp;" + list[i].createDate + "</span>"
+							       +	"</td>"
+							       + "</tr>";
+						} else {
+							value += "<tr>"
+								   +	"<th>" + list[i].userName + "</th>"
+								   +	"<td colspan='2'><span style='font-size:14px; color:gray;'>&nbsp;&nbsp;&nbsp;" + list[i].createDate + "</span></td>"
+								   + "</tr>"
+								   + "<tr height='35px;'>"
+								   +	"<td colspan='3'>&nbsp;" + list[i].content + "</td>"
+								   + "</tr>";
+						}
+					}
+					
+					const change_area = document.getElementById("ajax-change-area");
+					change_area.innerHTML = value;
+				}, error:function(){
+					console.log("변경사항용 ajax통신 실패");
+				}
+			});
+		}
+		
+		// Ajax 변경사항 insert
+		function ajaxInsertChange(){
+			const change_input = document.getElementById("change-input");
+			if(change_input.value.trim().length > 0){
+				$.ajax({
+					url:"insertChange.ap",
+					data:{
+						approvalNo:${ad.approvalNo},
+						userName:${loginUser.userNo},
+						content:change_input.value,
+						role:'댓글'
+					},
+					success:function(result){
+						if(result > 0){
+							change_input.value = "";
+							ajaxSelectChange();
+						}
+					}, error:function(){
+						alert("댓글 작성 실패");
+					}
+				});
+			}
+		}
+		
+		// Ajax 결재선 update
+		function myApproval(app){
+			let status = "";
+			if(app == 'Y'){
+				status = "승인";
+			}else{
+				status = "반려";
+			}
+			$.ajax({
+				url:"updateProcess.ap",
+				data:{
+					approvalNo:${ad.approvalNo},
+					userName:${loginUser.userNo},
+					status:status,
+					currentOrder:${ad.app.currentOrder},
+					finalOrder:${ad.app.finalOrder}
+				},
+				success:function(result){
+					if(result > 0){
+						location.reload();
+					}
+				},error:function(){
+					console.log("결재선용 ajax통신 오류");
+				}
+			});
 		}
 	</script>
 
@@ -91,17 +218,37 @@
         <br>
         <div class="first">
             <div class="first-1">
-				<div class="first-1-1"><span class="stt-pk"><b>승인필요</b></span></div>
+				<div class="first-1-1">
+					<button class="btnn-sb" onclick="myApproval('Y');">승인</button>
+					<button class="btnn-rd" onclick="myApproval('N');">반려</button>
+				</div>
+				
                 <div class="first-1-2">
-                	<div class="btn-align">
-			   			<span class="three-btn" onclick="selectHow(0);">🤍💜</span>
-					</div>
-					<div class="btn-align">
-			   			<span class="three-btn" onclick="selectHow(0);">✖️</span>
-					</div>
-					<div class="btn-align">
-			   			<span class="three-btn" onclick="selectHow(0);">🗑️</span>
-					</div>
+                   	
+					<c:if test="${ ad.app.userName eq loginUser.userName }"><!-- 관리자일경우 삭제? -->
+						<div class="btn-align">
+				   			<div class="three-btn btnn-gr">상신취소</div>
+						</div>
+						<div class="btn-align">
+				   			<div class="three-btn btnn-rd" onclick="return ajaxDel();">삭제</div>
+						</div>
+					</c:if>
+                
+                	<c:forEach var="p" items="${ ad.process }">
+	                	<c:if test="${ p.userName eq loginUser.userName }">
+	                   		<div class="btn-align">
+	                   			<c:choose>
+		                   			<c:when test="${ p.bookmark eq 'N' }">
+		                    			<img src="resources/icons/star.png" height="20px" class="three-btn as" onclick="ajaxStar(0);">
+		                    		</c:when>
+		                    		<c:otherwise>
+			                    		<img src="resources/icons/star-y.png" height="20px" class="three-btn as" onclick="ajaxStar(1);">
+		                    		</c:otherwise>
+		                    	</c:choose>
+	                   		</div>
+	                   	</c:if>
+                   	</c:forEach>
+					
                 </div>
             </div>
         </div>
@@ -335,14 +482,22 @@
         </div>
         <br clear="both">
         <div class="third">
-            <div class="reply-content">
-                댓글입니다.
-            </div>
-            <br>
-            <div class="reply-insert">
-                <input type="text">
-                <button class="btnn-pp">입력</button>
-            </div>
+        	<table>
+	        	<colgroup>
+	        		<col style="width:50px;">
+	           		<col style="width:260px;">
+	           		<col>
+				</colgroup>
+        		<thead id="ajax-change-area"></thead>
+        		<tbody>
+		            <tr>
+	        			<th colspan="2">
+	        				<textarea class="form-control" id="change-input" cols="55" rows="2" style="resize:none; width:300px;"></textarea>
+		                </th>
+		                <th><button class="btnn-pp" style="height:60px; width:50px;" onclick="ajaxInsertChange();">입력</button></th>
+	        		</tr>
+        		</tbody>
+            </table>
         </div>
         <br>
 

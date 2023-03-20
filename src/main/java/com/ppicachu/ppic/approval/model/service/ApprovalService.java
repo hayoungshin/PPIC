@@ -2,10 +2,13 @@ package com.ppicachu.ppic.approval.model.service;
 
 import java.util.ArrayList;
 
+import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
+import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
+import com.ppicachu.ppic.member.model.vo.Member;
 
 public interface ApprovalService {
 	
@@ -36,24 +39,32 @@ public interface ApprovalService {
 	// 8. 복원 update
 	int recoverApproval(String[] noArr);
 	
-	// 9. 업무기안 select
+	// 9. 상세 / 수정-업무기안 select
 	AppDetail selectDraftApp(int approvalNo);
 	
-	// 10. 인사발령품의서 select
+	// 10. 상세 / 수정-인사발령품의서 select
 	AppDetail selectTransferApp(int approvalNo);
 	
-	// 11. 비품신청서 select
+	// 11. 상세 / 수정-비품신청서 select
 	AppDetail selectConsumeApp(int approvalNo);
 	
-	// 12. 지출결의서 select
+	// 12. 상세 / 수정-지출결의서 select
 	AppDetail selectCashApp(int approvalNo);
 	
+	// 13. 상세-변경사항 select
+	ArrayList<AppChange> selectChange(int approvalNo);
 	
-	/*
-	// 9.작성_회원 리스트 select (+회원명, 부서명, 직급명)
-	// 15.수정_회원 리스트 select (+회원명, 부서명, 직급명)
+	// 14. 상세-결재선 update
+	int updateProcess(AppProcess ap);
+	int updateCurrentOrder(Approval a);
+	
+	// 15. 상세-변경사항 insert
+	int insertChange(AppChange ac);
+	
+	// 16. 작성 / 수정-회원 리스트 select
 	ArrayList<Member> selectMemberList();
 	
+	/*
 	// 10.작성_전자결재 insert (전자결재, 양식, 결재선, 첨부파일, 변경사항)
 	// 18.수정_전자결재 insert (전자결재, 양식, 결재선, 첨부파일, 변경사항)
 	int insertApproval(Approval a);
@@ -63,13 +74,6 @@ public interface ApprovalService {
 	int insertFormCash(ArrayList<FormDraft> fcaList);
 	int insertAppProcess(ArrayList<AppProcess> apList);
 	int insertAppChange(ArrayList<AppChange> acList);
-	
-	// 11.상세_전자결재 select (전자결재, 양식, 결재선, 첨부파일, 변경사항)
-	// 16.수정_전자결재 select (전자결재, 양식, 결재선, 첨부파일)
-	Approval selectApproval(int approvalNo);
-	
-	// 12.상세_변경사항 insert
-	int insertAppChange(AppChange ac);
 	
 	// 13.상세_변경사항삭제 update
 	int updateAppChange(int changeNo);

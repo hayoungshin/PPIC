@@ -12,6 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AppChange {
+	private int approvalNo;
 	private int changeNo;
 	private String userName;
 	private String departmentName;

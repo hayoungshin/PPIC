@@ -156,6 +156,8 @@
 						if(result > 0){
 							location.reload();
 						}
+					}, error:function(){
+						console.log("삭제용 ajax통신 실패");
 					}
 				});
 			}
@@ -217,7 +219,7 @@
 			                    <td>${ a.completeNo }</td>
 			                    <td>
 			                    	<c:choose>
-			                    		<c:when test="${ empty a.bookmark }">
+			                    		<c:when test="${ a.bookmark eq 'N' }">
 			                    			<img src="resources/icons/star.png" height="20px" class="as" onclick="ajaxStar(0);">
 			                    		</c:when>
 			                    		<c:otherwise>

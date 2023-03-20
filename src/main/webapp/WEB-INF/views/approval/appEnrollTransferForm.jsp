@@ -90,18 +90,22 @@
                                 <th width="20%">완료일</th>
                                 <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td>?</td>
-                                <th>문서번호</th>
-                                <td>기안 완료시 자동으로 생성됩니다.</td>
-                            </tr>
-                            <tr>
-                                <th>직급</th>
-                                <td>?</td>
-                                <th>작성자</th>
-                                <td>?</td>
-                            </tr>
+                            <c:forEach var="m" items="${ mList }">
+	                            <c:if test="${ loginUser.userNo eq m.userNo }">
+		                            <tr>
+		                                <th>부서</th>
+		                                <td>${ m.department }부</td>
+		                                <th>문서번호</th>
+		                                <td>기안 완료시 자동으로 생성됩니다.</td>
+		                            </tr>
+		                            <tr>
+		                                <th>직급</th>
+		                                <td>${ m.position }</td>
+		                                <th>작성자</th>
+		                                <td>${ m.userName }</td>
+		                            </tr>
+		                        </c:if>
+		                    </c:forEach>
                             <tr>
                                 <th>제목</th>
                                 <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>
@@ -145,10 +149,10 @@
                                             <td>
                                             	<select style="width:140px; height:35px;">
                                             		<option>변경직급을 선택하세요</option>
-                                            		
-                                            		<!-- forEach -->
-                                            		<option>직급 불러오기</option>
-                                            		
+                                            		<c:forEach var="p" items="${ pList }">
+	                                            		<option>${ p.positionName }</option>
+	                                            		<!-- 셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기) -->
+                                            		</c:forEach>
                                             	</select>
 											</td>
                                             <td>

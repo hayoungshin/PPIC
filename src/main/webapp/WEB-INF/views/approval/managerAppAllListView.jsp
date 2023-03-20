@@ -131,6 +131,8 @@
 						if(result > 0){
 							location.reload();
 						}
+					}, error:function(){
+						console.log("삭제용 ajax통신 실패");
 					}
 				});
 			} */

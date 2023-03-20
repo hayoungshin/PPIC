@@ -103,18 +103,22 @@
                                 <th width="20%">완료일</th>
                                 <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td>?</td>
-                                <th>문서번호</th>
-                                <td>기안 완료시 자동으로 생성됩니다.</td>
-                            </tr>
-                            <tr>
-                                <th>직급</th>
-                                <td>?</td>
-                                <th>작성자</th>
-                                <td>?</td>
-                            </tr>
+                            <c:forEach var="m" items="${ mList }">
+	                            <c:if test="${ loginUser.userNo eq m.userNo }">
+		                            <tr>
+		                                <th>부서</th>
+		                                <td>${ m.department }부</td>
+		                                <th>문서번호</th>
+		                                <td>기안 완료시 자동으로 생성됩니다.</td>
+		                            </tr>
+		                            <tr>
+		                                <th>직급</th>
+		                                <td>${ m.position }</td>
+		                                <th>작성자</th>
+		                                <td>${ m.userName }</td>
+		                            </tr>
+		                        </c:if>
+		                    </c:forEach>
                             <tr>
                                 <th>제목</th>
                                 <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>
@@ -127,17 +131,16 @@
                                     <!-- 업무기안일 경우 -->
                                     <table id="tb" class="table-bordered">
                                         <tr>
-                                            <th width="20%">시행일자</th>
+                                            <th width="20%">시행일자</th><!-- 오늘 이전의 날짜 선택 못하게 -->
                                             <td width="20%"><input type="date" style="width:190px; height:35px;"></td>
                                             <th width="20%">협조부서</th>
                                             <td width="40%">
                                             	<select style="width:380px; height:35px;">
                                             		<option>협조부서를 선택하세요</option>
-                                            		
-                                            		<!-- forEach -->
-                                            		<option>부서 불러오기</option>
-                                            		<!-- 셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기) -->
-                                            		
+                                            		<c:forEach var="d" items="${ dList }">
+	                                            		<option>${ d.departmentName }</option>
+	                                            		<!-- 셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기) -->
+                                            		</c:forEach>
                                             	</select>
                                             </td>
                                         </tr>

@@ -90,18 +90,22 @@
                                 <th width="20%">완료일</th>
                                 <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
                             </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td>?</td>
-                                <th>문서번호</th>
-                                <td>기안 완료시 자동으로 생성됩니다.</td>
-                            </tr>
-                            <tr>
-                                <th>직급</th>
-                                <td>?</td>
-                                <th>작성자</th>
-                                <td>?</td>
-                            </tr>
+                            <c:forEach var="m" items="${ mList }">
+	                            <c:if test="${ loginUser.userNo eq m.userNo }">
+		                            <tr>
+		                                <th>부서</th>
+		                                <td>${ m.department }부</td>
+		                                <th>문서번호</th>
+		                                <td>기안 완료시 자동으로 생성됩니다.</td>
+		                            </tr>
+		                            <tr>
+		                                <th>직급</th>
+		                                <td>${ m.position }</td>
+		                                <th>작성자</th>
+		                                <td>${ m.userName }</td>
+		                            </tr>
+		                        </c:if>
+		                    </c:forEach>
                             <tr>
                                 <th>제목</th>
                                 <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>

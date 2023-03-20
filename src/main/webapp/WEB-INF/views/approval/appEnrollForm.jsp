@@ -33,152 +33,36 @@
 	
     .btnn-gr{font-size: 14px; background-color: white; color: gray; border:1px solid gray; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
     .btnn-gr:hover{background-color: gray; color: white; transition: 0.3s;}
-    .btnn-pk{font-size: 14px; background-color: white; color: #fdbaba; border:1px solid #fdbaba; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
+    .btnn-pp{text-align: center; width: 350px; font-size: 35px; background-color: white; color: #6F50F8; border:3px solid #6F50F8; border-radius: 10px; padding: 40px; margin: 20px;}
+	.btnn-pp:hover{background-color: #6F50F8; color: white; transition: 0.3s;}
+	.btnn-kk{text-align: center; width: 350px; font-size: 35px; background-color: white; color: #de81fb; border:3px solid #de81fb; border-radius: 10px; padding: 40px; margin: 20px;}
+	.btnn-kk:hover{background-color: #de81fb; color: white; transition: 0.3s;}
+	.btnn-pk{text-align: center; width: 350px; font-size: 35px; background-color: white; color: #fdbaba; border:3px solid #fdbaba; border-radius: 10px; padding: 40px; margin: 20px;}
     .btnn-pk:hover{background-color: #fdbaba; color: white; transition: 0.3s;}
-    .btnn-sb{font-size: 14px; background-color: white; color: #00b5d1; border:1px solid #00b5d1; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-sb:hover{background-color: #00b5d1; color: white; transition: 0.3s;}
 </style>
 </head>
 <body>
 	<jsp:include page="../common/menubar.jsp"/>
 	
-	<script>
-		window.onload = function(){
-			/* 작성일 */
-			date = new Date();
-			year = date.getFullYear();
-			month = date.getMonth() + 1;
-			if(month < 10){
-				month = "0" + month;
-			}
-			day = date.getDate();
-			if(day < 10){
-				day = "0" + day;
-			}
-			document.getElementById("current-date").innerHTML = year + "-" + month + "-" + day;
-		}
-	</script>
-	
 	<div id="content" align="center">
-        <div class="first">
+		<div class="first">
             <div class="title-area"><h2><b>작성하기</b></h2></div>
-            <div id="title-area-selop">
-	            <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" style="width:130px; background-color:#6F50F8; border:0px;">
-	              결재양식
-	            </button>
-	            <div class="dropdown-menu">
-	              <a class="dropdown-item" href="enrollDraftForm.ap">업무기안</a>
-	              <a class="dropdown-item" href="enrollTransferForm.ap">인사발령품의서</a>
-	              <a class="dropdown-item" href="enrollConsumeForm.ap">비품신청서</a>
-	              <a class="dropdown-item" href="enrollCashForm.ap">지출결의서</a>
-	            </div>
-            </div>
         </div>
-        <br clear="both">
-
-        <div class="second">
-            <div class="second-1">
-                <div class="form-area">
-                    <table id="tb" class="table-bordered">
-                        <thead>
-                            <tr>
-                                <th colspan="4"><br><h2><b>결재양식을 선택하세요</b></h2><br></th>
-                            </tr>
-                            <tr>
-                                <th width="20%">작성일</th>
-                                <td width="20%" id="current-date"></td>
-                                <th width="20%">완료일</th>
-                                <td width="40%">기안 완료시 자동으로 생성됩니다</td>
-                            </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td>결재양식을 선택하세요</td>
-                                <th>문서번호</th>
-                                <td>기안 완료시 자동으로 생성됩니다</td>
-                            </tr>
-                            <tr>
-                                <th>직급</th>
-                                <td>결재양식을 선택하세요</td>
-                                <th>작성자</th>
-                                <td>결재양식을 선택하세요</td>
-                            </tr>
-                            <tr>
-                                <th>제목</th>
-                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" readonly placeholder="결재양식을 선택하세요"></td>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-    
-            </div>
-            
-            <br>
-            <div class="second-2">
-                <div class="agree-area">
-                    <br>
-                    <h4><b>승인ㆍ참조</b></h4>
-                    <br>
-
-                    <div class="line">
-                        <div class="line-content">
-                            <div class="person-title"><h5><b>승인자</b></h5></div>
-                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#myModal"></i>
-                            <br clear="both">
-
-                            <!-- forEach -->
-                            <div class="level"><h6><b>1단계</b></h6></div>
-                            <div class="level-person">
-                                <span class="person-img">🧑🏻💻</span>‍
-                                인사부 문승하 대리
-                            </div>
-
-                            <div class="person-title"><h5><b>참조자</b></h5></div>
-                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#myModal"></i>
-                            <br clear="both">
-                        </div>
-                        <br>
-                    </div>
-                    
-                    <!-- 승인, 참조 사원 선택 모달 시작 -->
-                    <div class="modal" id="myModal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                        
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                <h4 class="modal-title"></h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                        
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    <div class="m-outer">
-                                        <div class="m-content">
-                                            <input type="text">
-                                            <button class="btnn-sb">검색</button>
-                                            <div class="m-mem-list"></div>
-                                        </div>
-                                        <div class="m-footer">
-                                            <button class="btnn-gr">취소</button>
-                                            <button class="btnn-pp">확인</button>
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 승인, 참조 사원 선택 모달 종료-->
-
-                </div>
-            </div>
-
-            <br clear="both">
-            
-            <button class="btnn-gr" onclick="javascript:history.go(-1);">취소</button>
-            <button class="btnn-pk" disabled>임시저장</button>
-            <button class="btnn-pp" disabled>작성</button><!-- 작성완료시 상세로 -->
-        </div>
+        <br clear="both"><br>
+        
+    	<table>
+    		<tr>
+    			<td><div class="btnn-pp" onclick="location.href='enrollDraftForm.ap'"><b>업무기안</b></div></td>
+    			<td><div class="btnn-kk" onclick="location.href='enrollTransferForm.ap'"><b>인사발령품의서</b></div></td>
+    		</tr>
+    		<tr>
+    			<td><div class="btnn-kk" onclick="location.href='enrollConsumeForm.ap'"><b>비품신청서</b></div></td>
+    			<td><div class="btnn-pk" onclick="location.href='enrollCashForm.ap'"><b>지출결의서</b></div></td>
+    		</tr>
+    	</table>
+        <br><br><br>
+        
+        <button class="btnn-gr" onclick="javascript:history.go(-1);">목록</button>
     </div>
 </body>
 </html>

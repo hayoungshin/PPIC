@@ -73,6 +73,18 @@
 		   and user_no = #{userNo}
 	</select>
 	
+	<select id="selectMemberList" resultMap="memberResult">
+		select
+			   user_no
+		     , user_name
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
+		  from member
+		  join dept on (member.department = dept.department_no) 
+		  join position on (member.position = position.position_no)
+		 where status='Y'
+	</select>
+	
 	<select id="loginMember" resultMap="memberResult">
 		select
 			   user_no

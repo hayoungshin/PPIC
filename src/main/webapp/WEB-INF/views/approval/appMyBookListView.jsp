@@ -179,7 +179,7 @@
 			                    <td>${ a.completeNo }</td>
 			                    <td>
 			                    	<c:choose>
-			                    		<c:when test="${ empty a.bookmark }">
+			                    		<c:when test="${ a.bookmark eq 'N' }">
 			                    			<img src="resources/icons/star.png" height="20px" class="as" onclick="ajaxStar(0);">
 			                    		</c:when>
 			                    		<c:otherwise>

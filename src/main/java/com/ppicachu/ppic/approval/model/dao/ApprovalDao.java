@@ -6,10 +6,13 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
+import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
+import com.ppicachu.ppic.member.model.vo.Member;
 
 @Repository
 public class ApprovalDao {
@@ -84,5 +87,25 @@ public class ApprovalDao {
 
 	public AppDetail selectCashApp(SqlSessionTemplate sqlSession, int approvalNo) {
 		return sqlSession.selectOne("approvalMapper.selectCashApp", approvalNo);
+	}
+
+	public ArrayList<AppChange> selectChange(SqlSessionTemplate sqlSession, int approvalNo) {
+		return (ArrayList)sqlSession.selectList("approvalMapper.selectChange", approvalNo);
+	}
+
+	public int insertChange(SqlSessionTemplate sqlSession, AppChange ac) {
+		return sqlSession.insert("approvalMapper.insertChange", ac);
+	}
+
+	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("memberMapper.selectMemberList");
+	}
+
+	public int updateProcess(SqlSessionTemplate sqlSession, AppProcess ap) {
+		return sqlSession.update("approvalMapper.updateProcess", ap);
+	}
+
+	public int updateCurrentOrder(SqlSessionTemplate sqlSession, Approval a) {
+		return sqlSession.update("approvalMapper.updateCurrentOrder", a);
 	}
 }
