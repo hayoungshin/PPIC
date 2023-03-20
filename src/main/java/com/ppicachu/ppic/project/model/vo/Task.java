@@ -24,4 +24,7 @@ public class Task {
 	private String createDate;
 	private String modifyDate;
 	private String deleteStatus;
+	
+	private int refPeopleCnt;
+	
 }

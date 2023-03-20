@@ -15,4 +15,12 @@ public interface ProjectService {
 	
 	// 프로젝트 하위 작업 조회
 	ArrayList<Task> selectTaskList(int projectNo);
+	
+	// 작업 참조자정보 조회
+	ArrayList<ProjectParticipant> selectTaskParticipants(ArrayList<Task> tList);
+	// 작업 참조자 수
+	int selectCountTaskParticipants(int taskNo);
+	
+	// 작업상태 변경
+	int updateTaskStatus(Task t);
 }

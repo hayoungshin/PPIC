@@ -17,4 +17,5 @@ public class ProjectParticipant {
 	private int taskNo;
 	private String departmentName;
 	private String userName;
+	
 }

@@ -32,15 +32,42 @@ public class ProjectController {
 	@ResponseBody
 	@RequestMapping(value="detail.pr", produces="application/json; charset=UTF-8")
 	public String selectProjectParticipants(int projectNo) {
+		// 프로젝트 참여자 리스트
 		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
+		// task 리스트
 		ArrayList<Task> tList = pService.selectTaskList(projectNo);
+		// task 참조자 리스트
+		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(tList);
+		// task 참조자 수
+		int tpCount = 0;
+		for(int i=0; i<tList.size(); i++) {
+			tpCount = pService.selectCountTaskParticipants(tList.get(i).getTaskNo());
+			tList.get(i).setRefPeopleCnt(tpCount);
+		}
+		
 		
 		JSONObject jObj = new JSONObject();
-		
 		jObj.put("ppList", ppList);
 		jObj.put("tList", tList);
+		jObj.put("tpList", tpList);
 		
 		return new Gson().toJson(jObj);
 		
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("updateStatus.tk")
+	public String updateTaskStatus(Task t) {
+		switch(t.getTaskStatus()) {
+		case "wait-list" : t.setTaskStatus("1"); break;
+		case "working-list" : t.setTaskStatus("2"); break;
+		case "done-list" : t.setTaskStatus("3"); break;
+		case "hold-list" : t.setTaskStatus("4"); break;
+		}
+		
+		int result = pService.updateTaskStatus(t);
+		
+		return (result > 0) ? "success" : "failed";
 	}
 }

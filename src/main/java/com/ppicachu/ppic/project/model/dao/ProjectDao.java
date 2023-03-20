@@ -23,4 +23,16 @@ public class ProjectDao {
 	public ArrayList<Task> selectTaskList(SqlSessionTemplate sqlSession, int projectNo)	{
 		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskList", projectNo);
 	}
+	
+	public ArrayList<ProjectParticipant> selectTaskParticipants(SqlSessionTemplate sqlSession, ArrayList<Task> tList) {
+		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskParticipants", tList);
+	}
+	
+	public int selectCountTaskParticipants(SqlSessionTemplate sqlSession, int taskNo) {
+		return sqlSession.selectOne("projectMapper.selectCountTaskParticipants", taskNo);
+	}
+	
+	public int updateTaskStatus(SqlSessionTemplate sqlSession, Task t) {
+		return sqlSession.update("projectMapper.updateTaskStatus", t);
+	}
 }

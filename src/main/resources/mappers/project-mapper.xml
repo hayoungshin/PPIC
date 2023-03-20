@@ -76,7 +76,7 @@
 <select id="selectTaskList" resultMap="taskResult">
 	select
 		   task_no
-		 , assign_user
+		 , user_name "assign_user"
 		 , task_name
 		 , task_content
 		 , file_path
@@ -84,10 +84,40 @@
 		 , task_status
 		 , create_date
 		 , modify_date
-      from task
+      from task t
+      join member m on (t.assign_user = m.user_no)
      where project_no = #{projectNo}
        and delete_status = 'N'
 </select>
 
+<select id="selectTaskParticipants" parameterType="java.util.ArrayList" resultMap="proParticipantsResult">
+	select
+		   task_no
+		 , department_name
+		 , user_name
+	  from p_participant p
+	  join member using (user_no)
+      join dept using (department_no)
+      <where>
+	      <foreach item="t" collection="list" open="task_no in (" separator="," close=")">
+		 	 #{t.taskNo}
+	      </foreach>
+	      and task_assign = 'N'
+      </where>
+</select>
+
+<select id="selectCountTaskParticipants" resultType="_int">
+	select
+		   count(*)
+	  from p_participant
+	 where task_assign = 'N'
+	   and task_no = #{taskNo}
+</select>
+
+<update id="updateTaskStatus">
+	update task
+	   set task_status = #{taskStatus}
+	 where task_no = #{taskNo}
+</update>
 
 </mapper>
