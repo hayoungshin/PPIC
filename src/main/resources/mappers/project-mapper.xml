@@ -20,6 +20,9 @@
 	<result column="task_no" property="taskNo"/>
 	<result column="department_name" property="departmentName"/>
 	<result column="user_name" property="userName"/>
+	<result column="pm_status" property="pmStatus"/>
+	<result column="task_assign" property="taskAssign"/>
+	<result column="position_name" property="positionName"/>
 	<result column="profile_img" property="userImg"/>
 </resultMap>
 
@@ -36,6 +39,8 @@
 	<result column="modify_date" property="modifyDate"/>
 	<result column="delete_status" property="deleteStatus"/>
 	<result column="profile_img" property="userImg"/>
+	<result column="position_name" property="positionName"/>
+	<result column="user_no" property="userNo"/>
 </resultMap>
 
 <select id="selectProjectList" resultMap="projectResult">
@@ -49,10 +54,12 @@
 		 , create_date
 		 , modify_date
 		 , d.department_name "department_name"
+		 , ps.position_name "position_name"
       from project pj
       left join p_participant pp using (project_no)
       left join member m on (pj.project_manager = m.user_no)
       left join dept d on (m.department = d.department_no)
+      left join position ps on (m.position = ps.position_no)
      where delete_status = 'N'
        and end_date >= sysdate
        and pp.user_no = #{userNo}
@@ -67,11 +74,14 @@
 	      , task_no
 	      , d.department_name "department_name"
 	      , m.user_name "user_name"
+	      , ps.position_name "position_name"
 	  from p_participant pp
 	  join project p using (project_no)
 	  left join member m using (user_no)
 	  left join dept d using (department_no)
+	  left join position ps on (m.position = ps.position_no)
 	 where project_no = #{projectNo}
+	   and pm_status = 'N'
 </select>
 
 <select id="selectTaskList" resultMap="taskResult">
@@ -86,8 +96,11 @@
 		 , create_date
 		 , modify_date
 		 , profile_img
+		 , position_name
+		 , user_no
       from task t
-      join member m on (t.assign_user = m.user_no)
+      left join member m on (t.assign_user = m.user_no)
+      left join position ps on (m.position = ps.position_no) 
      where project_no = #{projectNo}
        and delete_status = 'N'
 </select>
@@ -115,9 +128,11 @@
 		 , department_name
 		 , user_name
 		 , profile_img
+		 , position_name
 	  from p_participant p
-	  join member using (user_no)
-      join dept using (department_no)
+	  left join member m using (user_no)
+      left join dept d using (department_no)
+      left join position ps on (m.position = ps.position_no)
      where task_no = #{taskNo}
 	   and task_assign = 'N'
 </select>
@@ -126,8 +141,8 @@
 	select
 		   count(*)
 	  from p_participant
-	 where task_assign = 'N'
-	   and task_no = #{taskNo}
+	 where task_no = #{taskNo}
+	   and task_assign = 'N'
 </select>
 
 <update id="updateTaskStatus">

@@ -25,6 +25,7 @@ public class Project {
 	private String modifyDate;
 	private String deleteStatus;
 	
+	
 	private ArrayList<ProjectParticipant> projectParticipants;
 	private ArrayList<Task> tasks;
 }
