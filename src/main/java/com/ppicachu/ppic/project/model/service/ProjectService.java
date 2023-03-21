@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.project.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.ppicachu.ppic.project.model.vo.Project;
 import com.ppicachu.ppic.project.model.vo.ProjectParticipant;
@@ -23,4 +24,8 @@ public interface ProjectService {
 	
 	// 작업상태 변경
 	int updateTaskStatus(Task t);
+	
+	// 프로젝트 참여자 정보/부서 조회
+	ArrayList<ProjectParticipant> selectDeptList(HashMap<String, Integer> map);
+	ArrayList<ProjectParticipant> selectEmployeesList(HashMap<String, Integer> map);
 }

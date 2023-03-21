@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.project.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,5 +35,13 @@ public class ProjectDao {
 	
 	public int updateTaskStatus(SqlSessionTemplate sqlSession, Task t) {
 		return sqlSession.update("projectMapper.updateTaskStatus", t);
+	}
+	
+	public ArrayList<ProjectParticipant> selectDeptList(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		return (ArrayList)sqlSession.selectList("projectMapper.selectDeptList", map);
+	}
+	
+	public ArrayList<ProjectParticipant> selectEmployeesList(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
+		return (ArrayList)sqlSession.selectList("projectMapper.selectEmployeesList", map);
 	}
 }

@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.project.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class ProjectController {
 	@Autowired
 	private ProjectService pService;
 	
+	// 로그인유저의 프로젝트 리스트 조회
 	@RequestMapping("list.pr")
 	public ModelAndView selectProjectList(@RequestParam(value="no")int userNo, ModelAndView mv) {
 		ArrayList<Project> pList = pService.selectProjectList(userNo);
@@ -30,6 +32,7 @@ public class ProjectController {
 		return mv;
 	}
 	
+	// 프로젝트 상세정보 조회
 	@ResponseBody
 	@RequestMapping(value="detail.pr", produces="application/json; charset=UTF-8")
 	public String selectProjectParticipants(int projectNo) {
@@ -52,6 +55,7 @@ public class ProjectController {
 		
 	}
 	
+	// task참조자 리스트
 	@ResponseBody
 	@RequestMapping(value="tpList.tk", produces="application/json; charset=UTF-8")
 	public String selectTaskParticipants(int taskNo) {
@@ -64,7 +68,7 @@ public class ProjectController {
 		return new Gson().toJson(jObj);
 	}
 	
-	
+	// task drag&drop 상태변경
 	@ResponseBody
 	@RequestMapping("updateStatus.tk")
 	public String updateTaskStatus(Task t) {
@@ -78,5 +82,22 @@ public class ProjectController {
 		int result = pService.updateTaskStatus(t);
 		
 		return (result > 0) ? "success" : "failed";
+	}
+	
+	// 프로젝트에 참여중인 부서/멤버 조회
+	@ResponseBody
+	@RequestMapping(value="selectList.tk", produces="application/json; charset=UTF-8")
+	public String selectEmployeesList(int projectNo, int userNo) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("projectNo", projectNo);
+		map.put("userNo", userNo);
+		
+		ArrayList<ProjectParticipant> dList = pService.selectDeptList(map);
+		ArrayList<ProjectParticipant> eList = pService.selectEmployeesList(map);
+		JSONObject jObj = new JSONObject();
+		jObj.put("dList", dList);
+		jObj.put("eList", eList);
+		
+		return new Gson().toJson(jObj);
 	}
 }
