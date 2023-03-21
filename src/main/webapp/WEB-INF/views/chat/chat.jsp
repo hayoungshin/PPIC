@@ -1046,13 +1046,13 @@
            									+ "<div class='chat-message other'>"
                								+ "<div class='send-message'>" + list[i].chatContent + "</div>"
                						if(list[i].notRead != 0){
-               							value1 += "<span class='notreadCount'>" + list[i].notRead + "</span>"
+               							value1 += "<span class='notreadCount' id='" + list[i].chatNo + "'>" + list[i].notRead + "</span>"
                						}
                						value1 += "</div></div>"
            				}else{
            					value1 += "<div class='chat-message mine'>"
        						if(list[i].notRead != 0){
-       							value1 += "<span class='notreadCount'>" + list[i].notRead + "</span>"
+       							value1 += "<span class='notreadCount' id='" + list[i].chatNo + "'>" + list[i].notRead + "</span>"
        						}
            					value1 += "<div class='send-message'>" + list[i].chatContent + "</div></div>"
            				}
@@ -1087,7 +1087,7 @@
            			}
            			value1 += "</div><div class='input-area'>"
                			   	+ "<div class='form-group'>"
-                   			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;'></textarea>"
+                   			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;' onKeyPress='check_enter();'></textarea>"
                     		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
                 	value2 += "<span><img src='resources/icons/dots.png'><img src='resources/icons/search.png'></span></div>"
@@ -1133,38 +1133,80 @@
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
-			if(msgArr[1] == ${loginUser.userNo}){
-				
-				if(msgArr[6] != 0){
-					$msg = "<span class='notreadCount'>" + msgArr[6] + "</span>"
-						+ "<div class='send-message'>" + msgArr[2] + "</div>"
+			if(msgArr[2] == "ENTER-CHAT"){
+				$(".notreadCount").each(function(){
+					if($(this).attr("id") > msgArr[5] && $(this).attr("id") <= msgArr[4]){
+						if(msgArr[1] == ${loginUser.userNo}){
+							if(!$(this).parent().attr("class").includes("mine")){
+								if((Number($(this).text()) - 1) == 0){
+									$(this).text("");
+								}else{
+									$(this).text(Number($(this).text()) - 1);
+								}
+							}
+						}else{
+							if($(this).parent().attr("class").includes("mine")){
+								if((Number($(this).text()) - 1) == 0){
+									$(this).text("");
+								}else{
+									$(this).text(Number($(this).text()) - 1);
+								}
+							}else{
+								if((Number($(this).text()) - 1) == 0){
+									$(this).text("");
+								}else{
+									$(this).text(Number($(this).text()) - 1);
+								}
+							}
+						}
+					}
+				})
+			} else{
+				if(msgArr[1] == ${loginUser.userNo}){
+					
+					if(msgArr[6] != 0){
+						$msg = "<span class='notreadCount' id='" + msgArr[7] + "'>" + msgArr[6] + "</span>"
+							+ "<div class='send-message'>" + msgArr[2] + "</div>"
+					}else{
+						$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+					}
+					$chatDiv = $("<div class='chat-message'>").append($msg);
+					$chatDiv.addClass("mine");
+					$chatAllDiv = $chatDiv;
 				}else{
 					$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+					if(msgArr[6] != 0){
+						$msg += "<span class='notreadCount' id='" + msgArr[7] + "'>" + msgArr[6] + "</span>"
+					}
+					$chatDiv = $("<div class='chat-message'>").append($msg);
+					let userVal = "<img src='";
+					if(msgArr[5] != "null"){
+						userVal += msgArr[5]
+					}else{
+						userVal += "resources/icons/profile.png"
+					}
+					userVal += "' class='rounded-circle chatProfileImg pro-small'>"
+							+ msgArr[4]
+					let $userSpan = $("<span class='send-user'>").html(userVal);
+					$chatDiv.addClass("other");
+					$chatAllDiv = $("<div>").append($chatDiv);
+					$chatAllDiv = $chatAllDiv.prepend($userSpan);
 				}
-				$chatDiv = $("<div class='chat-message'>").append($msg);
-				$chatDiv.addClass("mine");
-				$chatAllDiv = $chatDiv;
-			}else{
-				$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
-				if(msgArr[6] != 0){
-					$msg += "<span class='notreadCount'>" + msgArr[6] + "</span>"
-				}
-				$chatDiv = $("<div class='chat-message'>").append($msg);
-				let userVal = "<img src='";
-				if(msgArr[5] != "null"){
-					userVal += msgArr[5]
-				}else{
-					userVal += "resources/icons/profile.png"
-				}
-				userVal += "' class='rounded-circle chatProfileImg pro-small'>"
-						+ msgArr[4]
-				let $userSpan = $("<span class='send-user'>").html(userVal);
-				$chatDiv.addClass("other");
-				$chatAllDiv = $("<div>").append($chatDiv);
-				$chatAllDiv = $chatAllDiv.prepend($userSpan);
+				$(".chat-area").append($chatAllDiv);
+				$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
 			}
-			$(".chat-area").append($chatAllDiv);
-			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+		}
+		
+		// shift+enter 시 줄바꿈 / enter시 메세지 전송
+		function check_enter(){
+			if(event.keyCode==13){
+				if(!event.shiftKey){
+					event.preventDefault();
+					if($("#message").val() != ""){
+						document.getElementById("send-btn").click();
+					}
+				}
+			}
 		}
 			
 		function onClose(no){

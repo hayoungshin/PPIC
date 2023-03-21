@@ -3,6 +3,8 @@ package com.ppicachu.ppic.chat.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.mybatis.spring.SqlSessionTemplate;
+
 import com.ppicachu.ppic.chat.model.vo.Chat;
 import com.ppicachu.ppic.member.model.vo.Member;
 
@@ -32,15 +34,26 @@ public interface ChatService {
 	ArrayList<Chat> selectChat(int roomNo);
 	
 	// 8. 채팅 입력
-	int insertChat(Chat c);
+	int insertChat(HashMap<String, Object> map);
 	
 	// 9. 채팅방 변경
 	int updateChatRoom(int roomNo);
 	
-	// 10. websocket 연결된 방번호 찾기
+	// 10. 참여자 변경
+	int updateNotreadChat(HashMap<String, Object> hm);
+    int updateLastreadChat(HashMap<String, Object> hm);
+	
+	// 11. websocket 연결된 방번호 찾기
 	Chat selectChatRoom(int roomNo);
 	
-	// 11. 채팅방 삭제
+	// 12. 채팅방 삭제
 	int deleteParticipant(int roomNo);
 	int deleteChatRoom(int roomNo);
+	
+	// 13. 채팅 입장시 읽음 처리
+	int selectLastReadChat(Chat c);
+	int selectMaxChat(Chat c);
+	int updateParticipant(Chat c);
+	int updateChat(Chat c);
+	
 }
