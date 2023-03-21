@@ -87,13 +87,13 @@ public class ChatController {
 	
 	@ResponseBody
 	@RequestMapping("create.chat")
-	public String ajaxCreateChat(@RequestParam(value="participant[]") ArrayList<Integer> participant) {
+	public int ajaxCreateChat(@RequestParam(value="participant[]") ArrayList<Integer> participant) {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("groupCount", participant.size());
 		int result1 = cService.insertChatRoom(map);
 		int result2 = cService.insertParticipant(participant);
 		
-		return String.valueOf(result1);
+		return result1;
 	}
 	
 	@ResponseBody
@@ -101,5 +101,14 @@ public class ChatController {
 	public String ajaxOpenChat(int roomNo) {
 		ArrayList<Chat> list = cService.selectChat(roomNo);
 		return new Gson().toJson(list);
+	}
+	
+	@ResponseBody
+	@RequestMapping("delete.chat")
+	public String ajaxDeleteChat(int roomNo) {
+		int result1 = cService.deleteParticipant(roomNo);
+		int result2 = cService.deleteChatRoom(roomNo);
+		
+		return result1 * result2 > 0 ? "success" : "fail";
 	}
 }

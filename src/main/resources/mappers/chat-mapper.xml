@@ -121,7 +121,7 @@
                 where user_no = ${participantNo}
                   and room_no = cr.room_no) "notread_chat"
 		     , chat_content
-		     , to_char(send_date, 'YYYY.MM.DD PM HH:mm') "send_date"
+		     , to_char(modify_date, 'YYYY.MM.DD PM HH:MI') "send_date"
              , user_name
              , profile_img
 		  from chatroom cr
@@ -145,7 +145,7 @@
 	
 	<insert id="insertChatRoom" parameterType="java.util.HashMap" useGeneratedKeys="true" keyColumn="room_no" keyProperty="roomNo">
 		insert 
-		  into chatRoom
+		  into chatroom
 		  (
 		    room_no
 		  , group_count
@@ -199,5 +199,52 @@
 		  where r.room_no = #{roomNo}
 		 order by chat_no
 	</select>
+	
+	<insert id="insertChat">
+		insert 
+		  into chat
+		  (
+		    chat_no
+		  , room_no
+		  , send_no
+		  , chat_content
+		  , not_read
+		  )
+		  values
+		  (
+		    seq_chatno.nextval
+		  , #{roomNo}
+		  , #{sendNo}
+		  , #{chatContent}
+		  , #{notRead}
+		  )
+	</insert>
+	
+	<update id="updateChatRoom">
+		update
+		       chatroom
+		   set last_chat = seq_chatno.currval
+		     , modify_date = sysdate
+		 where room_no = #{roomNo}
+	</update>
+	
+	<select id="selectChatRoom" resultMap="chatResult">
+		select 
+		       room_no
+		  from chatroom
+		 where room_no = #{roomNo}
+	</select>
+	
+	<delete id="deleteParticipant">
+		delete 
+		  from participant
+		 where room_no = #{roomNo}
+	</delete>
+	
+	<delete id="deleteChatRoom">
+		delete 
+		  from chatroom
+		 where room_no = #{roomNo}
+	</delete>
 	
 </mapper>

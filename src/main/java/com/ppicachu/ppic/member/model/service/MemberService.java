@@ -41,4 +41,7 @@ public interface MemberService {
 
 	// 11. ajax멤버조회 서비스(이름, 메일만 - 메일자동완성용)
 	ArrayList<Member> selectMemForMail();
+	
+	// 12. ajax 권한 있는 멤저 리스트 조회
+	ArrayList<Member> selectAuthorityMemList(int authoNo);
 }

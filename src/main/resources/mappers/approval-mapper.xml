@@ -4,6 +4,7 @@
 	<resultMap type="Approval" id="approvalResult">
 		<id column="approval_no" property="approvalNo"/>
 		<result column="user_name" property="userName"/>
+		<result column="user_no" property="userNo"/>
 		<result column="department_name" property="department"/>
 		<result column="position_name" property="position"/>
 		<result column="form" property="form"/>
@@ -403,6 +404,7 @@
 		select
 		       approval_no app_no
 		     , complete_no
+		     , am.user_no
 		     , am.user_name
 		     , md.department_name
 		     , mp.position_name
@@ -459,6 +461,7 @@
 		select
 		       approval_no app_no
 		     , complete_no
+		     , am.user_no
 		     , am.user_name
 		     , md.department_name
 		     , mp.position_name
@@ -518,6 +521,7 @@
 		select
 		       approval_no app_no
 		     , complete_no
+		     , am.user_no
 		     , am.user_name
 		     , md.department_name
 		     , mp.position_name
@@ -576,6 +580,7 @@
 		select
 		       approval_no app_no
 		     , complete_no
+		     , am.user_no
 		     , am.user_name
 		     , md.department_name
 		     , mp.position_name

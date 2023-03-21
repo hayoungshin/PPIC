@@ -26,4 +26,5 @@ public class Approval {
 	private String completeDate;
 	private String completeNo;
 	private String bookmark;
+	private int userNo;
 }

@@ -41,12 +41,32 @@ public class ChatDao {
 		return Integer.valueOf(String.valueOf(map.get("roomNo")));
 	}
 	
-	 public int insertParticipant(SqlSessionTemplate sqlSession, ArrayList<Integer> checkNo) { 
-		 return sqlSession.insert("chatMapper.insertParticipant", checkNo); 
-	 }
+	public int insertParticipant(SqlSessionTemplate sqlSession, ArrayList<Integer> checkNo) { 
+		return sqlSession.insert("chatMapper.insertParticipant", checkNo); 
+	}
 	 
-	 public ArrayList<Chat> selectChat(SqlSessionTemplate sqlSession, int roomNo){
-		 return (ArrayList)sqlSession.selectList("chatMapper.selectChat", roomNo); 
-	 }
+	public ArrayList<Chat> selectChat(SqlSessionTemplate sqlSession, int roomNo){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectChat", roomNo); 
+	}
+	
+	public int insertChat(SqlSessionTemplate sqlSession, Chat c) { 
+		return sqlSession.insert("chatMapper.insertChat", c); 
+	}
+	
+	public int updateChatRoom(SqlSessionTemplate sqlSession, int roomNo) { 
+		return sqlSession.update("chatMapper.updateChatRoom", roomNo); 
+	}
+	
+	public Chat selectChatRoom(SqlSessionTemplate sqlSession, int roomNo) {
+		return sqlSession.selectOne("chatMapper.selectChatRoom", roomNo); 
+	}
+	
+	public int deleteParticipant(SqlSessionTemplate sqlSession, int roomNo) { 
+		return sqlSession.delete("chatMapper.deleteParticipant", roomNo); 
+	}
+	
+	public int deleteChatRoom(SqlSessionTemplate sqlSession, int roomNo) { 
+		return sqlSession.delete("chatMapper.deleteChatRoom", roomNo); 
+	}
 	 
 }

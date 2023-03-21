@@ -35,4 +35,19 @@ public class ProjectServiceImpl implements ProjectService {
 		return pDao.selectTaskList(sqlSession, projectNo); 
 	}
 
+	@Override
+	public ArrayList<ProjectParticipant> selectTaskParticipants(int taskNo) {
+		return pDao.selectTaskParticipants(sqlSession, taskNo);
+	}
+
+	@Override
+	public int selectCountTaskParticipants(int taskNo) {
+		return pDao.selectCountTaskParticipants(sqlSession, taskNo);
+	}
+
+	@Override
+	public int updateTaskStatus(Task t) {
+		return pDao.updateTaskStatus(sqlSession, t);
+	}
+
 }

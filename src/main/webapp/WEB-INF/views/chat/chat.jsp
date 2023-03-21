@@ -259,6 +259,7 @@
                     ${ loginUser.userName }&nbsp;
                     <img class="profileImg pro-small rounded-circle" src="<c:out value='${ loginUser.profileImg }' default='resources/icons/profile.png' />">
                     <span class="conn-my"></span> 
+                    <input type="hidden" name="openChatRoomNo">
                 </span>
             </div>
     
@@ -270,7 +271,9 @@
             <div id="search-div">
             </div>
         </div>
-        <div id="chat-body"></div>
+        <div id="chat-body">
+        	
+        </div>
     </div>
     <script>
 	   	$(function(){
@@ -287,6 +290,9 @@
         	$("#member-btn").addClass("menuClicked");
         	$("#chat-btn").removeClass("menuClicked");
         	$("input[name=keyword]").val("");
+        	if(sockChat){
+        		onClose();
+        	}
         }
 
         // 채팅 메뉴바 클릭 (채팅목록)
@@ -295,6 +301,9 @@
         	$("#chat-btn").addClass("menuClicked");
         	$("#member-btn").removeClass("menuClicked");
         	$("input[name=keyword]").val("");
+        	if(sockChat){
+        		onClose();
+        	}
         }
 	   	
 	   	// 주소록 불러오기 => ajax
@@ -1005,6 +1014,7 @@
        			data:{
        				participant:arr
            		},success:function(boardNo){
+           			$("input[name=openChatRoomNo]").val(boardNo);
            			openChat(boardNo);
            		},error:function(){
            			console.log("새로운 채팅 생성용 ajax 통신 실패")
@@ -1019,6 +1029,7 @@
        			data:{
        				roomNo:no
            		},success:function(list){
+           			$("input[name=openChatRoomNo]").val(no);
            			value1 = "<div class='chat-area'>"
            			value2 = ""
            			for(let i=0; i<list.length; i++){
@@ -1051,7 +1062,7 @@
            				for(let j=0; j<list[i].memList.length; j++){
            					if(list[i].groupCount == 2){
            						if(list[i].memList[j].userNo != ${loginUser.userNo}){
-           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' onclick='onClose();'>"
+           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
            									+ list[i].memList[j].userName
            									+ "&nbsp;<span class='conn";
             						if(list[i].memList[j].connSta == 0){
@@ -1064,7 +1075,7 @@
             						value2 += "'></span>"
            						}
            					}else{
-           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn'>"
+           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
            						if(list[i].roomName == undefined){
            							value2 += "그룹채팅 "
            						}else{
@@ -1077,18 +1088,109 @@
            			value1 += "</div><div class='input-area'>"
                			   	+ "<div class='form-group'>"
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;'></textarea>"
-                    		+ "<button type='button' id='send-btn'>전송</button>"
+                    		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
                 	value2 += "<span><img src='resources/icons/dots.png'><img src='resources/icons/search.png'></span></div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
-           			connect();
+           			connectChat(no);
            		},error:function(){
           			console.log("채팅 열기용 ajax 통신 실패")
           		}
   			})
     	}
+     	
+     	let sockChat = null;
+     	
+     	function connectChat(no){
+     		const sock2 = new SockJS("${pageContext.request.contextPath}/chat"); 
+			sockChat = sock2;
+			
+			sockChat.onopen = onOpen;
+			sockChat.onmessage = onMessage;
+     	}
+     	
+     	function sendMessage(no, groupCount){ // 전송하기 버튼 클릭시 실행되는 함수
+     		if($("#message").val() != ""){
+     			if(sockChat){
+         			let chatMsg = no + ",${loginUser.userNo}," + $("#message").val() + "," + (groupCount - 1);
+         			sockChat.send(chatMsg);
+        			$("#message").val("");
+         		}
+     		}
+		}
+     	
+     	function onOpen(){
+	 		if(sockChat){
+     			let chatMsg = $("input[name=openChatRoomNo]").val() + ",${loginUser.userNo},ENTER-CHAT,1";
+     			sockChat.send(chatMsg);
+     		}
+	 	}
+	 	
+		function onMessage(evt){
+			let msgArr = evt.data.split(",");
+			let $chatAllDiv;
+			let $msg;
+			let $chatDiv;
+			if(msgArr[1] == ${loginUser.userNo}){
+				
+				if(msgArr[6] != 0){
+					$msg = "<span class='notreadCount'>" + msgArr[6] + "</span>"
+						+ "<div class='send-message'>" + msgArr[2] + "</div>"
+				}else{
+					$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+				}
+				$chatDiv = $("<div class='chat-message'>").append($msg);
+				$chatDiv.addClass("mine");
+				$chatAllDiv = $chatDiv;
+			}else{
+				$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+				if(msgArr[6] != 0){
+					$msg += "<span class='notreadCount'>" + msgArr[6] + "</span>"
+				}
+				$chatDiv = $("<div class='chat-message'>").append($msg);
+				let userVal = "<img src='";
+				if(msgArr[5] != "null"){
+					userVal += msgArr[5]
+				}else{
+					userVal += "resources/icons/profile.png"
+				}
+				userVal += "' class='rounded-circle chatProfileImg pro-small'>"
+						+ msgArr[4]
+				let $userSpan = $("<span class='send-user'>").html(userVal);
+				$chatDiv.addClass("other");
+				$chatAllDiv = $("<div>").append($chatDiv);
+				$chatAllDiv = $chatAllDiv.prepend($userSpan);
+			}
+			$(".chat-area").append($chatAllDiv);
+			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+		}
+			
+		function onClose(no){
+			sockChat.close();
+			if($(".chat-area").html() == ""){ // 채팅 안쳤을 때 room자체도 삭제
+				deleteChatRoom(no);
+			} else{
+				chatRoomList();
+			}
+		}
+		
+		window.onbeforeunload = function(){
+			onClose();
+		}
+		
+		function deleteChatRoom(no){
+			$.ajax({
+				url:"delete.chat",
+				data:{roomNo:no},
+				success:function(result){
+					if(result == "success"){
+						chatRoomList();
+					}
+				}
+			})
+		}
     </script>
     
     <!-- 내 프로필 Modal -->

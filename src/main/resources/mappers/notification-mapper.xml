@@ -43,7 +43,7 @@
 		            and delete_sta = 'N') nf_count
 		     , nf_content
              , check_sta
-             , to_char(nf_date, 'YYYY.MM.DD PM HH:mm') "nf_date"
+             , to_char(nf_date, 'YYYY.MM.DD PM HH:MI') "nf_date"
 		  from notification
 		 where receive_no = #{userNo}
 		   and delete_sta = 'N'
@@ -65,7 +65,7 @@
 			   nf_no
 		     , nf_content
              , check_sta
-             , to_char(nf_date, 'YYYY-MM-DD PM HH:mm') "nf_date"
+             , to_char(nf_date, 'YYYY-MM-DD PM HH:MI') "nf_date"
 		  from notification
 		 where receive_no = #{receiveNo}
 		   and delete_sta = 'N'

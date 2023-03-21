@@ -40,27 +40,40 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			String sendName = strs[2];
 			String receiveNo = strs[3];
 			String catNo = strs[4];
+			String title = strs[5];
 			
+			String[] receives = receiveNo.split("/");
 			TextMessage tmpMsg = null;
-			if(dcatNo.equals("11")) {
-				tmpMsg = new TextMessage(sendName + "님이 공지사항을 등록했습니다.");
-				for(WebSocketSession sss : sessionList) { 
-					sss.sendMessage(tmpMsg);
-				}
-			}else {
-				WebSocketSession receiveSession = userSessions.get(receiveNo);
-				if(dcatNo.equals("") && receiveSession != null) {
-					
-				}
-				receiveSession.sendMessage(tmpMsg);
+			WebSocketSession receiveSession = null;
+			
+			switch(dcatNo) {
+			case "0": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
+			case "1": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 반려했어요."); break;
+			case "2": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"의 결재를 요청했어요."); break;
+			case "3": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"의 참조를 요청했어요."); break;
+			case "4": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 생성했어요."); break;
+			case "5": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 추가했어요."); break;
+			case "6": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\" 예약을 완료했어요."); break;
+			case "7": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 지급했어요."); break;
+			case "8": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 회수했어요."); break;
+			case "9": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
+			case "10": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 거절했어요."); break;
+			case "11": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 신청했어요."); break;
 			}
-			Alarm a = new Alarm();
-			a.setDcatNo(dcatNo);
-			a.setSendNo(sendNo);
-			a.setReceiveNo(catNo);
-			a.setCatNo(catNo);
-			a.setNfContent(tmpMsg.getPayload());
-			aService.insertAlarm(a);
+			
+			for(int i=0; i<receives.length; i++) {
+				receiveSession = userSessions.get(receives[i]);
+				if(receiveSession != null) {
+					receiveSession.sendMessage(tmpMsg);
+				}
+				Alarm a = new Alarm(); 
+				a.setDcatNo(dcatNo); 
+				a.setSendNo(sendNo);
+				a.setReceiveNo(receives[i]); 
+				a.setCatNo(catNo);
+				a.setNfContent(tmpMsg.getPayload()); 
+				aService.insertAlarm(a);
+			}
 		}
 	}
 

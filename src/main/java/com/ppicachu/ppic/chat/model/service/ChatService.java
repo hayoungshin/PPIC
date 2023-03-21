@@ -30,4 +30,17 @@ public interface ChatService {
 	
 	// 7. 채팅방 화면
 	ArrayList<Chat> selectChat(int roomNo);
+	
+	// 8. 채팅 입력
+	int insertChat(Chat c);
+	
+	// 9. 채팅방 변경
+	int updateChatRoom(int roomNo);
+	
+	// 10. websocket 연결된 방번호 찾기
+	Chat selectChatRoom(int roomNo);
+	
+	// 11. 채팅방 삭제
+	int deleteParticipant(int roomNo);
+	int deleteChatRoom(int roomNo);
 }

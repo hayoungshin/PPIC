@@ -139,7 +139,7 @@
                             <td>
                             	<button type="button" name="type" 
                             	onClick="a(${h.holidayNo}, '${h.type}', '${h.start }', '${h.finish }','${h.datea}','${h.sort}','${ h.reason }', ${h.userNo})" 
-                            	class="btn-purple" data-toggle="modal" data-target="#holidayApprove" >휴가승인</button>
+                            	class="btn-purple" data-toggle="modal" data-target="#holidayApprove" id="gg">휴가승인</button>
                             </td>
                         </tr>
                         </c:forEach>
@@ -246,7 +246,21 @@
                 </div>
             </div>
 			
-			
+			<!-- 알림 관련 -->
+			<script>
+				$("#holidayApprove button").click(function(){
+					
+					if(socket){
+						if($("select[name=status]").val() == '승인'){
+							let socketMsg = "9,${loginUser.userNo},${loginUser.userName}," + $("#uNo").val() + ",3," + $("#type").val();
+							socket.send(socketMsg);
+						}else{
+							let socketMsg = "10,${loginUser.userNo},${loginUser.userName}," + $("#uNo").val() + ",3," + $("#type").val();
+							socket.send(socketMsg);
+						}
+					}
+				})
+			</script>
 			
 			  
 
