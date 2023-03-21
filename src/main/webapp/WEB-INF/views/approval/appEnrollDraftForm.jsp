@@ -37,6 +37,11 @@
     .btnn-pk:hover{background-color: #fdbaba; color: white; transition: 0.3s;}
     .btnn-sb{font-size: 14px; background-color: white; color: #00b5d1; border:1px solid #00b5d1; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
     .btnn-sb:hover{background-color: #00b5d1; color: white; transition: 0.3s;}
+
+    .m-content-1{height: 300px; width: 250px; float: left; overflow: auto;}
+    .m-content-1::-webkit-scrollbar{width: 8px;}
+    .m-content-1::-webkit-scrollbar-thumb{background: lightgray; border-radius: 10px;}
+    .m-content-2{float: left; border: 1px solid lightgray; margin-left: 10px; height: 300px; width: 200px;}
 </style>
 </head>
 <body>
@@ -57,7 +62,7 @@
 	        	pop[i].style = 'display:none';
 			}
 			
-			/* 작성일 */
+			// 작성일
 			date = new Date();
 			year = date.getFullYear();
 			month = date.getMonth() + 1;
@@ -69,6 +74,27 @@
 				day = "0" + day;
 			}
 			document.getElementById("current-date").innerHTML = year + "-" + month + "-" + day;
+			
+			// 날짜 start max
+			let now_utc = Date.now(); // 지금 날짜를 밀리초로 가져옴
+			// getTimezoneOffset()은 현재 시간과의 차이를 분단위로 반환
+			let timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
+			// new Date(now_utc-timeOff).toISOString()은 '2023-03-20T18:09:38.134z'를 반환
+			let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+			document.getElementById("start").setAttribute("min", today);
+			
+			checkedPerson
+			// 모달 각 행
+			const tr = document.getElementsByClassName("trOver");
+			for(let i=0; i<tr.length; i++){
+				console.log(tr[i].childNodes);
+				// 상세 onclick
+				/*tr[i].childNodes[7].addEventListener("click", function(){
+					const no = this.parentNode.childNodes[1].value;
+					const form = this.parentNode.childNodes[5].innerHTML;
+					location.href="detail.ap?no=" + no + "&form=" + form;
+				});*/
+			}
 		}
 	</script>
 	
@@ -121,7 +147,7 @@
 		                    </c:forEach>
                             <tr>
                                 <th>제목</th>
-                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" required></td>
+                                <td colspan="3"><input type="text" id="title" style="width:770px; height:35px;" placeholder="제목을 입력하세요" required></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,8 +157,8 @@
                                     <!-- 업무기안일 경우 -->
                                     <table id="tb" class="table-bordered">
                                         <tr>
-                                            <th width="20%">시행일자</th><!-- 오늘 이전의 날짜 선택 못하게 -->
-                                            <td width="20%"><input type="date" style="width:190px; height:35px;"></td>
+                                            <th width="20%">시행일자</th>
+                                            <td width="20%"><input type="date" id="start" style="width:190px; height:35px;"></td>
                                             <th width="20%">협조부서</th>
                                             <td width="40%">
                                             	<select style="width:380px; height:35px;">
@@ -205,11 +231,33 @@
                                 <!-- Modal body -->
                                 <div class="modal-body">
                                     <div class="m-outer">
-                                        <div class="m-content">
-                                            <input type="text">
+                                    	<div class="header">
+                                    		<input type="text" >
                                             <button class="btnn-sb">검색</button>
-                                            <div class="m-mem-list"></div>
                                         </div>
+                                        <br>
+                                    	<div class="m-content-1">
+	                                        <table class="table table-hover ">
+							                    <c:forEach var="d" items="${ dList }">
+							                        <tr>
+							                            <th colspan="2">${ d.departmentName }</th>
+							                        </tr>
+							                        <c:forEach var="m" items="${ mList }">
+							                            <c:if test="${ d.departmentName eq m.department }">
+							                                <tr class="trOver">
+							                                	<input type="hidden" name="userNo" value="${ m.userNo }">
+			                                                    <td>${ m.userName } ${ m.position }</td>
+							                                    <td><div class="checkedPerson" style="display:none;"><img src="resources/icons/goTo.png" width="20px;"></div></td>
+							                                </tr>
+							                            </c:if>
+							                        </c:forEach>
+							                    </c:forEach>
+							                </table>
+	                                    </div>
+	                                    <div class="m-content-2">
+	                                    	
+	                                    </div>
+                                    	<br clear="both"><br>
                                         <div class="m-footer">
                                             <button class="btnn-gr">취소</button>
                                             <button class="btnn-pp">확인</button>

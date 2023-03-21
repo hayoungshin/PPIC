@@ -83,6 +83,8 @@
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
 		 where status='Y'
+		 order
+		 	by department_no, position_no
 	</select>
 	
 	<select id="loginMember" resultMap="memberResult">
