@@ -307,4 +307,26 @@
 		   and send_no != #{sendNo}
 	</update>
 	
+	<select id="selectPartiList" resultMap="memberResult">
+		select
+		       m.user_no
+		     , user_name
+		     , nvl(phone, '전화번호 없음') "phone"
+		     , mail
+		     , position_name as "position"
+		     , department_name as "department"
+		     , conn_sta
+		     , profile_img
+		     , (select like_date
+                  from chat_like
+                 where myuser_no = #{participantNo}
+                   and likeuser_no = m.user_no) "chat_like"
+		  from member m
+		  join dept on (m.department = dept.department_no) 
+		  join position on (m.position = position.position_no)
+          join participant p on(m.user_no = p.user_no)
+		 where status='Y'
+		   and room_no = #{roomNo}
+	</select>
+	
 </mapper>

@@ -120,5 +120,10 @@ public class ChatServiceImpl implements ChatService{
 		return cDao.updateChat(sqlSession, c);
 	}
 
+	@Override
+	public ArrayList<Chat> selectPartiList(Chat c) {
+		return cDao.selectPartiList(sqlSession, c);
+	}
+
 	
 }

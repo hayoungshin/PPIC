@@ -94,4 +94,7 @@ public class ChatDao {
 		return sqlSession.update("chatMapper.updateChat", c); 
 	}
 	 
+	public ArrayList<Chat> selectPartiList(SqlSessionTemplate sqlSession, Chat c){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectPartiList", c); 
+	}
 }

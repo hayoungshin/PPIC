@@ -258,8 +258,14 @@
             function chatPopup(){
             	if($("#chat").css("display") == "none"){
             		$("#chat").css("display", "block");
+            		if(sockChat){
+                		onClose();
+                	}
             	}else{
             		$("#chat").css("display", "none");
+            		if(sockChat){
+                		onClose();
+                	}
             	}
             }
         </script>

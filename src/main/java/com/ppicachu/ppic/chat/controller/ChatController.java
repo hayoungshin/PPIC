@@ -111,4 +111,11 @@ public class ChatController {
 		
 		return result1 * result2 > 0 ? "success" : "fail";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="partiList.chat", produces="application/json; charset=UTF-8")
+	public String ajaxSelectPartiList(Chat c) {
+		ArrayList<Chat> list = cService.selectPartiList(c);
+		return new Gson().toJson(list);
+	}
 }

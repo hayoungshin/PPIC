@@ -8,20 +8,48 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-    #chat{
+    #chat, #participantList{
         border: 1px solid rgb(202, 199, 199);
-        width:300px;
-        height:510px;
         border-radius:5px;
         font-size: 13px;
         background:white;
         position:fixed;
         z-index:100;
-        top:70px;
-        left:250px;
         display:none;
     }
-
+    #chat{
+    	width:300px;
+        height:510px;
+        top:70px;
+        left:250px;
+    }
+    #participantList{
+        width:200px;
+        height:430px;
+        top:150px;
+        left:550px;
+        padding:15px;
+    }
+    #participants>div{margin-bottom:15px;}
+    #participants>div>*{margin-right:5px;}
+    #participants{height:320px; overflow:auto;}
+	#participantList>img{
+		 float:right;
+		 margin-top:10px;
+	}
+	#participants .collegeProfileImg{cursor:pointer;}
+	#chatMe{
+		float:right;
+		border-radius:50%;
+		background:gray;
+		color:white;
+		height:20px;
+		width:20px;
+		text-align:center;
+		line-height:20px;
+		font-size:10px;
+	}
+	
     /* chat header 스타일 */
     #chat-header{
      position:sticky;
@@ -186,13 +214,13 @@
         display: flex;
         flex-direction: column;
     }
-    .chat-area::-webkit-scrollbar {width: 8px;}
+    .chat-area::-webkit-scrollbar, #participants::-webkit-scrollbar {width: 8px;}
 	
-	.chat-area::-webkit-scrollbar-thumb {
+	.chat-area::-webkit-scrollbar-thumb, #participants::-webkit-scrollbar-thumb {
 	    background: lightgray; 
 	    border-radius: 10px;
 	}
-    .chat-area::before {
+    .chat-area::before, #participants::before {
         content: "";
         display: block;
         flex: 1;
@@ -270,10 +298,31 @@
             
             <div id="search-div">
             </div>
+			
         </div>
         <div id="chat-body">
         	
         </div>
+    </div>
+    <div id="participantList">
+    	<b style="font-size:15px;">대화상대</b><br><br>
+    	<div id="participants">
+    		<div>
+	            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
+	            <span>
+	                김혜수
+	                <span class="conn online"></span>
+	            </span>
+	        </div>
+	        <div>
+	            <img src="resources/icons/profile.png" class="rounded-circle collegeProfileImg" width="25" height="25">
+	            <span>
+	                김혜수
+	                <span class="conn online"></span>
+	            </span>
+	        </div>
+    	</div>
+    	<img src="resources/icons/sign_out.png" width="25" height="25">
     </div>
     <script>
 	   	$(function(){
@@ -1090,7 +1139,7 @@
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;' onKeyPress='check_enter();'></textarea>"
                     		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
-                	value2 += "<span><img src='resources/icons/dots.png'><img src='resources/icons/search.png'></span></div>"
+                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(" + no + ");'><img src='resources/icons/search.png'></span></div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
@@ -1101,6 +1150,69 @@
   			})
     	}
      	
+     	// 대화상대 리스트 보기
+     	function partiList(no){
+     		$.ajax({
+     			url:"partiList.chat",
+     			data:{
+     				roomNo:no			
+     			},success:function(list){
+     				let me = "<div><img src='";
+     				let others = "";
+     				for(let i=0; i<list.length; i++){
+     					if(list[i].userNo == ${loginUser.userNo}){
+     						if(list[i].profileImg != undefined){
+     							me += list[i].profileImg
+    						}else{
+    							me += "resources/icons/profile.png"
+    						}
+     						me += "' class='rounded-circle pro-small'>"
+    							+ list[i].userName + "<span class='conn";
+    						if(list[i].connSta == 0){
+    							me += " online";
+    			       		} else if(list[i].connSta == 1){
+    			       			me += " offline";
+    			       		} else if(list[i].connSta == 2){
+    			       			me += " out";
+    			       		}
+    						me += "'></span><span id='chatMe'>나</span></div>";
+     					}else{
+     						others += "<div><input type='hidden'><img src='"
+     						if(list[i].profileImg != undefined){
+     							others += list[i].profileImg
+    						}else{
+    							others += "resources/icons/profile.png"
+    						}
+     						others += "' class='rounded-circle collegeProfileImg pro-small'>"
+    							+ "<input type='hidden' value='" + list[i].userNo +"'>"
+    							+ "<input type='hidden' value='" + list[i].userName +"'>"
+    							+ "<input type='hidden' value='" + list[i].department +"'>"
+    							+ "<input type='hidden' value='" + list[i].position +"'>"
+    							+ "<input type='hidden' value='" + list[i].mail +"'>"
+    							+ "<input type='hidden' value='" + list[i].phone +"'>"
+    							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
+    							+ list[i].userName + "<span class='conn";
+    						if(list[i].connSta == 0){
+    							others += " online";
+    			       		} else if(list[i].connSta == 1){
+    			       			others += " offline";
+    			       		} else if(list[i].connSta == 2){
+    			       			others += " out";
+    			       		}
+    						others += "'></span></div>";
+    						
+     					}
+     					
+     				}
+ 					$("#participants").html(me + others);
+     			},error:function(){
+     				
+     			}
+     		})
+     		$("#participantList").toggle();
+     	}
+     	
+     	// 웹소켓
      	let sockChat = null;
      	
      	function connectChat(no){
@@ -1111,7 +1223,8 @@
 			sockChat.onmessage = onMessage;
      	}
      	
-     	function sendMessage(no, groupCount){ // 전송하기 버튼 클릭시 실행되는 함수
+     	// 전송버튼클릭
+     	function sendMessage(no, groupCount){ 
      		if($("#message").val() != ""){
      			if(sockChat){
          			let chatMsg = no + ",${loginUser.userNo}," + $("#message").val() + "," + (groupCount - 1);
@@ -1121,6 +1234,7 @@
      		}
 		}
      	
+     	// 방 입장
      	function onOpen(){
 	 		if(sockChat){
      			let chatMsg = $("input[name=openChatRoomNo]").val() + ",${loginUser.userNo},ENTER-CHAT,1";
@@ -1208,7 +1322,8 @@
 				}
 			}
 		}
-			
+		
+		// 방 퇴장
 		function onClose(no){
 			sockChat.close();
 			if($(".chat-area").html() == ""){ // 채팅 안쳤을 때 room자체도 삭제
@@ -1216,12 +1331,15 @@
 			} else{
 				chatRoomList();
 			}
+			$("#participantList").hide();
 		}
 		
+		// 새로고침 시에도 socket close
 		window.onbeforeunload = function(){
 			onClose();
 		}
 		
+		// 채팅 안쳤을 때 room자체도 삭제
 		function deleteChatRoom(no){
 			$.ajax({
 				url:"delete.chat",

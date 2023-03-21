@@ -56,4 +56,6 @@ public interface ChatService {
 	int updateParticipant(Chat c);
 	int updateChat(Chat c);
 	
+	// 14. 대화상대 리스트
+	ArrayList<Chat> selectPartiList(Chat c);
 }
