@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.project.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,17 @@ public class ProjectServiceImpl implements ProjectService {
 	public int updateTaskStatus(Task t) {
 		return pDao.updateTaskStatus(sqlSession, t);
 	}
+
+	@Override
+	public ArrayList<ProjectParticipant> selectDeptList(HashMap<String, Integer> map) {
+		return pDao.selectDeptList(sqlSession, map);
+	}
+	
+	@Override
+	public ArrayList<ProjectParticipant> selectEmployeesList(HashMap<String, Integer> map) {
+		return pDao.selectEmployeesList(sqlSession, map);
+	}
+
+
 
 }

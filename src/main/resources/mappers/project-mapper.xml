@@ -24,6 +24,7 @@
 	<result column="task_assign" property="taskAssign"/>
 	<result column="position_name" property="positionName"/>
 	<result column="profile_img" property="userImg"/>
+	<result column="department_no" property="departmentNo"/>
 </resultMap>
 
 <resultMap id="taskResult" type="Task">
@@ -150,5 +151,32 @@
 	   set task_status = #{taskStatus}
 	 where task_no = #{taskNo}
 </update>
+
+<select id="selectDeptList" resultMap="proParticipantsResult">
+	select 
+	       department "department_no"
+	     , department_name
+	  from p_participant pp
+	  right join member m using (user_no)
+	  right join dept d using (department_no)
+	 where project_no = #{projectNo}
+	   and not user_no = #{userNo}
+     group by department, department_name
+</select>
+
+<select id="selectEmployeesList" resultMap="proParticipantsResult">
+	select 
+	       user_no
+	     , user_name
+	     , department "department_no"
+	     , position_name
+	  from p_participant pp
+	  right join member m using (user_no)
+	  right join dept d using (department_no)
+	   left join position ps on (m.position = ps.position_no)
+	 where project_no = #{projectNo}
+	   and not user_no = #{userNo}
+     group by user_no, user_name, department, position_name
+</select>
 
 </mapper>

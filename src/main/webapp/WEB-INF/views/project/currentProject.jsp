@@ -138,7 +138,34 @@
   .add-form th{width:20%;}
   .add-form td{width:80%;}
   .add-form input, .add-form textarea{width:80%; border:0.5px solid lightgray; border-radius:4px;}
-  #select-area{width:80%; height:150px; border:0.5px solid lightgray; border-radius:4px;}
+  #emp-select{width:30%;}
+  #selected-area{
+    width:80%;
+    height:150px;
+    border:0.5px solid lightgray;
+    border-radius:4px;
+    overflow:auto;
+  }
+  .select-user{
+    display:inline-flex;
+    align-items:center;
+    margin:5px;
+    background:rgb(240, 240, 240);
+    border-radius:3px;
+    width:100px;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .select-user>img{
+    width:12px;
+    margin:3px;
+  }
+  #invalidMsg{
+    font-size:12px;
+    color:red;
+    display:none;
+    margin:10px 0 0 100px;
+  }
 </style>
 </head>
 <body>
@@ -322,6 +349,9 @@
                 // 진행률 표시
                 taskProgress();
                 doneRatio();
+
+                // 셀렉트 조회
+                selectList();
 
               }, error:function(){
                 console.log("정보 가져오기 실패");
@@ -571,17 +601,18 @@
                   <tr>
                     <th>참조자 : </th>
                     <td>
-                      <select name="" id="">
-                        <option value="">부서1</option>
-                        <option value="">부서2</option>
+                      <select name="department" id="dept-select">
+                      </select>
+                      <select name="userNo" id="emp-select">
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <th></th>
-                    <td><div id="select-area">dddddddd</div></td>
+                    <td><div id="selected-area"></div></td>
                   </tr>
                 </table>
+                <div id="invalidMsg">이미 선택된 직원입니다.</div>
               </form>
             </div>
 
@@ -594,12 +625,69 @@
         </div>
       </div>
       
+      <!-- 셀렉트 정보 가져오기 -->
       <script>
-        function taskDetailLoad(){
-          // console.log("하하");
+        function selectList(){
+          const noneOption = "<option value='none'>선택</option>";
+          $("#dept-select").html(noneOption);
+          $("#emp-select").html(noneOption);
+          $("#selected-area").empty();
+          
+          let userNo = ${loginUser.userNo};
+          $.ajax({
+            url:"selectList.tk",
+            data:{"projectNo":projectNo, "userNo":userNo},
+            success:function(obj){
+              let dList = obj.dList;
+              let eList = obj.eList;
+              
+              let deptValue = "";
+              for(let i=0; i<dList.length; i++){
+                deptValue += "<option value='" + dList[i].departmentNo + "'>" + dList[i].departmentName + "</option>";
+              }
+              $("#dept-select").append(deptValue);
 
+              $("#dept-select").change(function(){
+                $("#emp-select").html(noneOption);
+                
+                let dept = $(this).val();
+                let empValue = "";
+                
+                for(let i=0; i<eList.length; i++){
+                  if(dept == eList[i].departmentNo){
+                    empValue += "<option value='" + eList[i].userNo + "'>" + eList[i].userName + " " + eList[i].positionName + "</option>";
+                  }
+                }
+                $("#emp-select").append(empValue);
+                $("#invalidMsg").css("display", "none");
+              })
+
+            }, error:function(){
+              console.log("부서 조회 실패");
+            }
+          })
         }
+          
+      </script>
 
+      <script>
+        // 선택한 정보 selected-area에 추가하기
+        let taskRefUser = "";
+        let selectUser = "";
+        $("#emp-select").change(function(){
+          selectUser = $("#emp-select option:selected").text();
+          if($("#selected-area").text().includes(selectUser)){
+            $("#invalidMsg").css("display", "block");
+          }else if(selectUser != "선택"){
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUser + "<img src='resources/icons/delete.png'></div>";
+            $("#selected-area").append(taskRefUser);
+          }
+        })
+
+        // 삭제하기
+        function deleteUser(e){
+          $(e).remove();
+        }
       </script>
     </div>
     </div>
