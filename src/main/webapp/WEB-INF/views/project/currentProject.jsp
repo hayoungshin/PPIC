@@ -22,6 +22,8 @@
       font-weight:600;
   }
 
+  #add-project{float:right;}
+
   /* swiper 슬라이드 */
   .swiper{
       width:100%;
@@ -68,17 +70,15 @@
     background:linear-gradient(to right, #00b5d1 60%, #FFCECE);
     height: 16px;
   }
-  .p-summary{
-    font-size:13px;
-  }
-  #p-detail{
-    line-height:20px;
-  }
-
+  .p-summary{font-size:13px;}
+  #p-detail{line-height:20px;}
+  
   /* 작업 추가 버튼 */
-  #add-task{
-    margin: 0 20px;
-  }
+  #add-task{float:right;}
+  /* 내 작업만 보기 필터 */
+  .filter-mine{float:right;}
+  #filter-check{margin-right:5px; width:17px; height:17px; cursor:pointer; position:relative; top:5px;}
+  #filter-label{margin-right:15px; font-size:14px; position:relative; top:3px;}
   /* 상태 레이블 */
   .circle{display:inline-block; width:20px; height:20px; border-radius:20px; background:#ecd718; margin-right:10px;}
   /* 작업분류박스 */
@@ -154,7 +154,8 @@
             <a href="#">프로젝트 관리</a>
         </div>
         <hr>
-        <br>
+        <button id="add-project" class="btn-purple" data-toggle="modal" data-target="#add-project-modal">+ 프로젝트 생성</button>
+        <br><br>
         
         <!-- Swiper -->
         <div class="swiper mySwiper">
@@ -165,7 +166,7 @@
                   <input type="hidden" name="projectNo" value="${p.projectNo}">
                   <input type="hidden" name="projectDetail" value="${p.detail}">
 	                <div class="project-title">${p.projectName}</div>
-	                <div class="project-manager">PM : ${p.projectManager} (${p.projectParticipants[0].departmentName})</div>
+	                <div class="project-manager">PM : ${p.projectManager} ${p.projectParticipants[0].positionName} (${p.projectParticipants[0].departmentName}) </div>
 	                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
 	              </div>
 	            </div>
@@ -248,6 +249,7 @@
 
         function detailLoad(projectNo){
           $("#task-list .col").empty();
+          $("#filter-check").prop("checked", false);
             $.ajax({
               url:"detail.pr",
               data:{"projectNo":projectNo},
@@ -258,7 +260,7 @@
                 // 참여자 정보 출력
                 let member = "";
                 for(let i=0; i<ppList.length; i++){
-                  member += ppList[i].userName + " (" + ppList[i].departmentName + "), ";
+                  member += ppList[i].userName + " " + ppList[i].positionName + " (" + ppList[i].departmentName + "), ";
                 }
                 member = "참여자 : " + member.substring(0, member.lastIndexOf(","));
                 $("#member-list").html(member);
@@ -280,7 +282,9 @@
                   task = "<div class='task-box' onclick='taskDetailLoad(this);'>"
                          + "<input type='hidden' name='taskNo' value='" + tList[i].taskNo + "'>"
                          + "<div class='task-title'>" + tList[i].taskName + "</div>"
-                         + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + "</div>";
+                         + "<input type='hidden' name='userNo' value='" + tList[i].userNo + "'>"
+                         + "<input type='hidden' name='assignUser' value='" + tList[i].assignUser + "'>"
+                         + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + " " + tList[i].positionName + "</div>";
                   if(tList[i].originName != null){
                     task += "<div class='file'>" + tList[i].originName + "</div>"; 
                   }
@@ -317,6 +321,7 @@
                 
                 // 진행률 표시
                 taskProgress();
+                doneRatio();
 
               }, error:function(){
                 console.log("정보 가져오기 실패");
@@ -335,8 +340,17 @@
       </div>
       <br>
       <div id="progress-area">
-        <span style="font-size:14px;"><b>진행률</b></span>
-        <br><br>
+        <div style="font-size:14px;"><b>진행률</b></div>
+        <div id="task-ratio" style="font-size:13px;"></div>
+        <br>
+        <script>
+          function doneRatio(){
+            var doneNum = $(".done-list>.task-box").length;
+            var allNum = $("#task-list .task-box").length;
+            $("#task-ratio").text(doneNum + " / " + allNum + " (완료 / 전체)")
+          }
+        </script>
+
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -345,36 +359,62 @@
 
       <script>
         function taskProgress(){
-          var taskCompletion = Math.round($(".done-list>.task-box").length/$("#task-list .task-box").length*100);
-          taskCompletion += "%";
-          $(".progress-bar").html(taskCompletion);
-          // $(".progress-bar").css("width", taskCompletion);
+          if($("#task-list .task-box").length != 0){
+           
+            var taskCompletion = Math.round($(".done-list>.task-box").length/$("#task-list .task-box").length*100);
+          
+            taskCompletion += "%";
+          }else{
+            taskCompletion = "0%";
+          }
+            // $(".progress-bar").css("width", taskCompletion);
 
-          // 값 변경 시마다 애니매이션 재시작
-          // keyframes 추가
-          var keyframesName = "load-" + new Date().getTime();
-          // 새로운 keyframes 규칙
-          var keyframesRule = "@keyframes " + keyframesName + " { 0% { width: 0; } 100% { width: " + taskCompletion + "; } }";
+            // 값 변경 시마다 애니매이션 재시작
+            // keyframes 추가
+            var keyframesName = "load-" + new Date().getTime();
+            // 새로운 keyframes 규칙
+            var keyframesRule = "@keyframes " + keyframesName + " { 0% { width: 0; } 100% { width: " + taskCompletion + "; } }";
+            
+            // style 추가
+            $("<style>")
+              .prop("type", "text/css")
+              .html(keyframesRule)
+              .appendTo("head");
+            
+            // 애니메이션 속성 변경하기
+            $(".progress-bar").css({
+              "animation-name": keyframesName,
+              "animation-duration": "2s",
+              "animation-fill-mode": "forwards"
+            });
           
-          // style 추가
-          $("<style>")
-            .prop("type", "text/css")
-            .html(keyframesRule)
-            .appendTo("head");
+          $(".progress-bar").html(taskCompletion);
           
-          // 애니메이션 속성 변경하기
-          $(".progress-bar").css({
-            "animation-name": keyframesName,
-            "animation-duration": "2s",
-            "animation-fill-mode": "forwards"
-          });
         }
       </script>
 
       <div id="task-area">
         <span style="font-size:16px;"><b>업무 현황</b></span>
         <button id="add-task" class="btn-purple" data-toggle="modal" data-target="#add-task-modal">+ 업무 추가</button>
+        <div class="filter-mine">
+          <input type="checkbox" id="filter-check">
+          <label for="filter-check" id="filter-label">내 작업만 보기</label>
+        </div>
         <br><br>
+
+        <script>
+          $("#filter-check").change(function(){
+            if($(this).prop("checked")){
+              $("input[name=userNo]").each(function(){
+                if($(this).val() != "${loginUser.userNo}"){
+                  $(this).parent(".task-box").prop("style", "display:none");
+                }
+              })
+            }else{
+              $(".task-box").prop("style", "display:block");
+            }
+          })
+        </script>
         <div class="row" id="task-category">
           <div class="col" id="wait"><div class="circle status-wait"></div>대기</div>
           <div class="col" id="working"><div class="circle status-working"></div>진행중</div>
@@ -417,7 +457,8 @@
                 if(tpList[i].userImg == null){
                   tpList[i].userImg = "resources/icons/none-profile.png";
                 }
-                taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>" + tpList[i].userName + "</div>";
+                taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>"
+                             + tpList[i].userName + " " + tpList[i].positionName + "</div>";
               }
               clickRp.popover ({
               content: taskRefList,
@@ -428,9 +469,6 @@
             }
           })
 
-          // console.log($(this));
-
-          
           
         })
       </script>
@@ -488,12 +526,11 @@
                   statusEl.html(statusVal);
 
                   taskProgress();
+                  doneRatio();
                 }, error:function(){
                   console.log("상태 업데이트 실패");
                 }
               })
-
-
             }
             
           });
@@ -507,7 +544,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">업무 추가</h4>
+              <h5 class="modal-title"><b>업무 추가</b></h5>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 

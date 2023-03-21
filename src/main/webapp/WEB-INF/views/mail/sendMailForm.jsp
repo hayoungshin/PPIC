@@ -12,17 +12,18 @@
 		height:40px;
 	}
 	.td{
-		width:1160px;
+		width:1100px;
 		border-bottom:1px solid rgb(200,200,200);
 	}
 	.td input{
-		width:1100px; height:30px;
+		width:1000px; height:30px;
 		border: none;
 		border-radius:5px;
 	}
 	.recipient-btn{
 		border:none;
 		border-radius:10px;
+		margin:2px;
 		background:#FFCECE;
 	}
 	.recipient-btn:hover{
@@ -160,6 +161,8 @@
 		<div id="content">
 		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
 		<form action="" style="padding:0px 20px;">
+		
+			<input type='hidden' >
 			
 			<button class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;">보내기</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
@@ -169,35 +172,28 @@
 				<tr id="recipient-area">
 					<th colspan="2" style="width:150px;">받는사람</th>
 					<td class="td">
-						<button class="recipient-btn">
-							신하영 &ltuser01@ppic.kr&gt
-							<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;">
-						</button>
-						<input type="text" class="mailInput" onkeyup="selectAutoComplete(0, this);"  placeholder="메일 주소 사이에 콤마(,) 또는 세미콜론(;)으로 구분하여 입력하세요" style="width:900px;">
+						<span class="span" id="recipient"></span>
+						<input type="text" class="mailInput" onkeyup="selectAutoComplete(0, this);"  placeholder="메일 주소 사이에 콤마(,) 또는 세미콜론(;)으로 구분하여 입력하세요">
 						<button type="button" class="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
-						
 						<div class="autocomplete-area" style="display:none;"></div>
-						
 					</td>
 				</tr>
 				<tr id="ref-area">
 					<th colspan='2'>참조</th>
 					<td class="td">
+						<span class="span" id="ref"></span>
 						<input class="mailInput" onkeyup="selectAutoComplete(1, this);" type="text">
 						<button type="button" class="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
-						
 						<div class="autocomplete-area" style="display:none;"></div>
-						
 					</td>
 				</tr>
 				<tr id="hid-ref-area">
 					<th colspan="2">숨은참조</th>
 					<td class="td">
+						<span class="span" id="hid-ref"></span>
 						<input class="mailInput" onkeyup="selectAutoComplete(2, this);" type="text">
 						<button type="button" class="address-btn" data-toggle="modal" data-target="#myModal">주소록</button>
-						
 						<div class="autocomplete-area" style="display:none;"></div>
-						
 					</td>
 				</tr>
 				<tr>
@@ -251,7 +247,6 @@
 	        			data:{},
 	        			type:"post",
 	        			success:function(mList){	//회원조회성공
-	        				
 	        				for(let i=0; i<mList.length; i++){
 		        				memArr.push({
 		        					name:mList[i].userName,
@@ -259,16 +254,19 @@
 		        					dept:mList[i].department
 		        				});
 	        				}
-	        				console.log(memArr);
 	        			}, error:function(){
 	        				console.log("회원조회용 ajax 통신실패")
 	        			}
 	        		})
 				}
 				
-				/* 키업때마다 자동완성 조회 */
+				// 메일주소들 담을 배열
+				let recipientArr = [];
+				let refArr = [];
+				let hidRefArr = [];
+				
 				function selectAutoComplete(type, e){
-					
+					/* 1. 키업때마다 자동완성 조회 */
 					let result = "";
 					let count = 0;
        				for(let i in memArr){
@@ -287,14 +285,104 @@
        					}
        				}
        				autocompleteArea[type].innerHTML = result;
+       				
+       				/* 2. ,나 ; 입력시 배열에 추가되도록 */
+       				const spans = document.getElementsByClassName("span");
+       				let value = ""
+       				let inputMail = "";
+       				if(e.value.includes(',') || e.value.includes(';')){
+       					let flag = false;
+       					for(let i in memArr){
+           					// 일치하는 값이 있을 경우 버튼으로 생성
+           					if(memArr[i].mail == e.value.substring(0, e.value.length-1)){
+           						flag = true;
+           						value = "<button class='recipient-btn'>"
+	             					  + 	memArr[i].name + " " + "&lt" + memArr[i].mail + "&gt"
+	               					  + 	"<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px;'>"
+	               					  + "</button>";
+	               				inputMail = memArr[i].mail;
+           					}
+           				}
+       					if(flag){
+       						spans[type].innerHTML += value;
+       						let newWidth = 1000 - spans[type].offsetWidth;
+            				if(newWidth > 200) {
+    	        				e.style.width = newWidth.toString() + "px";        					
+            				} else {
+            					e.style.width = "1000px"; 
+            				}
+       						if(type == 0) {
+       							recipientArr.push(inputMail);
+       						} else if(type == 1){
+       							refArr.push(inputMail);
+       						} else {
+       							hidRefArr.push(inputMail);
+       						}
+       						e.value = "";	// 텍스트 상자 비우기
+            				//console.log(recipientArr);
+            				//console.log(refArr);
+            				//console.log(hidRefArr);
+       					} else {
+       						alert('잘못된 이메일 형식입니다.');
+       						e.value = "";
+       					}
+					}
 				}
 				
-				$(document).on("click", ".autocomplete-items", function(){
-        			console.log($(this));
+				
+				
+				$(document).on("click", ".autocomplete-items", function(e){
+					let item = e.target;		// 이벤트 일어난 요소
+					let html = item.innerHTML;	// 이름 <메일주소>
+					let recipientType = item.parentNode.parentNode.childNodes[1].id;	// recipient|ref|hid-ref
+					
+       				startIdx = html.indexOf(";") + 1;
+       				endIdx = html.lastIndexOf("&");
+       				
+       				let value = "<button class='recipient-btn'>"
+       						  + 	html
+       						  + 	"<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px;'>"
+       						  + "</button>";
+        			
+        			if(recipientType == 'recipient'){
+        				// 버튼 추가
+        				document.getElementById("recipient").innerHTML += value;
+        				// 너비 조정
+        				let newWidth = 1000 - document.getElementById("recipient").offsetWidth;
+        				if(newWidth > 200) {
+	        				item.parentNode.parentNode.childNodes[3].style.width = newWidth.toString() + "px";        					
+        				} else {
+        					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
+        				}
+        				// 배열에 추가
+        				recipientArr.push(html.substring(startIdx, endIdx));
+        			} else if(recipientType == 'ref'){
+        				document.getElementById("ref").innerHTML += value;
+        				let newWidth = 1000 - document.getElementById("ref").offsetWidth;
+        				if(newWidth > 200) {
+	        				item.parentNode.parentNode.childNodes[3].style.width = newWidth.toString() + "px";        					
+        				} else {
+        					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
+        				}
+        				refArr.push(html.substring(startIdx, endIdx));
+        			} else {
+        				document.getElementById("hid-ref").innerHTML += value;
+        				let newWidth = 1000 - document.getElementById("hid-ref").offsetWidth;
+        				if(newWidth > 200) {
+	        				item.parentNode.parentNode.childNodes[3].style.width = newWidth.toString() + "px";        					
+        				} else {
+        					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
+        				}
+        				hidRefArr.push(html.substring(startIdx, endIdx));
+        			}
+        				item.parentNode.parentNode.childNodes[3].value = "";	// 텍스트 상자 비우기
+        				//console.log(recipientArr);
+        				//console.log(refArr);
+        				//console.log(hidRefArr);
         		})
 				
 				$(document).on("click", function(e){
-					console.log(e.target);
+					//console.log(e.target);
 					if(!$(e.target).hasClass("mailInput")){
 						// mailInput 클래스를 갖고 있는 영역을 클릭했을 때 빼고 area 안보이게
 						for(let i=0; i<autocompleteArea.length; i++){
@@ -305,15 +393,6 @@
 				})
 				
 				
-				
-				
-				/*
-				recipientInput.onkeyup = function(e){
-					if(e.key == ',' || e.key == ';'){
-						// , 또는 ;으로 구분
-						
-					}
-				}*/
 				
 				
 				
