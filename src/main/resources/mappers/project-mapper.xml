@@ -25,6 +25,7 @@
 	<result column="position_name" property="positionName"/>
 	<result column="profile_img" property="userImg"/>
 	<result column="department_no" property="departmentNo"/>
+	<result column="user_no" property="userNo"/>
 </resultMap>
 
 <resultMap id="taskResult" type="Task">
@@ -177,6 +178,72 @@
 	 where project_no = #{projectNo}
 	   and not user_no = #{userNo}
      group by user_no, user_name, department, position_name
+</select>
+
+<insert id="insertTask">
+	insert
+	  into task
+	  (
+	    task_no
+	  , project_no
+	  , assign_user
+	  , task_name
+	  , task_content
+	  , file_path
+	  , file_origin_name
+	  , task_status
+	  )
+	  values
+	  (
+	  	seq_tkno.nextval
+	  , #{projectNo}
+	  , #{assignUser}
+	  , #{taskName}
+	  , #{taskContent}
+	  , #{filePath}
+	  , #{originName}
+	  , #{taskStatus}
+	  )
+</insert>
+
+
+<insert id="insertTaskParticipants">
+  insert
+    into p_participant
+    (
+	   project_no
+	 , task_no
+	 , department_no
+	 , user_no
+	 , task_assign
+  	)
+  	values
+  	(
+	  #{projectNo}
+	, seq_tkno.currval
+    , #{departmentNo}
+    , #{userNo}
+    , 'N'
+  	)
+</insert>
+
+<select id="selectTaskDetail" resultMap="taskResult">
+	select distinct
+       task_no
+     , project_no
+     , assign_user
+     , user_name
+     , task_name
+     , task_content
+     , file_path
+     , file_origin_name
+     , task_status
+     , create_date
+     , modify_date
+  from task t
+  join member m on (t.assign_user = m.user_no)
+ where task_no = #{taskNo}
+   and delete_status = 'N'
 </select>
 
 </mapper>

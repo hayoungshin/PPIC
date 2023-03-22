@@ -61,6 +61,22 @@ public class ProjectServiceImpl implements ProjectService {
 		return pDao.selectEmployeesList(sqlSession, map);
 	}
 
+	@Override
+	public int insertTask(Task t) {
+		return pDao.insertTask(sqlSession, t);
+	}
+
+	@Override
+	public int insertTaskParticipants(ArrayList<ProjectParticipant> taskRefUser) {
+		return pDao.insertTaskParticipants(sqlSession, taskRefUser);
+	}
+
+	@Override
+	public Task selectTaskDetail(int taskNo) {
+		return pDao.selectTaskDetail(sqlSession, taskNo);
+	}
+
+	
 
 
 }

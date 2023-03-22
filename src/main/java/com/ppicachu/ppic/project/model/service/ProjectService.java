@@ -28,4 +28,12 @@ public interface ProjectService {
 	// 프로젝트 참여자 정보/부서 조회
 	ArrayList<ProjectParticipant> selectDeptList(HashMap<String, Integer> map);
 	ArrayList<ProjectParticipant> selectEmployeesList(HashMap<String, Integer> map);
+	
+	// task 추가
+	int insertTask(Task t);
+	// task 참조자 추가
+	int insertTaskParticipants(ArrayList<ProjectParticipant> taskRefUser);
+	
+	// task detail 조회
+	Task selectTaskDetail(int taskNo);
 }

@@ -567,7 +567,7 @@
         });
       </script>
 
-      <!-- The Modal -->
+      <!-- 업무 추가 Modal -->
       <div class="modal" id="add-task-modal">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -578,28 +578,28 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <!-- Modal body -->
-            <div class="modal-body">
-              <form action="" method="post" enctype="multipart/form-data">
+            <form action="addTask.tk" method="post" enctype="multipart/form-data">
+              <!-- Modal body -->
+              <div class="modal-body">
                 <table class="add-form">
                   <tr>
-                    <th width="100px;">업무명 : </th>
-                    <td><input type="text" class="task-title-inpt"></td>
+                    <th width="100px;">* 업무명 : </th>
+                    <td><input type="text" class="task-title-inpt" name="taskName" placeholder="업무명을 입력해주세요." required></td>
                   </tr>
                   <tr>
-                    <th>업무상세 :</th>
-                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;"></textarea></td>
+                    <th>* 업무상세 :</th>
+                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;" placeholder="업무 상세내용을 입력해주세요." required></textarea></td>
                   </tr>
                   <tr>
                     <th>첨부파일 :</th>
-                    <td><input type="file"></td>
+                    <td><input type="file" name="upfile"></td>
                   </tr>
                   <tr>
-                    <th>담당자 : </th>
-                    <td>${loginUser.userName}</td>
+                    <th>담당자 :</th>
+                    <td><input type="hidden" name="assignUser" value="${loginUser.userNo}">${loginUser.userName}</td>
                   </tr>
                   <tr>
-                    <th>참조자 : </th>
+                    <th>참조자 :</th>
                     <td>
                       <select name="department" id="dept-select">
                       </select>
@@ -608,23 +608,35 @@
                     </td>
                   </tr>
                   <tr>
-                    <th></th>
+                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
                     <td><div id="selected-area"></div></td>
+                    <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                  </tr>
+                  <tr>
+                    <th>상태</th>
+                    <td>
+                      <select name="taskStatus">
+                        <option value="1">대기</option>
+                        <option value="2">진행중</option>
+                        <option value="3">완료</option>
+                        <option value="4">보류</option>
+                      </select>
+                    </td>
                   </tr>
                 </table>
-                <div id="invalidMsg">이미 선택된 직원입니다.</div>
-              </form>
+                <input type="hidden" name="projectNo">
             </div>
 
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-purple" data-dismiss="modal">추가</button>
+              <button type="submit" class="btn btn-purple">추가</button>
             </div>
+          </form>
 
           </div>
         </div>
-      </div>
-      
+      </div><!-- add-task-modal-->
+
       <!-- 셀렉트 정보 가져오기 -->
       <script>
         function selectList(){
@@ -673,13 +685,22 @@
       <script>
         // 선택한 정보 selected-area에 추가하기
         let taskRefUser = "";
-        let selectUser = "";
+        let selectUserDept = "";
+        let selectUserName = "";
+        let selectUserNo = "";
+
         $("#emp-select").change(function(){
-          selectUser = $("#emp-select option:selected").text();
-          if($("#selected-area").text().includes(selectUser)){
+          selectUserDept = $("#dept-select option:selected").val();
+          selectUserName = $("#emp-select option:selected").text();
+          selectUserNo = $("#emp-select option:selected").val();
+
+          if($("#selected-area").text().includes(selectUserName)){
             $("#invalidMsg").css("display", "block");
-          }else if(selectUser != "선택"){
-            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUser + "<img src='resources/icons/delete.png'></div>";
+          }else if(selectUserName != "선택"){
+            // selectedList.push($("#emp-selected option:selected").val());
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete.png'></div>"
+                        + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
             $("#selected-area").append(taskRefUser);
           }
         })
@@ -687,8 +708,115 @@
         // 삭제하기
         function deleteUser(e){
           $(e).remove();
+          // selectedList.pop()
+        }
+
+        // 모달에 프로젝트번호 추가
+        $("#add-task").click(function(){
+          $("#add-task-modal input[name=projectNo]").val(projectNo);
+        })
+      </script>
+
+      
+
+      <!-- 업무 수정 Modal -->
+      <div class="modal" id="update-task-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h5 class="modal-title"><b>업무 상세</b></h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <form action="updateTask.tk" method="post" enctype="multipart/form-data">
+              <!-- Modal body -->
+              <div class="modal-body">
+                <table class="add-form">
+                  <tr>
+                    <th width="100px;">* 업무명 : </th>
+                    <td><input type="text" class="task-title-inpt" name="taskName" placeholder="업무명을 입력해주세요." required></td>
+                  </tr>
+                  <tr>
+                    <th>* 업무상세 :</th>
+                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;" placeholder="업무 상세내용을 입력해주세요." required></textarea></td>
+                  </tr>
+                  <tr>
+                    <th>첨부파일 :</th>
+                    <td><input type="file" name="upfile"></td>
+                  </tr>
+                  <tr>
+                    <th>담당자 :</th>
+                    <td><input type="hidden" name="assignUser" value="${loginUser.userNo}">${loginUser.userName}</td>
+                  </tr>
+                  <tr>
+                    <th>참조자 :</th>
+                    <td>
+                      <select name="department" id="dept-select">
+                      </select>
+                      <select name="userNo" id="emp-select">
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
+                    <td><div id="selected-area"></div></td>
+                    <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                  </tr>
+                  <tr>
+                    <th>상태</th>
+                    <td>
+                      <select name="taskStatus">
+                        <option value="1">대기</option>
+                        <option value="2">진행중</option>
+                        <option value="3">완료</option>
+                        <option value="4">보류</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+                <input type="hidden" name="projectNo">
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-purple">추가</button>
+            </div>
+          </form>
+
+          </div>
+        </div>
+      </div><!-- update-task-modal-->
+      
+
+      <script>
+        function taskDetailLoad(e){
+          let tn = $(e).children("input[name=taskNo]").val();
+          
+          $.ajax({
+            url:"detail.tk",
+            data:{"taskNo":tn},
+            success:function(obj){
+              let t = obj.t;
+              let tpList = obj.tpList;
+
+              
+            }, error:function(){
+              console.log("업무 상세 불러오기 실패");
+            }
+          })
         }
       </script>
+
+
+
+
+
+
+
+
+
     </div>
     </div>
 
