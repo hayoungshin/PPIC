@@ -329,4 +329,11 @@
 		   and room_no = #{roomNo}
 	</select>
 	
+	<update id="updateRoomName">
+		update
+		       chatroom
+		   set room_name = #{roomName}
+		 where room_no = #{roomNo}  
+	</update>
+	
 </mapper>

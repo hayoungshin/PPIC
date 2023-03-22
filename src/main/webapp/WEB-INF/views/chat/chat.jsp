@@ -1072,6 +1072,8 @@
      	}
     	
      	// 채팅방 열기
+     	let $groupCount = "";
+     	let $roomName = "";
      	function openChat(no){
      		$.ajax({
    				url:"open.chat",
@@ -1112,25 +1114,22 @@
            					if(list[i].groupCount == 2){
            						if(list[i].memList[j].userNo != ${loginUser.userNo}){
            							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
-           									+ list[i].memList[j].userName
-           									+ "&nbsp;<span class='conn";
-            						if(list[i].memList[j].connSta == 0){
-            			        		value2 += " online";
-            			       		} else if(list[i].memList[j].connSta == 1){
-            			       			value2 += " offline";
-            			       		} else if(list[i].memList[j].connSta == 2){
-            			       			value2 += " out";
-            			       		}
-            						value2 += "'></span>"
+           									+ "<span id='roomName-area'><span id='roomName'>" 
+           							if(list[i].roomName == undefined){
+           								value2 += list[i].memList[j].userName;
+           							}else{
+           								value2 += list[i].roomName;
+           							}
+           							value2 += "</span></span>";
            						}
            					}else{
            						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
            						if(list[i].roomName == undefined){
-           							value2 += "그룹채팅 "
+           							value2 += "<span id='roomName-area'><span id='roomName'>그룹채팅";
            						}else{
-           							value2 += list[i].roomName + " "
+           							value2 += "<span id='roomName-area'><span id='roomName'>" + list[i].roomName;
            						}
-           						value2 += list[i].groupCount
+           						value2 += "</span> <span id='groupCount'>"+ list[i].groupCount + "</span></span></span>"
            					}
            				}
            			}
@@ -1139,11 +1138,13 @@
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;' onKeyPress='check_enter();'></textarea>"
                     		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
-                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(" + no + ");'><img src='resources/icons/search.png'></span></div>"
+                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(" + no + ");'><img src='resources/icons/setting.png' onclick='updateRoomName(" + no + ");'></span></div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
            			connectChat(no);
+           			$groupCount = $("#groupCount").text();
+ 		     		$roomName = $("#roomName").text();
            		},error:function(){
           			console.log("채팅 열기용 ajax 통신 실패")
           		}
@@ -1155,7 +1156,8 @@
      		$.ajax({
      			url:"partiList.chat",
      			data:{
-     				roomNo:no			
+     				roomNo:no,
+     				participantNo:${loginUser.userNo}
      			},success:function(list){
      				let me = "<div><img src='";
      				let others = "";
@@ -1192,6 +1194,7 @@
     							+ "<input type='hidden' value='" + list[i].phone +"'>"
     							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
     							+ list[i].userName + "<span class='conn";
+    							console.log(list[i].chatLike)
     						if(list[i].connSta == 0){
     							others += " online";
     			       		} else if(list[i].connSta == 1){
@@ -1200,9 +1203,7 @@
     			       			others += " out";
     			       		}
     						others += "'></span></div>";
-    						
      					}
-     					
      				}
  					$("#participants").html(me + others);
      			},error:function(){
@@ -1210,6 +1211,44 @@
      			}
      		})
      		$("#participantList").toggle();
+     	}
+     	
+     	// 설정 아이콘 클릭 (채팅방 이름 변경)
+     	function updateRoomName(no){
+     		if(!$("#roomName-area").html().includes("input")){
+         		let value = "<input type='text' name='roomName' style='width:140px;'>"
+         					+ "<button class='updateRoomName-btn' id='" + no + "'><img src='resources/icons/check.png' width='20px' height='20px' style='margin-bottom:5px;'></button>"
+         					+ "<button onclick='cancelChange();'><img src='resources/icons/cancel.png' width='20px' height='20px' style='margin-bottom:5px;'></button>";
+         		$("#roomName-area").html(value);
+         		$("#roomName-area input[name=roomName]").focus();
+         		$("#roomName-area input[name=roomName]").val($roomName);
+     		}
+     	}
+     	
+     	// 체크 아이콘 클릭 (채팅방 이름 변경)
+     	$(document).on("click", ".updateRoomName-btn", function(){
+     		let newRoomName = $("input[name=roomName]").val();
+     		let roomNo = $(this).attr("id");
+     		$.ajax({
+     			url:"updateRoomName.chat",
+     			data:{
+     				roomName:newRoomName,
+     				roomNo:roomNo
+     			},success:function(result){
+     				if(result == "success"){
+     					let value = "<span id='roomName'>" + newRoomName + "</span>"
+     								+ " <span id='groupCount'>" + $groupCount + "</span>"
+     					$("#roomName-area").html(value);
+     				}
+     			}
+     		})
+     	})
+     	
+     	// 취소 아이콘 클릭 (채팅방 이름 변경 취소)
+     	function cancelChange(){
+     		let value = "<span id='roomName'>" + $roomName + "</span>"
+						+ " <span id='groupCount'>" + $groupCount + "</span>"
+			$("#roomName-area").html(value); 
      	}
      	
      	// 웹소켓

@@ -58,4 +58,7 @@ public interface ChatService {
 	
 	// 14. 대화상대 리스트
 	ArrayList<Chat> selectPartiList(Chat c);
+	
+	// 15. 채팅방 이름 변경
+	int updateRoomName(Chat c);
 }

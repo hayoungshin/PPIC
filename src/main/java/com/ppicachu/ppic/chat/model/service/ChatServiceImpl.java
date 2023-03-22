@@ -125,5 +125,10 @@ public class ChatServiceImpl implements ChatService{
 		return cDao.selectPartiList(sqlSession, c);
 	}
 
+	@Override
+	public int updateRoomName(Chat c) {
+		return cDao.updateRoomName(sqlSession, c);
+	}
+
 	
 }

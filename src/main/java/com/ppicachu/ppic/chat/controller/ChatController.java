@@ -118,4 +118,11 @@ public class ChatController {
 		ArrayList<Chat> list = cService.selectPartiList(c);
 		return new Gson().toJson(list);
 	}
+	
+	@ResponseBody
+	@RequestMapping("updateRoomName.chat")
+	public String ajaxUpdateRoomName(Chat c) {
+		int result = cService.updateRoomName(c);
+		return result > 0 ? "success" : "fail";
+	}
 }
