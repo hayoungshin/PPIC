@@ -66,6 +66,14 @@ public class MemberDao {
 		return (ArrayList)sqlSession.selectList("memberMapper.selectAuthorityMemList", authoNo);
 	}
 	
+	public ArrayList<Department> selectMemCountForMail(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectMemCountForMail");
+	}
+	
+	public ArrayList<Member> selectLikeMemForMail(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectLikeMemForMail", userNo);
+	}
+	
 	
 
 }

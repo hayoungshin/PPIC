@@ -92,10 +92,19 @@
         height:95%;
         padding:10px;
     }
-    #mail-address-group p, #mail-address-detail p{
+    #mail-address-group p{
         margin:10px 0;
         font-size: 14px;
         cursor:pointer;
+    }
+    #mail-address-detail label{
+        margin:5px 0;
+        font-size: 14px;
+        cursor:pointer;
+    }
+    #mail-address-list{height:380px; overflow:auto;}
+    #mail-address-group p:hover, #mail-address-detail label:hover{
+    	font-weight:600;
     }
     #mail-address-modal .header{
         cursor: pointer;
@@ -104,9 +113,9 @@
         height:25%;
         padding: 10px;
     }
-    .select-area{
-        height:33.3%;
-    }
+    #mail-address-group .dept-selected{font-weight:600;}
+    
+    .select-area{height:33.3%;}
     #mail-address-modal .selected-list{
         height:75%;
         padding:0px 10px;
@@ -238,9 +247,15 @@
 			<!-- 자동완성 -->
 			<script>
 				/* 페이지 로딩되자마자 전체 회원의 이름, 메일주소 조회 */
-				$(function(){selectMemberList();})				
+				/* 				부서번호, 부서명, 멤버수 조회 : 모달창 script쪽 */
+				$(function(){
+					selectMemberList();
+					selectMemCount();
+				})
+				
 				let memArr = [];
 				let autocompleteArea = document.getElementsByClassName("autocomplete-area");
+				
 				function selectMemberList(){
 					$.ajax({
 	        			url:"select.me",
@@ -298,7 +313,7 @@
            						flag = true;
            						value = "<button class='recipient-btn'>"
 	             					  + 	memArr[i].name + " " + "&lt" + memArr[i].mail + "&gt"
-	               					  + 	"<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px;'>"
+	               					  + 	" <img src='resources/icons/close.png' style='width:7px; margin-bottom:3px;'>"
 	               					  + "</button>";
 	               				inputMail = memArr[i].mail;
            					}
@@ -341,7 +356,7 @@
        				
        				let value = "<button class='recipient-btn'>"
        						  + 	html
-       						  + 	"<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px;'>"
+       						  + 	" <img src='resources/icons/close.png' style='width:7px; margin-bottom:3px;'>"
        						  + "</button>";
         			
         			if(recipientType == 'recipient'){
@@ -393,13 +408,9 @@
 				})
 				
 				
-				
-				
-				
-				
 			</script>
 
-			<script>
+			<script> // 파일첨부 관련
 				const fileArea = document.getElementById("input-file-area");
 
 				function loadFiles(inputFile) {
@@ -432,6 +443,7 @@
 					fileArea.innerHTML += "<p class='input-file-list'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[0].name + "</p>";
 				})
 			</script>
+			
 			<!-- include summernote css/js-->
 			<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> 
 			<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
@@ -460,56 +472,46 @@
 		  <div class="modal-content">
 		  
 			<!-- Modal Header -->
-			<div class="modal-header"><h4 class="modal-title">메일 주소록</h4></div>
+			<div class="modal-header"><h4 class="modal-title"><b>메일 주소록</b></h4></div>
 			
 			<!-- Modal body -->
 			<div class="modal-body" id="mail-address-modal">
 			  <div style="width:25%;" id="mail-address-group">
-				  <p>전체 <span><b>10</b></span></p>
-				  <p>미지정 <span><b>2</b></span></p>
+			  	<div>
+				  <p id="all-dept">전체 <span style='color:#6F50F8'></span></p>
+			    </div>
+				<hr style="margin:10px 0px;">
+				<div id="mail-dept-list">
+
+				</div>
 				  <hr style="margin:10px 0px;">
-				  <p>인사부 <span><b>4</b></span></p>
-				  <p>회계부 <span><b>4</b></span></p>
-				  <hr style="margin:10px 0px;">
-				  <p>즐겨찾기</p>
+				  <p id="likeList">즐겨찾기</p>
 			  </div>
 			  <div style="width:35%;" id="mail-address-detail">
-				  <p>전체</p>
+			  	  <div>
+			  	  	<label><input type="checkbox" id="all-memList"> 전체</label>
+			  	  </div>
 				  <hr style="margin:10px 0px;">
-				  <p>신하영 &ltuser01@ppic.kr&gt</p>
-				  <p>신하영 &ltuser01@ppic.kr&gt</p>
-				  <p>신하영 &ltuser01@ppic.kr&gt</p>
+				  <div id="mail-address-list"></div>
 			  </div>
 			  <div style="width:40%; padding:0; margin-bottom:10px;">
 
 				  <div class="select-area">
 					  <div class="header" onclick="select(this);">받는 사람 <span style="color:#00b5d1;">0</span></div>
 					  <ul class="selected-list">
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+					  
 					  </ul>
 				  </div>
 				  <div class="select-area">
 					  <div class="header" onclick="select(this);">참조 <span style="color:#00b5d1;">0</span></div>
 					  <ul class="selected-list">
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+					  
 					  </ul>
 				  </div>
 				  <div class="select-area">
 					  <div class="header" onclick="select(this);">숨은참조 <span style="color:#00b5d1;">0</span></div>
 					  <ul class="selected-list">
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
-						  <li>신하영 &ltuser01@ppic.kr&gt<button><img src="resources/icons/close.png"></button></li>
+					  
 					  </ul>
 				  </div>
 
@@ -527,20 +529,183 @@
 		  </div>
 		</div>
 
+		<!-- 주소록 모달창 -->
 		<script>
-		  function select(e){
-			  let selectedArea = e.parentNode;
-			  const siblings = e.parentNode.parentNode.children;
+		const mailList = document.getElementById("mail-address-list");				// 해당 부서 메일 리스트 div
+		const recipientList = document.getElementsByClassName("selected-list")[0];	// 받는 사람 ul
+		const refList = document.getElementsByClassName("selected-list")[1];
+		const hidRefList = document.getElementsByClassName("selected-list")[2];
+		const recipientCount = document.getElementsByClassName("header")[0].childNodes[1];	// 받는 사람 수 span
+		const refCount = document.getElementsByClassName("header")[1].childNodes[1];
+		const hidRefCount = document.getElementsByClassName("header")[2].childNodes[1];
+			/****** 초기화면 ******/
+			$(document).on("click", ".address-btn", function(){
+				/*
+				console.log(memArr);
+				console.log(recipientArr);
+				console.log(refArr);
+				console.log(hidRefArr);
+				*/
+				document.getElementById("all-dept").childNodes[1].innerHTML = memArr.length;
+				
+				let mailListHtml = "";
+				let recipientHtml = "";
+				let refHtml = "";
+				let hidRefHtml = "";
+				
+				
+				// 전체주소 뿌리기
+				for(let i in memArr){
+					mailListHtml += "<div>"
+						   		  +		"<label><input type='checkbox' id='memList" + i + "'> "
+						   		  +				memArr[i].name + " &lt" + memArr[i].mail + "&gt"
+						   		  +		"</label>"
+						   		  + "</div>"
+				}
+				mailList.innerHTML = mailListHtml;
+				
+				// 받는,참조,숨은참조 입력되어있는값 뿌리기
+				for(let i in recipientArr){
+					for(let j in memArr){
+						if(recipientArr[i] == memArr[j].mail){
+							recipientHtml += "<li>"
+										   +	memArr[j].name + " &lt" + memArr[j].mail + "&gt"
+										   +	"<button><img src='resources/icons/close.png'></button>"
+										   + "</li>"
+						}
+					}
+				}
+				for(let i in refArr){
+					for(let j in memArr){
+						if(refArr[i] == memArr[j].mail){
+							refHtml += "<li>"
+							 	     +		memArr[j].name + " &lt" + memArr[j].mail + "&gt"
+								     +		"<button><img src='resources/icons/close.png'></button>"
+								     + "</li>"
+						}
+					}
+				}
+				for(let i in hidRefArr){
+					for(let j in memArr){
+						if(hidRefArr[i] == memArr[j].mail){
+							hidRefHtml += "<li>"
+									    +	memArr[j].name + " &lt" + memArr[j].mail + "&gt"
+									    +	"<button><img src='resources/icons/close.png'></button>"
+									    + "</li>"
+						}
+					}
+				}
+				recipientList.innerHTML = recipientHtml;
+				refList.innerHTML = refHtml;
+				hidRefList.innerHTML = hidRefHtml;
+				
+				recipientCount.innerHTML = recipientArr.length;
+				refCount.innerHTML = refArr.length;
+				hidRefCount.innerHTML = hidRefArr.length;
+				
+				
+			})
+			
+			
+			let deptArr = [];	// 부서 리스트 : 부서번호, 부서명, 부서멤버수
+			function selectMemCount(){
+				
+				$.ajax({
+					url:"selectCount.me",
+					data:{},
+					type:"post",
+					success:function(dList){
+						for(let i=0; i<dList.length; i++){
+							deptArr.push({
+								no:dList[i].departmentNo,
+								name:dList[i].departmentName,
+								count:dList[i].memCount
+							})
+						}
+						
+						let deptListHtml = "";
+						const deptList = document.getElementById("mail-dept-list");
+						for(let i in deptArr){
+							deptListHtml += "<p id='deptList" + (Number(i) + 1) + "'>" + deptArr[i].name + " <span style='color:#6F50F8'>" + deptArr[i].count + "</span>" + "</p>";
+						}
+						deptList.innerHTML = deptListHtml;
+						
+					}, error:function(){
+						console.log("부서별 멤버수 조회용 ajax 통신실패")
+					}
+				})
+				
+			}
+			
+			$(document).on("click", "#mail-address-group p", function(e){
+				// 스타일 변경
+				e.target.className += "dept-selected";
+				deptList = document.querySelectorAll("#mail-address-group p");
+				for(let i in deptList){
+					if(deptList[i].id != e.target.id){
+						deptList[i].className = "";
+					}
+				}
 
-			  selectedArea.classList.add("selected");
-
-			  for(let i=0; i<siblings.length; i++){
-				  if(selectedArea != siblings[i]){
-					  siblings[i].classList.remove("selected");
-				  }
-			  }
-
-		  }
+				if(e.target.id == "all-dept"){
+					// 전체주소 뿌리기
+					let value = "";
+					for(let i in memArr){
+						value += "<div>"
+							   +		"<label><input type='checkbox' id='memList" + i + "'> "
+							   +				memArr[i].name + " &lt" + memArr[i].mail + "&gt"
+							   +		"</label>"
+							   + "</div>";
+					}
+					mailList.innerHTML = value;
+				} else if(e.target.id == "likeList"){
+					// 즐겨찾기 주소 뿌리기
+					$.ajax({
+						url:"selectLike.me",
+						data:{},
+						type:"post",
+						success:function(mList){
+							let value = "";
+							for(let i in mList){
+								value += "<div>"
+									   +		"<label><input type='checkbox' id='memList" + i + "'> "
+									   +				mList[i].userName + " &lt" + mList[i].mail + "&gt"
+									   +		"</label>"
+									   + "</div>";
+							}
+							mailList.innerHTML = value;
+						}, error:function(){
+							console.log("부서별 멤버 조회용 ajax 통신실패")
+						}
+					})
+				} else {
+					// 해당부서 주소 뿌리기
+					let value = "";
+					for(let i in memArr){
+						if(memArr[i].dept == e.target.id.substr(8)){
+							value += "<div>"
+								   +		"<label><input type='checkbox' id='memList" + i + "'> "
+								   +				memArr[i].name + " &lt" + memArr[i].mail + "&gt"
+								   +		"</label>"
+								   + "</div>";
+						}
+						mailList.innerHTML = value;
+					}
+				}
+			})
+			
+		
+			function select(e){
+				let selectedArea = e.parentNode;
+	  			const siblings = e.parentNode.parentNode.children;
+	  			selectedArea.classList.add("selected");
+	  			for(let i=0; i<siblings.length; i++){
+		  			if(selectedArea != siblings[i]){
+			  			siblings[i].classList.remove("selected");
+		  			}
+	  			}
+		  	}
+		  
 		</script>
 
 	</div>
