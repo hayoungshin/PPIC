@@ -248,7 +248,7 @@
 			
 			<!-- 알림 관련 -->
 			<script>
-				$("#holidayApprove button").click(function(){
+				$(".btn-holi").click(function(){
 					
 					if(socket){
 						if($("select[name=status]").val() == '승인'){
