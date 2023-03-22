@@ -263,11 +263,26 @@ public class MemberController {
 		}
 	}
 	
+	/************ 메일 ***********/
 	@ResponseBody
 	@RequestMapping("select.me")
 	public ArrayList<Member> ajaxselectMemForMail(){
 		return mService.selectMemForMail();
 	}
+	// 부서별 멤버 수 조회
+	@ResponseBody
+	@RequestMapping("selectCount.me")
+	public ArrayList<Department> ajaxselectMemCountForMail(){
+		return mService.selectMemCountForMail();
+	}
+	@ResponseBody
+	@RequestMapping("selectLike.me")
+	public ArrayList<Member> ajaxselectLikeMemForMail(HttpSession session){
+		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+		return mService.selectLikeMemForMail(userNo);
+	}
+	
+	
 	
 	// 권한 있는 멤버 리스트 조회
 	@ResponseBody 

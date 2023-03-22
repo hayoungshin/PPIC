@@ -14,4 +14,5 @@ public class Department {
 	private int departmentNo;
 	private String departmentName;
 	
+	private int memCount;
 }
