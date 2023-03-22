@@ -208,7 +208,7 @@
                 <span>메일</span>
             </div>
 
-            <div class="side-menu" onclick="location.href='workMain.wo'">
+            <div class="side-menu" onclick="location.href='workMain.wo?no=${loginUser.userNo}'">
                 <img src="resources/icons/time.png">
                 <span>근무</span>
             </div>

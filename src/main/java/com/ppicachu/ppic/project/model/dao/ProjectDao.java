@@ -44,4 +44,20 @@ public class ProjectDao {
 	public ArrayList<ProjectParticipant> selectEmployeesList(SqlSessionTemplate sqlSession, HashMap<String, Integer> map) {
 		return (ArrayList)sqlSession.selectList("projectMapper.selectEmployeesList", map);
 	}
+	
+	public int insertTask(SqlSessionTemplate sqlSession, Task t) {
+		return sqlSession.insert("projectMapper.insertTask", t);
+	}
+	
+	public int insertTaskParticipants(SqlSessionTemplate sqlSession, ArrayList<ProjectParticipant> taskRefUser) {
+		int result = 0;
+		for(int i=0; i<taskRefUser.size(); i++) {
+			result += sqlSession.insert("projectMapper.insertTaskParticipants", taskRefUser.get(i));
+		}
+		return result;
+	}
+	
+	public Task selectTaskDetail(SqlSessionTemplate sqlSession, int taskNo) {
+		return sqlSession.selectOne("projectMapper.selectTaskDetail", taskNo);
+	}
 }

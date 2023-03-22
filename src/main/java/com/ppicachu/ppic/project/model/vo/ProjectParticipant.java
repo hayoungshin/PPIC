@@ -26,5 +26,4 @@ public class ProjectParticipant {
 	
 	private String userImg;
 	
-	
 }

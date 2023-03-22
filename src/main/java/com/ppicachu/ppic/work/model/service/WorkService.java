@@ -49,4 +49,15 @@ public interface WorkService {
 		int holidayApprove(Holiday h);
 		int holidayInsert(Holiday h);
 	
+	// 13. 관리자의 휴가 지급 서비스 
+		int holidayGive(Holiday h);
+	
+	// 14. 사원의 출퇴근 기록 조회 서비스
+		ArrayList<Work> selectMemberWorkList(int userNo);
+		
+	// 15. 사원의 지각 조퇴 결근 횟수 조회 서비스 
+		Work countWorkStatus(int userNo);
+
+	// 16. 캘린더 조회 서비스 
+		ArrayList<Work> workCalendar(int userNo);
 }

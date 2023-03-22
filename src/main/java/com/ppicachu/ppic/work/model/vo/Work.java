@@ -19,5 +19,12 @@ public class Work {
 	private String workOut;
 	private String workTime;
 	private String status;
+	
+	private String absenteeism;
+	private String leavearly;
+	private String behindtime;
+	
+	// calendar 관련
+	
 
 }

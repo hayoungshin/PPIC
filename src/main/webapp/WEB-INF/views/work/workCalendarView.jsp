@@ -28,11 +28,24 @@
     			return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
     		},
     		//initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
-    		selectable : true, // 달력 일자 드래그 설정가능
-    		droppable : true,
-    		editable : true,
     		nowIndicator: true, // 현재 시간 마크
     		locale: 'ko' // 한국어 설정
+//    		event:function(info, successCallback, failureCallback){
+//    			var userNo = ${loginUser.userNo}
+//   			$.ajax({
+//    				url: "workCalendar.wo",
+//    				type: 'get',
+//    				cache: false,
+//    				data: userNo,
+//    				dataType:'JSON',
+//    				success: function(list) {
+//    					
+//    				},
+//    				error: function (request, status, error) {
+//    				console.log(error);
+//    				}
+//    			});
+    		}
     	});
     	calendar.render();
     });
@@ -81,33 +94,24 @@
 			
 			<script>
 				function workback(){
-					location.href="workMain.wo"
+					location.href="workMain.wo?no="+${loginUser.userNo }
 				}
 			</script>
            
-			<div class="workcategory" style="float:left;" >
-                <a href="workList.wo" style="color:black;">출퇴근기록</a>
-                <a href="workInfo.wo" >올해근무정보</a>
-				<a id="info" >휴가현황</a>
-                <a href="holiApply.ho">휴가신청</a>
-                
-                
-                <!-- 관리자만 보이게 할거임 -->
-                <a href="memberWork.wo">구성원근무</a>
-                <a href="memberHoli.ho">전사원휴가현황</a>
-                <a href="holiGive.ho">휴가지급|회수</a>
-                <a href="holiApprove.ho">휴가승인</a>
-                
-                <br>
+            <div class="workcategory" style="float:left;" >
+	            <a href="workList.wo?no=${loginUser.userNo }" style="color:black;">출퇴근기록</a>
+	            <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
+				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
+	            <a href="holiApply.ho?no=${loginUser.userNo }" >휴가신청</a>
+	            
+	            
+	            <!-- 관리자만 보이게 할거임 -->
+	            <a href="memberWork.wo">구성원근무</a>
+	            <a href="memberHoli.ho">전사원휴가현황</a>
+	            <a href="holiGive.ho">휴가지급|회수</a>
+	            <a href="holiApprove.ho">휴가승인</a>
+            <br>
             </div>
-            
-            <script>
-            $(function(){
-        		$("#info").click(function(){
-        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
-        		})
-        	})
-            </script>
 			
 			<br>
 			<br><br>
