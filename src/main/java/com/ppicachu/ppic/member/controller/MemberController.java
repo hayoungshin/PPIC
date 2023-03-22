@@ -89,6 +89,11 @@ public class MemberController {
 		return "member/memberAuthView";
 	}
 	
+	@RequestMapping("main.me")
+	public String mainMage() {
+		return "common/Home";
+	}
+	
 	@RequestMapping("login.me")
 	public String loginMember(Member m, HttpSession session) {
 		Member loginUser = mService.loginMember(m);
