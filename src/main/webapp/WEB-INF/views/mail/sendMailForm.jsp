@@ -92,18 +92,13 @@
         height:95%;
         padding:10px;
     }
-    #mail-address-group p{
+    #mail-address-group p, #mail-address-detail div, #all-adr{
         margin:10px 0;
         font-size: 14px;
         cursor:pointer;
     }
-    #mail-address-detail label{
-        margin:5px 0;
-        font-size: 14px;
-        cursor:pointer;
-    }
     #mail-address-list{height:380px; overflow:auto;}
-    #mail-address-group p:hover, #mail-address-detail label:hover{
+    #mail-address-group p:hover, #mail-address-list div:hover, #all-adr:hover{
     	font-weight:600;
     }
     #mail-address-modal .header{
@@ -488,8 +483,8 @@
 				  <p id="likeList">즐겨찾기</p>
 			  </div>
 			  <div style="width:35%;" id="mail-address-detail">
-			  	  <div>
-			  	  	<label><input type="checkbox" id="all-memList"> 전체</label>
+			  	  <div id="all-adr">
+			  	  	<label> 전체</label>
 			  	  </div>
 				  <hr style="margin:10px 0px;">
 				  <div id="mail-address-list"></div>
@@ -557,9 +552,7 @@
 				// 전체주소 뿌리기
 				for(let i in memArr){
 					mailListHtml += "<div>"
-						   		  +		"<label><input type='checkbox' id='memList" + i + "'> "
-						   		  +				memArr[i].name + " &lt" + memArr[i].mail + "&gt"
-						   		  +		"</label>"
+						   		  +		memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 						   		  + "</div>"
 				}
 				mailList.innerHTML = mailListHtml;
@@ -652,9 +645,7 @@
 					let value = "";
 					for(let i in memArr){
 						value += "<div>"
-							   +		"<label><input type='checkbox' id='memList" + i + "'> "
-							   +				memArr[i].name + " &lt" + memArr[i].mail + "&gt"
-							   +		"</label>"
+							   +	memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 							   + "</div>";
 					}
 					mailList.innerHTML = value;
@@ -668,9 +659,7 @@
 							let value = "";
 							for(let i in mList){
 								value += "<div>"
-									   +		"<label><input type='checkbox' id='memList" + i + "'> "
-									   +				mList[i].userName + " &lt" + mList[i].mail + "&gt"
-									   +		"</label>"
+									   +	mList[i].userName + " &lt" + mList[i].mail + "&gt"
 									   + "</div>";
 							}
 							mailList.innerHTML = value;
@@ -684,13 +673,28 @@
 					for(let i in memArr){
 						if(memArr[i].dept == e.target.id.substr(8)){
 							value += "<div>"
-								   +		"<label><input type='checkbox' id='memList" + i + "'> "
-								   +				memArr[i].name + " &lt" + memArr[i].mail + "&gt"
-								   +		"</label>"
+								   +	memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 								   + "</div>";
 						}
 						mailList.innerHTML = value;
 					}
+				}
+			})
+			
+			$(document).on("click", "#mail-address-list div", function(e){
+				console.log(e.target.innerHTML);
+				const selectedBox = document.getElementsByClassName("selected")[0];
+				if(selectedBox != null){
+					const startIdx = e.target.innerHTML.indexOf(";") + 1;
+					const endIdx = e.target.innerHTML.lastIndexOf("&");
+					const mail = e.target.innerHTML.substring(startIdx, endIdx);
+					console.log(mail);
+					console.log(recipientArr.includes(mail));
+					let value = "<li>"
+					       	  +		e.target.innerHTML
+					          +		"<button><img src='resources/icons/close.png'></button>"
+					          + "</li>"
+					document.querySelector("div.selected ul").innerHTML += value;
 				}
 			})
 			
