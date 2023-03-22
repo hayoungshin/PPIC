@@ -92,4 +92,24 @@ public class WorkServiceImpl implements WorkService {
 		return wDao.holidayInsert(sqlSession, h);
 	}
 
+	@Override
+	public int holidayGive(Holiday h) {
+		return wDao.holidayGive(sqlSession, h);
+	}
+
+	@Override
+	public ArrayList<Work> selectMemberWorkList(int userNo) {
+		return wDao.selectMemberWorkList(sqlSession, userNo);
+	}
+
+	@Override
+	public Work countWorkStatus(int userNo) {
+		return wDao.countWorkStatus(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Work> workCalendar(int userNo) {
+		return wDao.workCalendar(sqlSession, userNo);
+	}
+
 }

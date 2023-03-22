@@ -34,7 +34,16 @@ public class WorkController {
 	
 	/* 근무 메인 */
 	@RequestMapping("workMain.wo")
-	public String workMain() {
+	public String workMain(int no, Model model) {
+		
+		ArrayList<Work> list1 = wService.selectMemberWorkList(no);
+		model.addAttribute("list1", list1);
+		
+		Work w  = wService.countWorkStatus(no);
+		model.addAttribute("w", w);
+		Member m = wService.selectMemberHoliday(no);
+		model.addAttribute("m",m);
+		
 		return "work/workMainView";
 	}
 	
@@ -83,9 +92,7 @@ public class WorkController {
 		// 휴가 
 		ArrayList<Member> list2 = wService.selectHolidayList();
 		
-		model.addAttribute("list1", list1);
-		model.addAttribute("list2", list2);
-		
+	    model.addAttribute("list1", list1);
 		return "work/workMemberView";
 	}
 	
@@ -136,7 +143,6 @@ public class WorkController {
       
       HashMap<String,Object> map = new HashMap<String,Object>();
       map.put("w", w);
-      System.out.println(w);
 	  return new Gson().toJson(map);
 	}
 	
@@ -199,9 +205,33 @@ public class WorkController {
 		
 	}
 	
+	/* 관리자 휴가 지급하기 */
+	@RequestMapping("holidayGive.ho")
+	public String holidayGive(Holiday h, Model model) {
+		int result = wService.holidayGive(h);
+		
+		if(result>0) { 
+			model.addAttribute("alertMsg", "휴가지급 성공");
+			return "redirect:holiGive.ho";
+		}else { 
+			model.addAttribute("errorMsg", "휴가지급 실패");
+			return "redirect:holiGive.ho";
+		}
+		
+	}
 	
-	
-	
+	/* 관리자 휴가 회수하기 */
+	@RequestMapping("holiWithDraw.ho")
+	public String holidayWithDraw(Holiday h, Model model) {
+		int result = wService.holidayInsert(h);
+		if(result>0) { 
+			model.addAttribute("alertMsg", "휴가회수 성공");
+			return "redirect:holiGive.ho";
+		}else { 
+			model.addAttribute("errorMsg", "휴가회수 실패");
+			return "redirect:holiGive.ho";
+		}
+	}
 	
 	
 }

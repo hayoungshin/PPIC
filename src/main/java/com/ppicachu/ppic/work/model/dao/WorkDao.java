@@ -68,4 +68,20 @@ public class WorkDao {
 	public int holidayInsert(SqlSessionTemplate sqlSession, Holiday h) {
 		return sqlSession.insert("workMapper.holidayInsert", h);
 	}
+	
+	public int holidayGive(SqlSessionTemplate sqlSession, Holiday h) {
+		return sqlSession.insert("workMapper.holidayGive", h);
+	}
+	
+	public ArrayList<Work> selectMemberWorkList(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.selectMemberWorkList", userNo);
+	}
+	
+	public Work countWorkStatus(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("workMapper.countWorkStatus", userNo);
+	}
+	
+	public ArrayList<Work> workCalendar(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.workCalendar", userNo);
+	}
 }

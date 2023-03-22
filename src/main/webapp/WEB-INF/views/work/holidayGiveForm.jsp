@@ -85,33 +85,24 @@
 			
 			<script>
 				function workback(){
-					location.href="workMain.wo"
+					location.href="workMain.wo?no="+${loginUser.userNo }
 				}
 			</script>
            
-			<div class="workcategory" style="float:left;" >
-                <a href="workList.wo" >출퇴근기록</a>
-                <a href="workInfo.wo" >올해근무정보</a>
-				<a id="info" >휴가현황</a>
-                <a href="holiApply.ho">휴가신청</a>
-                
-                
-                <!-- 관리자만 보이게 할거임 -->
-                <a href="memberWork.wo">구성원근무</a>
-                <a href="memberHoli.ho">전사원휴가현황</a>
-                <a href="holiGive.ho">휴가지급|회수</a>
-                <a href="holiApprove.ho">휴가승인</a>
-                
-                <br>
+            <div class="workcategory" style="float:left;" >
+	            <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
+	            <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
+				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
+	            <a href="holiApply.ho?no=${loginUser.userNo }" >휴가신청</a>
+	            
+	            
+	            <!-- 관리자만 보이게 할거임 -->
+	            <a href="memberWork.wo">구성원근무</a>
+	            <a href="memberHoli.ho">전사원휴가현황</a>
+	            <a href="holiGive.ho" style="color:black;">휴가지급|회수</a>
+	            <a href="holiApprove.ho">휴가승인</a>
+            <br>
             </div>
-            
-            <script>
-            $(function(){
-        		$("#info").click(function(){
-        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
-        		})
-        	})
-            </script>
 
 			
 			<br>
@@ -123,7 +114,7 @@
 				
 				<br> 
 				
-				<form action="">
+				<form action="holidayGive.ho" method="post">
 				    <label id="homem" >대상자</label>
 				    
 				    <select class="dept" name="dept" id="dept">
@@ -133,7 +124,7 @@
 			            </c:forEach>
 				    </select>
 				    
-				    <select name="member" id="member">
+				    <select name="userNo" id="userNo">
 				    	<c:forEach var="m" items="${ list1 }">
 				    			<option value="${m.userNo}"> ${ m.userName }(사번) </option>
 				    	</c:forEach>
@@ -144,10 +135,6 @@
 		        		$("select[name=dept]").change(function(){
 		        			var dept = $("select[name=dept] option:selected").text();
 		        			console.log(dept);
-		        			
-		        			
-		        			
-		        			
 		        		});
 			      
 			        </script>
@@ -156,14 +143,14 @@
 				
 				    <label>지급내역</label>
 				    <select name="cause" id="cause">
-				        <option value="">연차</option>
-				        <option value="">여름휴가</option>
+				        <option value="추가지급">연차</option>
+				        <option value="추가지급">여름휴가</option>
 				    </select>
 				
-				    <br><br>
-				
+					
+					<br><br>
 				    <label>지급일수</label>
-				    <input type="number" id="" name="" style="width:150px">
+				    <input type="number" id="datea" name="datea" style="width:150px">
 				        
 				    <br><br>
 				
@@ -178,29 +165,34 @@
 			    
 			    <br>
 			
-			    <form action="">
+			    <form action="holiWithDraw.ho" method="post">
 			        <label id="homem2">대상자</label>
-			        <select name="" id="" >
-			            <option value="">소속</option>
-			        </select>
-			        <select name="" id="">
-			        	<c:forEach var="m" items="${ list }">
-			            	<option value="${ m.userNo }"> ${ m.userName }(사번)</option>
+			        
+			        <select class="dept" name="dept" id="dept">
+				    	<option value="">소속</option>
+				    	<c:forEach var="d" items="${ list2 }">
+			            	<option value="${ d.departmentNo }"> ${ d.departmentName }</option>
 			            </c:forEach>
+				    </select>
+				    
+				    <select name="userNo" id="userNo">
+				    	<c:forEach var="m" items="${ list1 }">
+				    			<option value="${m.userNo}"> ${ m.userName }(사번) </option>
+				    	</c:forEach>
 			        </select>
 			
 			        <br><br>
 			
-			        <label>지급내역</label>
+			        <label>회수내역</label>
 			        <select name="cause" id="cause">
-			            <option value="1">연차</option>
-			            <option value="1">여름휴가</option>
+			            <option value="연차사용">오지급</option>
+			            <option value="연차사용">무단결근</option>
 			        </select>
 			
 			        <br><br>
 			
 			        <label>지급일수</label>
-			        <input type="number" id="" name="" style="width:150px">
+			        <input type="number" id="" name="datea" style="width:150px">
 			        
 			        <br><br>
 			

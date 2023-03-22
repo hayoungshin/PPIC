@@ -62,33 +62,24 @@
 			
 			<script>
 				function workback(){
-					location.href="workMain.wo"
+					location.href="workMain.wo?no="+${loginUser.userNo }
 				}
 			</script>
            
-			<div class="workcategory" style="float:left;" >
-                <a href="workList.wo" >출퇴근기록</a>
-                <a href="workInfo.wo" >올해근무정보</a>
-				<a id="info" >휴가현황</a>
-                <a href="holiApply.ho">휴가신청</a>
-                
-                
-                <!-- 관리자만 보이게 할거임 -->
-                <a href="memberWork.wo" style="color:black;">구성원근무</a>
-                <a href="memberHoli.ho">전사원휴가현황</a>
-                <a href="holiGive.ho">휴가지급|회수</a>
-                <a href="holiApprove.ho">휴가승인</a>
-                
-                <br>
+            <div class="workcategory" style="float:left;" >
+	            <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
+	            <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
+				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
+	            <a href="holiApply.ho?no=${loginUser.userNo }" >휴가신청</a>
+	            
+	            
+	            <!-- 관리자만 보이게 할거임 -->
+	            <a href="memberWork.wo" style="color:black;">구성원근무</a>
+	            <a href="memberHoli.ho">전사원휴가현황</a>
+	            <a href="holiGive.ho">휴가지급|회수</a>
+	            <a href="holiApprove.ho">휴가승인</a>
+            <br>
             </div>
-            
-            <script>
-            $(function(){
-        		$("#info").click(function(){
-        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
-        		})
-        	})
-            </script>
 
 			
 			<br>
@@ -144,11 +135,11 @@
 		                <table class="worklist" border="1" style="margin-top:1px;">
 			                <tbody align="center">
 								
-								<c:forEach var="list1" items="${ list1 }"  varStatus="status">
+								<c:forEach var="list1" items="${ list1 }">
 				                    <tr >
 				                    	
-										<td  width="200"> ${ list1.userName }(사번)</td>
-										<td width="150">소속</td>
+										<td  width="200"> ${ list1.userName }(${list1.employeeNo })</td>
+										<td width="150"> ${list1.department }</td>
 										<td width="150">지급</td>
 										<td width="150">사용</td>
 										<td width="150">잔여</td>
