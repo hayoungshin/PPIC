@@ -74,7 +74,11 @@
 		 	}
 			 	
 	   		function onMessage(evt){
-	   			selectAlarm();
+	   			if(evt.data == "새채팅"){
+	   				chatAlarm();
+	   			}else{
+	   				selectAlarm();
+	   			}
 			}
 	   		
 	    	function onClose(){

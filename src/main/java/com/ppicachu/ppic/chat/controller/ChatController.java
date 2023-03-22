@@ -125,4 +125,20 @@ public class ChatController {
 		int result = cService.updateRoomName(c);
 		return result > 0 ? "success" : "fail";
 	}
+	
+	@ResponseBody
+	@RequestMapping("notRead.chat")
+	public int ajaxNotRead(int userNo) {
+		int result = cService.selectNotRead(userNo);
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("notReadRoom.chat")
+	public int ajaxNotReadRoom(Chat c) {
+		int result = cService.selectNotReadRoom(c);
+		return result;
+	}
+	
+	
 }

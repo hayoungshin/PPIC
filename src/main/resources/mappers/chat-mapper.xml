@@ -321,6 +321,7 @@
                   from chat_like
                  where myuser_no = #{participantNo}
                    and likeuser_no = m.user_no) "chat_like"
+             , room_no
 		  from member m
 		  join dept on (m.department = dept.department_no) 
 		  join position on (m.position = position.position_no)
@@ -336,4 +337,16 @@
 		 where room_no = #{roomNo}  
 	</update>
 	
+	<select id="selectNotRead" resultType="_int">
+		select sum(notread_chat)
+		  from participant
+		 where user_no = #{userNo}
+	</select>
+	
+	<select id="selectNotReadRoom" resultType="_int">
+		select notread_chat
+		  from participant
+		 where user_no = #{participantNo}
+		   and room_no = #{roomNo}
+	</select>
 </mapper>

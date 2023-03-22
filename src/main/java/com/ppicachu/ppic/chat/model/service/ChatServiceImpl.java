@@ -130,5 +130,15 @@ public class ChatServiceImpl implements ChatService{
 		return cDao.updateRoomName(sqlSession, c);
 	}
 
+	@Override
+	public int selectNotRead(int userNo) {
+		return cDao.selectNotRead(sqlSession, userNo);
+	}
+
+	@Override
+	public int selectNotReadRoom(Chat c) {
+		return cDao.selectNotReadRoom(sqlSession, c);
+	}
+
 	
 }

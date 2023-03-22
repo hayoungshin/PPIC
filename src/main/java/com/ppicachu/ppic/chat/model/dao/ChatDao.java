@@ -101,4 +101,12 @@ public class ChatDao {
 	public int updateRoomName(SqlSessionTemplate sqlSession, Chat c) {
 		return sqlSession.update("chatMapper.updateRoomName", c); 
 	}
+	
+	public int selectNotRead(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("chatMapper.selectNotRead", userNo);
+	}
+	
+	public int selectNotReadRoom(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.selectOne("chatMapper.selectNotReadRoom", c);
+	}
 }

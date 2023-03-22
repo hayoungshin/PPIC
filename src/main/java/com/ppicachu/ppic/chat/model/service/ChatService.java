@@ -61,4 +61,9 @@ public interface ChatService {
 	
 	// 15. 채팅방 이름 변경
 	int updateRoomName(Chat c);
+	
+	// 16. 채팅 알림
+	int selectNotRead(int userNo);
+	int selectNotReadRoom(Chat c);
+	
 }

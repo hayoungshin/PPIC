@@ -45,7 +45,6 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			String[] receives = receiveNo.split("/");
 			TextMessage tmpMsg = null;
 			WebSocketSession receiveSession = null;
-			
 			switch(dcatNo) {
 			case "0": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
 			case "1": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 반려했어요."); break;
@@ -59,6 +58,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			case "9": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
 			case "10": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 거절했어요."); break;
 			case "11": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 신청했어요."); break;
+			case "newchat": tmpMsg = new TextMessage("새채팅"); break;
 			}
 			
 			for(int i=0; i<receives.length; i++) {
@@ -66,13 +66,15 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 				if(receiveSession != null) {
 					receiveSession.sendMessage(tmpMsg);
 				}
-				Alarm a = new Alarm(); 
-				a.setDcatNo(dcatNo); 
-				a.setSendNo(sendNo);
-				a.setReceiveNo(receives[i]); 
-				a.setCatNo(catNo);
-				a.setNfContent(tmpMsg.getPayload()); 
-				aService.insertAlarm(a);
+				if(!dcatNo.equals("newchat")) {
+					Alarm a = new Alarm(); 
+					a.setDcatNo(dcatNo); 
+					a.setSendNo(sendNo);
+					a.setReceiveNo(receives[i]); 
+					a.setCatNo(catNo);
+					a.setNfContent(tmpMsg.getPayload()); 
+					aService.insertAlarm(a);
+				}
 			}
 		}
 	}
