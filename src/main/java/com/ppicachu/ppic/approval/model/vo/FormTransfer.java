@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.approval.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +21,6 @@ public class FormTransfer {
 	private String promotePosition;
 	private String remark;
 	private int formNo;
+	
+	private ArrayList<FormTransfer> ftrList;
 }

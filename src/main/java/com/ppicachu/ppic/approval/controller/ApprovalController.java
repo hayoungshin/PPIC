@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.ppicachu.ppic.approval.model.service.ApprovalService;
@@ -19,8 +19,14 @@ import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
+import com.ppicachu.ppic.approval.model.vo.FormCash;
+import com.ppicachu.ppic.approval.model.vo.FormConsume;
+import com.ppicachu.ppic.approval.model.vo.FormDraft;
+import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
+import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
+import com.ppicachu.ppic.common.template.FileUpload;
 import com.ppicachu.ppic.common.template.Pagination;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
@@ -247,62 +253,116 @@ public class ApprovalController {
 	 * 작성폼으로 이동
 	 */
 	@RequestMapping("enrollForm.ap")
-	public String enrollForm() {
-		return "approval/appEnrollForm";
+	public String enrollForm(int form, Model m) {
+		if(form != 0) {
+			ArrayList<Member> memberList = aService.selectMemberList();
+			ArrayList<Department> deptList = mService.selectDeptList();
+			m.addAttribute("mList", memberList);
+			m.addAttribute("dList", deptList);
+		}
+		if(form == 2) {
+			ArrayList<Position> positionList = mService.selectPositionList();
+			m.addAttribute("pList", positionList);
+		}
+		
+		String page = "";
+		switch(form) {
+		case 0 : page = "approval/appEnrollForm"; break;
+		case 1 : page = "approval/appEnrollDraftForm"; break;
+		case 2 : page = "approval/appEnrollTransferForm"; break;
+		case 3 : page = "approval/appEnrollConsumeForm"; break;
+		case 4 : page = "approval/appEnrollCashForm"; break;
+		}
+		return page;
 	}
 	
 	/**
-	 * 작성-업무기안폼으로 이동
+	 *  작성
 	 */
-	@RequestMapping("enrollDraftForm.ap")
-	public String enrollDraftForm(Model m) {
-		ArrayList<Member> memberList = aService.selectMemberList();
-		ArrayList<Department> deptList = mService.selectDeptList();
-		m.addAttribute("mList", memberList);
-		m.addAttribute("dList", deptList);
-		
-		return "approval/appEnrollDraftForm";
-	}
-	
-	/**
-	 * 작성-인사발령품의서폼으로 이동 
-	 */
-	@RequestMapping("enrollTransferForm.ap")
-	public String enrollTransferForm(Model m) {
-		ArrayList<Member> memberList = aService.selectMemberList();
-		ArrayList<Position> positionList = mService.selectPositionList();
-		m.addAttribute("mList", memberList);
-		m.addAttribute("pList", positionList);
-		
-		return "approval/appEnrollTransferForm";
-	}
-	
-	/** 
-	 * 작성-비품신청서폼으로 이동
-	 */
-	@RequestMapping("enrollConsumeForm.ap")
-	public String enrollConsumeForm(Model m) {
-		ArrayList<Member> memberList = aService.selectMemberList();
-		m.addAttribute("mList", memberList);
-		
-		return "approval/appEnrollConsumeForm";
-	}
-	
-	/**
-	 * 작성-지출결의서폼으로 이동
-	 */
-	@RequestMapping("enrollCashForm.ap")
-	public String enrollCashForm(Model m) {
-		ArrayList<Member> memberList = aService.selectMemberList();
-		m.addAttribute("mList", memberList);
-		
-		return "approval/appEnrollCashForm";
-	}
-	
-	/* 작성 */
 	@RequestMapping("insert.ap")
-	public String insertApproval() {
-		return "";
+	public void insertApproval(Approval a
+			, FormDraft fdr, FormTransfer ftr, FormConsume fco, FormCash fca
+			, String agrUserNo, String refUserNo
+			, MultipartFile[] upfile, HttpSession session) {
+		
+		// AppProcess 생성
+		ArrayList<AppProcess> apList = new ArrayList<>();
+		AppProcess ap = new AppProcess(); // 기안자 등록
+		ap.setUserName(a.getUserNo() + "");
+		ap.setProcessOrder(0);
+		ap.setApprovalRole("결재");
+		ap.setStatus("승인");
+		apList.add(ap);
+		String[] agrNoArr = {agrUserNo}; // 결재자 등록
+		if(agrUserNo.contains(",")) {
+			agrNoArr = agrUserNo.split(",");
+		}
+		for(int i=0; i<agrNoArr.length; i++) {
+			AppProcess ap1 = new AppProcess();
+			ap1.setUserName(agrNoArr[i]);
+			ap1.setProcessOrder(i + 1);
+			ap1.setApprovalRole("결재");
+			apList.add(ap1);
+		}
+		if(refUserNo != null) {
+			String[] refNoArr = {refUserNo}; // 참조자 등록
+			if(refUserNo.contains(",")) {
+				refNoArr = refUserNo.split(",");
+			}
+			for(int j=0; j<refNoArr.length; j++) {
+				AppProcess ap2 = new AppProcess();
+				ap2.setUserName(refNoArr[j]);
+				ap2.setProcessOrder(0);
+				ap2.setApprovalRole("참조");
+				apList.add(ap2);
+			}
+		}
+		
+		// Approval 추가
+		a.setFinalOrder(agrNoArr.length);
+						
+		// AppChange 생성
+		AppChange ac = new AppChange();
+		ac.setUserName(a.getUserNo() + "");
+		ac.setContent("님이 글을 작성했어요.");
+		ac.setRole("변경");
+
+		// Attachment 생성
+		ArrayList<Attachment> atList = new ArrayList<>();
+		if(!upfile[0].getOriginalFilename().equals("")) {
+			String[] saveFilePathArr = new String[upfile.length];
+			for(int i=0; i<upfile.length; i++) {
+				saveFilePathArr[i] = FileUpload.saveFile(upfile[i], session, "resources/uploadFiles/approvalFile/");
+			
+				Attachment at = new Attachment();
+				at.setOriginName(upfile[i].getOriginalFilename());
+				at.setChangeName(saveFilePathArr[i]);
+				atList.add(at);
+			}
+		}
+		
+		// Approval insert
+		int result1 = aService.insertApproval(a, apList, ac, atList);
+		
+		// Form insert
+		int result2 = 0;
+		switch(a.getForm()) {
+		case "업무기안" : result2 = aService.insertDraft(fdr); break;
+		case "인사발령품의서" : 
+			ArrayList<FormTransfer> ftrList = ftr.getFtrList();
+			for(int i=0; i<ftrList.size(); i++) {
+				ftrList.get(i).setEffectiveDate(ftr.getEffectiveDate());
+			}result2 = aService.insertTransfer(ftrList);
+			break;
+		//case "비품신청서" : result2 = aService.insertConsume(fco.getFcoList()); break;
+		//case "지출결의서" : result2 = aService.selectCash(fca.getFcaList90); break;
+		}
+		
+		if(result1 * result2 > 0) {
+			
+		} else {
+			
+		}
 	}
 	
 	/**

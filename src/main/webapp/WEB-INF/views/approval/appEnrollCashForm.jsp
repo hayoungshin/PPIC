@@ -67,10 +67,10 @@
 	              지출결의서
 	            </button>
 	            <div class="dropdown-menu">
-	              <a class="dropdown-item" href="enrollDraftForm.ap">업무기안</a>
-	              <a class="dropdown-item" href="enrollTransferForm.ap">인사발령품의서</a>
-	              <a class="dropdown-item" href="enrollConsumeForm.ap">비품신청서</a>
-	              <a class="dropdown-item" href="enrollCashForm.ap">지출결의서</a>
+	              <a class="dropdown-item" href="enrollForm.ap?form=1">업무기안</a>
+	              <a class="dropdown-item" href="enrollForm.ap?form=2">인사발령품의서</a>
+	              <a class="dropdown-item" href="enrollForm.ap?form=3">비품신청서</a>
+	              <a class="dropdown-item" href="enrollForm.ap?form=4">지출결의서</a>
 	            </div>
             </div>
         </div>

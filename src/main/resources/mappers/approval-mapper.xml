@@ -188,10 +188,11 @@
 		     , form
 		     , title
 		     , (
-		        select first_value(origin_name) over() <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
+		        select origin_name <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
 		          from attachment
 		         where approval_no = ref_no
 		           and category_no = 1
+                   and rownum = 1
 		       ) origin_name
 		     , approval_status
 		     , current_order
@@ -246,10 +247,11 @@
 		     , form
 		     , title
 		     , (
-		        select first_value(origin_name) over() <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
+		        select origin_name <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
 		          from attachment
 		         where approval_no = ref_no
 		           and category_no = 1
+                   and rownum = 1
 		       ) origin_name
 		     , approval_status
 		     , current_order
@@ -296,10 +298,11 @@
 		     , form
 		     , title
 		     , (
-		        select first_value(origin_name) over() <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
+		        select origin_name <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
 		          from attachment
 		         where approval_no = ref_no
 		           and category_no = 1
+                   and rownum = 1
 		       ) origin_name
 		     , approval_status
 		     , create_date
@@ -334,10 +337,11 @@
 		     , form
 		     , title
 		     , (
-		        select first_value(origin_name) over() <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
+		        select origin_name <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
 		          from attachment
 		         where approval_no = ref_no
 		           and category_no = 1
+                   and rownum = 1
 		       ) origin_name
 		     , approval_status
 		     , current_order
@@ -417,7 +421,7 @@
 		     , approval_status
 		     
 		     , form_no
-		     , to_char(to_date(effective_date, 'YY/MM/DD'), 'YYYY-MM-DD') effective_date
+		     , effective_date
 		     , fd.department_name form_dep_name
 		     , content
 		     
@@ -474,7 +478,7 @@
 		     , approval_status
 		     
 		     , form_no
-		     , to_char(to_date(effective_date, 'YY/MM/DD'), 'YYYY-MM-DD') effective_date
+		     , effective_date
 		     , f.user_name form_user_name
 		     , f.department_name form_dept_name
 		     , current_position
@@ -690,6 +694,60 @@
 		  where approval_no = #{approvalNo}
 	</update>
 	
+	<insert id="insertApproval">
+		insert
+		  into approval
+		  (
+		    approval_no
+		  , user_no
+		  , form
+		  , title
+		  , create_date
+		  , final_order
+		  )
+		  values
+		  (
+		    seq_apno.nextval
+		  , #{userNo}
+		  , #{form}
+		  , #{title}
+		  , sysdate
+		  , #{finalOrder}
+		  )
+	</insert>
+	
+	<insert id="insertProcess">
+		insert
+		  into app_process
+		  (
+		    approval_no
+		  , user_no
+		  , process_order
+		  , approval_role
+		<if test="status == '승인'">
+			, status
+			, approval_date
+		</if>
+		<if test="approvalRole == '참조'">
+			, approval_date
+		</if>
+		  )
+		  values
+		  (
+		    seq_apno.currval
+		  , #{userName}
+		  , #{processOrder}
+		  , #{approvalRole}
+		<if test="status == '승인'">
+			, #{status}
+			, sysdate
+		</if>
+		<if test="approvalRole == '참조'">
+			, sysdate
+		</if>
+		  )
+	</insert>
+	
 	<insert id="insertChange">
 		insert
 		  into app_change
@@ -703,11 +761,87 @@
 		  values
 		  (
 		    seq_chno.nextval
-		  , #{approvalNo}
+		<choose>
+			<when test="approvalNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{approvalNo}
+			</otherwise>
+		</choose>
 		  , #{userName}
 		  , #{content}
 		  , #{role}
 		  )
-			   
+	</insert>
+	
+	<insert id="insertAppAttachment">
+		insert
+		  into attachment
+		  (
+		    attachment_no
+		  , origin_name
+		  , change_name
+		  , category_no
+		  , ref_no
+		  )
+		  values
+		  (
+		    seq_atno.nextval
+		  , #{originName}
+		  , #{changeName}
+		  , 1
+		  , seq_apno.currval
+		  )
+	</insert>
+	
+	<insert id="insertDraft">
+		insert
+		  into form_draft
+		  (
+		    form_no
+		  , approval_no
+		  , effective_date
+		  , department_no
+		  , content
+		  )
+		  values
+		  (
+		    seq_fono.nextval
+		  , seq_apno.currval
+		  , #{effectiveDate}
+		  , (
+		  	  select department_no
+		  	    from dept
+		  	   where department_name = #{departmentNo}
+		  	)
+		  , #{content}
+		  )
+	</insert>
+	
+	<insert id="insertTransfer">
+		insert
+		  into form_transfer
+		  (
+		    form_no
+		  , approval_no
+		  , effective_date
+		  , user_name
+		  , department_name
+		  , current_position
+		  , promote_position
+		  , remark
+		  )
+		  values
+		  (
+		    seq_fono.nextval
+		  , seq_apno.currval
+		  , #{effectiveDate}
+		  , #{userName}
+		  , #{departmentName}
+		  , #{currentPosition}
+		  , #{promotePosition}
+		  , #{remark}
+		  )
 	</insert>
 </mapper>

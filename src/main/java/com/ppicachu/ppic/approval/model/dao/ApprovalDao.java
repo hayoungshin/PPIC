@@ -10,7 +10,10 @@ import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
+import com.ppicachu.ppic.approval.model.vo.FormDraft;
+import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
+import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.member.model.vo.Member;
 
@@ -93,10 +96,6 @@ public class ApprovalDao {
 		return (ArrayList)sqlSession.selectList("approvalMapper.selectChange", approvalNo);
 	}
 
-	public int insertChange(SqlSessionTemplate sqlSession, AppChange ac) {
-		return sqlSession.insert("approvalMapper.insertChange", ac);
-	}
-
 	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("memberMapper.selectMemberList");
 	}
@@ -107,5 +106,41 @@ public class ApprovalDao {
 
 	public int updateCurrentOrder(SqlSessionTemplate sqlSession, Approval a) {
 		return sqlSession.update("approvalMapper.updateCurrentOrder", a);
+	}
+
+	public int insertApproval(SqlSessionTemplate sqlSession, Approval a) {
+		return sqlSession.insert("approvalMapper.insertApproval", a);
+	}
+
+	public int insertProcess(SqlSessionTemplate sqlSession, ArrayList<AppProcess> apList) {
+		int result = 0;
+		for(int i=0; i<apList.size(); i++) {
+			result = sqlSession.insert("approvalMapper.insertProcess", apList.get(i));
+		}
+		return result;
+	}
+
+	public int insertChange(SqlSessionTemplate sqlSession, AppChange ac) {
+		return sqlSession.insert("approvalMapper.insertChange", ac);
+	}
+
+	public int insertAppAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> atList) {
+		int result = 0;
+		for(int i=0; i<atList.size(); i++) {
+			result = sqlSession.insert("approvalMapper.insertAppAttachment", atList.get(i));
+		}
+		return result;
+	}
+
+	public int insertDraft(SqlSessionTemplate sqlSession, FormDraft fdr) {
+		return sqlSession.insert("approvalMapper.insertDraft", fdr);
+	}
+
+	public int insertTransfer(SqlSessionTemplate sqlSession, ArrayList<FormTransfer> ftrList) {
+		int result = 0;
+		for(int i=0; i<ftrList.size(); i++) {
+			result = sqlSession.insert("approvalMapper.insertTransfer", ftrList.get(i));
+		}
+		return result;
 	}
 }

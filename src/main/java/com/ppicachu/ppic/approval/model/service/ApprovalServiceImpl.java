@@ -14,6 +14,7 @@ import com.ppicachu.ppic.approval.model.vo.Approval;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
 import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
+import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.member.model.vo.Member;
 
@@ -124,6 +125,26 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public ArrayList<Member> selectMemberList() {
 		return aDao.selectMemberList(sqlSession);
+	}
+
+	@Override
+	public int insertApproval(Approval a, ArrayList<AppProcess> apList, AppChange ac, ArrayList<Attachment> atList) {
+		int result1 = aDao.insertApproval(sqlSession, a);
+		int result2 = aDao.insertProcess(sqlSession, apList);
+		int result3 = aDao.insertChange(sqlSession, ac);
+		int result4 = aDao.insertAppAttachment(sqlSession, atList);
+		
+		return result1 * result2 * result3 * result4;
+	}
+
+	@Override
+	public int insertDraft(FormDraft fdr) {
+		return aDao.insertDraft(sqlSession, fdr);
+	}
+
+	@Override
+	public int insertTransfer(ArrayList<FormTransfer> ftrList) {
+		return aDao.insertTransfer(sqlSession, ftrList);
 	}
 
 }

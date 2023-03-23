@@ -68,7 +68,7 @@
 		<div class="content-1">
 			<div class="t-area">
 		    	<div class="title-area"><h2><b>전자결재</b></h2></div>
-			    <div class="title-area-enroll"><button type="button" class="btnn-pp" onclick="location.href='enrollForm.ap';">+ 작성하기</button></div>    
+			    <div class="title-area-enroll"><button type="button" class="btnn-pp" onclick="location.href='enrollForm.ap?form=0';">+ 작성하기</button></div>    
 			</div>
 			<br clear="both">
 			

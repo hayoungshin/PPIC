@@ -52,12 +52,12 @@
         
     	<table>
     		<tr>
-    			<td><div class="btnn-pp" onclick="location.href='enrollDraftForm.ap'"><b>업무기안</b></div></td>
-    			<td><div class="btnn-kk" onclick="location.href='enrollTransferForm.ap'"><b>인사발령품의서</b></div></td>
+    			<td><div class="btnn-pp" onclick="location.href='enrollForm.ap?form=1'"><b>업무기안</b></div></td>
+    			<td><div class="btnn-kk" onclick="location.href='enrollForm.ap?form=2'"><b>인사발령품의서</b></div></td>
     		</tr>
     		<tr>
-    			<td><div class="btnn-kk" onclick="location.href='enrollConsumeForm.ap'"><b>비품신청서</b></div></td>
-    			<td><div class="btnn-pk" onclick="location.href='enrollCashForm.ap'"><b>지출결의서</b></div></td>
+    			<td><div class="btnn-kk" onclick="location.href='enrollForm.ap?form=3'"><b>비품신청서</b></div></td>
+    			<td><div class="btnn-pk" onclick="location.href='enrollForm.ap?form=4'"><b>지출결의서</b></div></td>
     		</tr>
     	</table>
         <br><br><br>
