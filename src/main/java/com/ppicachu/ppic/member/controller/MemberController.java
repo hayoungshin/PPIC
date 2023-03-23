@@ -83,6 +83,21 @@ public class MemberController {
 		return "member/memberListView";
 	}
 	
+	/* 구성원_관리자 detail */
+	@RequestMapping("managerDetail.me")
+	public String managerMemberDetail(int no, Model model) {
+		
+		Member m = mService.selectMember(no);
+		model.addAttribute("m", m);
+		
+		ArrayList<Position> list1 = mService.selectPositionList();
+		ArrayList<Department> list2 = mService.selectDeptList();
+		model.addAttribute("list1", list1);
+		model.addAttribute("list2", list2);
+		
+		return "member/managerMemberDetailView";
+	}
+	
 	/* 구성원_권한설정 */
 	@RequestMapping("memberAuth.me")
 	public String memberAuth() {
@@ -107,7 +122,7 @@ public class MemberController {
 		}
 	}
 	
-	/* 회원정보 update(세션 out 됨) */
+	/* 회원정보 update */
 	@RequestMapping("update.me")
 	public String updateMember(Member m, HttpSession session) {
 		int result = mService.updateMember(m);
@@ -125,7 +140,40 @@ public class MemberController {
 		}
 	}
 	
-	/* 회원프로필 update(세션 out 됨) */
+	/* 관리자 회원정보 update */
+	@RequestMapping("detailUpdate.me")
+	public String detailUpdateMember(Member m, int userNo, HttpSession session, Model model) {
+		int result = mService.detailUpdateMember(m);
+		
+		if(result >0) {
+			session.setAttribute("alertMsg", "성공적으로 변경되었습니다");
+			return "redirect:memberList.me";
+		} else {
+			
+			return "common/errorPage";
+		}
+	}
+	
+	/* 회원 퇴사 처리 */
+	@RequestMapping("delete.me")
+	public String memberDelete(int userNo, HttpSession session, Model model) {
+		int result = mService.deleteMember(userNo);
+		
+		if(result >0) {
+			
+			
+			session.setAttribute("alertMsg", "퇴사처리가 완료되었습니다");
+			
+			return "redirect:memberList.me";
+		} else {
+			
+			return "common/errorPage";
+		}
+	}
+	
+	
+	
+	/* 회원프로필 update */
 	@ResponseBody 
 	@RequestMapping("uploadProfile.me")
 	public void uploadProfileImg(MultipartFile uploadFile, Member m, String originalFile, HttpSession session) {

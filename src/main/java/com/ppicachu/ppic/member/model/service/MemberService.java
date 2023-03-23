@@ -17,8 +17,11 @@ public interface MemberService {
 	// 3. 구성원 상세조회 서비스(사용자)
 	Member selectMember(int userNo);
 	
-	// 4. 마이페이지 회원정보 변경 서비스
+	// 4. 회원정보 변경 서비스
+	// - 마이페이지
 	int updateMember(Member m);
+	// - 관리자
+	int detailUpdateMember(Member m);
 	
 	// 로그인
 	Member loginMember(Member m);
@@ -48,5 +51,8 @@ public interface MemberService {
 	
 	// 12. ajax 권한 있는 멤저 리스트 조회
 	ArrayList<Member> selectAuthorityMemList(int authoNo);
+	
+	// 13. 멤버 퇴사 서비스
+	int deleteMember(int userNo);
 	
 }

@@ -51,10 +51,20 @@ public class WorkServiceImpl implements WorkService {
 	public int updateWorkIn(int userNo) {
 		return wDao.updateWorkIn(sqlSession, userNo);
 	}
+	
+	@Override
+	public int updateWorkInLate(int userNo) {
+		return wDao.updateWorkInLate(sqlSession, userNo);
+	}
 
 	@Override
 	public int updateWorkOut(int userNo) {
 		return wDao.updateWorkOut(sqlSession, userNo);
+	}
+	
+	@Override
+	public int updateWorkOutEarly(int userNo) {
+		return wDao.updateWorkOutEarly(sqlSession, userNo);
 	}
 
 	@Override
@@ -111,5 +121,9 @@ public class WorkServiceImpl implements WorkService {
 	public ArrayList<Work> workCalendar(int userNo) {
 		return wDao.workCalendar(sqlSession, userNo);
 	}
+
+	
+
+	
 
 }

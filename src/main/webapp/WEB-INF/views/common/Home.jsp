@@ -82,6 +82,7 @@
 				$(function(){
 					selectWorkRecord();
 					init();
+					
 				});
 				
 				function selectWorkRecord(){
@@ -135,33 +136,71 @@
 				}
 				
 				function workIn(){
+				  	var date = new Date();
+				    var hours = date.getHours();
+				    
+					if(hours < 9 ) {
+						$.ajax({
+							url:"workIn.wo",
+							data:{no:${loginUser.userNo}},
+							success:function(){
+							},error:function(){
+							}
+						});
+						
+						location.reload();
+						alert("${loginUser.userName}님 환영합니다.");
+						
+					}else {
+						$.ajax({
+							url:"workInLate.wo",
+							data:{no:${loginUser.userNo}},
+							success:function(){
+							},error:function(){
+							}
+						});
+						
+						location.reload();
+						alert("[지각]${loginUser.userName}님 환영합니다.");
+						
+					}
 					
-					$.ajax({
-						url:"workIn.wo",
-						data:{no:${loginUser.userNo}},
-						success:function(){
-						},error:function(){
-						}
-					});
 					
-					location.reload();
-					alert("${loginUser.userName}님 환영합니다.");
 					
 				}
 				
 				
 				function workOut(){
-					$.ajax({
-						url:"workOut.wo",
-						data:{no:${loginUser.userNo}},
-						success:function(){
-						},error:function(){
-						}
-					});
 					
-					location.reload();
+					var date = new Date();
+				    var hours = date.getHours();
+				    
+				    if(hours <18){
+				    	$.ajax({
+							url:"workOutEarly.wo",
+							data:{no:${loginUser.userNo}},
+							success:function(){
+							},error:function(){
+							}
+						});
+						
+						location.reload();
+						
+						alert("[조퇴]${loginUser.userName}님 수고하셨습니다.");
+				    }else{
+				    	$.ajax({
+							url:"workOut.wo",
+							data:{no:${loginUser.userNo}},
+							success:function(){
+							},error:function(){
+							}
+						});
+						
+						location.reload();
+						
+						alert("${loginUser.userName}님 수고하셨습니다.");
+				    }
 					
-					alert("${loginUser.userName}님 수고하셨습니다.");
 					
 				}
 				

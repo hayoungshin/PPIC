@@ -37,7 +37,15 @@ public class WorkDao {
 		return sqlSession.update("workMapper.updateWorkIn", userNo);
 	}
 	
+	public int updateWorkInLate(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkInLate", userNo);
+	}
+	
 	public int updateWorkOut(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkOut", userNo);
+	}
+	
+	public int updateWorkOutEarly(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.update("workMapper.updateWorkOut", userNo);
 	}
 	

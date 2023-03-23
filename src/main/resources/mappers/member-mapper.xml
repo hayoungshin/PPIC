@@ -21,6 +21,8 @@
 		<result column ="authority_no" property="authorityNo" />
 		<result column ="member_sign" property="memberSign" />
 		<result column ="conn_sta" property="connSta" />
+		<result column ="position_no" property="positionNo" />
+		<result column ="department_no" property="departmentNo" />
 	</resultMap>
 	
 	<resultMap id="departmentResult" type="Department">
@@ -47,10 +49,10 @@
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
 		     , profile_img
+		     , status
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
-		 where status='Y'
 	</select>
 	
 	<select id="selectDeptList" resultMap="departmentResult">
@@ -62,12 +64,19 @@
 	
 	<select id="selectMember" resultMap="memberResult">
 		select
-		       user_name
+			   user_no
+		     , user_name
 		     , phone
 		     , mail
-		     , position_name as "POSITION"
-		     , department_name as "DEPARTMENT"
+		     , employee_no
+		     , position as "position_no"
+		     , department as "department_no"
+		     , position_name as "position"
+		     , department_name as "department"
 		     , profile_img
+		     , address
+		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
+		     , status
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
@@ -99,8 +108,8 @@
 		     , phone
 		     , address
 		     , birthday
-		     , position
-		     , department
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
 		     , employee_no
 		     , profile_img
 		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
@@ -109,6 +118,8 @@
 		     , authority_no
 		     , conn_sta
 		  from member
+		  join dept on (member.department = dept.department_no)
+		  join position on (member.position = position.position_no) 
 		 where status = 'Y'
 		   and user_id = #{userId}
 		   and member_sign = 'Y'
@@ -228,4 +239,23 @@
 		 join member m on (m.user_no = l.like_user)
 		 where l.user_no = #{userNo}
 	</select>
+	
+	<update id="deleteMember" >
+		update
+			   member
+		   set resign_date = sysdate
+		     , status = 'N'
+		 where user_no = #{ userNo }
+	</update>
+	
+	<update id="detailUpdateMeber" >
+		update 
+			   member
+		   set user_name = #{userName}
+		     , department = #{department}
+		     , position = #{position}
+		     , phone = #{phone}
+		     , address = #{address}
+		 where user_no = #{userNo}
+	</update>
 </mapper>

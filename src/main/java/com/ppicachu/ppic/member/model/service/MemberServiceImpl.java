@@ -49,6 +49,11 @@ public class MemberServiceImpl implements MemberService{
 	public int updateMember(Member m) {
 		return mDao.updateMember(sqlSession, m);
 	}
+	
+	@Override
+	public int detailUpdateMember(Member m) {
+		return mDao.detailUpdateMember(sqlSession, m);
+	}
 
 	@Override
 	public int idCheck(String checkId) {
@@ -94,6 +99,13 @@ public class MemberServiceImpl implements MemberService{
 	public ArrayList<Member> selectLikeMemForMail(int userNo) {
 		return mDao.selectLikeMemForMail(sqlSession, userNo);
 	}
+
+	@Override
+	public int deleteMember(int userNo) {
+		return mDao.deleteMember(sqlSession, userNo);
+	}
+
+	
 
 
 }
