@@ -338,7 +338,7 @@
 	</update>
 	
 	<select id="selectNotRead" resultType="_int">
-		select sum(notread_chat)
+		select nvl(sum(notread_chat), 0)
 		  from participant
 		 where user_no = #{userNo}
 	</select>

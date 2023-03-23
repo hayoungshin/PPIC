@@ -72,7 +72,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 					a.setSendNo(sendNo);
 					a.setReceiveNo(receives[i]); 
 					a.setCatNo(catNo);
-					a.setNfContent(tmpMsg.getPayload()); 
+					a.setNfContent(tmpMsg.getPayload());
 					aService.insertAlarm(a);
 				}
 			}
@@ -82,5 +82,6 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		sessionList.remove(session);
+		userSessions.remove(String.valueOf(((Member)session.getAttributes().get("loginUser")).getUserNo()));
 	}
 }

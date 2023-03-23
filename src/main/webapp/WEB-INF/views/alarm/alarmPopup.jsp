@@ -75,7 +75,9 @@
 			 	
 	   		function onMessage(evt){
 	   			if(evt.data == "새채팅"){
-	   				chatAlarm();
+	   				if(sockChat == null){
+	   					chatAlarm();
+	   				}
 	   			}else{
 	   				selectAlarm();
 	   			}
