@@ -351,6 +351,7 @@
 	   			url:"memList.chat",
 	   			data:{userNo:${loginUser.userNo}},
         		success:function(map){
+        			console.log(map)
         			let value1 = "<div class='detailView' id='memberList'>"
 		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
 		    					+ "내 부서"
@@ -371,7 +372,7 @@
 		    		let likeCount = 0; // 즐겨찾는 사람수
 		    		
         			for(let i=0; i<map.deptList.length; i++){
-        				if(map.deptList[i].departmentNo == ${loginUser.department}){
+        				if(map.deptList[i].departmentName == "${loginUser.department}"){
 	        				for(let j=0; j<map.memList.length; j++){
 	        					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
 	        						if(map.memList[j].department == map.deptList[i].departmentName){
@@ -397,6 +398,7 @@
 		        			       		} else if(map.memList[j].connSta == 2){
 		        			       			value1 += " out";
 		        			       		}
+		        						console.log(map.memList[1].connSta)
 		        						value1 += "'></span></span></div>";
 		        					}
 	        					}
@@ -900,7 +902,7 @@
     	    		let likeCount = 0; // 즐겨찾는 사람수
     	    		
         			for(let i=0; i<map.deptList.length; i++){
-        				if(map.deptList[i].departmentNo == ${loginUser.department}){
+        				if(map.deptList[i].departmentName == "${loginUser.department}"){
             				for(let j=0; j<map.memList.length; j++){
             					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
             						if(map.memList[j].department == map.deptList[i].departmentName){
@@ -1008,16 +1010,16 @@
         }
         
      	// 채팅 생성 체크박스 이벤트
-        $(document).on("click", "input[type=checkbox]", function(){
+        $(document).on("click", "chat input[type=checkbox]", function(){
             const $class = $(this).attr("class");
             if($(this).prop("checked")){
-                $.each($("input[type=checkbox]"), function(){
+                $.each($("chat input[type=checkbox]"), function(){
                     if($(this).attr("class") == $class){
                         $(this).prop("checked", true);
                     }
                 });
             }else{
-                $.each($("input[type=checkbox]"), function(){
+                $.each($("chat input[type=checkbox]"), function(){
                     if($(this).attr("class") == $class){
                         $(this).prop("checked", false);
                     }
