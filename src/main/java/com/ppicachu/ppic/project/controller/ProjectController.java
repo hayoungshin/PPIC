@@ -1,5 +1,6 @@
 package com.ppicachu.ppic.project.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -145,14 +146,61 @@ public class ProjectController {
 	
 	@ResponseBody
 	@RequestMapping(value="detail.tk", produces="application/json; charset=UTF-8")
-	public String selectTaskDetail(int taskNo) {
+	public String selectTaskDetail(int taskNo, int projectNo) {
 		Task t = pService.selectTaskDetail(taskNo);
+		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
 		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(taskNo);
 		JSONObject jObj = new JSONObject();
 		jObj.put("t", t);
+		jObj.put("ppList", ppList);
 		jObj.put("tpList", tpList);
 		
 		return new Gson().toJson(jObj);
 		
+	}
+	
+	@RequestMapping("updateTask.tk")
+	public String updateTask(Task t, MultipartFile reupfile,
+						   String[] selectUser, String[] selectUserDept,
+						   HttpSession session, Model model) {
+	
+		// 새파일이 없을 때 
+		if(reupfile.getOriginalFilename().equals("")) {
+			// 기존 파일이 있었다면
+			if(t.getFilePath() != null) {
+				// 유저가 삭제했을 때
+				if(t.getOriginName() == null) {
+					// 기존 파일 지우기
+					new File(session.getServletContext().getRealPath(t.getFilePath())).delete();
+					t.setFilePath("");
+				}
+			}
+		// 새파일이 있을 때
+		}else if(!reupfile.getOriginalFilename().equals("")){
+			// 새 파일 저장
+			String saveFilePath = FileUpload.saveFile(reupfile, session, "resources/uploadFiles/taskFiles/");
+			// 기존 파일이 없었다면
+			if(t.getFilePath() != null) {
+				new File(session.getServletContext().getRealPath(t.getFilePath())).delete();
+			}
+			t.setOriginName(reupfile.getOriginalFilename());
+			t.setFilePath(saveFilePath);
+		}
+		
+		int result = pService.updateTask(t);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "업무가 수정되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "업무 수정 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("deleteTask.tk")
+	public String deleteTask(Task t) {
+		
+		return "";
 	}
 }

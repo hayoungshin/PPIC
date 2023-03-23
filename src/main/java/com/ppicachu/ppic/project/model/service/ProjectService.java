@@ -36,4 +36,8 @@ public interface ProjectService {
 	
 	// task detail 조회
 	Task selectTaskDetail(int taskNo);
+	
+	// task update
+	int updateTask(Task t);
+	
 }
