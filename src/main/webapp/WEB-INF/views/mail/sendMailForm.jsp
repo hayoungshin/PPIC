@@ -51,29 +51,29 @@
 	}
 
 	/* 파일첨부 */
-	.input-file-btn{
+	.file-btn{
 		border-radius:5px;
 		background:rgb(230,230,230);
 		margin:5px 0px;
 		padding:3px 5px;
 		font-size:13px;
 	}
-	.input-file-btn:hover{
+	.file-btn:hover{
 		cursor:pointer;
 		font-weight: 600;
 		background:rgb(220,220,220);
 	}
-	#input-file-area{
+	#file-list{
 		border:1px solid rgb(220,220,220);
 		border-radius:5px;
 		margin: 0px;
 		padding:5px;
 	}
-	.input-file-list{
+	.files{
 		margin:5px;
 		font-size:13px;
 	}
-	.input-file-list:hover{
+	.files:hover{
 		cursor:pointer;
 		font-weight:600;
 	}
@@ -164,7 +164,7 @@
 	<div class="outer">
 		<div id="content">
 		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
-		<form action="" style="padding:0px 20px;">
+		<form method="post" action="send.ml" enctype="multipart/form-data" style="padding:0px 20px;">
 		
 			<input type='hidden' name="recipientMail" id="recipientMail">
 			<input type='hidden' name="refMail" id="refMail">
@@ -205,11 +205,11 @@
 				<tr>
 					<th>제목</th>
 					<td style="width:50px; font-size:11px;">
-						<input type="checkbox" id="important-check" style="vertical-align: middle;">
+						<input type="checkbox" id="important-check" name="important" style="vertical-align: middle;">
 						<label for="important-check" style="margin:0;">중요</label>
 					</td>
 					<td class="td">
-						<input type="text" style="height:30px; border:none;">
+						<input type="text" name="mailTitle" style="height:30px; border:none;">
 					</td>
 				</tr>
 				<tr>
@@ -217,28 +217,78 @@
 					<td>
 						
 					</td>
-					<td class="recipient-list">
-						<label class="input-file-btn">
+					<td>
+						<label class="file-btn">
 							파일첨부
-							<input type="file" onchange="loadFiles(this);" style="display:none;" multiple>
+							<input type="file" id="upfiles" name="upfiles" onchange="loadFiles(this);" style="display:none" multiple>
 						</label>
 						
-						<div id="input-file-area">
-							<p class="input-file-list">
-								<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;"> 하이하이.pdf
-							</p>
-							<p class="input-file-list">
-								<img src="resources/icons/close.png" style="width:7px; margin-bottom:3px;"> 하잉.xls
-							</p>
+						<div id="file-list">
+
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3" style="padding-top:30px;">
-						<textarea id="summernote"></textarea>
+						<textarea id="summernote" name="mailContent"></textarea>
 					</td>
 				</tr>
 			</table>
+			
+			<!-- 파일 첨부 관련 -->
+			<script>
+			
+				const fileList = document.getElementById("file-list");	// 파일 원본명 뿌릴 영역
+				let fileArr = [];
+				function loadFiles(inputFile) {
+					/* 파일첨부 -> 리스트 출력 */
+					if(inputFile.files.length > 0){
+						for(let i=0; i<inputFile.files.length; i++){
+							fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + inputFile.files[i].name + "</p>"
+							fileArr.push(inputFile.files[i]);
+						}
+					}
+					console.log(fileArr);
+					$("#upfiles")[0].files = fileArr.files;
+                }
+				
+				$(document).on("click", ".files", function(e){
+					//console.log(e.target.innerText);
+					for(let i in fileArr){
+						if(e.target.innerText.includes(fileArr[i].name)){
+							fileArr.splice(i,1);
+							e.target.remove();
+						}
+					}
+					console.log(fileArr);
+					$("#upfiles")[0].files = fileArr.files;
+				})
+
+				fileList.addEventListener("dragenter",function(e){
+					e.preventDefault();
+					//console.log('파일닿았따!!!');
+					fileList.className = "drag-enter";
+				})
+				fileList.addEventListener("dragover",function(e){
+					e.preventDefault();
+					fileList.className = "drag-enter";
+				})
+				fileList.addEventListener("dragleave",function(e){
+					e.preventDefault();
+					//console.log("파일 나감");
+					fileList.classList.remove("drag-enter");
+				})
+				fileList.addEventListener("drop",function(e){
+					e.preventDefault();
+					fileList.classList.remove("drag-enter");
+					for(let i=0; i<e.dataTransfer.files.length; i++){
+						fileArr.push(e.dataTransfer.files[i]);
+						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[i].name + "</p>";
+					}
+					console.log(fileArr);
+					$("#upfiles")[0].files = fileArr.files;
+				})
+			</script>
 			
 			
 			<!-- 자동완성 -->
@@ -404,39 +454,7 @@
 				
 			</script>
 
-			<script> // 파일첨부 관련
-				const fileArea = document.getElementById("input-file-area");
-
-				function loadFiles(inputFile) {
-					console.log("파일변경");
-					console.log(inputFile.files);
-					/* 파일첨부 -> 리스트 출력 */
-					for(let i=0; i<inputFile.files.length; i++){
-						fileArea.innerHTML += "<p class='input-file-list'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + inputFile.files[i].name + "</p>"
-					}
-                }
-
-				fileArea.addEventListener("dragenter",function(e){
-					e.preventDefault();
-					console.log('파일닿았따!!!');
-					fileArea.className = "drag-enter";
-				})
-				fileArea.addEventListener("dragover",function(e){
-					e.preventDefault();
-					fileArea.className = "drag-enter";
-				})
-				fileArea.addEventListener("dragleave",function(e){
-					e.preventDefault();
-					console.log("파일 나감");
-					fileArea.classList.remove("drag-enter");
-				})
-				fileArea.addEventListener("drop",function(e){
-					e.preventDefault();
-					fileArea.classList.remove("drag-enter");
-					console.log(e.dataTransfer.files);
-					fileArea.innerHTML += "<p class='input-file-list'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[0].name + "</p>";
-				})
-			</script>
+			
 			
 			<!-- include summernote css/js-->
 			<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> 

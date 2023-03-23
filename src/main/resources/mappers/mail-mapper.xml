@@ -15,4 +15,75 @@
 		<result column="temp_status" property="tempStatus"/>
 	</resultMap>
 	
+	<resultMap id="mailAttachmentResult" type="MailAttachment">
+		<id column="file_no" property="fileNo"/>
+		<result column="mail_no" property="mailNo"/>
+		<result column="origin_name" property="originName"/>
+		<result column="change_name" property="changeName"/>
+	</resultMap>
+	
+	<insert id="sendMail">
+		insert
+		  into mail
+		  (
+		    mail_no
+		  , sender
+		  , sender_mail
+		  , recipient_mail
+		  , ref_mail
+		  , hid_ref_mail
+		  , mail_title
+		  , mail_content
+		  )
+		  values
+		  (
+		    seq_mailno.nextval
+		  , #{sender}
+		  , #{senderMail}
+		  , #{recipientMail}
+		  , #{refMail}
+		  , #{hidRefMail}
+		  , #{mailTitle}
+		  , #{mailContent}
+		  )
+	</insert>
+	
+	<insert id="sendAttachment">
+		insert
+		  into mail_attachment
+		  (
+		    file_no
+		  , mail_no
+		  , origin_name
+		  , change_name
+		  )
+		  values
+		  (
+		    seq_mailatno.nextval
+		  , seq_mailno.currval
+		  , #{originName}
+		  , #{changeName}
+		  )
+	</insert>
+	
+	<insert id="insertStatus">
+		insert
+		  into mail_status
+		  (
+		    mail_no
+		  , sender_mail
+		  , recipient_mail
+		  , mail_type
+		  , important_status
+		  )
+		  values
+		  (
+		    seq_mailno.currval
+		  , #{senderMail}
+		  , #{recipientMail}
+		  , #{mailType}
+		  , #{importantStatus}
+		  )
+	</insert>
+	
 </mapper>
