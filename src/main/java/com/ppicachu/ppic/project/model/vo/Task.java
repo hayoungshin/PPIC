@@ -26,8 +26,9 @@ public class Task {
 	private String deleteStatus;
 	
 	private String positionName;
-	private int userNo;
+	private String userNo;
 	private String userImg;
 	private int refPeopleCnt;
+	private String assignUserName;
 	
 }

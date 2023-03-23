@@ -60,4 +60,9 @@ public class ProjectDao {
 	public Task selectTaskDetail(SqlSessionTemplate sqlSession, int taskNo) {
 		return sqlSession.selectOne("projectMapper.selectTaskDetail", taskNo);
 	}
+	
+	public int updateTask(SqlSessionTemplate sqlSession, Task t) {
+		return sqlSession.update("projectMapper.updateTask", t);
+	}
+	
 }

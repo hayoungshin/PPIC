@@ -43,6 +43,7 @@
 	<result column="profile_img" property="userImg"/>
 	<result column="position_name" property="positionName"/>
 	<result column="user_no" property="userNo"/>
+	<result column="assign_user_name" property="assignUserName"/>
 </resultMap>
 
 <select id="selectProjectList" resultMap="projectResult">
@@ -71,19 +72,19 @@
 </select>
 
 <select id="selectProjectParticipants" resultMap="proParticipantsResult">
-	select
-	        project_no
-	      , task_no
+	select  distinct
+	        pp.project_no
 	      , d.department_name "department_name"
+	      , d.department_no "department_no" 
+	      , m.user_no
 	      , m.user_name "user_name"
 	      , ps.position_name "position_name"
 	  from p_participant pp
-	  join project p using (project_no)
-	  left join member m using (user_no)
-	  left join dept d using (department_no)
+      join project p on (pp.project_no = p.project_no)
+	  left join member m on (pp.user_no = m.user_no) 
+	  left join dept d on (m.department = d.department_no)
 	  left join position ps on (m.position = ps.position_no)
-	 where project_no = #{projectNo}
-	   and pm_status = 'N'
+	 where pp.project_no = #{projectNo}
 </select>
 
 <select id="selectTaskList" resultMap="taskResult">
@@ -128,7 +129,9 @@
 	select
 		   task_no
 		 , department_name
+		 , department_no
 		 , user_name
+		 , user_no
 		 , profile_img
 		 , position_name
 	  from p_participant p
@@ -232,7 +235,7 @@
        task_no
      , project_no
      , assign_user
-     , user_name
+     , user_name "assign_user_name"
      , task_name
      , task_content
      , file_path
@@ -245,5 +248,17 @@
  where task_no = #{taskNo}
    and delete_status = 'N'
 </select>
+
+<update id="updateTask">
+	update task
+	   set assign_user = #{assignUser}
+		  , task_name = #{taskName}
+		  , task_content = #{taskContent}
+		  , file_path = #{filePath}
+		  , file_origin_name = #{originName}
+		  , task_status = #{taskStatus}
+		  , modify_date = sysdate
+	  where task_no = #{taskNo}
+</update>
 
 </mapper>
