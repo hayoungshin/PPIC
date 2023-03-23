@@ -129,7 +129,11 @@
     	padding :20px 30px 30px 10px;
     	border-radius :15px; 
     }
-    
+    .memnev{
+        margin-bottom:30px;
+        font-size: 18px;
+        font-weight: bold;
+    }
     #phonepop{width:80%; margin:1px 3px 3px 3px;}
 </style>
 </head>
@@ -142,21 +146,21 @@
 
         <div id="content" style=" " >
 
-            <div>
-                <h2 >내 프로필</h2>
-                <br>
+            <div class="memnev">
+                <a href="memberList.me" style="color:lightgray"> 구성원 </a>
+                <a> | ${ m.userName }</a>
             </div>
            
             <div class="profile">
             
                 <div class="profileImg" style="float:left">
                 	<c:choose>
-                		<c:when test="${ empty loginUser.profileImg }">
-                			<div class="pro" style="float:left" onclick="$('#profileImgFile').click();">${ loginUser.userName }</div>
+                		<c:when test="${ empty m.profileImg }">
+                			<div class="pro" style="float:left" onclick="$('#profileImgFile').click();">${ m.userName }</div>
 		                    <input type="file" id="profileImgFile" style="display:none;">
                     	</c:when>
                     	<c:otherwise>
-                    		<img id="profileImg" src="${ loginUser.profileImg }" onclick="$('#profileImgFile').click();">
+                    		<img id="profileImg" src="${ m.profileImg }" onclick="$('#profileImgFile').click();">
 		                    <input type="file" id="profileImgFile" style="display:none;">
                     	</c:otherwise>
                     </c:choose>
@@ -191,8 +195,8 @@
             </script>
                 
                 <div class="p_name" style="float:left" >
-                    <h4 >${loginUser.userName }</h4>
-                    <h5>${loginUser.department }부</h5>
+                    <h4>${m.userName }</h4>
+                    <h5>${m.department }부</h5>
                     
                     <div class="phone" style="float:left;"> 
                     	<img src="resources/icons/phone_white.png" id="phonepop">
@@ -202,8 +206,8 @@
                     	<img src="resources/icons/email_white.png" id="mailpop"  style="width:80%; margin:1px 3px 3px 3px;">
                     </div>
                     
-                    <div id="phonep" onclick="copyCode1()" style="display:none"> ${ loginUser.phone } </div>
-                    <div id="mail" onclick="copyCode2()" style="display:none"> ${ loginUser.mail } </div>
+                    <div id="phonep" onclick="copyCode1()" style="display:none"> ${ m.phone } </div>
+                    <div id="mail" onclick="copyCode2()" style="display:none"> ${ m.mail } </div>
                     <div id="copy" style="display:none">복사완료</div>
                 </div>
             </div>
@@ -249,41 +253,50 @@
             </div>
 
             <div class="" style="float:right">
-                <img src="resources/icons/approval.png" data-toggle="modal" data-target="#updateForm" style="width:20px; margin:1px 3px 3px 3px;">
+            	<button type="button"  data-toggle="modal" class="btn-purple" data-target="#deleteForm">퇴사처리</button>
+                <img src="resources/icons/approval.png" data-toggle="modal" data-target="#updateForm" style="width:20px; margin:1px 3px 3px 20px;">
            </div>
-
-           <script>
-                /* 프로필 변경 모달 */
-
-           </script>
 
             <div class="member" >
                 <label id="p_title" for="">사번</label>
-                <label for="">${ loginUser.employeeNo }</label>
+                <label for="">${ m.employeeNo }</label>
+                <br>
+                
+                <label id="p_title" for="">상태</label>
+                <label for="">
+	                <c:choose>
+	               		<c:when test="${ m.status eq 'Y'}">
+	               			재직
+	               		</c:when>
+	               		<c:otherwise>
+	               			퇴사
+	               		</c:otherwise>
+	               	</c:choose>
+                </label>
                 <br>
 
                 <label id="p_title" for="">입사일</label>
-                <label for="">${ loginUser.hireDate }</label>
+                <label for="">${ m.hireDate }</label>
                 <br>
                 
                 <label id="p_title" for="">소속</label>
-                <label for="">${loginUser.department }부</label>
+                <label for="">${m.department }부</label>
                 <br>
 
                 <label id="p_title" for="">직위</label>
-                <label for="">${loginUser.position }</label>
+                <label for="">${m.position }</label>
                 <br>
 
                 <label id="p_title" for="">이메일</label>
-                <label for="">${loginUser.mail }</label>
+                <label for="">${m.mail }</label>
                 <br>
 
                 <label id="p_title" for="">휴대전화</label>
-                <label for="">${loginUser.phone }</label>
+                <label for="">${m.phone }</label>
                 <br>
 
                 <label id="p_title" for="">주소</label>
-                <label for="">${loginUser.address }</label>
+                <label for="">${m.address }</label>
                 <br>
 
             </div>
@@ -306,44 +319,71 @@
                 <!-- Modal body -->
                 <div class="modal-body" align="center">
                 
-                    <form action="update.me" method="post">
+                    <form action="detailUpdate.me" method="post">
                         <div class="form-group" align="center" style="float:none;">
                             
-                            <input type="hidden" id="userId" name="userId" value="${ loginUser.userId }" >
-                            <input type="hidden" id="userPwd" name="userPwd" value="${ loginUser.userPwd }" >
+                            <input type="hidden" id="userId" name="userId" value="${ m.userId }" >
+                            <input type="hidden" id="userPwd" name="userPwd" value="${ m.userPwd }" >
                             
-                            <table style="float:none;">
-                            	<tr>
-                            		<td>이름</td>
-                            		<td><input type="text" id="userName" name="userName" value="${loginUser.userName }"></td>
+                            <table style="float:none;" >
+                            	<tr height="40px">
+                            		<td width="100px">이름</td>
+                            		<td><input type="text" id="userName" name="userName" value="${m.userName }"></td>
                             	</tr>
-                            	<tr>
+                            	<tr height="40px">
                             		<td>사번</td>
-                            		<td>${ loginUser.employeeNo }</td>
+                            		<td>${ m.employeeNo }</td>
                             	</tr>
-                            	<tr>
+                            	<tr height="40px">
+                            		<td>상태</td>
+                            		<td> 
+                            			<c:choose>
+						               		<c:when test="${ m.status eq 'Y'}">
+						               			재직
+						               		</c:when>
+						               		<c:otherwise>
+						               			퇴사
+						               		</c:otherwise>
+						               	</c:choose>
+                            		</td>
+                            	</tr>
+                            	<tr height="40px">
                             		<td>입사일</td>
-                            		<td>${ loginUser.hireDate }</td>
+                            		<td>${ m.hireDate }</td>
                             	</tr>
-                            	<tr>
+                            	<tr height="60px">
                             		<td>소속</td>
-                            		<td>${loginUser.department }</td>
+                            		<td width="400px">
+                            			<input type="text" id="department" name="department" value="${m.department }"><br>
+								    	<a style="font-size:10px; height:12px">
+								    		<c:forEach var="d" items="${ list2 }">
+							            	${ d.departmentNo } : ${ d.departmentName } 
+							            	</c:forEach>
+								    	</a>
+                            		</td>
                             	</tr>
-                            	<tr>
+                            	<tr height="60px">
                             		<td>직위</td>
-                            		<td>${loginUser.position }</td>
+                            		<td>
+                            			<input type="text" id="position" name="position" value="${m.position }"><br>
+								    	<a style="font-size:10px; height:12px">
+								    		<c:forEach var="p" items="${ list1 }">
+							            	${ p.positionNo } : ${ p.positionName } 
+							            	</c:forEach>
+								    	</a>
+                            		</td>
                             	</tr>
-                            	<tr>
+                            	<tr height="40px">
                             		<td>이메일</td>
-                            		<td>${loginUser.mail }</td>
+                            		<td>${m.mail }</td>
                             	</tr>
-                            	<tr>
+                            	<tr height="40px">
                             		<td>휴대전화</td>
-                            		<td><input type="text" id="phone" name="phone" value="${loginUser.phone }"></td>
+                            		<td><input type="text" id="phone" name="phone" value="${m.phone }"></td>
                             	</tr>
-                            	<tr>
+                            	<tr height="40px">
                             		<td>주소</td>
-                            		<td><input type="text" id="address" name="address" value="${loginUser.address }"></td>
+                            		<td><input type="text" id="address" name="address" value="${m.address }"></td>
                             	</tr>
                             </table>
                         </div>
@@ -360,6 +400,35 @@
             </div>
         </div>
     </div>
+    
+    <!-- 퇴사처리 버튼 클릭시 보여질 Modal -->
+    <div class="modal" id="deleteForm" style="position: fixed; top: 300px; right: 600px; ">
+      		<div class="modal-dialog">
+          		<div class="modal-content">
+                 <button type="button" class="close" style="font-size:18px; width:30px; height:30px; margin:10px; margin-left:450px;" data-dismiss="modal">X</button>
+           
+                <!-- Modal body -->
+                <div class="modal-body" align="center">
+                
+                    <b>
+			                        퇴사처리 후 복구가 불가능합니다. <br>   
+			                        정말 퇴사처리 하겠습니까? <br><br>
+                    </b>
+					<br>
+                    <form action="delete.me" method="post">
+                        <input type="hidden" name="userNo" value="${ m.userNo }">
+						console.log(${m.userNo });
+                        <button type="submit" class="btn-purple" > 승인하기</button>
+                    </form>
 
+                </div>
+               
+           	</div>
+       	</div>
+   	</div>
+    
+    
+    
+    
 </body>
 </html>
