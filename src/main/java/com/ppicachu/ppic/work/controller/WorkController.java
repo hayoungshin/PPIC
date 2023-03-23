@@ -3,6 +3,7 @@ package com.ppicachu.ppic.work.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpSession;
 
@@ -150,18 +151,31 @@ public class WorkController {
 	@ResponseBody
 	@RequestMapping(value="workIn.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkIn(int no){
-		
 		int result = wService.updateWorkIn(no);
+		
+	}
+	
+	// home 출근등록하기 (지각)
+	@ResponseBody
+	@RequestMapping(value="workInLate.wo", produces="application/json; charset=utf-8" )
+	public void ajaxUpdateWorkInLate(int no){
+		int result = wService.updateWorkInLate(no);
+		
 	}
 
 	// home 퇴근등록하기 
 	@ResponseBody
 	@RequestMapping(value="workOut.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkOut(int no){
-		
 		int result = wService.updateWorkOut(no);
-		
-		}
+	}
+	
+	// home 퇴근등록하기 (조퇴)
+	@ResponseBody
+	@RequestMapping(value="workOutEarly.wo", produces="application/json; charset=utf-8" )
+	public void ajaxUpdateWorkOutEarly(int no){
+		int result = wService.updateWorkOutEarly(no);
+	}
 
 	// 사용자 예정 휴가 조회하기 
 	@ResponseBody
@@ -233,5 +247,15 @@ public class WorkController {
 		}
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="workCalendar.wo", produces="application/json; charset=utf-8")
+	public String ajaxWorkCalendar(int userNo, Model model) {
+      
+      ArrayList<Work> list = wService.workCalendar(userNo);
+      model.addAttribute("list",list);
+      
+      
+	  return new Gson().toJson(list);
+	}
 	
 }

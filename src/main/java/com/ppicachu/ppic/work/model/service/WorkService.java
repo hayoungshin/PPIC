@@ -28,9 +28,11 @@ public interface WorkService {
 	
 	// 6. 출근등록 서비스 
 		int updateWorkIn(int userNo);
+		int updateWorkInLate(int userNo);
 		
 	// 7. 퇴근등록 서비스 
 		int updateWorkOut(int userNo);
+		int updateWorkOutEarly(int userNo);
 		
 	// 8. 사원의 휴가 정보 조회 서비스 
 		Member selectMemberHoliday(int userNo);
