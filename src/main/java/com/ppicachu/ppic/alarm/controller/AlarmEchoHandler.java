@@ -35,6 +35,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 		String msg =  (String) message.getPayload();
 		String[] strs = msg.split(",");
 		if(strs != null) {
+			// 알림소분류,발신자회원번호,발신자이름,수신자회원번호,알림대분류,알림내용
 			String dcatNo = strs[0];
 			String sendNo = strs[1];
 			String sendName = strs[2];
@@ -54,7 +55,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			case "5": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 추가했어요."); break;
 			case "6": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\" 예약을 완료했어요."); break;
 			case "7": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 지급했어요."); break;
-			case "8": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 회수했어요."); break;
+			case "8": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"(으)로 휴가를 회수했어요."); break;
 			case "9": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
 			case "10": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 거절했어요."); break;
 			case "11": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 신청했어요."); break;

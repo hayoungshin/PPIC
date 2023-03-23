@@ -154,7 +154,7 @@
 				        
 				    <br><br>
 				
-				    <input class="btn-purple btn-holi" type="submit" value="저장">
+				    <input class="btn-purple btn-holi" id="holidaygive-btn" type="submit" value="저장">
 				</form>
 				    
 				
@@ -196,7 +196,7 @@
 			        
 			        <br><br>
 			
-			        <input class="btn-purple btn-holi" type="submit" value="저장">
+			        <input class="btn-purple btn-holi" id="holidaywithdraw-btn" type="button" value="저장">
 			    </form>
 			    
 			</div>
@@ -217,6 +217,24 @@
 
         </div>
     </div>	
-	
+
+	<!-- 알림 관련 -->
+	<script>
+		// 휴가 지급 버튼클릭
+		$("#holidaygive-btn").click(function(){
+			if(socket){
+				let socketMsg = "7,${loginUser.userNo},${loginUser.userName}," + $(".holi-give select[name=userNo]").val() + ",3," + $(".holi-give select[name=cause]>option:selected").text(); 
+				socket.send(socketMsg);
+			}
+		})
+		
+		// 휴가 회수 버튼클릭
+		$("#holidaywithdraw-btn").click(function(){
+			if(socket){
+				let socketMsg = "8,${loginUser.userNo},${loginUser.userName}," + $(".holi-out select[name=userNo]").val() + ",3," + $(".holi-out select[name=cause]>option:selected").text(); 
+				socket.send(socketMsg);
+			}
+		})
+	</script>
 </body>
 </html>
