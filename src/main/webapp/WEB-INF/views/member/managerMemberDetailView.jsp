@@ -322,8 +322,7 @@
                     <form action="detailUpdate.me" method="post">
                         <div class="form-group" align="center" style="float:none;">
                             
-                            <input type="hidden" id="userId" name="userId" value="${ m.userId }" >
-                            <input type="hidden" id="userPwd" name="userPwd" value="${ m.userPwd }" >
+                            <input type="hidden" id="userPwd" name="userNo" value="${ m.userNo }" >
                             
                             <table style="float:none;" >
                             	<tr height="40px">
@@ -354,7 +353,8 @@
                             	<tr height="60px">
                             		<td>소속</td>
                             		<td width="400px">
-                            			<input type="text" id="department" name="department" value="${m.department }"><br>
+                            			${m.department }
+                            			<input type="number" id="department" name="department" value="${m.departmentNo }" style="width:50px; margin-right:20px; ;"> <br>
 								    	<a style="font-size:10px; height:12px">
 								    		<c:forEach var="d" items="${ list2 }">
 							            	${ d.departmentNo } : ${ d.departmentName } 
@@ -365,7 +365,8 @@
                             	<tr height="60px">
                             		<td>직위</td>
                             		<td>
-                            			<input type="text" id="position" name="position" value="${m.position }"><br>
+                            			${m.position }
+                            			<input type="number" id="position" name="position" value="${m.positionNo }" style="width:50px; margin-right:20px;" ><br>
 								    	<a style="font-size:10px; height:12px">
 								    		<c:forEach var="p" items="${ list1 }">
 							            	${ p.positionNo } : ${ p.positionName } 
@@ -417,7 +418,6 @@
 					<br>
                     <form action="delete.me" method="post">
                         <input type="hidden" name="userNo" value="${ m.userNo }">
-						console.log(${m.userNo });
                         <button type="submit" class="btn-purple" > 승인하기</button>
                     </form>
 

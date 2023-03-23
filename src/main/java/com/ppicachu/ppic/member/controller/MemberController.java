@@ -140,7 +140,19 @@ public class MemberController {
 		}
 	}
 	
-	
+	/* 관리자 회원정보 update */
+	@RequestMapping("detailUpdate.me")
+	public String detailUpdateMember(Member m, int userNo, HttpSession session, Model model) {
+		int result = mService.detailUpdateMember(m);
+		
+		if(result >0) {
+			session.setAttribute("alertMsg", "성공적으로 변경되었습니다");
+			return "redirect:memberList.me";
+		} else {
+			
+			return "common/errorPage";
+		}
+	}
 	
 	/* 회원 퇴사 처리 */
 	@RequestMapping("delete.me")

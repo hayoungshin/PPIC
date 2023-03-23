@@ -29,6 +29,8 @@ public class Member {
 	private String authorityNo;
 	private String memberSign;
 	private String connSta;
+	private String positionNo;
+	private String departmentNo;
 	
 	private String giveDay;
 	private String useDay;

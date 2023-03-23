@@ -21,6 +21,8 @@
 		<result column ="authority_no" property="authorityNo" />
 		<result column ="member_sign" property="memberSign" />
 		<result column ="conn_sta" property="connSta" />
+		<result column ="position_no" property="positionNo" />
+		<result column ="department_no" property="departmentNo" />
 	</resultMap>
 	
 	<resultMap id="departmentResult" type="Department">
@@ -51,7 +53,6 @@
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
-		 where status='Y'
 	</select>
 	
 	<select id="selectDeptList" resultMap="departmentResult">
@@ -68,8 +69,10 @@
 		     , phone
 		     , mail
 		     , employee_no
-		     , position_name as "POSITION"
-		     , department_name as "DEPARTMENT"
+		     , position as "position_no"
+		     , department as "department_no"
+		     , position_name as "position"
+		     , department_name as "department"
 		     , profile_img
 		     , address
 		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
@@ -243,5 +246,16 @@
 		   set resign_date = sysdate
 		     , status = 'N'
 		 where user_no = #{ userNo }
+	</update>
+	
+	<update id="detailUpdateMeber" >
+		update 
+			   member
+		   set user_name = #{userName}
+		     , department = #{department}
+		     , position = #{position}
+		     , phone = #{phone}
+		     , address = #{address}
+		 where user_no = #{userNo}
 	</update>
 </mapper>
