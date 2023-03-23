@@ -84,21 +84,24 @@ public class MailController {
 	@RequestMapping("send.ml")	// 중요메일일 경우 "on"
 	public String sendMail(Mail m, String important, ArrayList<MultipartFile> upfiles, HttpSession session, Model model) {
 		
-		// 내 정보
+		// 내 정보 Mail에
 		m.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
 		m.setSender(((Member)session.getAttribute("loginUser")).getUserNo());
 		
-		// 중요표시 했는지
-		if(important != null) {
-			m.setImportantStatus("Y");
+		// 중요표시 했는지 MailStatus에
+		MailStatus status = new MailStatus();
+		if(important == null) {
+			status.setImportantStatus("N");
 		} else {
-			m.setImportantStatus("N");
-		};
+			status.setImportantStatus("Y");
+		}
+		status.setSenderMail(m.getSenderMail());
 		
-		// 받는, 참조, 숨은참조 배열로
+		// 받은,참조,숨은참조 문자열 배열로 저장
 		m.setRecipientArr(m.getRecipientMail().split(","));
 		m.setRefArr(m.getRefMail().split(","));
 		m.setHidRefArr(m.getHidRefMail().split(","));
+		
 		
 		/* 첨부파일 리스트로 추가 */
 		ArrayList<MailAttachment> list = new ArrayList<>();
@@ -115,7 +118,7 @@ public class MailController {
 			}
 		}
 		
-		int result = mService.sendMail(m, list);
+		int result = mService.sendMail(m, list, status);
 		
 		if(result > 0) {
 			session.setAttribute("alertMsg", "성공적으로 메일이 전송되었습니다.");

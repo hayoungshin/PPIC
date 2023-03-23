@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import com.ppicachu.ppic.mail.model.vo.Mail;
 import com.ppicachu.ppic.mail.model.vo.MailAttachment;
+import com.ppicachu.ppic.mail.model.vo.MailStatus;
 
 public interface MailService {
 	
 	// 1. 메일 보내기 서비스
-	int sendMail(Mail m, ArrayList<MailAttachment> list);
+	int sendMail(Mail m, ArrayList<MailAttachment> list, MailStatus status);
 
 }
