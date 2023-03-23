@@ -22,4 +22,10 @@ public class Mail {
 	private String sentDate;
 	private String tempStatus;
 
+	private String importantStatus;	// mail_status 테이블의 컬럼임
+	private String mailType;		// mail_status 테이블의 컬럼임 : 1받은 2참조 3숨은참조
+	
+	private String[] recipientArr;
+	private String[] refArr;
+	private String[] hidRefArr;
 }
