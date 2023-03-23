@@ -66,6 +66,7 @@
 		  join dept on (m.department = dept.department_no) 
 		  join position on (m.position = position.position_no)
 		 where status='Y'
+		   and member_sign = 'Y'
 	</select>
 	
 	<insert id="insertChatLike">
@@ -107,6 +108,7 @@
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
 		 where status='Y'
+		   and member_sign = 'Y'
 		   and user_name like '%' || #{userName} || '%'
 		   and user_no != #{userNo}
 	</select>
@@ -200,7 +202,7 @@
 		 order by chat_no
 	</select>
 	
-	<insert id="insertChat">
+	<insert id="insertChat" parameterType="java.util.HashMap" useGeneratedKeys="true" keyColumn="chat_no" keyProperty="chatNo">
 		insert 
 		  into chat
 		  (
@@ -228,6 +230,28 @@
 		 where room_no = #{roomNo}
 	</update>
 	
+	<update id="updateNotreadChat">
+		update 
+		       participant
+		   set notread_chat = notread_chat + 1
+		 where room_no = #{roomNo}
+		   and user_no not in
+		   	   <foreach item="item" index="index" collection="sessOnUser" open="(" separator="," close=")">
+		   	   		#{item}
+		   	   </foreach>
+	</update>
+	
+	<update id="updateLastreadChat">
+		update 
+		       participant
+		   set lastread_chat = seq_chatno.currval
+		 where room_no = #{roomNo}
+		   and user_no in
+		   	   <foreach item="item" index="index" collection="sessOnUser" open="(" separator="," close=")">
+		   	   		#{item}
+		   	   </foreach>
+	</update>
+	
 	<select id="selectChatRoom" resultMap="chatResult">
 		select 
 		       room_no
@@ -247,4 +271,84 @@
 		 where room_no = #{roomNo}
 	</delete>
 	
+	<select id="selectLastReadChat" resultType="_int">
+		select lastread_chat
+          from participant
+         where room_no = #{roomNo}
+           and user_no = #{sendNo}
+	</select>
+	
+	<select id="selectMaxChat" resultType="_int">
+		select 
+		       nvl(max(chat_no), 0)
+          from chat
+         where chat_no in(
+                select chat_no
+                  from chat
+                 where room_no = #{roomNo}
+                   and chat_no > #{lastreadChat}
+                   and send_no != #{sendNo})
+	</select>
+		
+	<update id="updateParticipant">
+		update
+		       participant
+		   set notread_chat = 0
+		     , lastread_chat = #{chatNo}
+		  where user_no = #{sendNo}
+		    and room_no = #{roomNo}
+	</update>
+	
+	<update id="updateChat">
+		update 
+		       chat
+		   set not_read = not_read-1
+		 where room_no = #{roomNo}
+		   and chat_no <![CDATA[<=]]> #{chatNo}
+		   and chat_no <![CDATA[>]]> #{lastreadChat}
+		   and send_no != #{sendNo}
+	</update>
+	
+	<select id="selectPartiList" resultMap="memberResult">
+		select
+		       m.user_no
+		     , user_name
+		     , nvl(phone, '전화번호 없음') "phone"
+		     , mail
+		     , position_name as "position"
+		     , department_name as "department"
+		     , conn_sta
+		     , profile_img
+		     , (select like_date
+                  from chat_like
+                 where myuser_no = #{participantNo}
+                   and likeuser_no = m.user_no) "chat_like"
+             , room_no
+		  from member m
+		  join dept on (m.department = dept.department_no) 
+		  join position on (m.position = position.position_no)
+          join participant p on(m.user_no = p.user_no)
+		 where status='Y'
+		   and room_no = #{roomNo}
+	</select>
+	
+	<update id="updateRoomName">
+		update
+		       chatroom
+		   set room_name = #{roomName}
+		 where room_no = #{roomNo}  
+	</update>
+	
+	<select id="selectNotRead" resultType="_int">
+		select nvl(sum(notread_chat), 0)
+		  from participant
+		 where user_no = #{userNo}
+	</select>
+	
+	<select id="selectNotReadRoom" resultType="_int">
+		select notread_chat
+		  from participant
+		 where user_no = #{participantNo}
+		   and room_no = #{roomNo}
+	</select>
 </mapper>

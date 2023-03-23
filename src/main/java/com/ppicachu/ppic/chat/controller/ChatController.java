@@ -111,4 +111,34 @@ public class ChatController {
 		
 		return result1 * result2 > 0 ? "success" : "fail";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="partiList.chat", produces="application/json; charset=UTF-8")
+	public String ajaxSelectPartiList(Chat c) {
+		ArrayList<Chat> list = cService.selectPartiList(c);
+		return new Gson().toJson(list);
+	}
+	
+	@ResponseBody
+	@RequestMapping("updateRoomName.chat")
+	public String ajaxUpdateRoomName(Chat c) {
+		int result = cService.updateRoomName(c);
+		return result > 0 ? "success" : "fail";
+	}
+	
+	@ResponseBody
+	@RequestMapping("notRead.chat")
+	public int ajaxNotRead(int userNo) {
+		int result = cService.selectNotRead(userNo);
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("notReadRoom.chat")
+	public int ajaxNotReadRoom(Chat c) {
+		int result = cService.selectNotReadRoom(c);
+		return result;
+	}
+	
+	
 }

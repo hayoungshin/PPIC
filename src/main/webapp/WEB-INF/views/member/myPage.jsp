@@ -192,7 +192,7 @@
                 
                 <div class="p_name" style="float:left" >
                     <h4 >${loginUser.userName }</h4>
-                    <h5>${loginUser.department }</h5>
+                    <h5>${loginUser.department }부</h5>
                     
                     <div class="phone" style="float:left;"> 
                     	<img src="resources/icons/phone_white.png" id="phonepop">
@@ -249,7 +249,7 @@
             </div>
 
             <div class="" style="float:right">
-                <img src="resources/icons/approval.png" data-toggle="modal" data-target="#deleteForm" style="width:20px; margin:1px 3px 3px 3px;">
+                <img src="resources/icons/approval.png" data-toggle="modal" data-target="#updateForm" style="width:20px; margin:1px 3px 3px 3px;">
            </div>
 
            <script>
@@ -267,7 +267,7 @@
                 <br>
                 
                 <label id="p_title" for="">소속</label>
-                <label for="">${loginUser.department }</label>
+                <label for="">${loginUser.department }부</label>
                 <br>
 
                 <label id="p_title" for="">직위</label>
@@ -293,7 +293,7 @@
     </div>
 
     <!-- 아이콘 클릭시 보여질 프로필변경 Modal -->
-    <div class="modal" id="deleteForm">
+    <div class="modal" id="updateForm">
         <div class="modal-dialog">
             <div class="modal-content">
             
@@ -307,44 +307,51 @@
                 <div class="modal-body" align="center">
                 
                     <form action="update.me" method="post">
-                        <div class="form-group" align="left">
+                        <div class="form-group" align="center" style="float:none;">
                             
                             <input type="hidden" id="userId" name="userId" value="${ loginUser.userId }" >
                             <input type="hidden" id="userPwd" name="userPwd" value="${ loginUser.userPwd }" >
-                            <label id="p_title" for="">이름</label>
-                            <input type="text" id="userName" name="userName" value="${loginUser.userName }"><br>
                             
-                            <label id="p_title" for="">사번</label>
-                            <label for="">${ loginUser.employeeNo }</label>
-                            <br>
-
-                            <label id="p_title" for="">입사일</label>
-                            <label for="">${ loginUser.hireDate }</label>
-                            <br>
-                            
-                            <label id="p_title" for="">소속</label>
-                            <label for="">${loginUser.position }</label>
-                            <br>
-
-                            <label id="p_title" for="">직위</label>
-                            <label for="">${loginUser.position }</label>
-                            <br>
-
-                            <label id="p_title" for="">이메일</label>
-                            <label for="">${loginUser.mail }</label>
-                            <br>
-
-                            <label id="p_title" for="">휴대전화</label>
-                            <input type="text" id="phone" name="phone" value="${loginUser.phone }"><br>
-
-                            <label id="p_title" for="">주소</label>
-                            <input type="text" id="address" name="address" value="${loginUser.address }"><br>
-                            
+                            <table style="float:none;">
+                            	<tr>
+                            		<td>이름</td>
+                            		<td><input type="text" id="userName" name="userName" value="${loginUser.userName }"></td>
+                            	</tr>
+                            	<tr>
+                            		<td>사번</td>
+                            		<td>${ loginUser.employeeNo }</td>
+                            	</tr>
+                            	<tr>
+                            		<td>입사일</td>
+                            		<td>${ loginUser.hireDate }</td>
+                            	</tr>
+                            	<tr>
+                            		<td>소속</td>
+                            		<td>${loginUser.department }</td>
+                            	</tr>
+                            	<tr>
+                            		<td>직위</td>
+                            		<td>${loginUser.position }</td>
+                            	</tr>
+                            	<tr>
+                            		<td>이메일</td>
+                            		<td>${loginUser.mail }</td>
+                            	</tr>
+                            	<tr>
+                            		<td>휴대전화</td>
+                            		<td><input type="text" id="phone" name="phone" value="${loginUser.phone }"></td>
+                            	</tr>
+                            	<tr>
+                            		<td>주소</td>
+                            		<td><input type="text" id="address" name="address" value="${loginUser.address }"></td>
+                            	</tr>
+                            </table>
                         </div>
+                        
                         <br>
-                        <div class="btns" align="center">
+                        
+                        <div class="btns" align="center" style="float:none; ">
                             <button type="submit" class="btn-purple">수정하기</button>
-                            
                         </div>
                     </form>
 

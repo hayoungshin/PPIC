@@ -21,11 +21,15 @@
 		<result column ="authority_no" property="authorityNo" />
 		<result column ="member_sign" property="memberSign" />
 		<result column ="conn_sta" property="connSta" />
+		<result column ="position_no" property="positionNo" />
+		<result column ="department_no" property="departmentNo" />
 	</resultMap>
 	
 	<resultMap id="departmentResult" type="Department">
 		<id column="department_no" property="departmentNo" />
 		<result column="department_name" property="departmentName" />
+
+		<result column="mem_count" property="memCount" />
 	</resultMap>
 	
 	<resultMap id="positionResult" type="Position">
@@ -45,10 +49,10 @@
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
 		     , profile_img
+		     , status
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
-		 where status='Y'
 	</select>
 	
 	<select id="selectDeptList" resultMap="departmentResult">
@@ -60,12 +64,19 @@
 	
 	<select id="selectMember" resultMap="memberResult">
 		select
-		       user_name
+			   user_no
+		     , user_name
 		     , phone
 		     , mail
-		     , position_name as "POSITION"
-		     , department_name as "DEPARTMENT"
+		     , employee_no
+		     , position as "position_no"
+		     , department as "department_no"
+		     , position_name as "position"
+		     , department_name as "department"
 		     , profile_img
+		     , address
+		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
+		     , status
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
@@ -97,8 +108,8 @@
 		     , phone
 		     , address
 		     , birthday
-		     , position
-		     , department
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
 		     , employee_no
 		     , profile_img
 		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
@@ -107,6 +118,8 @@
 		     , authority_no
 		     , conn_sta
 		  from member
+		  join dept on (member.department = dept.department_no)
+		  join position on (member.position = position.position_no) 
 		 where status = 'Y'
 		   and user_id = #{userId}
 		   and member_sign = 'Y'
@@ -186,16 +199,17 @@
 		 where user_no = #{ userNo }
 	</update>
 	
+	<!-- 메일용 -->
 	<select id="selectMemForMail" resultMap="memberResult">
 		select
-			   user_name
-			 , mail
-			 , department
+		       user_name
+		     , mail
+		     , department
 		  from member
 		 where status = 'Y'
 		   and member_sign = 'Y'
 		 order
-			by user_name
+		    by user_name
 	</select>
 	
 	<select id="selectAuthorityMemList" resultMap="memberResult">
@@ -205,4 +219,43 @@
 		 where authority_no like '%' || #{authoNo} || '%'
 		    or authority_no like '%' || 0 || '%'
 	</select>
+	
+	<select id="selectMemCountForMail" resultMap="departmentResult">
+		select d.department_no,
+		       d.department_name,
+		       (
+		         select count(*)
+		           from member m
+		          where d.department_no = m.department
+		       ) mem_count
+		  from dept d
+		 order
+		    by d.department_no
+	</select>
+	
+	<select id="selectLikeMemForMail" resultMap="memberResult">
+		select like_user "user_no", user_name, mail
+		  from address_like l
+		 join member m on (m.user_no = l.like_user)
+		 where l.user_no = #{userNo}
+	</select>
+	
+	<update id="deleteMember" >
+		update
+			   member
+		   set resign_date = sysdate
+		     , status = 'N'
+		 where user_no = #{ userNo }
+	</update>
+	
+	<update id="detailUpdateMeber" >
+		update 
+			   member
+		   set user_name = #{userName}
+		     , department = #{department}
+		     , position = #{position}
+		     , phone = #{phone}
+		     , address = #{address}
+		 where user_no = #{userNo}
+	</update>
 </mapper>

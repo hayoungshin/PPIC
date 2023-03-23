@@ -49,13 +49,22 @@ public class ChatDao {
 		return (ArrayList)sqlSession.selectList("chatMapper.selectChat", roomNo); 
 	}
 	
-	public int insertChat(SqlSessionTemplate sqlSession, Chat c) { 
-		return sqlSession.insert("chatMapper.insertChat", c); 
+	public int insertChat(SqlSessionTemplate sqlSession, HashMap<String, Object> map) { 
+		sqlSession.insert("chatMapper.insertChat", map); 
+		return Integer.valueOf(String.valueOf(map.get("chatNo")));
 	}
 	
 	public int updateChatRoom(SqlSessionTemplate sqlSession, int roomNo) { 
 		return sqlSession.update("chatMapper.updateChatRoom", roomNo); 
 	}
+	
+	public int updateNotreadChat(SqlSessionTemplate sqlSession, HashMap<String, Object> hm) {
+		return sqlSession.update("chatMapper.updateNotreadChat", hm); 
+	}
+	
+    public int updateLastreadChat(SqlSessionTemplate sqlSession, HashMap<String, Object> hm) {
+    	return sqlSession.update("chatMapper.updateLastreadChat", hm); 
+    }
 	
 	public Chat selectChatRoom(SqlSessionTemplate sqlSession, int roomNo) {
 		return sqlSession.selectOne("chatMapper.selectChatRoom", roomNo); 
@@ -68,5 +77,36 @@ public class ChatDao {
 	public int deleteChatRoom(SqlSessionTemplate sqlSession, int roomNo) { 
 		return sqlSession.delete("chatMapper.deleteChatRoom", roomNo); 
 	}
+	
+	public int selectLastReadChat(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.selectOne("chatMapper.selectLastReadChat", c);
+	}
+	
+	public int selectMaxChat(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.selectOne("chatMapper.selectMaxChat", c);
+	}
+	
+	public int updateParticipant(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.update("chatMapper.updateParticipant", c); 
+	}
+	
+	public int updateChat(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.update("chatMapper.updateChat", c); 
+	}
 	 
+	public ArrayList<Chat> selectPartiList(SqlSessionTemplate sqlSession, Chat c){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectPartiList", c); 
+	}
+	
+	public int updateRoomName(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.update("chatMapper.updateRoomName", c); 
+	}
+	
+	public int selectNotRead(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("chatMapper.selectNotRead", userNo);
+	}
+	
+	public int selectNotReadRoom(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.selectOne("chatMapper.selectNotReadRoom", c);
+	}
 }

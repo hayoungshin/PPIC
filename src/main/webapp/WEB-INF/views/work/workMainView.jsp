@@ -97,10 +97,10 @@
 			</div>
            
            <div class="workcategory" style="float:left;" >
-                <a href="workList.wo" >출퇴근기록</a>
-                <a href="workInfo.wo" >올해근무정보</a>
-				<a id="info" >휴가현황</a>
-                <a href="holiApply.ho">휴가신청</a>
+                <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
+                <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
+				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
+                <a href="holiApply.ho?no=${loginUser.userNo }">휴가신청</a>
                 
                 
                 <!-- 관리자만 보이게 할거임 -->
@@ -112,20 +112,13 @@
                 <br>
             </div>
             
-            <script>
-            $(function(){
-        		$("#info").click(function(){
-        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
-        		})
-        	})
-            </script>
 
             <br>
             
             <div class="workinfo" style="margin-top:30px;">
                <table style="float:left;">
                     <tr style="font-size: 20px;" >
-                        <th height="50px" width="440px" >근태현황</th>
+                        <th height="50px" width="440px" >월근태현황</th>
                         <th width="445px">휴가현황</th>
                         <th width="300px">근무시간</th>
                     </tr>
@@ -139,9 +132,9 @@
                             <td width="100px">결근</td>
                         </tr>
                         <tr align="center">
-                            <td height="50px">00회</td>
-                            <td>00회</td>
-                            <td>00회</td>
+                            <td height="50px">${ w. behindtime}회</td>
+                            <td>${w.leavearly}회</td>
+                            <td>${w.absenteeism}회</td>
                         </tr>
                     </table>
                </div>
@@ -149,13 +142,15 @@
                <div class="workinfod" style="float:left; margin-top:10px;" >
                 <table align="center" style="margin-top:10px" >
                     <tr align="center">
-                        <td height="100px" width="100px"> 잔여연차</td>
-                        <td width="100px"> <button class="btn-purple" onclick="location.href='holiInfo.ho'" >휴가현황</button> </td>
+                        <td height="100px" width="100px"> 지급연차 </td>
+                        <td width="100px"> 사용연차 </td>
+                        <td width="100px"> 잔여연차 </td>
                        
                     </tr>
                     <tr align="center">
-                        <td height="50px">00회</td>
-                        <td><button class="btn-purple" onclick="location.href='holiApply.ho'">휴가신청</button></td>
+                        <td>${ m.giveDay + m.addDay }일</td>
+                        <td>${ m.useDay }일</td>
+                        <td>${ m.giveDay + m.addDay + m.useDay }</td>
                         
                     </tr>
                 </table>
@@ -182,87 +177,28 @@
             <br>
 
             <div class="wotitle" style="float:left;"> 출퇴근기록</div>
-
-            <div class="day"  align="center" style="float:left">
-                <span> 00월 00 일</span> <br>
-                <div id="workstatus"> 지각 </div>
-               
-                
-                <table border="1" >
-                    <tr align="center">
-                        <td width="100px" >출근</td>
-                        <td width="100px" >00:00</td>
-                    </tr>
-                    <tr align="center">
-                        <td >퇴근</td>
-                        <td>00:00</td>
-                    </tr>
-                </table>
-            </div>
-           <div class="day"  align="center" style="float:left">
-                <span> 00월 00 일</span> <br>
-                <div id="workstatus"> 지각 </div>
-               
-                
-                <table border="1" >
-                    <tr align="center">
-                        <td width="100px" >출근</td>
-                        <td width="100px" >00:00</td>
-                    </tr>
-                    <tr align="center">
-                        <td >퇴근</td>
-                        <td>00:00</td>
-                    </tr>
-                </table>
-            </div><div class="day"  align="center" style="float:left">
-                <span> 00월 00 일</span> <br>
-                <div id="workstatus"> 지각 </div>
-               
-                
-                <table border="1" >
-                    <tr align="center">
-                        <td width="100px" >출근</td>
-                        <td width="100px" >00:00</td>
-                    </tr>
-                    <tr align="center">
-                        <td >퇴근</td>
-                        <td>00:00</td>
-                    </tr>
-                </table>
-            </div><div class="day"  align="center" style="float:left">
-                <span> 00월 00 일</span> <br>
-                <div id="workstatus"> 지각 </div>
-               
-                
-                <table border="1" >
-                    <tr align="center">
-                        <td width="100px" >출근</td>
-                        <td width="100px" >00:00</td>
-                    </tr>
-                    <tr align="center">
-                        <td >퇴근</td>
-                        <td>00:00</td>
-                    </tr>
-                </table>
-            </div>
-			<div class="day"  align="center" style="float:left">
-                <span> 00월 00 일</span> <br>
-                <div id="workstatus"> 지각 </div>
-               
-                
-                <table border="1" >
-                    <tr align="center">
-                        <td width="100px" >출근</td>
-                        <td width="100px" >00:00</td>
-                    </tr>
-                    <tr align="center">
-                        <td >퇴근</td>
-                        <td>00:00</td>
-                    </tr>
-                </table>
-            </div>
+			
+			<c:forEach var="list1" items="${ list1 }" end="4">
+	            <div class="day"  align="center" style="float:left">
+	                <span> ${list1.workDate }</span> <br>
+	                <div id="workstatus"> ${list1.status } </div>
+	               
+	                
+	                <table border="1" >
+	                    <tr align="center">
+	                        <td width="100px" >출근</td>
+	                        <td width="100px" >${list1.workIn }</td>
+	                    </tr>
+	                    <tr align="center">
+	                        <td >퇴근</td>
+	                        <td>${list1.workOut }</td>
+	                    </tr>
+	                </table>
+	            </div>
+            </c:forEach>
+           
             
-            <div class="worklist" style="float:left" onclick="location.href='workList.wo'"> 
+            <div class="worklist" style="float:left" onclick="location.href='workList.wo?no=${loginUser.userNo }'"> 
                 
                 o o o  
             

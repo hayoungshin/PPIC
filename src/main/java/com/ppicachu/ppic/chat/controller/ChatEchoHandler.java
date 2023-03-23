@@ -2,6 +2,7 @@ package com.ppicachu.ppic.chat.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,9 @@ public class ChatEchoHandler extends TextWebSocketHandler{
 	
 	private final ObjectMapper objectMapper = new ObjectMapper();
     
-    // 채팅방 목록 <방 번호, ArrayList<session> >이 들어간다.
+    // 채팅방 목록 <방 번호, ArrayList<session> >
     private HashMap<Integer, ArrayList<WebSocketSession>> RoomList = new HashMap<>();
-    // session, 방 번호가 들어간다.
+    // session, 방 번호
     private HashMap<WebSocketSession, Integer> sessionList = new HashMap<>();
     
     private static int i;
@@ -55,31 +56,56 @@ public class ChatEchoHandler extends TextWebSocketHandler{
         Chat chatRoom = cService.selectChatRoom(Integer.parseInt(strs[0]));
         // 채팅 세션 목록에 채팅방이 존재하지 않고, 처음 들어왔고, DB에서의 채팅방이 있을 때
         // 채팅방 생성
-        if(RoomList.get(chatRoom.getRoomNo()) == null && strs[2].equals("ENTER-CHAT") && chatRoom != null) {
+        if(strs[2].equals("ENTER-CHAT") && chatRoom != null) {
+        	if(RoomList.get(chatRoom.getRoomNo()) == null) {
+                
+                // 채팅방에 들어갈 session들
+                ArrayList<WebSocketSession> sessionTwo = new ArrayList<>();
+                // session 추가
+                sessionTwo.add(session);
+                // sessionList에 추가
+                sessionList.put(session, chatRoom.getRoomNo());
+                // RoomList에 추가
+                RoomList.put(chatRoom.getRoomNo(), sessionTwo);
+            }
             
-            // 채팅방에 들어갈 session들
-            ArrayList<WebSocketSession> sessionTwo = new ArrayList<>();
-            // session 추가
-            sessionTwo.add(session);
-            // sessionList에 추가
-            sessionList.put(session, chatRoom.getRoomNo());
-            // RoomList에 추가
-            RoomList.put(chatRoom.getRoomNo(), sessionTwo);
-            // 확인용
-            System.out.println("채팅방 생성");
-        }
-        
-        // 채팅방이 존재 할 때
-        else if(RoomList.get(chatRoom.getRoomNo()) != null && strs[2].equals("ENTER-CHAT") && chatRoom != null) {
+            // 채팅방이 존재 할 때
+            else if(RoomList.get(chatRoom.getRoomNo()) != null) {
+                
+                // RoomList에서 해당 방번호를 가진 방이 있는지 확인.
+                RoomList.get(chatRoom.getRoomNo()).add(session);
+                // sessionList에 추가
+                sessionList.put(session, chatRoom.getRoomNo());
+            }
+        	
+        	Chat cc = new Chat();
+        	cc.setRoomNo(Integer.parseInt(roomNo));
+        	cc.setSendNo(Integer.parseInt(sendNo));
+        	
+        	// 마지막으로 읽은 채팅번호 조회
+        	int lastRead = cService.selectLastReadChat(cc);
+        	
+        	// 상대방이 보낸 채팅 중 최대값 조회 (없으면 0)
+        	cc.setLastreadChat(String.valueOf(lastRead));
+        	int maxChat = cService.selectMaxChat(cc);
+        	
+        	if(maxChat > 0) {
+        		cc.setChatNo(maxChat);
+        		// 참여자, 채팅 수정
+            	cService.updateParticipant(cc);
+            	cService.updateChat(cc);
+        	}
+        	
+        	// roomNo,sendNo,chatContent,notRead,maxChat,lastRead
+        	msg += "," + maxChat + "," + lastRead;
+        	
+        	TextMessage textMessage = new TextMessage(msg);
             
-            // RoomList에서 해당 방번호를 가진 방이 있는지 확인.
-            RoomList.get(chatRoom.getRoomNo()).add(session);
-            // sessionList에 추가
-            sessionList.put(session, chatRoom.getRoomNo());
-            // 확인용
-            System.out.println("생성된 채팅방으로 입장");
+            for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
+                sess.sendMessage(textMessage);
+            }
+            
         }
-        
         // 채팅 메세지 입력 시
         else if(RoomList.get(chatRoom.getRoomNo()) != null && !strs[2].equals("ENTER-CHAT") && chatRoom != null) {
             
@@ -89,32 +115,42 @@ public class ChatEchoHandler extends TextWebSocketHandler{
             	sessionCount++;
             }
             
-            // roomNo,sendNo,chatContent,notRead,sendName,sendProfile,realnotread
-            msg += "," + ((Member)session.getAttributes().get("loginUser")).getUserName() + "," + ((Member)session.getAttributes().get("loginUser")).getProfileImg() + "," + (Integer.parseInt(notRead) - sessionCount + 1);
+            // DB에 저장
+            HashMap<String, Object> map = new HashMap<>();
+			map.put("roomNo", roomNo);
+			map.put("sendNo", sendNo);
+			map.put("chatContent", chatContent);
+			map.put("notRead", Integer.parseInt(notRead) - sessionCount + 1);
+			
+            int a = cService.insertChat(map);
+            int b = cService.updateChatRoom(Integer.parseInt(roomNo));
+            
+            ArrayList<String> sessOnUser = new ArrayList<>();
+            
+            for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
+            	String[] arr = sess.getAttributes().get("loginUser").toString().split(",");
+                sessOnUser.add(arr[0].substring(14));
+            }
+            
+            HashMap<String, Object> hm = new HashMap<>();
+            hm.put("roomNo", Integer.parseInt(roomNo));
+            hm.put("sessOnUser", sessOnUser);
+            
+            cService.updateNotreadChat(hm);
+            cService.updateLastreadChat(hm);
+            
+         // roomNo,sendNo,chatContent,notRead,sendName,sendProfile,realnotread,chatNo
+            msg += "," + ((Member)session.getAttributes().get("loginUser")).getUserName() 
+            	+ "," + ((Member)session.getAttributes().get("loginUser")).getProfileImg() 
+            	+ "," + (Integer.parseInt(notRead) - sessionCount + 1)
+            	+ "," + a;
             TextMessage textMessage = new TextMessage(msg);
+            
             
             // 해당 채팅방의 session에 뿌려준다.
             for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
                 sess.sendMessage(textMessage);
             }
-            
-            Chat c = new Chat();
-			c.setRoomNo(Integer.parseInt(roomNo));
-			c.setSendNo(Integer.parseInt(sendNo));
-			c.setChatContent(chatContent);
-			c.setNotRead(String.valueOf(Integer.parseInt(notRead) - sessionCount + 1));
-            
-            // DB에 저장한다.
-            int a = cService.insertChat(c);
-            
-            if(a == 1) {
-                System.out.println("메세지 전송 및 DB 저장 성공");
-            }else {
-                System.out.println("메세지 전송 실패!!! & DB 저장 실패!!");
-            }
-            
-            int b = cService.updateChatRoom(Integer.parseInt(roomNo));
-            
         }
     }
     

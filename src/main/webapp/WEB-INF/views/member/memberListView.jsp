@@ -178,11 +178,20 @@
                             </tr>
                         </thead>
                         
-                        <tbody align="center">
+                        <tbody id="member" align="center">
                         	<c:forEach var="m" items="${ list1 }" >
 	                            <tr>
-	                                <td > ${ m.userName } </td>
-	                                <td >재직|퇴직</td>
+	                                <td >${ m.userName } <div class="bno" style="display:none;">${ m.userNo }</div></td>
+	                                <td >
+	                                	<c:choose>
+	                                		<c:when test="${ m.status eq 'Y'}">
+	                                			재직
+	                                		</c:when>
+	                                		<c:otherwise>
+	                                			퇴사
+	                                		</c:otherwise>
+	                                	</c:choose>
+	                                </td>
 	                                <td >${ m.employeeNo }</td>
 	                                <td >${ m.hireDate }</td>
 	                                <td >${ m.resignDate }</td>
@@ -197,6 +206,14 @@
 				</div>
 				
 			</div>
+			
+			<script>
+				$(function(){
+					$("#list>tbody>tr").click(function(){
+            			location.href = 'managerDetail.me?no=' + $(this).find(".bno").text(); ;
+            		})
+				})
+			</script>
 
             <div class="v-line"></div>
             

@@ -8,20 +8,48 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-    #chat{
+    #chat, #participantList{
         border: 1px solid rgb(202, 199, 199);
-        width:300px;
-        height:510px;
         border-radius:5px;
         font-size: 13px;
         background:white;
         position:fixed;
         z-index:100;
-        top:70px;
-        left:250px;
         display:none;
     }
-
+    #chat{
+    	width:300px;
+        height:510px;
+        top:70px;
+        left:250px;
+    }
+    #participantList{
+        width:200px;
+        height:430px;
+        top:150px;
+        left:550px;
+        padding:15px;
+    }
+    #participants>div{margin-bottom:15px;}
+    #participants>div>*{margin-right:5px;}
+    #participants{height:320px; overflow:auto;}
+	#button-area>img{
+		 float:right;
+		 margin-top:10px;
+	}
+	#participants .collegeProfileImg, #button-area>img{cursor:pointer;}
+	#chatMe{
+		float:right;
+		border-radius:50%;
+		background:gray;
+		color:white;
+		height:20px;
+		width:20px;
+		text-align:center;
+		line-height:20px;
+		font-size:10px;
+	}
+	
     /* chat header 스타일 */
     #chat-header{
      position:sticky;
@@ -186,13 +214,13 @@
         display: flex;
         flex-direction: column;
     }
-    .chat-area::-webkit-scrollbar {width: 8px;}
+    .chat-area::-webkit-scrollbar, #participants::-webkit-scrollbar {width: 8px;}
 	
-	.chat-area::-webkit-scrollbar-thumb {
+	.chat-area::-webkit-scrollbar-thumb, #participants::-webkit-scrollbar-thumb {
 	    background: lightgray; 
 	    border-radius: 10px;
 	}
-    .chat-area::before {
+    .chat-area::before, #participants::before {
         content: "";
         display: block;
         flex: 1;
@@ -270,10 +298,17 @@
             
             <div id="search-div">
             </div>
+			
         </div>
         <div id="chat-body">
         	
         </div>
+    </div>
+    <div id="participantList">
+    	<b style="font-size:15px;">대화상대</b><br><br>
+    	<div id="participants">
+    	</div>
+    	<div id="button-area"></div>
     </div>
     <script>
 	   	$(function(){
@@ -282,6 +317,10 @@
 	   		
 	   		// 주소록 불러오기
 	   		showUser();
+	   		
+	   		if(sockChat){
+        		onClose();
+        	}
 	   	})
 	   	
 	   	// 채팅 메뉴바 클릭 (주소록)
@@ -312,6 +351,7 @@
 	   			url:"memList.chat",
 	   			data:{userNo:${loginUser.userNo}},
         		success:function(map){
+        			console.log(map)
         			let value1 = "<div class='detailView' id='memberList'>"
 		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
 		    					+ "내 부서"
@@ -332,7 +372,7 @@
 		    		let likeCount = 0; // 즐겨찾는 사람수
 		    		
         			for(let i=0; i<map.deptList.length; i++){
-        				if(map.deptList[i].departmentNo == ${loginUser.department}){
+        				if(map.deptList[i].departmentName == "${loginUser.department}"){
 	        				for(let j=0; j<map.memList.length; j++){
 	        					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
 	        						if(map.memList[j].department == map.deptList[i].departmentName){
@@ -358,6 +398,7 @@
 		        			       		} else if(map.memList[j].connSta == 2){
 		        			       			value1 += " out";
 		        			       		}
+		        						console.log(map.memList[1].connSta)
 		        						value1 += "'></span></span></div>";
 		        					}
 	        					}
@@ -614,7 +655,7 @@
         				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
         			}
         			for(let i=0; i<list.length; i++){
-        				value += "<tr ondblclick='openChat(" + list[i].roomNo + ")'><td style='width:50px'>"
+        				value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
         				
        						if(list[i].groupCount <= 2){
        							for(let j=0; j<list[i].memList.length; j++){
@@ -709,6 +750,7 @@
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
         			$("#search-div").html(value2);
+        			console.log(value)
         		},error:function(){
         			console.log("채팅 리스트 조회용 ajax 통신 실패");
         		}
@@ -729,7 +771,7 @@
         				value += "<tr><td>검색 내역이 없습니다.</td></tr>"
         			}
         			for(let i=0; i<list.length; i++){
-        				value += "<tr><td style='width:50px'>"
+        				value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
         				
        						if(list[i].groupCount <= 2){
        							for(let j=0; j<list[i].memList.length; j++){
@@ -828,6 +870,7 @@
         		}
      		})
      	}
+     	
      	$(document).on("click", "#chatRoomSearch-btn", function(){
      		if($("input[name=keyword]").val().replace(/ /g, '') != ""){ // 공백 입력시
         		chatRoomSearch();
@@ -859,7 +902,7 @@
     	    		let likeCount = 0; // 즐겨찾는 사람수
     	    		
         			for(let i=0; i<map.deptList.length; i++){
-        				if(map.deptList[i].departmentNo == ${loginUser.department}){
+        				if(map.deptList[i].departmentName == "${loginUser.department}"){
             				for(let j=0; j<map.memList.length; j++){
             					if(map.memList[j].userNo != ${loginUser.userNo }){ // 본인 제외
             						if(map.memList[j].department == map.deptList[i].departmentName){
@@ -950,12 +993,12 @@
     			       		} else if(map.memList[k].connSta == 2){
     			       			value3 += " out";
     			       		}
-    						value3 += "'></span></label></span></div>";
+    						value3 += "'></span></span></div>";
     						likeCount += 1;
     					}
     				}
         			if(likeCount == 0){
-        				value3 += "<div><small>즐겨찾는 멤버가 없습니다.<small></div>"
+        				value3 += "<div><small>즐겨찾는 멤버가 없습니다.</small></div>"
         			}
         			value2 += "</div>";
     				value3 += "</div>";
@@ -967,16 +1010,16 @@
         }
         
      	// 채팅 생성 체크박스 이벤트
-        $(document).on("click", "input[type=checkbox]", function(){
+        $(document).on("click", "chat input[type=checkbox]", function(){
             const $class = $(this).attr("class");
             if($(this).prop("checked")){
-                $.each($("input[type=checkbox]"), function(){
+                $.each($("chat input[type=checkbox]"), function(){
                     if($(this).attr("class") == $class){
                         $(this).prop("checked", true);
                     }
                 });
             }else{
-                $.each($("input[type=checkbox]"), function(){
+                $.each($("chat input[type=checkbox]"), function(){
                     if($(this).attr("class") == $class){
                         $(this).prop("checked", false);
                     }
@@ -1003,7 +1046,15 @@
             	arr.push(clickNo);
      			newChat(arr);
      		}else{ // 이미 생성된 1:1 채팅이 있을 때
-     			openChat(no);
+     			$.ajax({
+     				url:"notReadRoom.chat",
+     				data:{
+     					participantNo:${loginUser.userNo},
+     					roomNo:no
+     				},success:function(notread){
+     					openChat(no, notread);
+     				}
+     			})
      		}
      	}
      	
@@ -1015,7 +1066,7 @@
        				participant:arr
            		},success:function(boardNo){
            			$("input[name=openChatRoomNo]").val(boardNo);
-           			openChat(boardNo);
+           			openChat(boardNo, 0);
            		},error:function(){
            			console.log("새로운 채팅 생성용 ajax 통신 실패")
            		}
@@ -1023,15 +1074,19 @@
      	}
     	
      	// 채팅방 열기
-     	function openChat(no){
+     	let $groupCount = "";
+     	let $roomName = "";
+		let receiveList = "";
+		let $notread = 0;
+     	function openChat(no, notread){
      		$.ajax({
    				url:"open.chat",
        			data:{
        				roomNo:no
            		},success:function(list){
            			$("input[name=openChatRoomNo]").val(no);
-           			value1 = "<div class='chat-area'>"
-           			value2 = ""
+           			let value1 = "<div class='chat-area'>"
+           			let value2 = "";
            			for(let i=0; i<list.length; i++){
            				if(list[i].sendNo != ${loginUser.userNo}){
            					value1 += "<div><span class='send-user'>"
@@ -1046,13 +1101,13 @@
            									+ "<div class='chat-message other'>"
                								+ "<div class='send-message'>" + list[i].chatContent + "</div>"
                						if(list[i].notRead != 0){
-               							value1 += "<span class='notreadCount'>" + list[i].notRead + "</span>"
+               							value1 += "<span class='notreadCount' id='" + list[i].chatNo + "'>" + list[i].notRead + "</span>"
                						}
                						value1 += "</div></div>"
            				}else{
            					value1 += "<div class='chat-message mine'>"
        						if(list[i].notRead != 0){
-       							value1 += "<span class='notreadCount'>" + list[i].notRead + "</span>"
+       							value1 += "<span class='notreadCount' id='" + list[i].chatNo + "'>" + list[i].notRead + "</span>"
        						}
            					value1 += "<div class='send-message'>" + list[i].chatContent + "</div></div>"
            				}
@@ -1062,45 +1117,179 @@
            				for(let j=0; j<list[i].memList.length; j++){
            					if(list[i].groupCount == 2){
            						if(list[i].memList[j].userNo != ${loginUser.userNo}){
-           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
-           									+ list[i].memList[j].userName
-           									+ "&nbsp;<span class='conn";
-            						if(list[i].memList[j].connSta == 0){
-            			        		value2 += " online";
-            			       		} else if(list[i].memList[j].connSta == 1){
-            			       			value2 += " offline";
-            			       		} else if(list[i].memList[j].connSta == 2){
-            			       			value2 += " out";
-            			       		}
-            						value2 += "'></span>"
+           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
+           									+ "<span id='roomName-area'><span id='roomName'>" 
+           							if(list[i].roomName == undefined){
+           								value2 += list[i].memList[j].userName;
+           							}else{
+           								value2 += list[i].roomName;
+           							}
+           							value2 += "</span></span>";
            						}
            					}else{
-           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
+           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
            						if(list[i].roomName == undefined){
-           							value2 += "그룹채팅 "
+           							value2 += "<span id='roomName-area'><span id='roomName'>그룹채팅";
            						}else{
-           							value2 += list[i].roomName + " "
+           							value2 += "<span id='roomName-area'><span id='roomName'>" + list[i].roomName;
            						}
-           						value2 += list[i].groupCount
+           						value2 += "</span> <span id='groupCount'>"+ list[i].groupCount + "</span></span></span>"
            					}
            				}
            			}
            			value1 += "</div><div class='input-area'>"
                			   	+ "<div class='form-group'>"
-                   			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;'></textarea>"
+                   			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;' onKeyPress='check_enter();'></textarea>"
                     		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
-                	value2 += "<span><img src='resources/icons/dots.png'><img src='resources/icons/search.png'></span></div>"
+                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(1, " + no + ");'><img src='resources/icons/setting.png' onclick='updateRoomName(" + no + ");'></span><input type='hidden' id='roomNo' value='" + no + "'</div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
            			connectChat(no);
+           			$groupCount = $("#groupCount").text();
+ 		     		$roomName = $("#roomName").text();
+ 		     		partiList(2, no);
+           			readChat(notread);
            		},error:function(){
           			console.log("채팅 열기용 ajax 통신 실패")
           		}
   			})
     	}
      	
+     	// 대화상대 리스트 보기
+     	function partiList(num, no){
+     		$.ajax({
+     			url:"partiList.chat",
+     			data:{
+     				roomNo:no,
+     				participantNo:${loginUser.userNo}
+     			},success:function(list){
+     				if(num == 1){
+     					let me = "<div><img src='";
+         				let others = "";
+         				let button = "<img src='resources/icons/sign_out.png' width='25' height='25'>"
+         					/* onclick='chatOut(" + list[0].roomNo + ")' */
+         				for(let i=0; i<list.length; i++){
+         					if(list[i].userNo == ${loginUser.userNo}){
+         						if(list[i].profileImg != undefined){
+         							me += list[i].profileImg
+        						}else{
+        							me += "resources/icons/profile.png"
+        						}
+         						me += "' class='rounded-circle pro-small'>"
+        							+ list[i].userName + "<span class='conn";
+        						if(list[i].connSta == 0){
+        							me += " online";
+        			       		} else if(list[i].connSta == 1){
+        			       			me += " offline";
+        			       		} else if(list[i].connSta == 2){
+        			       			me += " out";
+        			       		}
+        						me += "'></span><span id='chatMe'>나</span></div>";
+         					}else{
+         						others += "<div><input type='hidden'><img src='"
+         						if(list[i].profileImg != undefined){
+         							others += list[i].profileImg
+        						}else{
+        							others += "resources/icons/profile.png"
+        						}
+         						others += "' class='rounded-circle collegeProfileImg pro-small'>"
+        							+ "<input type='hidden' value='" + list[i].userNo +"'>"
+        							+ "<input type='hidden' value='" + list[i].userName +"'>"
+        							+ "<input type='hidden' value='" + list[i].department +"'>"
+        							+ "<input type='hidden' value='" + list[i].position +"'>"
+        							+ "<input type='hidden' value='" + list[i].mail +"'>"
+        							+ "<input type='hidden' value='" + list[i].phone +"'>"
+        							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
+        							+ list[i].userName + "<span class='conn";
+        						if(list[i].connSta == 0){
+        							others += " online";
+        			       		} else if(list[i].connSta == 1){
+        			       			others += " offline";
+        			       		} else if(list[i].connSta == 2){
+        			       			others += " out";
+        			       		}
+        						others += "'></span></div>";
+         					}
+         				}
+     					$("#participants").html(me + others);
+     					$("#button-area").html(button);
+     					$("#participantList").toggle();
+     				}else{
+     					for(let i=0; i<list.length; i++){
+         					if(list[i].userNo != ${loginUser.userNo}){
+         						receiveList += "/" + list[i].userNo
+         					}
+         				}
+     					receiveList = receiveList.substring(1);
+     				}
+     			},error:function(){
+     				
+     			}
+     		})
+     	}
+     	
+     	// 설정 아이콘 클릭 (채팅방 이름 변경)
+     	function updateRoomName(no){
+     		if(!$("#roomName-area").html().includes("input")){
+         		let value = "<input type='text' name='roomName' style='width:140px;'>"
+         					+ "<button class='updateRoomName-btn' id='" + no + "'><img src='resources/icons/check.png' width='20px' height='20px' style='margin-bottom:5px;'></button>"
+         					+ "<button onclick='cancelChange();'><img src='resources/icons/cancel.png' width='20px' height='20px' style='margin-bottom:5px;'></button>";
+         		$("#roomName-area").html(value);
+         		$("#roomName-area input[name=roomName]").focus();
+         		$("#roomName-area input[name=roomName]").val($roomName);
+     		}
+     	}
+     	
+     	// 체크 아이콘 클릭 (채팅방 이름 변경)
+     	$(document).on("click", ".updateRoomName-btn", function(){
+     		let newRoomName = $("input[name=roomName]").val();
+     		let roomNo = $(this).attr("id");
+     		$.ajax({
+     			url:"updateRoomName.chat",
+     			data:{
+     				roomName:newRoomName,
+     				roomNo:roomNo
+     			},success:function(result){
+     				if(result == "success"){
+     					let value = "<span id='roomName'>" + newRoomName + "</span>"
+     								+ " <span id='groupCount'>" + $groupCount + "</span>"
+     					$("#roomName-area").html(value);
+     				}
+     			}
+     		})
+     	})
+     	
+     	// 취소 아이콘 클릭 (채팅방 이름 변경 취소)
+     	function cancelChange(){
+     		let value = "<span id='roomName'>" + $roomName + "</span>"
+						+ " <span id='groupCount'>" + $groupCount + "</span>"
+			$("#roomName-area").html(value); 
+     	}
+     	
+     	// 방 나가기
+     	/* function chatOut(no){
+     		$.ajax({
+     			url:"out.chat",
+     			data:{
+     				roomNo:no,
+     				userNo:${loginUser.userNo}
+     			},success:function(result){
+     				console.log(result)
+     			}
+     		})
+     	} */
+     	
+     	function readChat(notread){
+     		let $chatCount = Number($("#chat-count").text());
+	 		if($chatCount - notread == 0){
+	 			$("#chat-count").css("display", "none");
+	 		}
+	 		$("#chat-count").text($chatCount - notread);
+     	}
+     	
+     	// 웹소켓
      	let sockChat = null;
      	
      	function connectChat(no){
@@ -1111,7 +1300,8 @@
 			sockChat.onmessage = onMessage;
      	}
      	
-     	function sendMessage(no, groupCount){ // 전송하기 버튼 클릭시 실행되는 함수
+     	// 전송버튼클릭
+     	function sendMessage(no, groupCount){ 
      		if($("#message").val() != ""){
      			if(sockChat){
          			let chatMsg = no + ",${loginUser.userNo}," + $("#message").val() + "," + (groupCount - 1);
@@ -1121,6 +1311,7 @@
      		}
 		}
      	
+     	// 방 입장
      	function onOpen(){
 	 		if(sockChat){
      			let chatMsg = $("input[name=openChatRoomNo]").val() + ",${loginUser.userNo},ENTER-CHAT,1";
@@ -1133,53 +1324,103 @@
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
-			if(msgArr[1] == ${loginUser.userNo}){
-				
-				if(msgArr[6] != 0){
-					$msg = "<span class='notreadCount'>" + msgArr[6] + "</span>"
-						+ "<div class='send-message'>" + msgArr[2] + "</div>"
+			if(msgArr[2] == "ENTER-CHAT"){
+				$(".notreadCount").each(function(){
+					if($(this).attr("id") > msgArr[5] && $(this).attr("id") <= msgArr[4]){
+						if(msgArr[1] == ${loginUser.userNo}){
+							if(!$(this).parent().attr("class").includes("mine")){
+								if((Number($(this).text()) - 1) == 0){
+									$(this).text("");
+								}else{
+									$(this).text(Number($(this).text()) - 1);
+								}
+							}
+						}else{
+							if($(this).parent().attr("class").includes("mine")){
+								if((Number($(this).text()) - 1) == 0){
+									$(this).text("");
+								}else{
+									$(this).text(Number($(this).text()) - 1);
+								}
+							}else{
+								if((Number($(this).text()) - 1) == 0){
+									$(this).text("");
+								}else{
+									$(this).text(Number($(this).text()) - 1);
+								}
+							}
+						}
+					}
+				})
+			} else{
+				if(msgArr[1] == ${loginUser.userNo}){
+					if(msgArr[6] != 0){
+						$msg = "<span class='notreadCount' id='" + msgArr[7] + "'>" + msgArr[6] + "</span>"
+							+ "<div class='send-message'>" + msgArr[2] + "</div>"
+					}else{
+						$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+					}
+					$chatDiv = $("<div class='chat-message'>").append($msg);
+					$chatDiv.addClass("mine");
+					$chatAllDiv = $chatDiv;
 				}else{
 					$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+					if(msgArr[6] != 0){
+						$msg += "<span class='notreadCount' id='" + msgArr[7] + "'>" + msgArr[6] + "</span>"
+					}
+					$chatDiv = $("<div class='chat-message'>").append($msg);
+					let userVal = "<img src='";
+					if(msgArr[5] != "null"){
+						userVal += msgArr[5]
+					}else{
+						userVal += "resources/icons/profile.png"
+					}
+					userVal += "' class='rounded-circle chatProfileImg pro-small'>"
+							+ msgArr[4]
+					let $userSpan = $("<span class='send-user'>").html(userVal);
+					$chatDiv.addClass("other");
+					$chatAllDiv = $("<div>").append($chatDiv);
+					$chatAllDiv = $chatAllDiv.prepend($userSpan);
 				}
-				$chatDiv = $("<div class='chat-message'>").append($msg);
-				$chatDiv.addClass("mine");
-				$chatAllDiv = $chatDiv;
-			}else{
-				$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
-				if(msgArr[6] != 0){
-					$msg += "<span class='notreadCount'>" + msgArr[6] + "</span>"
+				$(".chat-area").append($chatAllDiv);
+				$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+				if(socket){
+					let socketMsg2 = "newchat, , ," + receiveList + ", , ";
+					socket.send(socketMsg2);
 				}
-				$chatDiv = $("<div class='chat-message'>").append($msg);
-				let userVal = "<img src='";
-				if(msgArr[5] != "null"){
-					userVal += msgArr[5]
-				}else{
-					userVal += "resources/icons/profile.png"
-				}
-				userVal += "' class='rounded-circle chatProfileImg pro-small'>"
-						+ msgArr[4]
-				let $userSpan = $("<span class='send-user'>").html(userVal);
-				$chatDiv.addClass("other");
-				$chatAllDiv = $("<div>").append($chatDiv);
-				$chatAllDiv = $chatAllDiv.prepend($userSpan);
-			}
-			$(".chat-area").append($chatAllDiv);
-			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
-		}
-			
-		function onClose(no){
-			sockChat.close();
-			if($(".chat-area").html() == ""){ // 채팅 안쳤을 때 room자체도 삭제
-				deleteChatRoom(no);
-			} else{
-				chatRoomList();
 			}
 		}
 		
+		// shift+enter 시 줄바꿈 / enter시 메세지 전송
+		function check_enter(){
+			if(event.keyCode==13){
+				if(!event.shiftKey){
+					event.preventDefault();
+					if($("#message").val() != ""){
+						document.getElementById("send-btn").click();
+					}
+				}
+			}
+		}
+		
+		// 방 퇴장
+		function onClose(){
+			sockChat.close();
+			if($(".chat-area").html() == ""){ // 채팅 안쳤을 때 room자체도 삭제
+				deleteChatRoom($("#roomNo").val());
+			} else{
+				chatRoomList();
+			}
+			$("#participantList").hide();
+			receiveList = "";
+		}
+		
+		// 새로고침 시에도 socket close
 		window.onbeforeunload = function(){
 			onClose();
 		}
 		
+		// 채팅 안쳤을 때 room자체도 삭제
 		function deleteChatRoom(no){
 			$.ajax({
 				url:"delete.chat",

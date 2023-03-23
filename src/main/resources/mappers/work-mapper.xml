@@ -41,6 +41,9 @@
 		<result column="work_out" property="workOut" />
 		<result column="work_time" property="workTime" />
 		<result column="status" property="status" />
+		<result column="behindtime" property="behindtime" />
+		<result column="absenteeism" property="absenteeism" />
+		<result column="leavearly" property="leavearly" />
 	</resultMap>
 
 	<select id="selectHolidayList" resultMap="holidayResult2" >
@@ -102,7 +105,8 @@
 		     , status 
 		     )
 		select seq_wno.nextval
-			 , m.user_no,to_(sysdate,'YYYY-MM-DD hh24:mi:SS')
+			 , m.user_no
+			 , sysdate
 			 , null
 			 , null
 			 , null
@@ -123,16 +127,27 @@
 		  from work w
 		  join member m on (w.user_no = m.user_no)
 		  where w.user_no = #{userNo}
-		    AND WORK_DATE = to_char(sysdate,'YYYY-MM-DD')
+		    AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 	</select>
 	
 	<update id="updateWorkIn">
 		update 
 		       work
 		   set work_in = sysdate
+		     , status = '정상'
 		 where USER_NO = #{userNo}
-		   AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD')
+		   AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 	</update>
+	
+	<update id="updateWorkInLate">
+		update 
+		       work
+		   set work_in = sysdate
+		   	 , status = '지각'
+		 where USER_NO = #{userNo}
+		   AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
+	</update>
+	
 	
 	<update id="updateWorkOut">
 		update 
@@ -141,10 +156,30 @@
 		     , work_time = (select 
 		                           ROUND(((work_out-work_in)*24)-1) 
 		                      FROM work 
-		                     where  USER_NO = 3
-		                     AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD'))
+		                     where  USER_NO = #{userNo}
+		                     AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 		 where  USER_NO = #{userNo}
-		  AND WORK_DATE= to_char(sysdate,'YYYY-MM-DD')
+		  AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
+	</update>
+	<update id="updateWorkOutEarly">
+		update 
+		       work
+		   set work_out = sysdate
+		   	 , status = '조퇴'
+		     , work_time = (select 
+		                           ROUND(((work_out-work_in)*24)-1) 
+		                      FROM work 
+		                     where  USER_NO = #{userNo}
+		                     AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd'))
+		 where  USER_NO = #{userNo}
+		  AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
+	</update>
+	
+	<update id="updateConnSta">
+		update 
+		       member
+		   set conn_sta = #{connSta}
+		 where user_no = #{userNo}
 	</update>
 	
 	<select id="selectMemberHoliday" resultMap="holidayResult2">
@@ -247,4 +282,60 @@
   )
 	</insert>
 	
+	<insert id="holidayGive">
+		insert 
+		  into holiday
+		     ( holi_no
+		     , user_no
+		     , h_give
+		     , h_date
+		     , h_cause
+		     , h_remain
+		     )
+		  values
+		  ( SEQ_HNO.nextval
+		  , #{userNo}
+		  , #{datea}
+		  , sysdate
+		  , #{cause}
+		  , null
+		  )
+	</insert>
+	
+	<select id="selectMemberWorkList" resultMap="workResult">
+	select work_no
+	     , user_no
+	     , to_char(work_date, 'MM"월"DD"일"') as work_date
+     	 , to_char(work_in, 'hh24:MI') as work_in
+     	 , to_char(work_out,'hh24:MI') as work_out
+	     , work_time
+	     , status
+	  from work
+	 where user_no=#{userNo}
+	 order
+	    by work_no desc
+	</select>
+	
+	<select id="countWorkStatus" resultMap="workResult">
+		select 
+		       COUNT( CASE WHEN STATUS ='결근'  then 1 end ) AS "absenteeism"
+		     , COUNT( CASE WHEN STATUS ='조퇴'  then 1 end ) AS "leavearly"
+		     , COUNT( CASE WHEN STATUS ='지각'  then 1 end ) AS "behindtime"
+		  FROM WORK
+		 WHERE USER_NO=#{userNo}
+		 AND SUBSTR(WORK_DATE,0,8) BETWEEN (TO_CHAR(TRUNC(SYSDATE,'MM'),'YY/MM/DD') ) AND (LAST_DAY(SYSDATE))
+	</select>
+	
+	<select id="workCalendar" resultMap="workResult">
+		select
+		       work_no
+		     , user_no
+		     , to_char(work_date, 'MM"월"DD"일"') as work_date
+		     , to_char(work_in, 'hh24:MI') as work_in
+		     , to_char(work_out,'hh24:MI') as work_out
+		     , work_time
+		     , status
+		  from work 
+		 where user_no=#{userNo}
+	</select>
 </mapper>

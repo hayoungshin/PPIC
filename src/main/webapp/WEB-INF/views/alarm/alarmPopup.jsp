@@ -61,26 +61,6 @@
 	    </table>
     </div>
     <script>
-	    function connectAlarm(){
-			const sock = new SockJS("${pageContext.request.contextPath}/alarm"); 
-				socket = sock;
-			
-			sock.onopen = onOpen;
-			sock.onmessage = onMessage; 
-			sock.onclose = onClose; 
-			 	
-	   		function onOpen(){
-		 		console.log('Info : alarm connection opened.');
-		 	}
-			 	
-	   		function onMessage(evt){
-	   			selectAlarm();
-			}
-	   		
-	    	function onClose(){
-	    		console.log('Info : alarm connection closed.');
-			}
-		}
 	    
 	    function selectListNoti(){
     		$.ajax({

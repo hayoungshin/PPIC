@@ -37,8 +37,20 @@ public class WorkDao {
 		return sqlSession.update("workMapper.updateWorkIn", userNo);
 	}
 	
+	public int updateWorkInLate(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkInLate", userNo);
+	}
+	
 	public int updateWorkOut(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.update("workMapper.updateWorkOut", userNo);
+	}
+	
+	public int updateWorkOutEarly(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkOutEarly", userNo);
+	}
+	
+	public int updateConnSta(SqlSessionTemplate sqlSession, Work w) {
+		return sqlSession.update("workMapper.updateConnSta", w);
 	}
 	
 	public Member selectMemberHoliday(SqlSessionTemplate sqlSession, int userNo ) {
@@ -67,5 +79,21 @@ public class WorkDao {
 	
 	public int holidayInsert(SqlSessionTemplate sqlSession, Holiday h) {
 		return sqlSession.insert("workMapper.holidayInsert", h);
+	}
+	
+	public int holidayGive(SqlSessionTemplate sqlSession, Holiday h) {
+		return sqlSession.insert("workMapper.holidayGive", h);
+	}
+	
+	public ArrayList<Work> selectMemberWorkList(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.selectMemberWorkList", userNo);
+	}
+	
+	public Work countWorkStatus(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("workMapper.countWorkStatus", userNo);
+	}
+	
+	public ArrayList<Work> workCalendar(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.workCalendar", userNo);
 	}
 }

@@ -17,6 +17,12 @@ public class ProjectParticipant {
 	private int taskNo;
 	private String departmentName;
 	private String userName;
+	private String pmStatus;
+	private String taskAssign;
+	
+	private String positionName;
+	private String userNo;
+	private String departmentNo;
 	
 	private String userImg;
 	

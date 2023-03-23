@@ -11,6 +11,7 @@
 	<typeAliases>
 		<typeAlias type="com.ppicachu.ppic.member.model.vo.Member" alias="Member" />
 		<typeAlias type="com.ppicachu.ppic.mail.model.vo.Mail" alias="Mail"/>
+		<typeAlias type="com.ppicachu.ppic.mail.model.vo.MailAttachment" alias="MailAttachment"/>
 		<typeAlias type="com.ppicachu.ppic.board.model.vo.Board" alias="Board"/>
 		<typeAlias type="com.ppicachu.ppic.chat.model.vo.Chat" alias="Chat"/>
 		<typeAlias type="com.ppicachu.ppic.comschedule.model.vo.Comschedule" alias="Comschedule"/>

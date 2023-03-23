@@ -3,6 +3,7 @@ package com.ppicachu.ppic.work.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,7 +35,16 @@ public class WorkController {
 	
 	/* 근무 메인 */
 	@RequestMapping("workMain.wo")
-	public String workMain() {
+	public String workMain(int no, Model model) {
+		
+		ArrayList<Work> list1 = wService.selectMemberWorkList(no);
+		model.addAttribute("list1", list1);
+		
+		Work w  = wService.countWorkStatus(no);
+		model.addAttribute("w", w);
+		Member m = wService.selectMemberHoliday(no);
+		model.addAttribute("m",m);
+		
 		return "work/workMainView";
 	}
 	
@@ -83,9 +93,7 @@ public class WorkController {
 		// 휴가 
 		ArrayList<Member> list2 = wService.selectHolidayList();
 		
-		model.addAttribute("list1", list1);
-		model.addAttribute("list2", list2);
-		
+	    model.addAttribute("list1", list1);
 		return "work/workMemberView";
 	}
 	
@@ -136,7 +144,6 @@ public class WorkController {
       
       HashMap<String,Object> map = new HashMap<String,Object>();
       map.put("w", w);
-      System.out.println(w);
 	  return new Gson().toJson(map);
 	}
 	
@@ -144,18 +151,53 @@ public class WorkController {
 	@ResponseBody
 	@RequestMapping(value="workIn.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkIn(int no){
-		
 		int result = wService.updateWorkIn(no);
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(0);
+		
+		wService.updateConnSta(w);
+		
+	}
+	
+	// home 출근등록하기 (지각)
+	@ResponseBody
+	@RequestMapping(value="workInLate.wo", produces="application/json; charset=utf-8" )
+	public void ajaxUpdateWorkInLate(int no){
+		int result = wService.updateWorkInLate(no);
+		
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(0);
+		
+		wService.updateConnSta(w);
 	}
 
 	// home 퇴근등록하기 
 	@ResponseBody
 	@RequestMapping(value="workOut.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkOut(int no){
-		
 		int result = wService.updateWorkOut(no);
 		
-		}
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(1);
+		
+		wService.updateConnSta(w);
+	}
+	
+	// home 퇴근등록하기 (조퇴)
+	@ResponseBody
+	@RequestMapping(value="workOutEarly.wo", produces="application/json; charset=utf-8" )
+	public void ajaxUpdateWorkOutEarly(int no){
+		int result = wService.updateWorkOutEarly(no);
+		
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(1);
+		
+		wService.updateConnSta(w);
+	}
 
 	// 사용자 예정 휴가 조회하기 
 	@ResponseBody
@@ -199,9 +241,43 @@ public class WorkController {
 		
 	}
 	
+	/* 관리자 휴가 지급하기 */
+	@RequestMapping("holidayGive.ho")
+	public String holidayGive(Holiday h, Model model) {
+		int result = wService.holidayGive(h);
+		
+		if(result>0) { 
+			model.addAttribute("alertMsg", "휴가지급 성공");
+			return "redirect:holiGive.ho";
+		}else { 
+			model.addAttribute("errorMsg", "휴가지급 실패");
+			return "redirect:holiGive.ho";
+		}
+		
+	}
 	
+	/* 관리자 휴가 회수하기 */
+	@RequestMapping("holiWithDraw.ho")
+	public String holidayWithDraw(Holiday h, Model model) {
+		int result = wService.holidayInsert(h);
+		if(result>0) { 
+			model.addAttribute("alertMsg", "휴가회수 성공");
+			return "redirect:holiGive.ho";
+		}else { 
+			model.addAttribute("errorMsg", "휴가회수 실패");
+			return "redirect:holiGive.ho";
+		}
+	}
 	
-	
-	
+	@ResponseBody
+	@RequestMapping(value="workCalendar.wo", produces="application/json; charset=utf-8")
+	public String ajaxWorkCalendar(int userNo, Model model) {
+      
+      ArrayList<Work> list = wService.workCalendar(userNo);
+      model.addAttribute("list",list);
+      
+      
+	  return new Gson().toJson(list);
+	}
 	
 }

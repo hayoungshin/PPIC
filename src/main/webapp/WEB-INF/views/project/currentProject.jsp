@@ -22,6 +22,8 @@
       font-weight:600;
   }
 
+  #add-project{float:right;}
+
   /* swiper 슬라이드 */
   .swiper{
       width:100%;
@@ -68,17 +70,15 @@
     background:linear-gradient(to right, #00b5d1 60%, #FFCECE);
     height: 16px;
   }
-  .p-summary{
-    font-size:13px;
-  }
-  #p-detail{
-    line-height:20px;
-  }
-
+  .p-summary{font-size:13px;}
+  #p-detail{line-height:20px;}
+  
   /* 작업 추가 버튼 */
-  #add-task{
-    margin: 0 20px;
-  }
+  #add-task{float:right;}
+  /* 내 작업만 보기 필터 */
+  .filter-mine{float:right;}
+  #filter-check{margin-right:5px; width:17px; height:17px; cursor:pointer; position:relative; top:5px;}
+  #filter-label{margin-right:15px; font-size:14px; position:relative; top:3px;}
   /* 상태 레이블 */
   .circle{display:inline-block; width:20px; height:20px; border-radius:20px; background:#ecd718; margin-right:10px;}
   /* 작업분류박스 */
@@ -138,7 +138,34 @@
   .add-form th{width:20%;}
   .add-form td{width:80%;}
   .add-form input, .add-form textarea{width:80%; border:0.5px solid lightgray; border-radius:4px;}
-  #select-area{width:80%; height:150px; border:0.5px solid lightgray; border-radius:4px;}
+  #emp-select{width:30%;}
+  #selected-area{
+    width:80%;
+    height:150px;
+    border:0.5px solid lightgray;
+    border-radius:4px;
+    overflow:auto;
+  }
+  .select-user{
+    display:inline-flex;
+    align-items:center;
+    margin:5px;
+    background:rgb(240, 240, 240);
+    border-radius:3px;
+    width:100px;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .select-user>img{
+    width:12px;
+    margin:3px;
+  }
+  #invalidMsg{
+    font-size:12px;
+    color:red;
+    display:none;
+    margin:10px 0 0 100px;
+  }
 </style>
 </head>
 <body>
@@ -154,7 +181,8 @@
             <a href="#">프로젝트 관리</a>
         </div>
         <hr>
-        <br>
+        <button id="add-project" class="btn-purple" data-toggle="modal" data-target="#add-project-modal">+ 프로젝트 생성</button>
+        <br><br>
         
         <!-- Swiper -->
         <div class="swiper mySwiper">
@@ -165,7 +193,7 @@
                   <input type="hidden" name="projectNo" value="${p.projectNo}">
                   <input type="hidden" name="projectDetail" value="${p.detail}">
 	                <div class="project-title">${p.projectName}</div>
-	                <div class="project-manager">PM : ${p.projectManager} (${p.projectParticipants[0].departmentName})</div>
+	                <div class="project-manager">PM : ${p.projectManager} ${p.projectParticipants[0].positionName} (${p.projectParticipants[0].departmentName}) </div>
 	                <div class="project-schedule">기간: ${p.startDate} ~ ${p.endDate}</div>
 	              </div>
 	            </div>
@@ -248,6 +276,7 @@
 
         function detailLoad(projectNo){
           $("#task-list .col").empty();
+          $("#filter-check").prop("checked", false);
             $.ajax({
               url:"detail.pr",
               data:{"projectNo":projectNo},
@@ -258,7 +287,7 @@
                 // 참여자 정보 출력
                 let member = "";
                 for(let i=0; i<ppList.length; i++){
-                  member += ppList[i].userName + " (" + ppList[i].departmentName + "), ";
+                  member += ppList[i].userName + " " + ppList[i].positionName + " (" + ppList[i].departmentName + "), ";
                 }
                 member = "참여자 : " + member.substring(0, member.lastIndexOf(","));
                 $("#member-list").html(member);
@@ -280,7 +309,9 @@
                   task = "<div class='task-box' onclick='taskDetailLoad(this);'>"
                          + "<input type='hidden' name='taskNo' value='" + tList[i].taskNo + "'>"
                          + "<div class='task-title'>" + tList[i].taskName + "</div>"
-                         + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + "</div>";
+                         + "<input type='hidden' name='userNo' value='" + tList[i].userNo + "'>"
+                         + "<input type='hidden' name='assignUser' value='" + tList[i].assignUser + "'>"
+                         + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + " " + tList[i].positionName + "</div>";
                   if(tList[i].originName != null){
                     task += "<div class='file'>" + tList[i].originName + "</div>"; 
                   }
@@ -317,6 +348,10 @@
                 
                 // 진행률 표시
                 taskProgress();
+                doneRatio();
+
+                // 셀렉트 조회
+                selectList();
 
               }, error:function(){
                 console.log("정보 가져오기 실패");
@@ -335,8 +370,17 @@
       </div>
       <br>
       <div id="progress-area">
-        <span style="font-size:14px;"><b>진행률</b></span>
-        <br><br>
+        <div style="font-size:14px;"><b>진행률</b></div>
+        <div id="task-ratio" style="font-size:13px;"></div>
+        <br>
+        <script>
+          function doneRatio(){
+            var doneNum = $(".done-list>.task-box").length;
+            var allNum = $("#task-list .task-box").length;
+            $("#task-ratio").text(doneNum + " / " + allNum + " (완료 / 전체)")
+          }
+        </script>
+
         <div class="progress">
           <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -345,36 +389,62 @@
 
       <script>
         function taskProgress(){
-          var taskCompletion = Math.round($(".done-list>.task-box").length/$("#task-list .task-box").length*100);
-          taskCompletion += "%";
-          $(".progress-bar").html(taskCompletion);
-          // $(".progress-bar").css("width", taskCompletion);
+          if($("#task-list .task-box").length != 0){
+           
+            var taskCompletion = Math.round($(".done-list>.task-box").length/$("#task-list .task-box").length*100);
+          
+            taskCompletion += "%";
+          }else{
+            taskCompletion = "0%";
+          }
+            // $(".progress-bar").css("width", taskCompletion);
 
-          // 값 변경 시마다 애니매이션 재시작
-          // keyframes 추가
-          var keyframesName = "load-" + new Date().getTime();
-          // 새로운 keyframes 규칙
-          var keyframesRule = "@keyframes " + keyframesName + " { 0% { width: 0; } 100% { width: " + taskCompletion + "; } }";
+            // 값 변경 시마다 애니매이션 재시작
+            // keyframes 추가
+            var keyframesName = "load-" + new Date().getTime();
+            // 새로운 keyframes 규칙
+            var keyframesRule = "@keyframes " + keyframesName + " { 0% { width: 0; } 100% { width: " + taskCompletion + "; } }";
+            
+            // style 추가
+            $("<style>")
+              .prop("type", "text/css")
+              .html(keyframesRule)
+              .appendTo("head");
+            
+            // 애니메이션 속성 변경하기
+            $(".progress-bar").css({
+              "animation-name": keyframesName,
+              "animation-duration": "2s",
+              "animation-fill-mode": "forwards"
+            });
           
-          // style 추가
-          $("<style>")
-            .prop("type", "text/css")
-            .html(keyframesRule)
-            .appendTo("head");
+          $(".progress-bar").html(taskCompletion);
           
-          // 애니메이션 속성 변경하기
-          $(".progress-bar").css({
-            "animation-name": keyframesName,
-            "animation-duration": "2s",
-            "animation-fill-mode": "forwards"
-          });
         }
       </script>
 
       <div id="task-area">
         <span style="font-size:16px;"><b>업무 현황</b></span>
         <button id="add-task" class="btn-purple" data-toggle="modal" data-target="#add-task-modal">+ 업무 추가</button>
+        <div class="filter-mine">
+          <input type="checkbox" id="filter-check">
+          <label for="filter-check" id="filter-label">내 작업만 보기</label>
+        </div>
         <br><br>
+
+        <script>
+          $("#filter-check").change(function(){
+            if($(this).prop("checked")){
+              $("input[name=userNo]").each(function(){
+                if($(this).val() != "${loginUser.userNo}"){
+                  $(this).parent(".task-box").prop("style", "display:none");
+                }
+              })
+            }else{
+              $(".task-box").prop("style", "display:block");
+            }
+          })
+        </script>
         <div class="row" id="task-category">
           <div class="col" id="wait"><div class="circle status-wait"></div>대기</div>
           <div class="col" id="working"><div class="circle status-working"></div>진행중</div>
@@ -417,7 +487,8 @@
                 if(tpList[i].userImg == null){
                   tpList[i].userImg = "resources/icons/none-profile.png";
                 }
-                taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>" + tpList[i].userName + "</div>";
+                taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>"
+                             + tpList[i].userName + " " + tpList[i].positionName + "</div>";
               }
               clickRp.popover ({
               content: taskRefList,
@@ -428,9 +499,6 @@
             }
           })
 
-          // console.log($(this));
-
-          
           
         })
       </script>
@@ -488,82 +556,267 @@
                   statusEl.html(statusVal);
 
                   taskProgress();
+                  doneRatio();
                 }, error:function(){
                   console.log("상태 업데이트 실패");
                 }
               })
-
-
             }
             
           });
         });
       </script>
 
-      <!-- The Modal -->
+      <!-- 업무 추가 Modal -->
       <div class="modal" id="add-task-modal">
         <div class="modal-dialog">
           <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">업무 추가</h4>
+              <h5 class="modal-title"><b>업무 추가</b></h5>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <!-- Modal body -->
-            <div class="modal-body">
-              <form action="" method="post" enctype="multipart/form-data">
+            <form action="addTask.tk" method="post" enctype="multipart/form-data">
+              <!-- Modal body -->
+              <div class="modal-body">
                 <table class="add-form">
                   <tr>
-                    <th width="100px;">업무명 : </th>
-                    <td><input type="text" class="task-title-inpt"></td>
+                    <th width="100px;">* 업무명 : </th>
+                    <td><input type="text" class="task-title-inpt" name="taskName" placeholder="업무명을 입력해주세요." required></td>
                   </tr>
                   <tr>
-                    <th>업무상세 :</th>
-                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;"></textarea></td>
+                    <th>* 업무상세 :</th>
+                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;" placeholder="업무 상세내용을 입력해주세요." required></textarea></td>
                   </tr>
                   <tr>
                     <th>첨부파일 :</th>
-                    <td><input type="file"></td>
+                    <td><input type="file" name="upfile"></td>
                   </tr>
                   <tr>
-                    <th>담당자 : </th>
-                    <td>${loginUser.userName}</td>
+                    <th>담당자 :</th>
+                    <td><input type="hidden" name="assignUser" value="${loginUser.userNo}">${loginUser.userName}</td>
                   </tr>
                   <tr>
-                    <th>참조자 : </th>
+                    <th>참조자 :</th>
                     <td>
-                      <select name="" id="">
-                        <option value="">부서1</option>
-                        <option value="">부서2</option>
+                      <select name="department" id="dept-select">
+                      </select>
+                      <select name="userNo" id="emp-select">
                       </select>
                     </td>
                   </tr>
                   <tr>
-                    <th></th>
-                    <td><div id="select-area">dddddddd</div></td>
+                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
+                    <td><div id="selected-area"></div></td>
+                    <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                  </tr>
+                  <tr>
+                    <th>상태</th>
+                    <td>
+                      <select name="taskStatus">
+                        <option value="1">대기</option>
+                        <option value="2">진행중</option>
+                        <option value="3">완료</option>
+                        <option value="4">보류</option>
+                      </select>
+                    </td>
                   </tr>
                 </table>
-              </form>
+                <input type="hidden" name="projectNo">
             </div>
 
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-purple" data-dismiss="modal">추가</button>
+              <button type="submit" class="btn btn-purple">추가</button>
             </div>
+          </form>
 
           </div>
         </div>
-      </div>
-      
-      <script>
-        function taskDetailLoad(){
-          // console.log("하하");
+      </div><!-- add-task-modal-->
 
+      <!-- 셀렉트 정보 가져오기 -->
+      <script>
+        function selectList(){
+          const noneOption = "<option value='none'>선택</option>";
+          $("#dept-select").html(noneOption);
+          $("#emp-select").html(noneOption);
+          $("#selected-area").empty();
+          
+          let userNo = ${loginUser.userNo};
+          $.ajax({
+            url:"selectList.tk",
+            data:{"projectNo":projectNo, "userNo":userNo},
+            success:function(obj){
+              let dList = obj.dList;
+              let eList = obj.eList;
+              
+              let deptValue = "";
+              for(let i=0; i<dList.length; i++){
+                deptValue += "<option value='" + dList[i].departmentNo + "'>" + dList[i].departmentName + "</option>";
+              }
+              $("#dept-select").append(deptValue);
+
+              $("#dept-select").change(function(){
+                $("#emp-select").html(noneOption);
+                
+                let dept = $(this).val();
+                let empValue = "";
+                
+                for(let i=0; i<eList.length; i++){
+                  if(dept == eList[i].departmentNo){
+                    empValue += "<option value='" + eList[i].userNo + "'>" + eList[i].userName + " " + eList[i].positionName + "</option>";
+                  }
+                }
+                $("#emp-select").append(empValue);
+                $("#invalidMsg").css("display", "none");
+              })
+
+            }, error:function(){
+              console.log("부서 조회 실패");
+            }
+          })
+        }
+          
+      </script>
+
+      <script>
+        // 선택한 정보 selected-area에 추가하기
+        let taskRefUser = "";
+        let selectUserDept = "";
+        let selectUserName = "";
+        let selectUserNo = "";
+
+        $("#emp-select").change(function(){
+          selectUserDept = $("#dept-select option:selected").val();
+          selectUserName = $("#emp-select option:selected").text();
+          selectUserNo = $("#emp-select option:selected").val();
+
+          if($("#selected-area").text().includes(selectUserName)){
+            $("#invalidMsg").css("display", "block");
+          }else if(selectUserName != "선택"){
+            // selectedList.push($("#emp-selected option:selected").val());
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete.png'></div>"
+                        + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
+            $("#selected-area").append(taskRefUser);
+          }
+        })
+
+        // 삭제하기
+        function deleteUser(e){
+          $(e).remove();
+          // selectedList.pop()
         }
 
+        // 모달에 프로젝트번호 추가
+        $("#add-task").click(function(){
+          $("#add-task-modal input[name=projectNo]").val(projectNo);
+        })
       </script>
+
+      
+
+      <!-- 업무 수정 Modal -->
+      <div class="modal" id="update-task-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h5 class="modal-title"><b>업무 상세</b></h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <form action="updateTask.tk" method="post" enctype="multipart/form-data">
+              <!-- Modal body -->
+              <div class="modal-body">
+                <table class="add-form">
+                  <tr>
+                    <th width="100px;">* 업무명 : </th>
+                    <td><input type="text" class="task-title-inpt" name="taskName" placeholder="업무명을 입력해주세요." required></td>
+                  </tr>
+                  <tr>
+                    <th>* 업무상세 :</th>
+                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;" placeholder="업무 상세내용을 입력해주세요." required></textarea></td>
+                  </tr>
+                  <tr>
+                    <th>첨부파일 :</th>
+                    <td><input type="file" name="upfile"></td>
+                  </tr>
+                  <tr>
+                    <th>담당자 :</th>
+                    <td><input type="hidden" name="assignUser" value="${loginUser.userNo}">${loginUser.userName}</td>
+                  </tr>
+                  <tr>
+                    <th>참조자 :</th>
+                    <td>
+                      <select name="department" id="dept-select">
+                      </select>
+                      <select name="userNo" id="emp-select">
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
+                    <td><div id="selected-area"></div></td>
+                    <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                  </tr>
+                  <tr>
+                    <th>상태</th>
+                    <td>
+                      <select name="taskStatus">
+                        <option value="1">대기</option>
+                        <option value="2">진행중</option>
+                        <option value="3">완료</option>
+                        <option value="4">보류</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+                <input type="hidden" name="projectNo">
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-purple">추가</button>
+            </div>
+          </form>
+
+          </div>
+        </div>
+      </div><!-- update-task-modal-->
+      
+
+      <script>
+        function taskDetailLoad(e){
+          let tn = $(e).children("input[name=taskNo]").val();
+          
+          $.ajax({
+            url:"detail.tk",
+            data:{"taskNo":tn},
+            success:function(obj){
+              let t = obj.t;
+              let tpList = obj.tpList;
+
+              
+            }, error:function(){
+              console.log("업무 상세 불러오기 실패");
+            }
+          })
+        }
+      </script>
+
+
+
+
+
+
+
+
+
     </div>
     </div>
 

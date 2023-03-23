@@ -151,7 +151,7 @@
 		        				boardNo:${ b.boardNo }
 		        			},success:function(b){
 		        				$("#dislike-btn").removeClass("clickedbtn");
-		        				$("#dislike-btn").text("👎 " + b.likeCount);
+		        				$("#dislike-btn").text("👎 " + b.hateCount);
 		        				$("#likehateStatus").val(b.likehateStatus);
 		        			},error:function(){
 		        				console.log("싫어요 삭제 ajax 통신 실패")

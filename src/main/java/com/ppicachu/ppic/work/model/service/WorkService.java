@@ -28,9 +28,14 @@ public interface WorkService {
 	
 	// 6. 출근등록 서비스 
 		int updateWorkIn(int userNo);
+		int updateWorkInLate(int userNo);
 		
 	// 7. 퇴근등록 서비스 
 		int updateWorkOut(int userNo);
+		int updateWorkOutEarly(int userNo);
+		
+		// 출퇴근시 채팅 접속상태 변경
+		int updateConnSta(Work w);
 		
 	// 8. 사원의 휴가 정보 조회 서비스 
 		Member selectMemberHoliday(int userNo);
@@ -49,4 +54,15 @@ public interface WorkService {
 		int holidayApprove(Holiday h);
 		int holidayInsert(Holiday h);
 	
+	// 13. 관리자의 휴가 지급 서비스 
+		int holidayGive(Holiday h);
+	
+	// 14. 사원의 출퇴근 기록 조회 서비스
+		ArrayList<Work> selectMemberWorkList(int userNo);
+		
+	// 15. 사원의 지각 조퇴 결근 횟수 조회 서비스 
+		Work countWorkStatus(int userNo);
+
+	// 16. 캘린더 조회 서비스 
+		ArrayList<Work> workCalendar(int userNo);
 }

@@ -72,33 +72,24 @@
 			
 			<script>
 				function workback(){
-					location.href="workMain.wo"
+					location.href="workMain.wo?no="+${loginUser.userNo }
 				}
 			</script>
            
-			<div class="workcategory" style="float:left;" >
-                <a href="workList.wo" >출퇴근기록</a>
-                <a href="workInfo.wo" >올해근무정보</a>
-				<a id="info" >휴가현황</a>
-                <a href="holiApply.ho" style="color:black;">휴가신청</a>
-                
-                
-                <!-- 관리자만 보이게 할거임 -->
-                <a href="memberWork.wo">구성원근무</a>
-                <a href="memberHoli.ho">전사원휴가현황</a>
-                <a href="holiGive.ho">휴가지급|회수</a>
-                <a href="holiApprove.ho">휴가승인</a>
-                
-                <br>
+            <div class="workcategory" style="float:left;" >
+	            <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
+	            <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
+				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
+	            <a href="holiApply.ho?no=${loginUser.userNo }" >휴가신청</a>
+	            
+	            
+	            <!-- 관리자만 보이게 할거임 -->
+	            <a href="memberWork.wo">구성원근무</a>
+	            <a href="memberHoli.ho">전사원휴가현황</a>
+	            <a href="holiGive.ho">휴가지급|회수</a>
+	            <a href="holiApprove.ho" style="color:black;">휴가승인</a>
+            <br>
             </div>
-            
-            <script>
-            $(function(){
-        		$("#info").click(function(){
-        			location.href = 'holiInfo.ho?no=' + ${loginUser.userNo}; 
-        		})
-        	})
-            </script>
 
 			
 			<br>
@@ -190,47 +181,66 @@
                         <!-- Modal body -->
                         <div class="modal-body" align="center">
                         
-                            <form action="approve.ho" method="post" onsubmit="">
+                            <form action="approve.ho" method="post" >
                                 <div class="form-group">
                                  			<input type="hidden" id="uNo" name=userNo value="" >
-                                	<table>
+                                	<table style="float:none; margin-bottom:30px;">
                                 		<tr>
                                 			<td style="width:150px;">종류</td>
                                 			<td>
                                 				<input type="hidden" class="inputcss" id="no" name="holidayNo" value="" readonly>
                                 				<input type="text" class="inputcss" id="type" style="border:none" name="" value="" readonly>
                                 			</td>
+                                			<td></td>
                                 		</tr>
                                 		<tr>
                                 			<td>일정</td>
                                 			<td>
-                                				<input type="text" class="inputcss" id="start" style="border:none" name="" value="" readonly>-
-                                    			<input type="text" class="inputcss" id="finish" style="border:none" name="" value="" readonly>
+                                				<input type="text" class="inputcss" id="start" style="border:none; width:100px" name="" value="" readonly> -
+                                    			<input type="text" class="inputcss" id="finish" style="border:none; width:100px" name="" value="" readonly>
                                 			</td>
+                                			<td></td>
                                 		</tr>
                                 		
                                 			<tr>
                                 			<td>기간</td>
-                                			<td>
-                                				<input type="text" class="inputcss" id="datea" name="" style="border:none" value="datea" readonly>
+                                			<td id="optionY">
+                                				<input type="text" class="inputcss" id="datea" name="datea" style="border:none" value="" readonly>
                                 			</td>
+                                		
+                                			<td></td>
                                 		</tr>
                                 		
                                 		<tr>
-                                			<td>사유 
-                                				<input type="hidden" style="width:100px;" class="inputcss"  name="cause" value="연차사용" readonly>
-                                			</td>
+                                			<td>사유</td>
                                 			<td id="reason"></td>
+                                			<td id="causeY">
+                                				<input type="hidden" style="width:100px;" class="inputcss"  name="cause" value="연차사용">
+                                			</td>
+                                			
                                 		</tr>
                                 		
                                 	</table>
                                    
-                                   <br><br>
-									
-									<select name="status">
+									<select style="float:none;" name="status" id="option" onchange="changehtml();" style="margin-left:150px;">
 										<option value="승인">승인하기</option>
 										<option value="거절">승인거부</option>
 									</select>
+									
+									<script>
+										function changehtml(){
+											var option = document.getElementById('option').value;
+											var a = document.getElementById('causeY')
+											
+											if(option=="승인"){
+												a.innerHTML ='<input type="hidden" style="width:100px;" class="inputcss"  name="cause" value="연차사용">';
+											}else if(option=="거절") {
+												a.innerHTML ='<input type="hidden" style="width:100px;" class="inputcss"  name="cause" value="승인거절">';
+											}
+										}
+									</script>
+									
+									
                                 </div>
                                 <br>
                                 <div class="btns" align="center">
@@ -248,7 +258,7 @@
 			
 			<!-- 알림 관련 -->
 			<script>
-				$("#holidayApprove button").click(function(){
+				$(".btn-holi").click(function(){
 					
 					if(socket){
 						if($("select[name=status]").val() == '승인'){

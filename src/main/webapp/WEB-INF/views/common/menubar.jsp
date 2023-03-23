@@ -132,17 +132,30 @@
 	    border-radius:5px;
 	    font-weight:600;
 	}
-	#alarm-count{
+	#alarm-count, #chat-count{
 		 border-radius:50%; 
-		 height:25px; 
-		 width:25px; 
 		 left:170px; 
 		 text-align:center; 
-		 line-height:25px;
 		 background:rgb(244, 89, 89);
 		 color:white;
 		 font-size:11px;
 		 display:none;
+	}
+	#alarm-count{
+		height:25px;
+		width:25px;
+		line-height:25px;
+	}
+	
+	#chat-count{
+		position:fixed;
+        z-index:100;
+        top:68px;
+        left:195px;
+        height:22px;
+		width:22px;
+		font-size:5px;
+		line-height:22px;
 	}
 </style>
 </head>
@@ -168,8 +181,11 @@
                         <td class="nametag-background" style="width:35px; height:35px; cursor:pointer;" onclick="toMyPage();">
                             <span class="nametag-name" style="font-size:12px;">이름</span>
                         </td>
-                        <td id="side-my-name" style="" onclick="toMyPage();">${loginUser.userName }</td>
-                        <td style="cursor:pointer"><img src="resources/icons/messenger.png" style="width:25px;" onclick="chatPopup();"></td>
+                        <td id="side-my-name" style="" onclick="toMyPage();">${loginUser.userName}</td>
+                        <td style="cursor:pointer">
+                        	<img src="resources/icons/messenger.png" style="width:25px;" onclick="chatPopup();">
+                        	<span id="chat-count"></span>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -177,12 +193,12 @@
             <div class="side-menu" onclick="alarmPopup();" style="margin-top:20px;">
                 <img src="resources/icons/bell.png" style="margin:5px 10px; width:23px;">
                 <span style="left:50px;">새로운 알림</span>
-                <span id="alarm-count">0</span>
+                <span id="alarm-count"></span>
             </div>
 
             <hr style="margin:20px 0px;">
 
-            <div class="side-menu" onclick="location.href='login.me'">
+            <div class="side-menu" onclick="location.href='main.me'">
                 <img src="resources/icons/home.png">
                 <span>홈 피드</span>
             </div>
@@ -192,7 +208,7 @@
                 <span>메일</span>
             </div>
 
-            <div class="side-menu" onclick="location.href='workMain.wo'">
+            <div class="side-menu" onclick="location.href='workMain.wo?no=${loginUser.userNo}'">
                 <img src="resources/icons/time.png">
                 <span>근무</span>
             </div>
@@ -245,7 +261,7 @@
             	location.href="myPage.me"
             }
             
-            /* 새로운 알람 클릭 */
+            /* 새로운 알림 클릭 */
             function alarmPopup(){
             	if($("#alarm-popup").css("display") == "none"){
             		$("#alarm-popup").css("display", "block");
@@ -257,9 +273,20 @@
             /* 채팅 아이콘 클릭 */
             function chatPopup(){
             	if($("#chat").css("display") == "none"){
+            		memList();
+            		$("#member-btn").addClass("menuClicked");
+                	$("#chat-btn").removeClass("menuClicked");
             		$("#chat").css("display", "block");
+            		if(sockChat){
+                		onClose();
+                	}
             	}else{
             		$("#chat").css("display", "none");
+            		$("#search-div").html("");
+            		$("#chat-body").html("");
+            		if(sockChat){
+                		onClose();
+                	}
             	}
             }
         </script>
@@ -267,6 +294,42 @@
         <script>
 	        let socket = null;
 	        let newAlarm = [];
+	        
+	        function connectAlarm(){
+				const sock = new SockJS("${pageContext.request.contextPath}/alarm"); 
+					socket = sock;
+				
+				sock.onopen = onOpen;
+				sock.onmessage = onMessage; 
+				sock.onclose = onClose; 
+				 	
+		   		function onOpen(){
+			 		console.log('Info : alarm connection opened.');
+			 	}
+				 	
+		   		function onMessage(evt){
+		   			if(evt.data == "새채팅"){
+		   				if(sockChat == null || sockChat.readyState != 1){
+				     		let $chatCount = Number($("#chat-count").text());
+				     		if($chatCount == 0){
+				     			$("#chat-count").css("display", "block");
+				     		}
+				     		$("#chat-count").text($chatCount + 1);
+				     		if($("#chat-btn").hasClass("menuClicked")){
+				     			chatRoomList();
+			   				}
+		   				}
+		   				
+		   			}else{
+		   				selectAlarm();
+		   			}
+				}
+		   		
+		    	function onClose(){
+		    		console.log('Info : alarm connection closed.');
+				}
+			}
+	        
 	     	// 날짜 포맷
 	        function dateFormat(no){
 	        	const d = new Date();
@@ -277,11 +340,13 @@
 	        	}
 	        }
 	     	
-	     	// 알람 조회
 			$(function(){
 				connectAlarm();
 				selectAlarm();
+				chatNotRead();
 			})
+			
+			// 알람 조회
 	     	function selectAlarm(){
 				$.ajax({
 					url:"select.noti",
@@ -341,6 +406,22 @@
 						console.log("알람 조회용 ajax통신실패")
 					}
 				})
+	     	}
+	     	
+	     	function chatNotRead(){
+	     		$.ajax({
+	     			url:"notRead.chat",
+	     			data:{
+	     				userNo:${loginUser.userNo}
+	     			},success:function(count){
+	     				if(count > 0){
+	     					$("#chat-count").css("display", "block");
+	     					$("#chat-count").text(count)
+	     				}else{
+	     					$("#chat-count").css("display", "none");
+	     				}
+	     			}
+	     		})
 	     	}
         </script>
 		

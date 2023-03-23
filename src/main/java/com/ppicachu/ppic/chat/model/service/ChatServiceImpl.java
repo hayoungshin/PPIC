@@ -66,13 +66,23 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	@Override
-	public int insertChat(Chat c) {
-		return cDao.insertChat(sqlSession, c);
+	public int insertChat(HashMap<String, Object> map) {
+		return cDao.insertChat(sqlSession, map);
 	}
 	
 	@Override
 	public int updateChatRoom(int roomNo) {
 		return cDao.updateChatRoom(sqlSession, roomNo);
+	}
+	
+	@Override
+	public int updateNotreadChat(HashMap<String, Object> hm) {
+		return cDao.updateNotreadChat(sqlSession, hm);
+	}
+
+	@Override
+	public int updateLastreadChat(HashMap<String, Object> hm) {
+		return cDao.updateLastreadChat(sqlSession, hm);
 	}
 
 	@Override
@@ -90,4 +100,45 @@ public class ChatServiceImpl implements ChatService{
 		return cDao.deleteChatRoom(sqlSession, roomNo);
 	}
 
+	@Override
+	public int selectLastReadChat(Chat c) {
+		return cDao.selectLastReadChat(sqlSession, c);
+	}
+	
+	@Override
+	public int selectMaxChat(Chat c) {
+		return cDao.selectMaxChat(sqlSession, c);
+	}
+	
+	@Override
+	public int updateParticipant(Chat c) {
+		return cDao.updateParticipant(sqlSession, c);
+	}
+	
+	@Override
+	public int updateChat(Chat c) {
+		return cDao.updateChat(sqlSession, c);
+	}
+
+	@Override
+	public ArrayList<Chat> selectPartiList(Chat c) {
+		return cDao.selectPartiList(sqlSession, c);
+	}
+
+	@Override
+	public int updateRoomName(Chat c) {
+		return cDao.updateRoomName(sqlSession, c);
+	}
+
+	@Override
+	public int selectNotRead(int userNo) {
+		return cDao.selectNotRead(sqlSession, userNo);
+	}
+
+	@Override
+	public int selectNotReadRoom(Chat c) {
+		return cDao.selectNotReadRoom(sqlSession, c);
+	}
+
+	
 }

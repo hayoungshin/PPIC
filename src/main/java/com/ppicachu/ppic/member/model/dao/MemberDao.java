@@ -37,6 +37,9 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateMember", m);
 	}
 	
+	public int detailUpdateMember(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.detailUpdateMeber", m);
+	}
 	
 	public int idCheck(SqlSessionTemplate sqlSession, String checkId) {
 		return sqlSession.selectOne("memberMapper.idCheck", checkId);
@@ -66,6 +69,16 @@ public class MemberDao {
 		return (ArrayList)sqlSession.selectList("memberMapper.selectAuthorityMemList", authoNo);
 	}
 	
+	public ArrayList<Department> selectMemCountForMail(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectMemCountForMail");
+	}
 	
+	public ArrayList<Member> selectLikeMemForMail(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectLikeMemForMail", userNo);
+	}
+	
+	public int deleteMember(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("memberMapper.deleteMember", userNo);
+	}
 
 }
