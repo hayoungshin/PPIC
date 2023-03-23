@@ -317,6 +317,10 @@
 	   		
 	   		// 주소록 불러오기
 	   		showUser();
+	   		
+	   		if(sockChat){
+        		onClose();
+        	}
 	   	})
 	   	
 	   	// 채팅 메뉴바 클릭 (주소록)
@@ -744,6 +748,7 @@
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
         			$("#search-div").html(value2);
+        			console.log(value)
         		},error:function(){
         			console.log("채팅 리스트 조회용 ajax 통신 실패");
         		}
@@ -863,6 +868,7 @@
         		}
      		})
      	}
+     	
      	$(document).on("click", "#chatRoomSearch-btn", function(){
      		if($("input[name=keyword]").val().replace(/ /g, '') != ""){ // 공백 입력시
         		chatRoomSearch();
@@ -1109,7 +1115,7 @@
            				for(let j=0; j<list[i].memList.length; j++){
            					if(list[i].groupCount == 2){
            						if(list[i].memList[j].userNo != ${loginUser.userNo}){
-           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
+           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
            									+ "<span id='roomName-area'><span id='roomName'>" 
            							if(list[i].roomName == undefined){
            								value2 += list[i].memList[j].userName;
@@ -1119,7 +1125,7 @@
            							value2 += "</span></span>";
            						}
            					}else{
-           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose(" + no + ");'>"
+           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
            						if(list[i].roomName == undefined){
            							value2 += "<span id='roomName-area'><span id='roomName'>그룹채팅";
            						}else{
@@ -1134,7 +1140,7 @@
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;' onKeyPress='check_enter();'></textarea>"
                     		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
-                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(1, " + no + ");'><img src='resources/icons/setting.png' onclick='updateRoomName(" + no + ");'></span></div>"
+                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(1, " + no + ");'><img src='resources/icons/setting.png' onclick='updateRoomName(" + no + ");'></span><input type='hidden' id='roomNo' value='" + no + "'</div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
@@ -1280,6 +1286,7 @@
 	 		}
 	 		$("#chat-count").text($chatCount - notread);
      	}
+     	
      	// 웹소켓
      	let sockChat = null;
      	
@@ -1298,8 +1305,6 @@
          			let chatMsg = no + ",${loginUser.userNo}," + $("#message").val() + "," + (groupCount - 1);
          			sockChat.send(chatMsg);
         			$("#message").val("");
-					let socketMsg2 = "newchat, , ," + receiveList + ", , ";
-					socket.send(socketMsg2);
          		}
      		}
 		}
@@ -1317,7 +1322,6 @@
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
-			let receives = "";
 			if(msgArr[2] == "ENTER-CHAT"){
 				$(".notreadCount").each(function(){
 					if($(this).attr("id") > msgArr[5] && $(this).attr("id") <= msgArr[4]){
@@ -1378,6 +1382,10 @@
 				}
 				$(".chat-area").append($chatAllDiv);
 				$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+				if(socket){
+					let socketMsg2 = "newchat, , ," + receiveList + ", , ";
+					socket.send(socketMsg2);
+				}
 			}
 		}
 		
@@ -1394,10 +1402,10 @@
 		}
 		
 		// 방 퇴장
-		function onClose(no){
+		function onClose(){
 			sockChat.close();
 			if($(".chat-area").html() == ""){ // 채팅 안쳤을 때 room자체도 삭제
-				deleteChatRoom(no);
+				deleteChatRoom($("#roomNo").val());
 			} else{
 				chatRoomList();
 			}

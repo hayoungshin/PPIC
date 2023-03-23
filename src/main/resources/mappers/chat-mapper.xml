@@ -66,6 +66,7 @@
 		  join dept on (m.department = dept.department_no) 
 		  join position on (m.position = position.position_no)
 		 where status='Y'
+		   and member_sign = 'Y'
 	</select>
 	
 	<insert id="insertChatLike">
@@ -107,6 +108,7 @@
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
 		 where status='Y'
+		   and member_sign = 'Y'
 		   and user_name like '%' || #{userName} || '%'
 		   and user_no != #{userNo}
 	</select>

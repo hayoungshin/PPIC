@@ -273,12 +273,17 @@
             /* 채팅 아이콘 클릭 */
             function chatPopup(){
             	if($("#chat").css("display") == "none"){
+            		memList();
+            		$("#member-btn").addClass("menuClicked");
+                	$("#chat-btn").removeClass("menuClicked");
             		$("#chat").css("display", "block");
             		if(sockChat){
                 		onClose();
                 	}
             	}else{
             		$("#chat").css("display", "none");
+            		$("#search-div").html("");
+            		$("#chat-body").html("");
             		if(sockChat){
                 		onClose();
                 	}
@@ -289,6 +294,42 @@
         <script>
 	        let socket = null;
 	        let newAlarm = [];
+	        
+	        function connectAlarm(){
+				const sock = new SockJS("${pageContext.request.contextPath}/alarm"); 
+					socket = sock;
+				
+				sock.onopen = onOpen;
+				sock.onmessage = onMessage; 
+				sock.onclose = onClose; 
+				 	
+		   		function onOpen(){
+			 		console.log('Info : alarm connection opened.');
+			 	}
+				 	
+		   		function onMessage(evt){
+		   			if(evt.data == "새채팅"){
+		   				if(sockChat == null || sockChat.readyState != 1){
+				     		let $chatCount = Number($("#chat-count").text());
+				     		if($chatCount == 0){
+				     			$("#chat-count").css("display", "block");
+				     		}
+				     		$("#chat-count").text($chatCount + 1);
+				     		if($("#chat-btn").hasClass("menuClicked")){
+				     			chatRoomList();
+			   				}
+		   				}
+		   				
+		   			}else{
+		   				selectAlarm();
+		   			}
+				}
+		   		
+		    	function onClose(){
+		    		console.log('Info : alarm connection closed.');
+				}
+			}
+	        
 	     	// 날짜 포맷
 	        function dateFormat(no){
 	        	const d = new Date();
@@ -383,13 +424,7 @@
 	     		})
 	     	}
 	     	
-	     	function chatAlarm(){
-	     		let $chatCount = Number($("#chat-count").text());
-	     		if($chatCount == 0){
-	     			$("#chat-count").css("display", "block");
-	     		}
-	     		$("#chat-count").text($chatCount + 1);
-	     	}
+	     	
         </script>
 		
 </body>

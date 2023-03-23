@@ -67,8 +67,6 @@ public class ChatEchoHandler extends TextWebSocketHandler{
                 sessionList.put(session, chatRoom.getRoomNo());
                 // RoomList에 추가
                 RoomList.put(chatRoom.getRoomNo(), sessionTwo);
-                // 확인용
-                System.out.println("채팅방 생성");
             }
             
             // 채팅방이 존재 할 때
@@ -78,8 +76,6 @@ public class ChatEchoHandler extends TextWebSocketHandler{
                 RoomList.get(chatRoom.getRoomNo()).add(session);
                 // sessionList에 추가
                 sessionList.put(session, chatRoom.getRoomNo());
-                // 확인용
-                System.out.println("생성된 채팅방으로 입장");
             }
         	
         	Chat cc = new Chat();
@@ -127,23 +123,14 @@ public class ChatEchoHandler extends TextWebSocketHandler{
 			map.put("notRead", Integer.parseInt(notRead) - sessionCount + 1);
 			
             int a = cService.insertChat(map);
-            
-            // roomNo,sendNo,chatContent,notRead,sendName,sendProfile,realnotread,chatNo
-            msg += "," + ((Member)session.getAttributes().get("loginUser")).getUserName() 
-            	+ "," + ((Member)session.getAttributes().get("loginUser")).getProfileImg() 
-            	+ "," + (Integer.parseInt(notRead) - sessionCount + 1)
-            	+ "," + a;
-            TextMessage textMessage = new TextMessage(msg);
+            int b = cService.updateChatRoom(Integer.parseInt(roomNo));
             
             ArrayList<String> sessOnUser = new ArrayList<>();
-            // 해당 채팅방의 session에 뿌려준다.
+            
             for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
-                sess.sendMessage(textMessage);
-                String[] arr = sess.getAttributes().get("loginUser").toString().split(",");
+            	String[] arr = sess.getAttributes().get("loginUser").toString().split(",");
                 sessOnUser.add(arr[0].substring(14));
             }
-            
-            int b = cService.updateChatRoom(Integer.parseInt(roomNo));
             
             HashMap<String, Object> hm = new HashMap<>();
             hm.put("roomNo", Integer.parseInt(roomNo));
@@ -151,6 +138,19 @@ public class ChatEchoHandler extends TextWebSocketHandler{
             
             cService.updateNotreadChat(hm);
             cService.updateLastreadChat(hm);
+            
+         // roomNo,sendNo,chatContent,notRead,sendName,sendProfile,realnotread,chatNo
+            msg += "," + ((Member)session.getAttributes().get("loginUser")).getUserName() 
+            	+ "," + ((Member)session.getAttributes().get("loginUser")).getProfileImg() 
+            	+ "," + (Integer.parseInt(notRead) - sessionCount + 1)
+            	+ "," + a;
+            TextMessage textMessage = new TextMessage(msg);
+            
+            
+            // 해당 채팅방의 session에 뿌려준다.
+            for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
+                sess.sendMessage(textMessage);
+            }
         }
     }
     

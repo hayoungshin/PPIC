@@ -67,6 +67,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 				if(receiveSession != null) {
 					receiveSession.sendMessage(tmpMsg);
 				}
+				
 				if(!dcatNo.equals("newchat")) {
 					Alarm a = new Alarm(); 
 					a.setDcatNo(dcatNo); 
