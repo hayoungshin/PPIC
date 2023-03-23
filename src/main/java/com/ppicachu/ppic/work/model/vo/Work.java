@@ -26,5 +26,8 @@ public class Work {
 	
 	// calendar 관련
 	
+	
+	// 채팅관련
+	private int connSta;
 
 }

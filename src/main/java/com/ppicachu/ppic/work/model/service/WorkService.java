@@ -34,6 +34,9 @@ public interface WorkService {
 		int updateWorkOut(int userNo);
 		int updateWorkOutEarly(int userNo);
 		
+		// 출퇴근시 채팅 접속상태 변경
+		int updateConnSta(Work w);
+		
 	// 8. 사원의 휴가 정보 조회 서비스 
 		Member selectMemberHoliday(int userNo);
 		ArrayList<Holiday> selectMemberHolidayList(int userNo);

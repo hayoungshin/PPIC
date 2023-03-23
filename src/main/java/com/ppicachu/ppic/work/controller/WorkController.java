@@ -152,6 +152,11 @@ public class WorkController {
 	@RequestMapping(value="workIn.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkIn(int no){
 		int result = wService.updateWorkIn(no);
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(0);
+		
+		wService.updateConnSta(w);
 		
 	}
 	
@@ -161,6 +166,11 @@ public class WorkController {
 	public void ajaxUpdateWorkInLate(int no){
 		int result = wService.updateWorkInLate(no);
 		
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(0);
+		
+		wService.updateConnSta(w);
 	}
 
 	// home 퇴근등록하기 
@@ -168,6 +178,12 @@ public class WorkController {
 	@RequestMapping(value="workOut.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkOut(int no){
 		int result = wService.updateWorkOut(no);
+		
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(1);
+		
+		wService.updateConnSta(w);
 	}
 	
 	// home 퇴근등록하기 (조퇴)
@@ -175,6 +191,12 @@ public class WorkController {
 	@RequestMapping(value="workOutEarly.wo", produces="application/json; charset=utf-8" )
 	public void ajaxUpdateWorkOutEarly(int no){
 		int result = wService.updateWorkOutEarly(no);
+		
+		Work w = new Work();
+		w.setUserNo(no);
+		w.setConnSta(1);
+		
+		wService.updateConnSta(w);
 	}
 
 	// 사용자 예정 휴가 조회하기 

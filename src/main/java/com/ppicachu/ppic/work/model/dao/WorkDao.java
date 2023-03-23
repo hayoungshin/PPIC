@@ -46,7 +46,11 @@ public class WorkDao {
 	}
 	
 	public int updateWorkOutEarly(SqlSessionTemplate sqlSession, int userNo) {
-		return sqlSession.update("workMapper.updateWorkOut", userNo);
+		return sqlSession.update("workMapper.updateWorkOutEarly", userNo);
+	}
+	
+	public int updateConnSta(SqlSessionTemplate sqlSession, Work w) {
+		return sqlSession.update("workMapper.updateConnSta", w);
 	}
 	
 	public Member selectMemberHoliday(SqlSessionTemplate sqlSession, int userNo ) {

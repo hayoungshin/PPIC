@@ -66,6 +66,11 @@ public class WorkServiceImpl implements WorkService {
 	public int updateWorkOutEarly(int userNo) {
 		return wDao.updateWorkOutEarly(sqlSession, userNo);
 	}
+	
+	@Override
+	public int updateConnSta(Work w) {
+		return wDao.updateConnSta(sqlSession, w);
+	}
 
 	@Override
 	public int holiApplyEnroll(Holiday h) {
@@ -123,7 +128,4 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	
-
-	
-
 }

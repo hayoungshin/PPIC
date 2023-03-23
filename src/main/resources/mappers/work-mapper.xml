@@ -175,6 +175,13 @@
 		  AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 	</update>
 	
+	<update id="updateConnSta">
+		update 
+		       member
+		   set conn_sta = #{connSta}
+		 where user_no = #{userNo}
+	</update>
+	
 	<select id="selectMemberHoliday" resultMap="holidayResult2">
 		SELECT T1.USER_NO  
 		     , T1.USER_NAME 
