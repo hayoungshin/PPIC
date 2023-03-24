@@ -169,6 +169,9 @@
 			<input type='hidden' name="recipientMail" id="recipientMail" value="">
 			<input type='hidden' name="refMail" id="refMail" value="">
 			<input type='hidden' name="hidRefMail" id="hidRefMail" value="">
+			<input type='hidden' name="recipientNo" id="recipientNol" value="">
+			<input type='hidden' name="refNo" id="refNo" value="">
+			<input type='hidden' name="hidRefNo" id="hidRefNo" value="">
 			
 			<button type="button" class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;" onclick="submitForm();">보내기</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
@@ -307,7 +310,7 @@
 			
 			<!-- 자동완성 -->
 			<script>
-				/* 페이지 로딩되자마자 전체 회원의 이름, 메일주소 조회 */
+				/* 페이지 로딩되자마자 전체 회원의 이름, 메일주소, 회원번호 조회 */
 				/* 				부서번호, 부서명, 멤버수 조회 : 모달창 script쪽 */
 				$(function(){
 					selectMemberList();
@@ -327,7 +330,8 @@
 		        				memArr.push({
 		        					name:mList[i].userName,
 		        					mail:mList[i].mail,
-		        					dept:mList[i].department
+		        					dept:mList[i].department,
+		        					no:mList[i].userNo
 		        				});
 	        				}
 	        			}, error:function(){
@@ -341,6 +345,9 @@
 				let arr1 = [];
 				let arr2 = [];
 				
+				// 알림 보낼 회원번호 담을 배열
+				let arrAlarm = [];
+				
 				function selectAutoComplete(type, e){
 					/* 1. 키업때마다 자동완성 조회 */
 					let result = "";
@@ -349,7 +356,7 @@
        					// 포함되어있을 경우 area에 추가
        					if(memArr[i].name.indexOf(e.value) != -1 || memArr[i].mail.indexOf(e.value) != -1){
        						count += 1;
-       						result += "<p class='autocomplete-items'>"
+       						result += "<p class='autocomplete-items' id='" + memArr[i].no + "'>"
         						   +	memArr[i].name + " " + "&lt" + memArr[i].mail + "&gt"
         						   + "</p>";
        					}
@@ -380,12 +387,15 @@
 	           					if(type == 0 && !arr0.includes(inputMail)){	// 없으면 버튼으로 생성
 	           						flag = true;
 	           						arr0.push(inputMail);
+	           						arrAlarm.push(memArr[i].no);
 	           					} else if(type == 1 && !arr1.includes(inputMail)){
 	           						flag = true;
 	           						arr1.push(inputMail);
+	           						arrAlarm.push(memArr[i].no);
 	           					} else if(type == 2 && !arr2.includes(inputMail)){
 	           						flag = true;
 	           						arr2.push(inputMail);
+	           						arrAlarm.push(memArr[i].no);
 	           					}
            					}
            				}
@@ -410,6 +420,7 @@
 				$(document).on("click", ".autocomplete-items", function(e){
 					let item = e.target;		// 이벤트 일어난 요소
 					let html = item.innerHTML;	// 이름 <메일주소>
+					let inputUserNo = item.getAttribute('id') // 회원번호 
 					let recipientType = item.parentNode.parentNode.childNodes[1].id;	// recipient|ref|hid-ref
        				let inputMail = html.substring(html.indexOf(";") + 1, html.lastIndexOf("&"));	// 메일주소만
        				
@@ -429,6 +440,7 @@
         				}
         				// 배열에 추가
         				arr0.push(inputMail);
+        				arrAlarm.push(inputUserNo);
         			} else if(recipientType == 'ref' && !arr1.includes(inputMail)){
         				document.getElementById("ref").innerHTML += value;
         				let newWidth = 1000 - document.getElementById("ref").offsetWidth;
@@ -438,6 +450,7 @@
         					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
         				}
         				arr1.push(inputMail);
+        				arrAlarm.push(inputUserNo);
         			} else if(recipientType == 'hid-ref' && !arr2.includes(inputMail)) {
         				document.getElementById("hid-ref").innerHTML += value;
         				let newWidth = 1000 - document.getElementById("hid-ref").offsetWidth;
@@ -447,6 +460,7 @@
         					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
         				}
         				arr2.push(inputMail);
+        				arrAlarm.push(inputUserNo);
         			}
         				item.parentNode.parentNode.childNodes[3].value = "";	// 텍스트 상자 비우기
         		})
@@ -568,6 +582,9 @@
 		let temp0 = [];
 		let temp1 = [];
 		let temp2 = [];
+		let tempAlarm0 = [];
+		let tempAlarm1 = [];
+		let tempAlarm2 = [];
 		
 			/****** 초기화면 ******/
 			$(document).on("click", ".address-btn", function(){
@@ -585,7 +602,7 @@
 				
 				// 전체주소 뿌리기
 				for(let i in memArr){
-					mailListHtml += "<div>"
+					mailListHtml += "<div id='" + memArr[i].no + "'>"
 						   		  +		memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 						   		  + "</div>"
 				}
@@ -677,7 +694,7 @@
 					// 전체주소 뿌리기
 					let value = "";
 					for(let i in memArr){
-						value += "<div>"
+						value += "<div id='" + memArr[i].no + "'>"
 							   +	memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 							   + "</div>";
 					}
@@ -691,7 +708,7 @@
 						success:function(mList){
 							let value = "";
 							for(let i in mList){
-								value += "<div>"
+								value += "<div id='" + mList[i].userNo + "'>"
 									   +	mList[i].userName + " &lt" + mList[i].mail + "&gt"
 									   + "</div>";
 							}
@@ -705,7 +722,7 @@
 					let value = "";
 					for(let i in memArr){
 						if(memArr[i].dept == e.target.id.substr(8)){
-							value += "<div>"
+							value += "<div id='" + memArr[i].no + "'>"
 								   +	memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 								   + "</div>";
 						}
@@ -721,6 +738,7 @@
 					const startIdx = e.target.innerHTML.indexOf(";") + 1;
 					const endIdx = e.target.innerHTML.lastIndexOf("&");
 					const mail = e.target.innerHTML.substring(startIdx, endIdx);
+					const no = e.target.getAttribute('id');
 					let value = "<li>"
 					       	  +		e.target.innerHTML
 					          +		"<button><img src='resources/icons/close.png'></button>"
@@ -729,18 +747,21 @@
 					if(selectedBox.id == "recipientBox"){
 						if(!temp0.includes(mail) && !arr0.includes(mail)){	// 배열에 해당 메일이 없을 때 (중복으로 추가하지 않기 위해서)
 							temp0.push(mail);
+							tempAlarm0.push(no);
 							document.querySelector("div.selected ul").innerHTML += value;
 							document.querySelectorAll(".header span")[0].innerHTML = arr0.length + temp0.length;
 						}
 					} else if(selectedBox.id == "refBox"){
 						if(!temp1.includes(mail) && !arr1.includes(mail)){	// 배열에 해당 메일이 없을 때 (중복으로 추가하지 않기 위해서)
 							temp1.push(mail);
+							tempAlarm1.push(no);
 							document.querySelector("div.selected ul").innerHTML += value;
 							document.querySelectorAll(".header span")[1].innerHTML = arr1.length + temp1.length;
 						}
 					} else {
 						if(!temp2.includes(mail) && !arr2.includes(mail)){	// 배열에 해당 메일이 없을 때 (중복으로 추가하지 않기 위해서)
 							temp2.push(mail);
+							tempAlarm2.push(no);
 							document.querySelector("div.selected ul").innerHTML += value;
 							document.querySelectorAll(".header span")[2].innerHTML = arr2.length + temp2.length;
 						}
@@ -756,6 +777,7 @@
 				const inputs = document.getElementsByClassName("mailInput");
 				for(let i in temp0){
 					arr0.push(temp0[i]);	// 배열에 넣고
+					arrAlarm.push(tempAlarm0[i]);
 					let value = "";
 					for(let j in memArr){	// memArr에서 해당 메일값의 이름까지 불러오기
 	   					if(memArr[j].mail == temp0[i]){
@@ -775,6 +797,7 @@
 				};
 				for(let i in temp1){
 					arr1.push(temp1[i]);
+					arrAlarm.push(tempAlarm1[i]);
 					let value = "";
 					for(let j in memArr){	// memArr에서 해당 메일값의 이름까지 불러오기
 	   					if(memArr[j].mail == temp1[i]){
@@ -794,6 +817,7 @@
 				};
 				for(let i in temp2){
 					arr2.push(temp2[i]);
+					arrAlarm.push(tempAlarm2[i]);
 					let value = "";
 					for(let j in memArr){	// memArr에서 해당 메일값의 이름까지 불러오기
 	   					if(memArr[j].mail == temp2[i]){
@@ -838,6 +862,14 @@
 					swal('', "받는사람이 지정되지 않았습니다.\n받는 사람 주소를 입력해주세요.", 'error')
 				} else {
 					document.getElementById("sendMailForm").submit();
+					
+					// 알림 관련
+					let arrDup = [...new Set(arrAlarm)];
+					let mailTo = arrDup.join("/");
+					if(socket){
+						let socketMsg = "12,${loginUser.userNo},${loginUser.userName}," + mailTo + ",4, ";
+						socket.send(socketMsg);
+					}
 				}
 			}
 		</script>
