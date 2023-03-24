@@ -74,10 +74,24 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return aDao.deleteApproval(sqlSession, noArr);
 	}
 
-	/*@Override
-	public int removeApproval(String[] noArr) {
-		return aDao.removeApproval(sqlSession, noArr);
-	}*/
+	@Override
+	public int removeApproval(ArrayList<Approval> aList) {
+		aDao.removeProcess(sqlSession, aList);
+		aDao.removeChange(sqlSession, aList);
+		aDao.removeAppAttachment(sqlSession, aList);
+		for(int i=0; i<aList.size(); i++) {
+			switch(aList.get(i).getForm()) {
+			case "업무기안" : aDao.removeDraft(sqlSession, aList.get(i).getApprovalNo()); break;
+			case "인사발령품의서" : aDao.removeTransfer(sqlSession, aList.get(i).getApprovalNo()); break;
+			case "비품신청서" : aDao.removeConsume(sqlSession, aList.get(i).getApprovalNo()); break;
+			case "지출결의서" : aDao.removeCash(sqlSession, aList.get(i).getApprovalNo()); break;
+			}
+		}
+		
+		int result = aDao.removeApproval(sqlSession, aList);
+		
+		return result;
+	}
 
 	@Override
 	public int recoverApproval(String[] noArr) {
@@ -134,14 +148,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 		int result1 = aDao.insertApproval(sqlSession, a);
 		int result2 = aDao.insertProcess(sqlSession, apList);
 		int result3 = aDao.insertChange(sqlSession, ac);
-		int result4 = 0;
-		if(atList.isEmpty()) {
-			result4 = 1;
-		} else {
-			result4 = aDao.insertAppAttachment(sqlSession, atList);
+
+		if(!atList.isEmpty()) {
+			aDao.insertAppAttachment(sqlSession, atList);
 		}
 		
-		return result1 * result2 * result3 * result4;
+		return result1 * result2 * result3;
 	}
 
 	@Override

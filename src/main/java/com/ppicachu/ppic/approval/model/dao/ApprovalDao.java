@@ -69,10 +69,52 @@ public class ApprovalDao {
 	public int deleteApproval(SqlSessionTemplate sqlSession, String[] noArr) {
 		return sqlSession.update("approvalMapper.deleteApproval", noArr);
 	}
+	
+	public int removeProcess(SqlSessionTemplate sqlSession, ArrayList<Approval> aList) {
+		int result = 0;
+		for(int i=0; i<aList.size(); i++) {
+			result = sqlSession.delete("approvalMapper.removeProcess", aList.get(i));
+		}
+		return result;
+	}
 
-	/*public int removeApproval(SqlSessionTemplate sqlSession, String[] noArr) {
-		return 0;
-	}*/
+	public int removeChange(SqlSessionTemplate sqlSession, ArrayList<Approval> aList) {
+		int result = 0;
+		for(int i=0; i<aList.size(); i++) {
+			result = sqlSession.delete("approvalMapper.removeChange", aList.get(i));
+		}
+		return result;
+	}
+
+	public void removeAppAttachment(SqlSessionTemplate sqlSession, ArrayList<Approval> aList) {
+		for(int i=0; i<aList.size(); i++) {
+			sqlSession.delete("approvalMapper.removeAppAttachment", aList.get(i));
+		}
+	}
+
+	public void removeDraft(SqlSessionTemplate sqlSession, int approvalNo) {
+		sqlSession.delete("approvalMapper.removeDraft", approvalNo);
+	}
+
+	public void removeTransfer(SqlSessionTemplate sqlSession, int approvalNo) {
+		sqlSession.delete("approvalMapper.removeTransfer", approvalNo);
+	}
+
+	public void removeConsume(SqlSessionTemplate sqlSession, int approvalNo) {
+		sqlSession.delete("approvalMapper.removeConsume", approvalNo);
+	}
+
+	public void removeCash(SqlSessionTemplate sqlSession, int approvalNo) {
+		sqlSession.delete("approvalMapper.removeCash", approvalNo);
+	}
+
+	public int removeApproval(SqlSessionTemplate sqlSession, ArrayList<Approval> aList) {
+		int result = 0;
+		for(int i=0; i<aList.size(); i++) {
+			result = sqlSession.delete("approvalMapper.removeApproval", aList.get(i));
+		}
+		return result;
+	}
 
 	public int recoverApproval(SqlSessionTemplate sqlSession, String[] noArr) {
 		return sqlSession.update("approvalMapper.recoverApproval", noArr);
@@ -98,16 +140,20 @@ public class ApprovalDao {
 		return (ArrayList)sqlSession.selectList("approvalMapper.selectChange", approvalNo);
 	}
 
-	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("memberMapper.selectMemberList");
-	}
-
 	public int updateProcess(SqlSessionTemplate sqlSession, AppProcess ap) {
 		return sqlSession.update("approvalMapper.updateProcess", ap);
 	}
 
 	public int updateCurrentOrder(SqlSessionTemplate sqlSession, Approval a) {
 		return sqlSession.update("approvalMapper.updateCurrentOrder", a);
+	}
+
+	public int insertChange(SqlSessionTemplate sqlSession, AppChange ac) {
+		return sqlSession.insert("approvalMapper.insertChange", ac);
+	}
+
+	public ArrayList<Member> selectMemberList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("memberMapper.selectMemberList");
 	}
 
 	public int insertApproval(SqlSessionTemplate sqlSession, Approval a) {
@@ -122,16 +168,10 @@ public class ApprovalDao {
 		return result;
 	}
 
-	public int insertChange(SqlSessionTemplate sqlSession, AppChange ac) {
-		return sqlSession.insert("approvalMapper.insertChange", ac);
-	}
-
-	public int insertAppAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> atList) {
-		int result = 0;
+	public void insertAppAttachment(SqlSessionTemplate sqlSession, ArrayList<Attachment> atList) {
 		for(int i=0; i<atList.size(); i++) {
-			result = sqlSession.insert("approvalMapper.insertAppAttachment", atList.get(i));
+			sqlSession.insert("approvalMapper.insertAppAttachment", atList.get(i));
 		}
-		return result;
 	}
 
 	public int insertDraft(SqlSessionTemplate sqlSession, FormDraft fdr) {

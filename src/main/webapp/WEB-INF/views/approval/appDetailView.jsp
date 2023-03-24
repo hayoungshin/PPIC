@@ -263,10 +263,10 @@
                                 <th colspan="6"><br><h3><b>${ ad.app.form }</b></h3><br></th>
                             </tr>
                             <tr>
-                                <th>작성일</th>
-                                <td>${ ad.app.createDate }</td>
-                                <th>완료일</th>
-                                <td>
+                                <th width="13%">작성일</th>
+                                <td width="20%">${ ad.app.createDate }</td>
+                                <th width="13%">완료일</th>
+                                <td width="20%">
 									<c:choose>
 										<c:when test="${ empty ad.app.completeDate }">
 											<span style="color:#6F50F8;">완료시 자동생성</span>
@@ -276,8 +276,8 @@
 										</c:otherwise>
 									</c:choose>
 								</td>
-								<th>문서번호</th>
-                                <td>
+								<th width="13%">문서번호</th>
+                                <td width="21%">
 									<c:choose>
 										<c:when test="${ empty ad.app.completeNo }">
 											<span style="color:#6F50F8;">완료시 자동생성</span>
@@ -308,10 +308,10 @@
                                     <!-- 업무기안일 경우 -->
                                     <table id="fdr" class="table-bordered">
                                         <tr>
-                                            <th>시행일자</th>
-                                            <td>${ ad.draft.effectiveDate }</td>
-                                            <th>협조부서</th>
-                                            <td>${ ad.draft.departmentNo }부</td>
+                                            <th width="20%">시행일자</th>
+                                            <td width="20%">${ ad.draft.effectiveDate }</td>
+                                            <th width="20%">협조부서</th>
+                                            <td width="40%">${ ad.draft.departmentNo }부</td>
                                         </tr>
                                         <tr>
                                             <th colspan="4">내용</th>
@@ -323,13 +323,22 @@
 
                                     <!-- 인사발령품의서일 경우 -->
                                     <table id="ftr" class="table-bordered">
-                                        <tr>
+                                        <colgroup>
+				                    		<col style="width:15%">
+				                    		<col style="width:5%">
+				                    		<col style="width:10%">
+				                    		<col style="width:15%">
+				                    		<col style="width:15%">
+				                    		<col style="width:40%">
+				                    	</colgroup>
+				                    	
+				                    	<tr>
                                             <th colspan="2">시행일자</th>
-                                            <td colspan="3">${ ad.transfer[0].effectiveDate }</td>
+                                            <td colspan="4">${ ad.transfer[0].effectiveDate }</td>
                                         </tr>
                                         <tr>
                                             <th>성명</th>
-                                            <th>부서</th>
+                                            <th colspan="2">부서</th>
                                             <th>현직급</th>
                                             <th>변경직급</th>
                                             <th>비고</th>
@@ -337,7 +346,7 @@
 										<c:forEach var="t" items="${ ad.transfer }">
 	                                        <tr>
 	                                            <td>${ t.userName }</td>
-	                                            <td>${ t.departmentName }부</td>
+	                                            <td colspan="2">${ t.departmentName }부</td>
 	                                            <td>${ t.currentPosition }</td>
 	                                            <td>${ t.promotePosition }</td>
 	                                            <td>${ t.remark }</td>

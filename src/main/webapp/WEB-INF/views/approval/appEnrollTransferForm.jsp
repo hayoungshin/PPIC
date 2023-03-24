@@ -188,7 +188,7 @@
 				value += "<div class='level-area'>"
 		               +	"<div class='level'><h6><b>" + (i + 1) + "단계</b></h6></div>"
 		               +	"<div class='level-person'>"
-		               +		"<span class='person-img'>🧑🏻‍💻</span>"
+		               +		"<span class='person-img'>🧑🏻‍💻</span> "
 		               +		"<input type='hidden' name='agrUserNo' value='" + userNo + "'>"
 					   +		deptName + "부 " + namePosition
 		               +	"</div>"
@@ -211,7 +211,7 @@
 				const namePosition = tr[i].childNodes[0].childNodes[2].innerHTML;
 				value += "<div class='level-area-pk'>"
 		               +	"<div class='level-person'>"
-		               +		"<span class='person-img'>🙋🏻‍♂️</span>"
+		               +		"<span class='person-img'>🙋🏻‍♂️</span> "
 		               +		"<input type='hidden' name='refUserNo' value='" + userNo + "'>"
 					   +		deptName + "부 " + namePosition
 		               +	"</div>"
@@ -235,12 +235,12 @@
 				const arr = namePosition.split(" ");
 				value += "<tr>"
 		               +	"<td>"
-		               +		"<input type='hidden' name='ftrList[" + i + "].departmentName' value='" + deptName + "'>"
-					   +		deptName
-		               +	"</td>"
-		               +	"<td colspan='2'>"
 		               +		"<input type='hidden' name='ftrList[" + i + "].userName' value='" + arr[0] + "'>"
 					   +		arr[0]
+		               +	"</td>"
+		               +	"<td colspan='2'>"
+		               +		"<input type='hidden' name='ftrList[" + i + "].departmentName' value='" + deptName + "'>"
+					   +		deptName
 		               +	"</td>"
 		               +	"<td>"
 		               +		"<input type='hidden' name='ftrList[" + i + "].currentPosition' value='" + arr[1] + "'>"
@@ -359,39 +359,37 @@
 	                    <table id="tb" class="table-bordered">
 	                        <thead>
 	                            <tr>
-	                                <th colspan="4"><br><h2><b>인사발령품의서</b></h2><br></th>
+	                                <th colspan="6"><br><h2><b>인사발령품의서</b></h2><br></th>
 	                            </tr>
 	                            <tr>
-	                                <th width="20%">작성일</th>
+                                	<th width="13%">작성일</th>
 	                                <td width="20%" id="current-date"></td>
-	                                <th width="20%">완료일</th>
-	                                <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
+	                                <th width="13%">완료일</th>
+	                                <td width="20%"><span style="color:#6F50F8;">완료시 자동생성</span></td>
+	                            	<th width="13%">문서번호</th>
+                                	<td width="21%"><span style="color:#6F50F8;">완료시 자동생성</span></td>
 	                            </tr>
 	                            <c:forEach var="m" items="${ mList }">
 		                            <c:if test="${ loginUser.userNo eq m.userNo }">
 			                            <tr>
-			                                <th>부서</th>
-			                                <td>${ m.department }부</td>
-			                                <th>문서번호</th>
-			                                <td>기안 완료시 자동으로 생성됩니다.</td>
-			                            </tr>
-			                            <tr>
-			                                <th>직급</th>
-			                                <td>${ m.position }</td>
 			                                <th>작성자</th>
 			                                <td>${ m.userName }</td>
-				                            <input type="hidden" name="userNo" value="${ loginUser.userNo }">
+			                                <th>부서</th>
+			                                <td>${ m.department }부</td>
+			                                <th>직급</th>
+			                                <td>${ m.position }</td>
+			                                <input type="hidden" name="userNo" value="${ loginUser.userNo }">
 			                            </tr>
 			                        </c:if>
 			                    </c:forEach>
 	                            <tr>
 	                                <th>제목</th>
-		                                <td colspan="3"><input type="text" id="title" name="title" style="width:770px; height:35px;" placeholder="제목을 입력하세요"></td>
+	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요"></td>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
 	                            <tr>
-	                                <td colspan="4">
+	                                <td colspan="6">
 	
 	                                    <!-- 인사발령품의서일 경우 -->
 	                                    <table id="tb" class="table-bordered">
@@ -409,8 +407,8 @@
 						                            <td colspan="4" align="left"><input type="date" id="start" name="effectiveDate" style="width:190px; height:35px;"></td>
 						                        </tr>
 						                        <tr>
-						                            <th>부서</th>
-						                            <th colspan="2">성명</th>
+						                            <th>성명</th>
+						                            <th colspan="2">부서</th>
 						                            <th>현직급</th>
 						                            <th>변경직급</th>
 						                            <th>비고</th>

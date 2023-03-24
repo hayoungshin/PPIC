@@ -103,7 +103,7 @@
 				tr[i].childNodes[9].addEventListener("click", function(){
 					const no = this.parentNode.childNodes[1].value;
 					const form = this.parentNode.childNodes[7].innerHTML;
-					//location.href="detail.ap?no=" + no + "&form=" + form; 수정폼으로..
+					location.href="updateForm.ap?no=" + no + "&form=" + form;
 				});
 			}
 		}
