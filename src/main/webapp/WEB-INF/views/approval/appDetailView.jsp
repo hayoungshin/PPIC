@@ -389,11 +389,11 @@
 	                                    </c:forEach>
                                         <tr>
                                             <th colspan="2">부가가치세</th>
-                                            <td>${ ad.cash[0].vat }</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <th colspan="2">합계</th>
-                                            <td>${ ad.cash[0].vat + total }</td>
+                                            <td></td>
                                         </tr>
                                     </table>
 

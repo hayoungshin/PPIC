@@ -280,10 +280,11 @@ public class ApprovalController {
 	 *  작성
 	 */
 	@RequestMapping("insert.ap")
-	public void insertApproval(Approval a
+	public String insertApproval(Approval a
 			, FormDraft fdr, FormTransfer ftr, FormConsume fco, FormCash fca
 			, String agrUserNo, String refUserNo
-			, MultipartFile[] upfile, HttpSession session) {
+			, MultipartFile[] upfile
+			, HttpSession session, Model m) {
 		
 		// AppProcess 생성
 		ArrayList<AppProcess> apList = new ArrayList<>();
@@ -354,14 +355,16 @@ public class ApprovalController {
 				ftrList.get(i).setEffectiveDate(ftr.getEffectiveDate());
 			}result2 = aService.insertTransfer(ftrList);
 			break;
-		//case "비품신청서" : result2 = aService.insertConsume(fco.getFcoList()); break;
-		//case "지출결의서" : result2 = aService.selectCash(fca.getFcaList90); break;
+		case "비품신청서" : result2 = aService.insertConsume(fco.getFcoList()); break;
+		case "지출결의서" : result2 = aService.insertCash(fca.getFcaList()); break;
 		}
 		
 		if(result1 * result2 > 0) {
-			
+			session.setAttribute("alertMsg", "성공적으로 기안이 등록되었습니다.");
+			return "redirect:list.ap?myi=1";
 		} else {
-			
+			m.addAttribute("errorMsg", "기안 등록 실패");
+			return "common/errorPage";
 		}
 	}
 	

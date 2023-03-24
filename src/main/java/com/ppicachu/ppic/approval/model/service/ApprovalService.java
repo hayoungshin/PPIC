@@ -6,6 +6,8 @@ import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
+import com.ppicachu.ppic.approval.model.vo.FormCash;
+import com.ppicachu.ppic.approval.model.vo.FormConsume;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
 import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
@@ -77,7 +79,10 @@ public interface ApprovalService {
 	int insertTransfer(ArrayList<FormTransfer> ftrList);
 	
 	// 20. 작성 / 수정-FormConsume insert
+	int insertConsume(ArrayList<FormConsume> fcoList);
+	
 	// 21. 작성 / 수정-FormCash insert
+	int insertCash(ArrayList<FormCash> fcaList);
 	/*
 	// 10.작성_전자결재 insert (전자결재, 양식, 결재선, 첨부파일, 변경사항)
 	// 18.수정_전자결재 insert (전자결재, 양식, 결재선, 첨부파일, 변경사항)

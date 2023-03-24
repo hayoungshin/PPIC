@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.approval.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ public class FormCash {
 	private String account;
 	private String userHistory;
 	private int price;
-	private int vat;
 	private int formNo;
+	
+	private ArrayList<FormCash> fcaList;
 }

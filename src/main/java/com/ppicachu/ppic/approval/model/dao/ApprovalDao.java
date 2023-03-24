@@ -10,6 +10,8 @@ import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
+import com.ppicachu.ppic.approval.model.vo.FormCash;
+import com.ppicachu.ppic.approval.model.vo.FormConsume;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
 import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
@@ -140,6 +142,22 @@ public class ApprovalDao {
 		int result = 0;
 		for(int i=0; i<ftrList.size(); i++) {
 			result = sqlSession.insert("approvalMapper.insertTransfer", ftrList.get(i));
+		}
+		return result;
+	}
+
+	public int insertConsume(SqlSessionTemplate sqlSession, ArrayList<FormConsume> fcoList) {
+		int result = 0;
+		for(int i=0; i<fcoList.size(); i++) {
+			result = sqlSession.insert("approvalMapper.insertConsume", fcoList.get(i));
+		}
+		return result;
+	}
+
+	public int insertCash(SqlSessionTemplate sqlSession, ArrayList<FormCash> fcaList) {
+		int result = 0;
+		for(int i=0; i<fcaList.size(); i++) {
+			result = sqlSession.insert("approvalMapper.insertCash", fcaList.get(i));
 		}
 		return result;
 	}

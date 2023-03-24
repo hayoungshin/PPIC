@@ -110,7 +110,6 @@
 			<result column="account" property="account"/>
 			<result column="user_history" property="userHistory"/>
 			<result column="price" property="price"/>
-			<result column="vat" property="vat"/>
 		</collection>
 		<collection property="process" ofType="AppProcess">
 			<result column="pro_user_name" property="userName"/>
@@ -600,7 +599,6 @@
 		     , account
 		     , user_history
 		     , price
-		     , vat
 		     
 		     , pm.user_name pro_user_name
      		 , pd.department_name pro_department_name
@@ -842,6 +840,50 @@
 		  , #{currentPosition}
 		  , #{promotePosition}
 		  , #{remark}
+		  )
+	</insert>
+	
+	<insert id="insertConsume">
+		insert
+		  into form_consume
+		  (
+		    form_no
+		  , approval_no
+		  , name
+		  , reason
+		  , unit
+		  , count
+		  , price
+		  )
+		  values
+		  (
+		    seq_fono.nextval
+		  , seq_apno.currval
+		  , #{name}
+		  , #{reason}
+		  , #{unit}
+		  , #{count}
+		  , #{price}
+		  )
+	</insert>
+	
+	<insert id="insertCash">
+		insert
+		  into form_cash
+		  (
+		    form_no
+		  , approval_no
+		  , account
+		  , user_history
+		  , price
+		  )
+		  values
+		  (
+		    seq_fono.nextval
+		  , seq_apno.currval
+		  , #{account}
+		  , #{userHistory}
+		  , #{price}
 		  )
 	</insert>
 </mapper>

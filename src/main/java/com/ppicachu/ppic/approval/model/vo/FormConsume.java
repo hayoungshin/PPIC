@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.approval.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +20,6 @@ public class FormConsume {
 	private int count;
 	private int price;
 	private int formNo;
+	
+	private ArrayList<FormConsume> fcoList;
 }

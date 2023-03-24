@@ -11,6 +11,8 @@ import com.ppicachu.ppic.approval.model.vo.AppChange;
 import com.ppicachu.ppic.approval.model.vo.AppDetail;
 import com.ppicachu.ppic.approval.model.vo.AppProcess;
 import com.ppicachu.ppic.approval.model.vo.Approval;
+import com.ppicachu.ppic.approval.model.vo.FormCash;
+import com.ppicachu.ppic.approval.model.vo.FormConsume;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
 import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
@@ -132,7 +134,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 		int result1 = aDao.insertApproval(sqlSession, a);
 		int result2 = aDao.insertProcess(sqlSession, apList);
 		int result3 = aDao.insertChange(sqlSession, ac);
-		int result4 = aDao.insertAppAttachment(sqlSession, atList);
+		int result4 = 0;
+		if(atList.isEmpty()) {
+			result4 = 1;
+		} else {
+			result4 = aDao.insertAppAttachment(sqlSession, atList);
+		}
 		
 		return result1 * result2 * result3 * result4;
 	}
@@ -145,6 +152,16 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public int insertTransfer(ArrayList<FormTransfer> ftrList) {
 		return aDao.insertTransfer(sqlSession, ftrList);
+	}
+
+	@Override
+	public int insertConsume(ArrayList<FormConsume> fcoList) {
+		return aDao.insertConsume(sqlSession, fcoList);
+	}
+
+	@Override
+	public int insertCash(ArrayList<FormCash> fcaList) {
+		return aDao.insertCash(sqlSession, fcaList);
 	}
 
 }

@@ -69,14 +69,6 @@
 			}
 			document.getElementById("current-date").innerHTML = year + "-" + month + "-" + day;
 			
-			// 날짜 start max
-			let now_utc = Date.now(); // 지금 날짜를 밀리초로 가져옴
-			// getTimezoneOffset()은 현재 시간과의 차이를 분단위로 반환
-			let timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
-			// new Date(now_utc-timeOff).toISOString()은 '2023-03-20T18:09:38.134z'를 반환
-			let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
-			document.getElementById("start").setAttribute("min", today);
-			
 			// 승인자 모달 각 행
 			const a_tr = document.getElementsByClassName("a-trOver");
 			for(let i=0; i<a_tr.length; i++){
@@ -193,16 +185,16 @@
 		// 행추가
 		function tr_add(){
 			const tr_content = document.getElementById("tr-content"); // 행추가 공간
-			let value = "<tr id='tr" + trNo + "'>"
+			let value = "<tr>"
 					  +		"<td align='right'>"
 					  +			"<a class='deleteTr'><i class='far fa-minus-square'></i></a>"
-					  +			"<input type='text' style='width:220px; height:35px;'>"
+					  +			"<input type='text' name='fcoList[" + trNo + "].name' style='width:220px; height:35px;'>"
 					  +		"</td>"
-					  +		"<td><input type='number' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='text' style='width:245px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].unit' style='width:110px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].count' style='width:110px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].price' style='width:110px; height:35px;'></td>"
+					  +		"<td><span class='toPrice'>?</span>원</td>"
+					  +		"<td><input type='text' name='fcoList[" + trNo + "].reason' style='width:245px; height:35px;'></td>"
 					  + "</tr>";
 			tr_content.innerHTML += value;
 			trNo++;
@@ -211,15 +203,21 @@
 		// 행삭제 click 이벤트
 		$(function(){
 			$(document).on("click", ".deleteTr", function(){
-				deleteRow($(this).parent().parent();
-				/* document.getElementById("r-table").deleteRow(j);
+				$(this).parent().parent().remove();
 				
 				// name 변경
-			    let $file = $("div[id^=file]");
-			    for(let i=0; i<$file.length; i++){
-					$file.eq(i).attr("id", "file" + i);
-			    } */
-			    
+			    let $name = $("input[name$=name]");
+				let $unit = $("input[name$=unit]");
+				let $count = $("input[name$=count]");
+				let $price = $("input[name$=price]");
+				let $reason = $("input[name$=reason]");
+			    for(let i=0; i<$name.length; i++){
+					$name.eq(i).attr("name", "fcoList[" + i + "].name");
+					$unit.eq(i).attr("name", "fcoList[" + i + "].unit");
+					$count.eq(i).attr("name", "fcoList[" + i + "].count");
+					$price.eq(i).attr("name", "fcoList[" + i + "].price");
+					$reason.eq(i).attr("name", "fcoList[" + i + "].reason");
+			    }
 				trNo--;
 			})
 		});
@@ -381,9 +379,11 @@
 	                            </tr>
 	                        </tbody>
 	                    </table>
-	                    <div class="custom-file">
-	                        <input type="file" class="custom-file-input" id="customFile">
-	                        <label class="custom-file-label" for="customFile">Choose file</label>드래그앤드랍..
+	                    <div class="custom-file insert">
+	                    	<input type="file" class="custom-file-input" id="file" name="upfile" onchange="addFile(this);" multiple>
+		                    <label class="custom-file-label" for="file">Choose file</label>
+		                    <div class="file-list"></div>
+		                    <span>※ 첨부파일은 5개까지 첨부 가능합니다.</span>
 	                    </div>
 	                </div>
 	    
@@ -395,49 +395,74 @@
 	                    <br>
 	                    <h4><b>승인ㆍ참조</b></h4>
 	                    <br>
-	
+		
 	                    <div class="line">
 	                        <div class="line-content">
 	                            <div class="person-title"><h5><b>승인자</b></h5></div>
-	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#myModal"></i>
+	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addAgr"></i>
 	                            <br clear="both">
 	
-	                            <!-- forEach -->
-	                            <div class="level"><h6><b>1단계</b></h6></div>
-	                            <div class="level-person">
-	                                <span class="person-img">🧑🏻💻</span>‍
-	                                인사부 문승하 대리
-	                            </div>
+	                            <div id="a-person-content"></div>
 	
 	                            <div class="person-title"><h5><b>참조자</b></h5></div>
-	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#myModal"></i>
+	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addRef"></i>
 	                            <br clear="both">
+	                            
+	                            <div id="r-person-content"></div>
+	                            
 	                        </div>
 	                        <br>
 	                    </div>
 	                    
-	                    <!-- 승인, 참조 사원 선택 모달 시작 -->
-	                    <div class="modal" id="myModal">
+	                    <!-- 승인자 선택 모달 시작 -->
+	                    <div class="modal" id="addAgr">
 	                        <div class="modal-dialog">
 	                            <div class="modal-content">
 	                        
 	                                <!-- Modal Header -->
 	                                <div class="modal-header">
-	                                <h4 class="modal-title"></h4>
+	                                <h4 class="modal-title">승인자</h4>
 	                                <button type="button" class="close" data-dismiss="modal">&times;</button>
 	                                </div>
 	                        
 	                                <!-- Modal body -->
 	                                <div class="modal-body">
-	                                    <div class="m-outer">
-	                                        <div class="m-content">
-	                                            <input type="text">
+	                                    <div class="form">
+	                                    	<div class="header">
+	                                    		<input type="text" >
 	                                            <button class="btnn-sb">검색</button>
-	                                            <div class="m-mem-list"></div>
 	                                        </div>
+	                                        <br>
+	                                    	<div class="a-content-1">
+		                                        <table class="table table-hover">
+								                    <c:forEach var="d" items="${ dList }">
+								                        <tr>
+								                            <th colspan="2">${ d.departmentName }</th>
+								                        </tr>
+								                        <c:forEach var="m" items="${ mList }">
+								                            <c:if test="${ d.departmentName eq m.department }">
+								                                <tr class="a-trOver">
+								                                	<input type="hidden" value="${ m.userNo }">
+				                                                    <input type="hidden" value="${ m.department }">
+				                                                    <td>${ m.userName } ${ m.position }</td>
+								                                    <td><div style="display:none;"><img src="resources/icons/goTo.png" width="20px;"></div></td>
+								                                </tr>
+								                            </c:if>
+								                        </c:forEach>
+								                    </c:forEach>
+								                </table>
+		                                    </div>
+		                                    <div class="a-content-2">
+		                                    	<br>
+		                                    	<table id="a-table">
+		                                    		<tbody id="a-checked"></tbody>
+		                                    	</table>
+		                                    	<br>
+		                                    </div>
+	                                    	<br clear="both"><br>
 	                                        <div class="m-footer">
-	                                            <button class="btnn-gr">취소</button>
-	                                            <button class="btnn-pp">확인</button>
+	                                            <button class="btnn-gr" data-dismiss="modal">취소</button>
+	                                            <button class="btnn-pp" data-dismiss="modal" onclick="a_add();">확인</button>
 	                                        </div>
 	                                    </div>
 	                                </div>
@@ -445,16 +470,74 @@
 	                            </div>
 	                        </div>
 	                    </div>
-	                    <!-- 승인, 참조 사원 선택 모달 종료-->
+	                    <!-- 승인자 선택 모달 종료-->
+	                    
+	                    <!-- 참조자 선택 모달 시작 -->
+	                    <div class="modal" id="addRef">
+	                        <div class="modal-dialog">
+	                            <div class="modal-content">
+	                        
+	                                <!-- Modal Header -->
+	                                <div class="modal-header">
+	                                <h4 class="modal-title">참조자</h4>
+	                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+	                                </div>
+	                        
+	                                <!-- Modal body -->
+	                                <div class="modal-body">
+	                                    <div class="form">
+	                                    	<div class="header">
+	                                    		<input type="text" >
+	                                            <button class="btnn-sb">검색</button>
+	                                        </div>
+	                                        <br>
+	                                    	<div class="r-content-1">
+		                                        <table class="table table-hover">
+								                    <c:forEach var="d" items="${ dList }">
+								                        <tr>
+								                            <th colspan="2">${ d.departmentName }</th>
+								                        </tr>
+								                        <c:forEach var="m" items="${ mList }">
+								                            <c:if test="${ d.departmentName eq m.department }">
+								                                <tr class="r-trOver">
+								                                	<input type="hidden" value="${ m.userNo }">
+				                                                    <input type="hidden" value="${ m.department }">
+				                                                    <td>${ m.userName } ${ m.position }</td>
+								                                    <td><div style="display:none;"><img src="resources/icons/goTo.png" width="20px;"></div></td>
+								                                </tr>
+								                            </c:if>
+								                        </c:forEach>
+								                    </c:forEach>
+								                </table>
+		                                    </div>
+		                                    <div class="r-content-2">
+		                                    	<br>
+		                                    	<table id="r-table">
+		                                    		<tbody id="r-checked"></tbody>
+		                                    	</table>
+		                                    	<br>
+		                                    </div>
+	                                    	<br clear="both"><br>
+	                                        <div class="m-footer">
+	                                            <button class="btnn-gr" data-dismiss="modal">취소</button>
+	                                            <button class="btnn-pp" data-dismiss="modal" onclick="r_add();">확인</button>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                        
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <!-- 참조자 선택 모달 종료-->
 	
 	                </div>
 	            </div>
 	
 	            <br clear="both">
 	            
-	            <button class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
-	            <button class="btnn-pk">임시저장</button>
-	            <button class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
+	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
+		        <button class="btnn-pk">임시저장</button>
+		        <button type="submit" class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
 	        </div>
 	    </form>
     </div>
