@@ -360,7 +360,11 @@ public class ApprovalController {
 		}
 		
 		if(result1 * result2 > 0) {
-			session.setAttribute("alertMsg", "성공적으로 기안이 등록되었습니다.");
+			if(a.getTem() != null) {
+				session.setAttribute("alertMsg", "성공적으로 기안이 임시저장되었습니다.");
+			} else {
+				session.setAttribute("alertMsg", "성공적으로 기안이 등록되었습니다.");
+			}
 			return "redirect:list.ap?myi=1";
 		} else {
 			m.addAttribute("errorMsg", "기안 등록 실패");

@@ -27,4 +27,6 @@ public class Approval {
 	private String completeNo;
 	private String bookmark;
 	private int userNo;
+	
+	private String tem;
 }

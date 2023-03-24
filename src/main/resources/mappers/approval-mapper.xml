@@ -702,6 +702,9 @@
 		  , title
 		  , create_date
 		  , final_order
+		<if test="tem != null">
+			, approval_status
+		</if>
 		  )
 		  values
 		  (
@@ -711,6 +714,9 @@
 		  , #{title}
 		  , sysdate
 		  , #{finalOrder}
+		<if test="tem != null">
+			, #{tem}
+		</if>
 		  )
 	</insert>
 	

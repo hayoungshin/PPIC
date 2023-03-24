@@ -265,6 +265,11 @@
             // FileList를 다시 $("#file")[0].files에 대입
             $("#file")[0].files = dataTransfer.files;
 		}
+		
+		// 임시저장
+		function tem(){
+			document.getElementById("title-area-selop").innerHTML += "<input type='hidden' name='tem' value='임시저장'>";
+		}
 	</script>
 	
 	<div id="content" align="center">
@@ -511,8 +516,8 @@
 	            <br clear="both">
 	            
 	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
-	            <button class="btnn-pk">임시저장</button>
-	            <button type="submit" class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
+	            <button type="submit" class="btnn-pk" onclick="tem();">임시저장</button>
+		        <button type="submit" class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
 	        </div>
         </form>
     </div>
