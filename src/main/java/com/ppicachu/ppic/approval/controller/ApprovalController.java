@@ -148,20 +148,15 @@ public class ApprovalController {
 	}
 	
 	/**
-	 * 삭제 delete (in)
+	 * 삭제 delete (=)
 	 */
-	/*@ResponseBody
-	@RequestMapping("recoverApproval.ap")
-	public int AjaxRemoveApproval(String no) {
-		String[] noArr = {no};
-		if(no.contains(",")) {
-			noArr = no.split(",");
-		}
-		
-		int result = aService.removeApproval(noArr);
+	@ResponseBody
+	@RequestMapping("removeApproval.ap")
+	public int AjaxRemoveApproval(ArrayList<Approval> aList) {
+		int result = aService.removeApproval(aList);
 		
 		return result;
-	}*/
+	}
 	
 	/**
 	 * 복원 update (in)
@@ -377,23 +372,58 @@ public class ApprovalController {
 	 */
 	@RequestMapping("updateForm.ap")
 	public String updateForm(int no, String form, Model m) {
+		ArrayList<Member> memberList = aService.selectMemberList();
+		ArrayList<Department> deptList = mService.selectDeptList();
+		m.addAttribute("mList", memberList);
+		m.addAttribute("dList", deptList);
+
 		AppDetail ad = null;
-		
+		String page = "";
 		switch(form) {
-		case "업무기안" : ad = aService.selectDraftApp(no); break;
-		case "인사발령품의서" : ad = aService.selectTransferApp(no); break;
-		case "비품신청서" : ad = aService.selectConsumeApp(no); break;
-		case "지출결의서" : ad = aService.selectCashApp(no); break;
+		case "업무기안" :
+			ad = aService.selectDraftApp(no);
+			page = "approval/appUpdateDraftForm";
+			break;
+		case "인사발령품의서" :
+			ad = aService.selectTransferApp(no);
+			page = "approval/appUpdateTransferForm";
+			ArrayList<Position> positionList = mService.selectPositionList();
+			m.addAttribute("pList", positionList);
+			break;
+		case "비품신청서" :
+			ad = aService.selectConsumeApp(no);
+			page = "approval/appUpdateConsumeForm";
+			break;
+		case "지출결의서" :
+			ad = aService.selectCashApp(no);
+			page = "approval/appUpdateCashForm";
+			break;
 		}
 		m.addAttribute("ad", ad);
-		
-		return "approval/appUpdateForm";
+
+		return page;
 	}
 	
-	/* 수정 */
+	/**
+	 * 수정
+	 */
 	@RequestMapping("update.ap")
-	public String updateApproval() {
-		return "";
+	public String updateApproval(Approval a
+			, FormDraft fdr, FormTransfer ftr, FormConsume fco, FormCash fca
+			, String agrUserNo, String refUserNo
+			, MultipartFile[] upfile
+			, HttpSession session, Model m) {
+
+		// delete
+		ArrayList<Approval> aList = new ArrayList<>();
+		aList.add(a);
+		int result = aService.removeApproval(aList);
+		// 사진 삭제
+		
+		// insert
+		String page = insertApproval(a, fdr, ftr, fco, fca, agrUserNo, refUserNo, upfile, session, m);
+		
+		return page;
 	}
 	
 	/* 검색? */
