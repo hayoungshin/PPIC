@@ -65,7 +65,7 @@
         margin-right:20px;
     }
 
-    .member{width: 70%; margin-right: 30px;}
+    .member{width: 100%; margin-right: 30px;}
     
     .memberList {overflow:auto; height:500px;}
     .memberList::-webkit-scrollbar { width: 8px; }
@@ -83,24 +83,7 @@
         margin-left: 275px;
     }
 
-    .organizationchart{ width:25%; padding: 20px;}
-
-    #org{
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
-
-    .depttitle{ font-size: 15px; font-weight: 600; }
-
-    .deptlist{
-        font-size: 15px;
-        font-weight: 600;
-        margin-top:20px;
-        margin-left: 20px;
-    }
-
-    .deptlist div{ margin-bottom: 10px; }
+    
     
 	
 </style>
@@ -142,47 +125,44 @@
 			<div class="member" style="float:left">
 			
 				<div>
-				    <div style="float:left; font-size: 18px; font-weight: bold; width:200px;">전체</div>
-				
-					<div style="float:right; margin-right:20px;">
-						<img src="resources/icons/up-down.png" style="width:25px; ">
-					</div>
-					
-					<div style="float:right; margin-right:10px;">
-						<img src="resources/icons/search.png" style="width:25px; ">
-					</div>
-					
-					<br><hr>
+				    
 				</div>
 			               
 				<div class="memberList">
 					<table id="list">
-						<tbody align="center">
-							<c:forEach var="m" items="${ list1 }" >
+						<tbody >
+							<c:forEach var="d" items="${ list2 }" >
 								<tr>
-									<td width="80%">
-										<div class="bno" style="display:none;">${ m.userNo }</div>
-										<c:choose>
-						              		<c:when test="${ empty m.profileImg }">
-						              			<div class="mpro" style="float:left" >${ m.userName }</div>
-						                  	</c:when>
-						                  	<c:otherwise>
-						                  		<img id="profileImg" src="${ m.profileImg }" style="float:left" >
-						                  	</c:otherwise>
-						                </c:choose>
-										<div class="proname" >${ m.userName }</div>
-									</td>
-									<td>
-									    <div class="position" style="float:right" > ${ m.department }부 | ${ m.position } </div>
-									</td>
-								</tr>
+		                            <th colspan="2" style="font-size:20px;">${ d.departmentName }부</th>
+		                        </tr>
+								<c:forEach var="m" items="${ list1 }" >
+									<c:if test="${ d.departmentName eq m.department }">
+									<tr align="center" class="mlist">
+										<td width="80%">
+											<div class="bno" style="display:none;">${ m.userNo }</div>
+											<c:choose>
+							              		<c:when test="${ empty m.profileImg }">
+							              			<div class="mpro" style="float:left" >${ m.userName }</div>
+							                  	</c:when>
+							                  	<c:otherwise>
+							                  		<img id="profileImg" src="${ m.profileImg }" style="float:left" >
+							                  	</c:otherwise>
+							                </c:choose>
+											<div class="proname" >${ m.userName }</div>
+										</td>
+										<td>
+										    <div class="position" style="float:right" > ${ m.department }부 | ${ m.position } </div>
+										</td>
+									</tr>
+									</c:if>
+								</c:forEach>
 							</c:forEach>
 			        	</tbody>
 			    	</table>
 			    	
 			    	<script>
 		            	$(function(){
-		            		$("#list>tbody>tr").click(function(){
+		            		$(".mlist").click(function(){
 		            			location.href = 'memberDetail.me?no=' + $(this).find(".bno").text(); ;
 		            		})
 		            	})
@@ -194,21 +174,8 @@
 			
 			</div>
 
-                <div class="v-line"></div>
                 
-                <div class="organizationchart" style="float:left">
-                    <div id="org">조직도</div>
-					<div class="depttitle"> 전체 구성원 (00) </div>
-                    <div class="deptlist">
-                    	<c:forEach var="d" items="${ list2 }" >
-							 <div> ${ d.departmentName }부 (00) </div>
-						</c:forEach>
-                    </div>
-                    
-                    <script>
-                    	
-                    </script>
-                </div>
+              
                 
             </div>
 			

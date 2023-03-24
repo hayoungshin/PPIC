@@ -62,79 +62,36 @@
 				</tr>
 			</thead>
 			<tbody>
+			<c:forEach var="m" items="${ list }">
 				<tr>
 					<td style="width:30px;">
-						<input type="checkbox" name="" id="">
+						<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }">
 					</td>
 					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+						<c:choose>
+							<c:when test="${ m.importantStatus eq 'Y' }">	<!-- 중요표시 O -->
+								<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
+							</c:when>
+							<c:otherwise>	<!-- 중요표시 X -->
+								<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+							</c:otherwise>
+						</c:choose>
 					</td>
 					<td style="width:70px; text-align:left;" onclick="toDetail();">
-						<img src="resources/icons/mail-c.png" style="width:20px;">
+						<c:choose>
+							<c:when test="${ m.readStatus eq '1' }">	<!-- 읽음 -->
+								<img src="resources/icons/mail-opened.png" style="width:20px;">
+							</c:when>
+							<c:otherwise>	<!-- 안읽음 -->
+								<img src="resources/icons/mail-c.png" style="width:20px;">
+							</c:otherwise>
+						</c:choose>
 					</td>
-					<td style="width:200px" onclick="toDetail();">shin@ppic.kr</td>
-					<td style="width:750px" onclick="toDetail();">제목제목 나는 제목~~~ 여기는 제목자리~~~</td>
-					<td style="width:150px; text-align:right;" onclick="toDetail();">2023.02.21 15:10</td>
+					<td style="width:200px" onclick="toDetail();">${ m.senderMail }</td>
+					<td style="width:750px" onclick="toDetail();">${ m.mailTitle }</td>
+					<td style="width:150px; text-align:right;" onclick="toDetail();">${ m.sentDate }</td>
 				</tr>
-				<tr>
-					<td style="width:30px;">
-						<input type="checkbox" name="" id="">
-					</td>
-					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
-					</td>
-					<td style="width:70px; text-align:left;">
-						<img src="resources/icons/mail-opened.png" style="width:20px;">
-					</td>
-					<td style="width:200px">shin@ppic.kr</td>
-					<td style="width:750px">제목제목 나는 제목~~~ 여기는 제목자리~~~</td>
-					<td style="width:150px; text-align:right;">2023.02.21 15:10</td>
-				</tr>
-				<tr>
-					<td style="width:30px;">
-						<input type="checkbox" name="" id="">
-					</td>
-					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
-					</td>
-					<td style="width:70px; text-align:left;">
-						<img src="resources/icons/mail-opened.png" style="width:20px;">
-					</td>
-					<td style="width:200px">shin@ppic.kr</td>
-					<td style="width:770px">
-						제목제목 나는 제목~~~ 여기는 제목자리~~~
-						<img src="resources/icons/clip.png" style="width:18px; margin:0px 5px;">
-					</td>
-					<td style="width:130px; text-align:right;">2023.02.21 15:10</td>
-				</tr>
-				<tr>
-					<td style="width:30px;">
-						<input type="checkbox" name="" id="">
-					</td>
-					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
-					</td>
-					<td style="width:70px; text-align:left;">
-						<img src="resources/icons/mail-c.png" style="width:20px;">
-					</td>
-					<td style="width:200px">shin@ppic.kr</td>
-					<td style="width:750px">제목제목 나는 제목~~~ 여기는 제목자리~~~</td>
-					<td style="width:150px; text-align:right;">2023.02.21 15:10</td>
-				</tr>
-				<tr>
-					<td style="width:30px;">
-						<input type="checkbox" name="" id="">
-					</td>
-					<td style="width:50px;text-align:right;">
-						<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
-					</td>
-					<td style="width:70px; text-align:left;">
-						<img src="resources/icons/mail-c.png" style="width:20px;">
-					</td>
-					<td style="width:200px">shin@ppic.kr</td>
-					<td style="width:750px">제목제목 나는 제목~~~ 여기는 제목자리~~~</td>
-					<td style="width:150px; text-align:right;">2023.02.21 15:10</td>
-				</tr>
+			</c:forEach>
 			</tbody>
 		</table>
 
@@ -146,18 +103,45 @@
 		</script>
 	
 		<br>
-
+		
 		<div id="paging">
-			<ul>
-				<li><a href="#"><</a></li>
-				<li><a href="#">1</a></li>
-				<li class="active"><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li><a href="#">></a></li>
-			</ul>
-		</div>
+	       	<ul>
+          		<c:if test="${ pi.currentPage ne 1 }">
+              		<li><a href="recieveList.ml?cpage=${ pi.currentPage - 1 } "><</a></li>
+              	</c:if>
+	            
+	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+	            	<c:choose>
+	            		<c:when test="${ pi.currentPage eq p }">
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li class="active"><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<!-- 수정할 것 -->
+				            		<li class="active"><a href="search.ml?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+	            			</c:choose>
+	            		</c:when>
+	            		<c:otherwise>
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<!-- 수정할 것 -->
+				            		<li><a href="search.ml?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            	</c:otherwise>
+			            	</c:choose>
+	            		</c:otherwise>
+	            	</c:choose>
+				</c:forEach>
+				
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
+	            	<li><a href="recieveList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+				</c:if>
+           </ul>
+        </div>
 	</div>
 
 

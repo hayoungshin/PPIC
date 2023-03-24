@@ -105,6 +105,16 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.deleteMember(sqlSession, userNo);
 	}
 
+	@Override
+	public ArrayList<Member> authMemberList() {
+		return mDao.authMemberList(sqlSession);
+	}
+
+	@Override
+	public int authUpdate(Member m) {
+		return mDao.authUpdate(sqlSession, m);
+	}
+
 	
 
 

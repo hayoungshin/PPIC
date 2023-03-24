@@ -164,13 +164,16 @@
 	<div class="outer">
 		<div id="content">
 		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
-		<form method="post" action="send.ml" enctype="multipart/form-data" style="padding:0px 20px;">
+		<form id="sendMailForm" method="post" action="send.ml" enctype="multipart/form-data" style="padding:0px 20px;">
 		
-			<input type='hidden' name="recipientMail" id="recipientMail">
-			<input type='hidden' name="refMail" id="refMail">
-			<input type='hidden' name="hidRefMail" id="hidRefMail">
+			<input type='hidden' name="recipientMail" id="recipientMail" value="">
+			<input type='hidden' name="refMail" id="refMail" value="">
+			<input type='hidden' name="hidRefMail" id="hidRefMail" value="">
+			<input type='hidden' name="recipientNo" id="recipientNol" value="">
+			<input type='hidden' name="refNo" id="refNo" value="">
+			<input type='hidden' name="hidRefNo" id="hidRefNo" value="">
 			
-			<button class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;">보내기</button>
+			<button type="button" class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;" onclick="submitForm();">보내기</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">미리보기</button>
 
@@ -213,10 +216,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>첨부파일</th>
-					<td>
-						
-					</td>
+					<th colspan="2">첨부파일</th>
 					<td>
 						<label class="file-btn">
 							파일첨부
@@ -237,66 +237,80 @@
 			
 			<!-- 파일 첨부 관련 -->
 			<script>
-			
+
+				const dataTransfer = new DataTransfer();				// 나름 FileList 객체 (Array에 있는걸 다시 옮겨 담기 위한 용도)
 				const fileList = document.getElementById("file-list");	// 파일 원본명 뿌릴 영역
-				let fileArr = [];
+				
+				/* 1. 파일 입력 */
 				function loadFiles(inputFile) {
-					/* 파일첨부 -> 리스트 출력 */
-					if(inputFile.files.length > 0){
-						for(let i=0; i<inputFile.files.length; i++){
-							fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + inputFile.files[i].name + "</p>"
-							fileArr.push(inputFile.files[i]);
-						}
+					// 리스트 출력
+					for(let file of inputFile.files){
+						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + file.name + "</p>"
+						// DataTransfer에 담기
+						dataTransfer.items.add(file);
 					}
-					console.log(fileArr);
-					$("#upfiles").files = fileArr.files;
-					console.log($("#upfiles")[0].files);
+					// 파일배열 input요소에 담기
+					$("#upfiles")[0].files = dataTransfer.files;
                 }
 				
+				/* 2. 파일 삭제 */
 				$(document).on("click", ".files", function(e){
-					//console.log(e.target.innerText);
-					for(let i in fileArr){
+					
+					// input type="file"에 multiple 속성을 사용할 경우
+		            // 선택된 파일들에 접근하면 FileList로 처리됨
+		            let files = $("#upfiles")[0].files;	// 선택된 파일들  (FileList)
+		            let fileArr = Array.from(files);	// 파일들을 배열로 변환 (즉, FileList => Array)
+
+					for(let i=0; i<fileArr.length; i++){
+						// 클릭한 요소의 innerText에 이름이 포함되어있는 배열요소 삭제
 						if(e.target.innerText.includes(fileArr[i].name)){
 							fileArr.splice(i,1);
 							e.target.remove();
 						}
 					}
-					console.log(fileArr);
-					$("#upfiles").files = fileArr.files;
-					console.log($("#upfiles")[0].files);
+		            
+				 	dataTransfer.clearData(); // 한번 비워주고
+			        
+		            // 제거가 다 끝난 Array => FileList로 다시 변환 
+		            fileArr.forEach(function(file){
+		                dataTransfer.items.add(file);
+		            })
+			        
+		            // FileList를 다시 input요소에 담기
+		            $("#upfiles")[0].files = dataTransfer.files;
 				})
 
-				fileList.addEventListener("dragenter",function(e){
+				/* 드래그 앤 드롭 */
+				fileList.addEventListener("dragenter",function(e){	// 파일 닿음
 					e.preventDefault();
-					//console.log('파일닿았따!!!');
 					fileList.className = "drag-enter";
 				})
 				fileList.addEventListener("dragover",function(e){
 					e.preventDefault();
 					fileList.className = "drag-enter";
 				})
-				fileList.addEventListener("dragleave",function(e){
+				fileList.addEventListener("dragleave",function(e){	// 파일 나감
 					e.preventDefault();
-					//console.log("파일 나감");
 					fileList.classList.remove("drag-enter");
 				})
+				/* 3. 드래그앤드롭으로 파일 입력 */
 				fileList.addEventListener("drop",function(e){
 					e.preventDefault();
 					fileList.classList.remove("drag-enter");
-					for(let i=0; i<e.dataTransfer.files.length; i++){
-						fileArr.push(e.dataTransfer.files[i]);
-						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[i].name + "</p>";
+					for(let file of e.dataTransfer.files){
+						dataTransfer.items.add(file);
+						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + file.name + "</p>";
 					}
-					console.log(fileArr);
-					$("#upfiles").files = fileArr.files;
-					console.log($("#upfiles")[0].files);
+					// 파일배열 input요소에 담기
+					$("#upfiles")[0].files = dataTransfer.files;
 				})
 			</script>
 			
 			
+			
 			<!-- 자동완성 -->
 			<script>
-				/* 페이지 로딩되자마자 전체 회원의 이름, 메일주소 조회 */
+				/* 페이지 로딩되자마자 전체 회원의 이름, 메일주소, 회원번호 조회 */
 				/* 				부서번호, 부서명, 멤버수 조회 : 모달창 script쪽 */
 				$(function(){
 					selectMemberList();
@@ -316,7 +330,8 @@
 		        				memArr.push({
 		        					name:mList[i].userName,
 		        					mail:mList[i].mail,
-		        					dept:mList[i].department
+		        					dept:mList[i].department,
+		        					no:mList[i].userNo
 		        				});
 	        				}
 	        			}, error:function(){
@@ -330,6 +345,9 @@
 				let arr1 = [];
 				let arr2 = [];
 				
+				// 알림 보낼 회원번호 담을 배열
+				let arrAlarm = [];
+				
 				function selectAutoComplete(type, e){
 					/* 1. 키업때마다 자동완성 조회 */
 					let result = "";
@@ -338,7 +356,7 @@
        					// 포함되어있을 경우 area에 추가
        					if(memArr[i].name.indexOf(e.value) != -1 || memArr[i].mail.indexOf(e.value) != -1){
        						count += 1;
-       						result += "<p class='autocomplete-items'>"
+       						result += "<p class='autocomplete-items' id='" + memArr[i].no + "'>"
         						   +	memArr[i].name + " " + "&lt" + memArr[i].mail + "&gt"
         						   + "</p>";
        					}
@@ -369,12 +387,15 @@
 	           					if(type == 0 && !arr0.includes(inputMail)){	// 없으면 버튼으로 생성
 	           						flag = true;
 	           						arr0.push(inputMail);
+	           						arrAlarm.push(memArr[i].no);
 	           					} else if(type == 1 && !arr1.includes(inputMail)){
 	           						flag = true;
 	           						arr1.push(inputMail);
+	           						arrAlarm.push(memArr[i].no);
 	           					} else if(type == 2 && !arr2.includes(inputMail)){
 	           						flag = true;
 	           						arr2.push(inputMail);
+	           						arrAlarm.push(memArr[i].no);
 	           					}
            					}
            				}
@@ -399,6 +420,7 @@
 				$(document).on("click", ".autocomplete-items", function(e){
 					let item = e.target;		// 이벤트 일어난 요소
 					let html = item.innerHTML;	// 이름 <메일주소>
+					let inputUserNo = item.getAttribute('id') // 회원번호 
 					let recipientType = item.parentNode.parentNode.childNodes[1].id;	// recipient|ref|hid-ref
        				let inputMail = html.substring(html.indexOf(";") + 1, html.lastIndexOf("&"));	// 메일주소만
        				
@@ -418,6 +440,7 @@
         				}
         				// 배열에 추가
         				arr0.push(inputMail);
+        				arrAlarm.push(inputUserNo);
         			} else if(recipientType == 'ref' && !arr1.includes(inputMail)){
         				document.getElementById("ref").innerHTML += value;
         				let newWidth = 1000 - document.getElementById("ref").offsetWidth;
@@ -427,6 +450,7 @@
         					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
         				}
         				arr1.push(inputMail);
+        				arrAlarm.push(inputUserNo);
         			} else if(recipientType == 'hid-ref' && !arr2.includes(inputMail)) {
         				document.getElementById("hid-ref").innerHTML += value;
         				let newWidth = 1000 - document.getElementById("hid-ref").offsetWidth;
@@ -436,6 +460,7 @@
         					item.parentNode.parentNode.childNodes[3].style.width = "1000px"; 
         				}
         				arr2.push(inputMail);
+        				arrAlarm.push(inputUserNo);
         			}
         				item.parentNode.parentNode.childNodes[3].value = "";	// 텍스트 상자 비우기
         		})
@@ -557,6 +582,9 @@
 		let temp0 = [];
 		let temp1 = [];
 		let temp2 = [];
+		let tempAlarm0 = [];
+		let tempAlarm1 = [];
+		let tempAlarm2 = [];
 		
 			/****** 초기화면 ******/
 			$(document).on("click", ".address-btn", function(){
@@ -574,7 +602,7 @@
 				
 				// 전체주소 뿌리기
 				for(let i in memArr){
-					mailListHtml += "<div>"
+					mailListHtml += "<div id='" + memArr[i].no + "'>"
 						   		  +		memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 						   		  + "</div>"
 				}
@@ -666,7 +694,7 @@
 					// 전체주소 뿌리기
 					let value = "";
 					for(let i in memArr){
-						value += "<div>"
+						value += "<div id='" + memArr[i].no + "'>"
 							   +	memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 							   + "</div>";
 					}
@@ -680,7 +708,7 @@
 						success:function(mList){
 							let value = "";
 							for(let i in mList){
-								value += "<div>"
+								value += "<div id='" + mList[i].userNo + "'>"
 									   +	mList[i].userName + " &lt" + mList[i].mail + "&gt"
 									   + "</div>";
 							}
@@ -694,7 +722,7 @@
 					let value = "";
 					for(let i in memArr){
 						if(memArr[i].dept == e.target.id.substr(8)){
-							value += "<div>"
+							value += "<div id='" + memArr[i].no + "'>"
 								   +	memArr[i].name + " &lt" + memArr[i].mail + "&gt"
 								   + "</div>";
 						}
@@ -710,6 +738,7 @@
 					const startIdx = e.target.innerHTML.indexOf(";") + 1;
 					const endIdx = e.target.innerHTML.lastIndexOf("&");
 					const mail = e.target.innerHTML.substring(startIdx, endIdx);
+					const no = e.target.getAttribute('id');
 					let value = "<li>"
 					       	  +		e.target.innerHTML
 					          +		"<button><img src='resources/icons/close.png'></button>"
@@ -718,18 +747,21 @@
 					if(selectedBox.id == "recipientBox"){
 						if(!temp0.includes(mail) && !arr0.includes(mail)){	// 배열에 해당 메일이 없을 때 (중복으로 추가하지 않기 위해서)
 							temp0.push(mail);
+							tempAlarm0.push(no);
 							document.querySelector("div.selected ul").innerHTML += value;
 							document.querySelectorAll(".header span")[0].innerHTML = arr0.length + temp0.length;
 						}
 					} else if(selectedBox.id == "refBox"){
 						if(!temp1.includes(mail) && !arr1.includes(mail)){	// 배열에 해당 메일이 없을 때 (중복으로 추가하지 않기 위해서)
 							temp1.push(mail);
+							tempAlarm1.push(no);
 							document.querySelector("div.selected ul").innerHTML += value;
 							document.querySelectorAll(".header span")[1].innerHTML = arr1.length + temp1.length;
 						}
 					} else {
 						if(!temp2.includes(mail) && !arr2.includes(mail)){	// 배열에 해당 메일이 없을 때 (중복으로 추가하지 않기 위해서)
 							temp2.push(mail);
+							tempAlarm2.push(no);
 							document.querySelector("div.selected ul").innerHTML += value;
 							document.querySelectorAll(".header span")[2].innerHTML = arr2.length + temp2.length;
 						}
@@ -745,6 +777,7 @@
 				const inputs = document.getElementsByClassName("mailInput");
 				for(let i in temp0){
 					arr0.push(temp0[i]);	// 배열에 넣고
+					arrAlarm.push(tempAlarm0[i]);
 					let value = "";
 					for(let j in memArr){	// memArr에서 해당 메일값의 이름까지 불러오기
 	   					if(memArr[j].mail == temp0[i]){
@@ -764,6 +797,7 @@
 				};
 				for(let i in temp1){
 					arr1.push(temp1[i]);
+					arrAlarm.push(tempAlarm1[i]);
 					let value = "";
 					for(let j in memArr){	// memArr에서 해당 메일값의 이름까지 불러오기
 	   					if(memArr[j].mail == temp1[i]){
@@ -783,6 +817,7 @@
 				};
 				for(let i in temp2){
 					arr2.push(temp2[i]);
+					arrAlarm.push(tempAlarm2[i]);
 					let value = "";
 					for(let j in memArr){	// memArr에서 해당 메일값의 이름까지 불러오기
 	   					if(memArr[j].mail == temp2[i]){
@@ -816,6 +851,27 @@
 	  			}
 		  	}
 		  
+		</script>
+		
+		<!-- Alert -->
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<!-- 메일 보내기 -->
+		<script>
+			function submitForm(){
+				if(document.getElementById("recipientMail").value == ""){
+					swal('', "받는사람이 지정되지 않았습니다.\n받는 사람 주소를 입력해주세요.", 'error')
+				} else {
+					document.getElementById("sendMailForm").submit();
+					
+					// 알림 관련
+					let arrDup = [...new Set(arrAlarm)];
+					let mailTo = arrDup.join("/");
+					if(socket){
+						let socketMsg = "12,${loginUser.userNo},${loginUser.userName}," + mailTo + ",4, ";
+						socket.send(socketMsg);
+					}
+				}
+			}
 		</script>
 
 	</div>

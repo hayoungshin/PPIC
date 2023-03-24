@@ -174,9 +174,8 @@
             			let uploadFile = this.files[0];
             			
             			formData.append("uploadFile", uploadFile);
-            			formData.append("userId", '${loginUser.userId}');
-            			formData.append("userPwd", '${loginUser.userPwd}');
-            			formData.append("originalFile", '${loginUser.profileImg}');
+            			formData.append("userId", '${m.userId}');
+            			formData.append("originalFile", '${m.profileImg}');
             			
             			$.ajax({
             				url:"uploadProfile.me",

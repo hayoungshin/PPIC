@@ -66,7 +66,7 @@
         font-size: 18px;
     }
     
-    #holiday {overflow:auto; height:500px;}
+    #holiday {overflow:auto; height:400px;}
     #holiday::-webkit-scrollbar { width: 8px; }
 	#holiday::-webkit-scrollbar-thumb {background: lightgray; border-radius: 10px;}
 	
@@ -118,11 +118,11 @@
                     <a href="memberHoliUse.ho" style="color:black">휴가사용내역</a>
                     
                     <div style="float:right; margin-right:20px;">
-						<img src="resources/icons/up-down.png" style="width:25px; ">
+						
 					</div>
 			
 					<div style="float:right; margin-right:10px;">
-						<img src="resources/icons/search.png" style="width:25px; ">
+						
 					</div>
                 </div>
 

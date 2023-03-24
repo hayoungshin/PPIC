@@ -59,6 +59,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			case "9": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 승인했어요."); break;
 			case "10": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 거절했어요."); break;
 			case "11": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 신청했어요."); break;
+			case "12" : tmpMsg = new TextMessage(sendName + "님으로부터 메일이 도착했어요."); break;
 			case "newchat": tmpMsg = new TextMessage("새채팅"); break;
 			}
 			

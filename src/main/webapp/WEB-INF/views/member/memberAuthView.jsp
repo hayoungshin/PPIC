@@ -60,7 +60,7 @@
     }
 
     .member{
-        width: 70%;
+        width: 100%;
         margin-right: 30px;
     }
     
@@ -87,24 +87,6 @@
         margin-left: 275px;
     }
 
-	.organizationchart{ width:25%; padding: 20px;}
-
-    #org{
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
-
-    .depttitle{ font-size: 15px; font-weight: 600; }
-
-    .deptlist{
-        font-size: 15px;
-        font-weight: 600;
-        margin-top:20px;
-        margin-left: 20px;
-    }
-
-    .deptlist div{ margin-bottom: 10px; }
 	
 	
 	/* modal */
@@ -168,29 +150,38 @@
 					<table id="list"  style="width:95%">
                         <thead>
                             <tr style="height:50px">
-                                <th width="45%">이름</th>
-                                <th width="20%">소속</th>
-                                <th width="20%">권한</th>
+                                <th width="20%">이름</th>
+                                <th width="10%">소속</th>
+                                <th width="10%">직급</th>
+                                <th width="40%">권한</th>
                             </tr>
                         </thead>
                         <tbody style="height:60px">
-                            <tr>
-                                <td>
-                                    <div class="pro" style="float:left" align="center" >뫄뫄</div>
-                                    <div class="proname"> 김뫄뫄</div>
-                                </td>
-                                <td> 관리자</td>
-                                <td> ALL</td>
-                            </tr>
-
-                            <tr >
-                                <td>
-                                    <div class="pro" style="float:left" align="center" >뫄뫄</div>
-                                    <div style="float:left; margin-top: 10px; margin-left: 10px; font-size: 20px; font-weight: bold;" > 김뫄뫄</div>
-                                </td>
-                                <td> 관리자</td>
-                                <td> 문서 | 회사소식</td>
-                            </tr>
+	                        <c:forEach var="m" items="${ list2 }">
+								<tr>
+	                                <td>
+	                                    <div class="proname"> ${m.userName }</div>
+	                                </td>
+	                                <td> ${m.department }</td>
+	                                <td> ${m.position }</td>
+	                                <td> 
+	                                	<c:forEach items="${m.authority}" var="auth">
+	                                		<c:choose>
+	                                			<c:when test="${auth eq '0'}"> all </c:when>
+	                                			<c:when test="${auth eq '1'}"> 메일 </c:when>
+	                                			<c:when test="${auth eq '2'}"> 근무 </c:when>
+	                                			<c:when test="${auth eq '3'}"> 회사소식 </c:when>
+	                                			<c:when test="${auth eq '4'}"> 구성원 </c:when>
+	                                			<c:when test="${auth eq '5'}"> 전자결재 </c:when>
+	                                			<c:when test="${auth eq '6'}"> 문서 </c:when>
+	                                			<c:when test="${auth eq '7'}"> 예약 </c:when>
+	                                			<c:when test="${auth eq '8'}"> 업무 </c:when>
+	                                			<c:otherwise>없음</c:otherwise>
+	                                		</c:choose>
+	                                	</c:forEach>
+	                                </td>
+	                            </tr>
+							</c:forEach>
                         </tbody>
                     </table>
 					
@@ -198,17 +189,6 @@
 				
 			</div>
 
-            <div class="v-line"></div>
-            
-            <div class="organizationchart" style="float:left">
-                <div id="org">조직도</div>
-				<div class="depttitle"> 전체 구성원 (00) </div>
-                <div class="deptlist">
-                    <div> 00부 (00) </div>
-                    <div> 00부 (00) </div>
-                    <div> 00부 (00) </div>
-                </div>
-            </div>
               
 		</div>
 			
@@ -228,38 +208,79 @@
 	                <!-- Modal body -->
 	                <div class="modal-body" style="padding:50px; font-size:18px;">
 	                
-	                    <form action="" method="post" onsubmit="">
+	                    <form action="authUpdate.me" method="post" >
 	                        <div class="form-group">
-	                            
-	                            <label>대상</label>
-	                            <select name="" id="">
-	                                <option value="1">부서</option>
-	                                <option value="1">부서</option>
-	                                <option value="1">부서</option>
-	                            </select>
-	                            <select>
-	                                <option value="">사원리스트</option>
-	                            </select>
+	                            <label>이름 </label>
+	                            <select name="userNo" id="userNo" style="width:300px">
+							    	<c:forEach var="m" items="${ list1 }">
+							    			<option value="${m.userNo}"> [${m.employeeNo }] ${ m.userName }(${m.department }&nbsp;|&nbsp;${m.position }) </option>
+							    	</c:forEach>
+						        </select>
 	
 	                            <br><br>
 	
-	                            <label for="">권한</label>
-	                            <select name="" id="">
-	                                <option value="ALL">ALL</option>
-	                                <option value="ALL">ALL</option>
-	                                <option value="ALL">ALL</option>
-	                            </select>
+	                            <label for="">권한</label> <br><br>
+		                            <div style="float:none;">
+		                            	<table style="font-size:15px;" id="authupdate">
+		                            		<tr height="30px">
+		                            			<td colspan="4">
+		                            				<input type="checkbox" name="auth" value="0"> <label>all</label> 
+		                            			</td>
+		                            		</tr>
+		                            		<tr height="30px">
+		                            			<td width="90px">
+		                            				 <input type="checkbox" name="auth" value="1"> <label>메일</label> 
+		                            			</td>
+		                            			<td width="90px">
+		                            				<input type="checkbox" name="auth" value="2"> <label>근무</label> 
+		                            			</td>
+		                            			<td width="90px">
+													<input type="checkbox" name="auth" value="3"> <label>회사소식</label>		                            			</td>
+		                            			<td width="90px">
+		                            				<input type="checkbox" name="auth" value="4"> <label>구성원</label> 
+		                            			</td>
+		                            		</tr>
+		                            		<tr height="30px">
+		                            			<td >
+		                            				<input type="checkbox" name="auth" value="5"> <label>전자결제</label> 
+		                            			</td>
+		                            			<td >
+		                            				<input type="checkbox" name="auth" value="6"> <label>문서</label> 
+		                            			</td>
+		                            			<td >
+		                            				<input type="checkbox" name="auth" value="7"> <label>예약</label> 
+		                            			</td>
+		                            			<td >
+		                            				<input type="checkbox" name="auth" value="8"> <label>업무</label> 
+		                            			</td>
+		                            		</tr>
+		                            	</table>
+		                            	
+		                            	<script>
+					                      	  $(function(){
+						                      		var chk_arr = $("input[name='auth']");
 	
-	
-	                            
+						                            var chk_data = [];
+						                            for( var i=0; i<chk_arr.length; i++ ) {
+						                                if( chk_arr[i].checked == true ) {
+						                                    chk_data.push(chk_arr[i].value);
+						                                }
+						                            }
+						                            
+						                            console.log(che_data);
+					                      	  })}
+				                     	</script>
+		                            	
+		                            	
+		                            </div>
+	                            	
 	                        </div>
 	                        <br>
 	                        <div class="btns" align="center">
 	                            <button type="submit" class="btn-purple btn-holi">적용하기</button>
-	                            
 	                        </div>
 	                    </form>
-	
+						
 	                </div>
 	                
 	            </div>

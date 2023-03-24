@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.member.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +33,9 @@ public class Member {
 	private String connSta;
 	private String positionNo;
 	private String departmentNo;
+	
+	private String authority[];
+	private String auth;
 	
 	private String giveDay;
 	private String useDay;

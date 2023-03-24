@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.ppicachu.ppic.common.template.FileUpload;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
@@ -83,6 +84,7 @@ public class MemberController {
 		return "member/memberListView";
 	}
 	
+	
 	/* 구성원_관리자 detail */
 	@RequestMapping("managerDetail.me")
 	public String managerMemberDetail(int no, Model model) {
@@ -100,7 +102,20 @@ public class MemberController {
 	
 	/* 구성원_권한설정 */
 	@RequestMapping("memberAuth.me")
-	public String memberAuth() {
+	public String memberAuth(Model model) {
+		ArrayList<Member> list1 = mService.selectListMember();
+		
+		ArrayList<Member> list2 = mService.authMemberList();
+		for(Member item:list2) {
+			String[] checkList = item.getAuthorityNo().split(",");
+			item.setAuthority(checkList);
+			
+		}
+		
+		model.addAttribute("list1", list1);
+		
+		model.addAttribute("list2", list2);
+		
 		return "member/memberAuthView";
 	}
 	
@@ -160,13 +175,9 @@ public class MemberController {
 		int result = mService.deleteMember(userNo);
 		
 		if(result >0) {
-			
-			
 			session.setAttribute("alertMsg", "퇴사처리가 완료되었습니다");
-			
 			return "redirect:memberList.me";
 		} else {
-			
 			return "common/errorPage";
 		}
 	}
@@ -196,6 +207,21 @@ public class MemberController {
 			}
 		}
 	}
+	
+	/* 회원 권한 부여 */
+	@RequestMapping("authUpdate.me")
+	public String authUpdate(Member m, HttpSession session) {
+		
+		int result = mService.authUpdate(m);
+		
+		if(result >0) {
+			session.setAttribute("alertMsg", "권한부여가 완료되었습니다");
+			return "redirect:memberAuth.me";
+		} else {
+			return "common/errorPage";
+		}
+	}
+	
 	
 	/* 회원가입 */
 	/**
