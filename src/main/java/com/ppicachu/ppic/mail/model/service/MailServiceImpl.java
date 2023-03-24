@@ -24,8 +24,14 @@ public class MailServiceImpl implements MailService{
 	@Override
 	public int sendMail(Mail m, ArrayList<MailAttachment> list, MailStatus status) {
 		int result1 = mDao.sendMail(sqlSession, m);
-		int result2 = mDao.sendAttachment(sqlSession, list);
+		int result2 = 1;
+		if(list.size() != 0) {	// 첨부파일이 넘어왔으면
+			result2 = mDao.sendAttachment(sqlSession, list);			
+		}
 		int result3 = mDao.insertStatus(sqlSession, status, m);
+		System.out.println("result1 : " + result1);
+		System.out.println("result2 : " + result2);
+		System.out.println("result3 : " + result3);
 		return result1 * result2 * result3;
 	}
 	

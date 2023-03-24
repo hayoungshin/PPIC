@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ppicachu.ppic.common.template.FileUpload;
@@ -82,8 +83,9 @@ public class MailController {
 	}
 	
 	@RequestMapping("send.ml")	// 중요메일일 경우 "on"
-	public String sendMail(Mail m, String important, ArrayList<MultipartFile> upfiles, HttpSession session, Model model) {
+	public String sendMail(Mail m, @RequestParam(value="mailTitle", defaultValue="(제목없음)") String mailTitle, String important, ArrayList<MultipartFile> upfiles, HttpSession session, Model model) {
 		
+		m.setMailTitle(mailTitle);
 		// 내 정보 Mail에
 		m.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
 		m.setSender(((Member)session.getAttribute("loginUser")).getUserNo());
@@ -127,6 +129,7 @@ public class MailController {
 			model.addAttribute("errorMsg", "메일 전송 실패");
 			return "common/errorPage";
 		}
+		
 	}
 	
 	

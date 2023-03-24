@@ -164,13 +164,13 @@
 	<div class="outer">
 		<div id="content">
 		<h2 style="display:inline-block; margin-bottom: 40px;"><b>메일</b></h2>
-		<form method="post" action="send.ml" enctype="multipart/form-data" style="padding:0px 20px;">
+		<form id="sendMailForm" method="post" action="send.ml" enctype="multipart/form-data" style="padding:0px 20px;">
 		
-			<input type='hidden' name="recipientMail" id="recipientMail">
-			<input type='hidden' name="refMail" id="refMail">
-			<input type='hidden' name="hidRefMail" id="hidRefMail">
+			<input type='hidden' name="recipientMail" id="recipientMail" value="">
+			<input type='hidden' name="refMail" id="refMail" value="">
+			<input type='hidden' name="hidRefMail" id="hidRefMail" value="">
 			
-			<button class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;">보내기</button>
+			<button type="button" class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;" onclick="submitForm();">보내기</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">미리보기</button>
 
@@ -213,10 +213,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>첨부파일</th>
-					<td>
-						
-					</td>
+					<th colspan="2">첨부파일</th>
 					<td>
 						<label class="file-btn">
 							파일첨부
@@ -237,61 +234,75 @@
 			
 			<!-- 파일 첨부 관련 -->
 			<script>
-			
+
+				const dataTransfer = new DataTransfer();				// 나름 FileList 객체 (Array에 있는걸 다시 옮겨 담기 위한 용도)
 				const fileList = document.getElementById("file-list");	// 파일 원본명 뿌릴 영역
-				let fileArr = [];
+				
+				/* 1. 파일 입력 */
 				function loadFiles(inputFile) {
-					/* 파일첨부 -> 리스트 출력 */
-					if(inputFile.files.length > 0){
-						for(let i=0; i<inputFile.files.length; i++){
-							fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + inputFile.files[i].name + "</p>"
-							fileArr.push(inputFile.files[i]);
-						}
+					// 리스트 출력
+					for(let file of inputFile.files){
+						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + file.name + "</p>"
+						// DataTransfer에 담기
+						dataTransfer.items.add(file);
 					}
-					console.log(fileArr);
-					$("#upfiles").files = fileArr.files;
-					console.log($("#upfiles")[0].files);
+					// 파일배열 input요소에 담기
+					$("#upfiles")[0].files = dataTransfer.files;
                 }
 				
+				/* 2. 파일 삭제 */
 				$(document).on("click", ".files", function(e){
-					//console.log(e.target.innerText);
-					for(let i in fileArr){
+					
+					// input type="file"에 multiple 속성을 사용할 경우
+		            // 선택된 파일들에 접근하면 FileList로 처리됨
+		            let files = $("#upfiles")[0].files;	// 선택된 파일들  (FileList)
+		            let fileArr = Array.from(files);	// 파일들을 배열로 변환 (즉, FileList => Array)
+
+					for(let i=0; i<fileArr.length; i++){
+						// 클릭한 요소의 innerText에 이름이 포함되어있는 배열요소 삭제
 						if(e.target.innerText.includes(fileArr[i].name)){
 							fileArr.splice(i,1);
 							e.target.remove();
 						}
 					}
-					console.log(fileArr);
-					$("#upfiles").files = fileArr.files;
-					console.log($("#upfiles")[0].files);
+		            
+				 	dataTransfer.clearData(); // 한번 비워주고
+			        
+		            // 제거가 다 끝난 Array => FileList로 다시 변환 
+		            fileArr.forEach(function(file){
+		                dataTransfer.items.add(file);
+		            })
+			        
+		            // FileList를 다시 input요소에 담기
+		            $("#upfiles")[0].files = dataTransfer.files;
 				})
 
-				fileList.addEventListener("dragenter",function(e){
+				/* 드래그 앤 드롭 */
+				fileList.addEventListener("dragenter",function(e){	// 파일 닿음
 					e.preventDefault();
-					//console.log('파일닿았따!!!');
 					fileList.className = "drag-enter";
 				})
 				fileList.addEventListener("dragover",function(e){
 					e.preventDefault();
 					fileList.className = "drag-enter";
 				})
-				fileList.addEventListener("dragleave",function(e){
+				fileList.addEventListener("dragleave",function(e){	// 파일 나감
 					e.preventDefault();
-					//console.log("파일 나감");
 					fileList.classList.remove("drag-enter");
 				})
+				/* 3. 드래그앤드롭으로 파일 입력 */
 				fileList.addEventListener("drop",function(e){
 					e.preventDefault();
 					fileList.classList.remove("drag-enter");
-					for(let i=0; i<e.dataTransfer.files.length; i++){
-						fileArr.push(e.dataTransfer.files[i]);
-						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[i].name + "</p>";
+					for(let file of e.dataTransfer.files){
+						dataTransfer.items.add(file);
+						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + file.name + "</p>";
 					}
-					console.log(fileArr);
-					$("#upfiles").files = fileArr.files;
-					console.log($("#upfiles")[0].files);
+					// 파일배열 input요소에 담기
+					$("#upfiles")[0].files = dataTransfer.files;
 				})
 			</script>
+			
 			
 			
 			<!-- 자동완성 -->
@@ -816,6 +827,19 @@
 	  			}
 		  	}
 		  
+		</script>
+		
+		<!-- Alert -->
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<!-- 메일 보내기 -->
+		<script>
+			function submitForm(){
+				if(document.getElementById("recipientMail").value == ""){
+					swal('', "받는사람이 지정되지 않았습니다.\n받는 사람 주소를 입력해주세요.", 'error')
+				} else {
+					document.getElementById("sendMailForm").submit();
+				}
+			}
 		</script>
 
 	</div>
