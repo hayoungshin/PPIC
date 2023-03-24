@@ -540,7 +540,7 @@
 	            
 	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
 		        <button type="submit" class="btnn-pk" onclick="tem();">임시저장</button>
-		        <button type="submit" class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
+		        <button type="submit" class="btnn-pp" id="forAlarm">작성</button><!-- 작성완료시 상세로 -->
 	        </div>
 	    </form>
     </div>
