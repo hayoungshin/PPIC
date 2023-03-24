@@ -389,9 +389,54 @@
 			</foreach>
 	</update>
 	
-	<!-- <delete id=removeApproval">
-		
-	</delete> -->
+	<delete id="removeApproval">
+		delete
+		  from approval
+		 where approval_no = #{approvalNo}
+	</delete>
+	
+	<delete id="removeProcess">
+		delete
+		  from app_process
+		 where approval_no = #{approvalNo}
+	</delete>
+	
+	<delete id="removeChange">
+		delete
+		  from app_change
+		 where approval_no = #{approvalNo}
+	</delete>
+	
+	<delete id="removeAppAttachment">
+		delete
+		  from attachment
+		 where ref_no = #{approvalNo}
+		   and category_no = 1
+	</delete>
+	
+	<delete id="removeDraft">
+		delete
+		  from form_draft
+		 where approval_no = #{approvalNo}
+	</delete>
+	
+	<delete id="removeTransfer">
+		delete
+		  from form_transfer
+		 where approval_no = #{approvalNo}
+	</delete>
+	
+	<delete id="removeConsume">
+		delete
+		  from form_consume
+		 where approval_no = #{approvalNo}
+	</delete>
+	
+	<delete id="removeCash">
+		delete
+		  from form_cash
+		 where approval_no = #{approvalNo}
+	</delete>
 	
 	<update id="recoverApproval">
 		update
@@ -692,6 +737,33 @@
 		  where approval_no = #{approvalNo}
 	</update>
 	
+	<insert id="insertChange">
+		insert
+		  into app_change
+		  (
+		    change_no
+		  , approval_no
+		  , user_no
+		  , content
+		  , role
+		  )
+		  values
+		  (
+		    seq_chno.nextval
+		<choose>
+			<when test="approvalNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{approvalNo}
+			</otherwise>
+		</choose>
+		  , #{userName}
+		  , #{content}
+		  , #{role}
+		  )
+	</insert>
+	
 	<insert id="insertApproval">
 		insert
 		  into approval
@@ -749,33 +821,6 @@
 		<if test="approvalRole == '참조'">
 			, sysdate
 		</if>
-		  )
-	</insert>
-	
-	<insert id="insertChange">
-		insert
-		  into app_change
-		  (
-		    change_no
-		  , approval_no
-		  , user_no
-		  , content
-		  , role
-		  )
-		  values
-		  (
-		    seq_chno.nextval
-		<choose>
-			<when test="approvalNo == 0">
-				, seq_apno.currval
-			</when>
-			<otherwise>
-				, #{approvalNo}
-			</otherwise>
-		</choose>
-		  , #{userName}
-		  , #{content}
-		  , #{role}
 		  )
 	</insert>
 	

@@ -97,6 +97,25 @@ public class WorkController {
 		return "work/workMemberView";
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="ajaxMemberList.wo", produces="application/json; charset=utf-8")
+	public String ajaxMemberList(Model model) {
+		ArrayList<Member> mlist = wService.selectAllMember();
+		ArrayList<Member> hlist = wService.selectHolidayList();
+		ArrayList<Member> wlist = wService.selectWorkCountList();
+		//ArrayList<Member> tlist = wService.selectTimeCountList();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		map.put("mlist", mlist);
+		map.put("hlist", hlist);
+		map.put("wlist", wlist);
+		//map.put("tlist", tlist);
+		
+		return new Gson().toJson(map);
+	}
+	
+	
 	/* 근무_전사원휴가보유현황 */
 	@RequestMapping("memberHoli.ho")
 	public String memberHoli(Model model) {
@@ -171,6 +190,8 @@ public class WorkController {
 		w.setConnSta(0);
 		
 		wService.updateConnSta(w);
+		
+		
 	}
 
 	// home 퇴근등록하기 
@@ -184,6 +205,10 @@ public class WorkController {
 		w.setConnSta(1);
 		
 		wService.updateConnSta(w);
+		
+		if (result>0) {
+			int timeup = wService.updateWorkTime(no);
+		}
 	}
 	
 	// home 퇴근등록하기 (조퇴)
@@ -197,6 +222,11 @@ public class WorkController {
 		w.setConnSta(1);
 		
 		wService.updateConnSta(w);
+		
+		if (result>0) {
+			int timeup = wService.updateWorkTime(no);
+		}
+		
 	}
 
 	// 사용자 예정 휴가 조회하기 

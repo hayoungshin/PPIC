@@ -37,6 +37,9 @@ public interface WorkService {
 		// 출퇴근시 채팅 접속상태 변경
 		int updateConnSta(Work w);
 		
+		// 근무시간 등록 서비스
+		int updateWorkTime(int userNo);
+		
 	// 8. 사원의 휴가 정보 조회 서비스 
 		Member selectMemberHoliday(int userNo);
 		ArrayList<Holiday> selectMemberHolidayList(int userNo);
@@ -65,4 +68,13 @@ public interface WorkService {
 
 	// 16. 캘린더 조회 서비스 
 		ArrayList<Work> workCalendar(int userNo);
+	
+	// 17. 전사원 목록 조회 서비스 
+		ArrayList<Member> selectAllMember();
+		
+	// 18. 전사원 연간 근태조회 서비스
+		ArrayList<Member> selectWorkCountList();
+	
+	// 19. 전사원 연간 근무시간 조회 서비스 
+		ArrayList<Member> selectTimeCountList();
 }

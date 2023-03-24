@@ -96,4 +96,20 @@ public class WorkDao {
 	public ArrayList<Work> workCalendar(SqlSessionTemplate sqlSession, int userNo){
 		return (ArrayList)sqlSession.selectList("workMapper.workCalendar", userNo);
 	}
+	
+	public int updateWorkTime(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.update("workMapper.updateWorkTime", userNo);
+	}
+	
+	public ArrayList<Member> selectAllMember(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("workMapper.selectAllMember");
+	}
+	
+	public ArrayList<Member> selectWorkCountList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("workMapper.selectWorkCountList");
+	}
+	
+	public ArrayList<Member> selectTimeCountList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("workMapper.selectTimeCountList");
+	}
 }

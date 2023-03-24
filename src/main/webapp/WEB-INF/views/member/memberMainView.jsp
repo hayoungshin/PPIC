@@ -117,7 +117,21 @@
                 <br>
             </div>
 
-			
+			<script>
+				$(function(){
+	        		
+	        		$(".memberCategory").hide();
+	        		
+	        		var a = "${loginUser.authorityNo}";
+	        		
+	
+	        		if (a.includes('4') || a.includes('0')) {
+	        			$(".memberCategory").show();
+	       			} else {
+	       				
+	       			}
+	        	})
+			</script>
 			<br><br><br>
 	
 			

@@ -2,6 +2,7 @@ package com.ppicachu.ppic.member.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -84,6 +85,19 @@ public class MemberController {
 		return "member/memberListView";
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="ajaxMemberList.me", produces="application/json; charset=utf-8")
+	public String ajaxMemberList(Model model) {
+		ArrayList<Member> list1 = mService.selectListMember();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		map.put("list1", list1);
+		
+		return new Gson().toJson(map);
+	}
+	
+	
+	
 	
 	/* 구성원_관리자 detail */
 	@RequestMapping("managerDetail.me")
@@ -109,7 +123,6 @@ public class MemberController {
 		for(Member item:list2) {
 			String[] checkList = item.getAuthorityNo().split(",");
 			item.setAuthority(checkList);
-			
 		}
 		
 		model.addAttribute("list1", list1);
@@ -215,6 +228,9 @@ public class MemberController {
 		int result = mService.authUpdate(m);
 		
 		if(result >0) {
+			Member updateMem = mService.loginMember(m);
+			
+			session.setAttribute("loginUser", updateMem);
 			session.setAttribute("alertMsg", "권한부여가 완료되었습니다");
 			return "redirect:memberAuth.me";
 		} else {
