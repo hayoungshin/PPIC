@@ -53,6 +53,8 @@
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
+		  order
+		 	by department_no, position_no
 	</select>
 	
 	<select id="selectDeptList" resultMap="departmentResult">
@@ -65,6 +67,7 @@
 	<select id="selectMember" resultMap="memberResult">
 		select
 			   user_no
+			 , user_id
 		     , user_name
 		     , phone
 		     , mail
@@ -256,6 +259,26 @@
 		     , position = #{position}
 		     , phone = #{phone}
 		     , address = #{address}
+		 where user_no = #{userNo}
+	</update>
+	
+	<select id="authMemberList" resultMap="memberResult" >
+		select 
+		      user_no
+		    , user_name
+		    , position_name as "POSITION"
+			, department_name as "DEPARTMENT"
+		    , authority_no
+		  from member
+		  join dept on (member.department = dept.department_no)
+		  join position on (member.position = position.position_no) 
+		  where authority_no is not null
+	</select>
+	
+	<update id="authUpdate">
+		update 
+			   member
+		   set authority_no = #{auth}
 		 where user_no = #{userNo}
 	</update>
 </mapper>

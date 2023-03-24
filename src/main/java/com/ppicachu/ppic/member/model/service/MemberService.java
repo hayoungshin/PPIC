@@ -55,4 +55,10 @@ public interface MemberService {
 	// 13. 멤버 퇴사 서비스
 	int deleteMember(int userNo);
 	
+	// 14. 권한 멤버 리스트 조회 서비스
+	ArrayList<Member> authMemberList();
+	
+	//15. 멤버 권한 부여 서비스 
+	int authUpdate(Member m);
+	
 }

@@ -80,5 +80,13 @@ public class MemberDao {
 	public int deleteMember(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.update("memberMapper.deleteMember", userNo);
 	}
+	
+	public ArrayList<Member> authMemberList(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("memberMapper.authMemberList");
+	}
+	
+	public int authUpdate(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.authUpdate", m);
+	}
 
 }
