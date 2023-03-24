@@ -45,6 +45,31 @@
 		<result column="absenteeism" property="absenteeism" />
 		<result column="leavearly" property="leavearly" />
 	</resultMap>
+	
+	<resultMap id="memberResult" type="Member">
+		<id column="user_no" property="userNo" />
+		<result column ="user_name" property="userName" />
+		<result column ="position" property="position" />
+		<result column ="department" property="department" />
+		<result column ="phone" property="phone" />
+		<result column ="mail" property="mail" />
+		<result column ="hire_date" property="hireDate" />
+		<result column ="resign_date" property="resignDate" />
+		<result column ="employee_no" property="employeeNo" />
+		<result column ="user_id" property="userId" />
+		<result column ="user_pwd" property="userPwd" />
+		<result column ="address" property="address" />
+		<result column ="birthday" property="birthday" />
+		<result column ="profile_img" property="profileImg" />
+		<result column ="status" property="status" />
+		<result column ="authority_no" property="authorityNo" />
+		<result column ="member_sign" property="memberSign" />
+		<result column ="position_no" property="positionNo" />
+		<result column ="department_no" property="departmentNo" />
+		<result column="behindtime" property="behindtime" />
+		<result column="absenteeism" property="absenteeism" />
+		<result column="leavearly" property="leavearly" />
+	</resultMap>
 
 	<select id="selectHolidayList" resultMap="holidayResult2" >
 		SELECT T1.USER_NO 
@@ -153,11 +178,6 @@
 		update 
 		       work
 		   set work_out = sysdate
-		     , work_time = (select 
-		                           ROUND(((work_out-work_in)*24)-1) 
-		                      FROM work 
-		                     where  USER_NO = #{userNo}
-		                     AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 		 where  USER_NO = #{userNo}
 		  AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 	</update>
@@ -166,12 +186,19 @@
 		       work
 		   set work_out = sysdate
 		   	 , status = '조퇴'
-		     , work_time = (select 
+		 where  USER_NO = #{userNo}
+		  AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
+	</update>
+	
+	<update id="updateWorkTime">
+		update 
+		       work
+		   set work_time = (select 
 		                           ROUND(((work_out-work_in)*24)-1) 
 		                      FROM work 
 		                     where  USER_NO = #{userNo}
 		                     AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd'))
-		 where  USER_NO = #{userNo}
+		 where  USER_NO =#{userNo}
 		  AND to_char( work_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
 	</update>
 	
@@ -337,5 +364,40 @@
 		     , status
 		  from work 
 		 where user_no=#{userNo}
+	</select>
+	
+	<select id="selectAllMember" resultMap="memberResult">
+		select
+		       user_no
+		     , user_name
+		     , phone
+		     , mail
+		     , to_char(hire_date, 'YYYY.MM.DD') as "HIRE_DATE"
+		     , to_char(resign_date, 'YYYY.MM.DD') as "resign_date"
+		     , employee_no
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
+		     , profile_img
+		     , status
+		  from member
+		  join dept on (member.department = dept.department_no) 
+		  join position on (member.position = position.position_no)
+		  order
+		 	by user_no
+	</select>
+	
+	<select id="selectWorkCountList" resultMap="memberResult">
+		select 
+		       m.user_name
+		     , m.user_no
+		     , COUNT( CASE WHEN w.STATUS ='결근'  then 1 end ) AS "absenteeism"
+		     , COUNT( CASE WHEN w.STATUS ='조퇴'  then 1 end ) AS "leavearly"
+		     , COUNT( CASE WHEN w.STATUS ='지각'  then 1 end ) AS "behindtime"
+		  FROM member m
+		  join work w on (w.user_no = m.user_no)
+		 WHERE SUBSTR(WORK_DATE,0,8) BETWEEN (TO_CHAR(TRUNC(SYSDATE,'YY'),'YY/MM/DD') ) AND (LAST_DAY(SYSDATE))
+		 group
+		    by m.user_name, m.user_no
+		 order by user_no
 	</select>
 </mapper>

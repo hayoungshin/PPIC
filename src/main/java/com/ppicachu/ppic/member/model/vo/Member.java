@@ -44,4 +44,8 @@ public class Member {
 	private String chatLike;
 	private int roomNo;
 	private int lastreadChat;
+	
+	private String absenteeism;
+	private String leavearly;
+	private String behindtime;
 }
