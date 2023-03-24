@@ -32,6 +32,8 @@ public class MailController {
 	
 	/**
 	 * @param currentPage 페이징처리
+	 * @param session 로그인한 유저 정보 불러오기 위해
+	 * @param mv
 	 * @return 메일 메뉴 초기화면 : 받은 메일 목록
 	 */
 	@RequestMapping("recieveList.ml")
@@ -47,8 +49,36 @@ public class MailController {
 	}
 	
 	@RequestMapping("recieveDetail.ml")
-	public String selectRecieveMail() {
-		return "mail/recieveMailDetailView";
+	public ModelAndView selectRecieveMail(int no, HttpSession session, ModelAndView mv) {
+		
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		
+		MailStatus status = new MailStatus();
+		status.setMailNo(no);
+		status.setRecipientMail(userMail);
+		
+		int readStatus = mService.selectReadStatus(status);	// 1읽음|0안읽음
+		int result = 0;
+		if(readStatus == 1) {	// 읽었던 메일
+			// 메일기본정보
+			Mail m = mService.selectRecieve(no);
+			// 메일 첨부파일
+			ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+			
+			mv.addObject("m", m).addObject("list", list).setViewName("mail/recieveMailDetailView");
+		} else {				// 안읽었던 메일
+			result = mService.updateReadDate(status);
+			//읽은 시간 먼저 업데이트
+			if(result > 0) {
+				Mail m = mService.selectRecieve(no);
+				ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+				mv.addObject("m", m).addObject("list", list).setViewName("mail/recieveMailDetailView");
+			} else {
+				mv.addObject("errorMsg", "받은메일 상세조회 실패").setViewName("common/errorPage");
+			}
+		}
+		
+		return mv;
 	}
 	
 	@RequestMapping("sendForm.ml")

@@ -43,5 +43,26 @@ public class MailServiceImpl implements MailService{
 	public ArrayList<Mail> selectRecieveList(PageInfo pi, String userMail) {
 		return mDao.selectRecieveList(sqlSession, userMail, pi);
 	}
+
+	@Override
+	public int selectReadStatus(MailStatus status) {
+		return mDao.selectReadStatus(sqlSession, status);
+	}
+	
+	@Override
+	public int updateReadDate(MailStatus status) {
+		return mDao.updateReadDate(sqlSession, status);
+	}
+
+	@Override
+	public Mail selectRecieve(int mailNo) {
+		return mDao.selectRecieve(sqlSession, mailNo);
+	}
+
+	@Override
+	public ArrayList<MailAttachment> selectAttachmentList(int mailNo) {
+		return mDao.selectAttachmentList(sqlSession, mailNo);
+	}
+
 	
 }
