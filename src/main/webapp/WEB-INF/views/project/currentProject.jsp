@@ -113,6 +113,9 @@
   }
   .userImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
   .file{color:gray; margin-bottom:10px;}
+  .file>img{width:13px; margin:0 5px;}
+  .file>a{color:rgb(25, 25, 25);}
+  #delete-file-btn{cursor:pointer;}
   .ref-people{display:inline-block; width:180px; text-align:right; font-size:12px;}
   .status{display:inline-block; color:white; width:50px; border-radius:5px; text-align:center; font-size:12px;}
   .tp-userImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
@@ -138,8 +141,9 @@
   .add-form th{width:20%;}
   .add-form td{width:80%;}
   .add-form input, .add-form textarea{width:80%; border:0.5px solid lightgray; border-radius:4px;}
-  #emp-select{width:30%;}
-  #selected-area{
+  #dept-select, #dept-select2{width:20%;}
+  #emp-select, #emp-select2{width:30%;}
+  #selected-area, #selected-area2{
     width:80%;
     height:150px;
     border:0.5px solid lightgray;
@@ -160,11 +164,17 @@
     width:12px;
     margin:3px;
   }
-  #invalidMsg{
+  #invalidMsg, #invalidMsg2{
     font-size:12px;
     color:red;
     display:none;
-    margin:10px 0 0 100px;
+  }
+  .btn-outline-red{
+    border:1px solid red;
+    border-radius:5px;
+    background:#ffffff;
+    color:red;
+    padding:2px 6px;
   }
 </style>
 </head>
@@ -266,9 +276,6 @@
             let projectDetail = $(e).find("input[name=projectDetail]").val();
             $("#p-detail").text(projectDetail);
 
-            let pm = $(e).find(".project-manager").text();
-            $("#pm").text(pm);
-            
             projectNo = $(e).find("input[name=projectNo]").val();
 
             detailLoad(projectNo);
@@ -286,11 +293,17 @@
 
                 // 참여자 정보 출력
                 let member = "";
+                let pm = "";
                 for(let i=0; i<ppList.length; i++){
-                  member += ppList[i].userName + " " + ppList[i].positionName + " (" + ppList[i].departmentName + "), ";
+                  if(ppList[i].pmStatus != "Y"){
+                    member += ppList[i].userName + " " + ppList[i].positionName + " (" + ppList[i].departmentName + "), ";
+                  }else if(ppList[i].pmStatus == "Y"){
+                    pm = "PM : " + ppList[i].userName;
+                  }
                 }
                 member = "참여자 : " + member.substring(0, member.lastIndexOf(","));
                 $("#member-list").html(member);
+                $("#pm").text(pm);
 
                 // 작업 리스트 출력
                 let task;
@@ -306,14 +319,14 @@
                   }
 
                   // 상태별 div
-                  task = "<div class='task-box' onclick='taskDetailLoad(this);'>"
+                  task = "<div class='task-box' onclick='taskDetailLoad(this)'>"
                          + "<input type='hidden' name='taskNo' value='" + tList[i].taskNo + "'>"
                          + "<div class='task-title'>" + tList[i].taskName + "</div>"
                          + "<input type='hidden' name='userNo' value='" + tList[i].userNo + "'>"
                          + "<input type='hidden' name='assignUser' value='" + tList[i].assignUser + "'>"
                          + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + " " + tList[i].positionName + "</div>";
                   if(tList[i].originName != null){
-                    task += "<div class='file'>" + tList[i].originName + "</div>"; 
+                    task += "<div class='file'><img src='resources/icons/clip.png'>" + tList[i].originName + "</div>"; 
                   }
 
                   switch(tList[i].taskStatus){
@@ -351,7 +364,7 @@
                 doneRatio();
 
                 // 셀렉트 조회
-                selectList();
+                selectList("add");
 
               }, error:function(){
                 console.log("정보 가져오기 실패");
@@ -474,10 +487,11 @@
         let taskNo = "";
         let taskRefList = "";
         $(document).on("click", ".ref-people", function(){
+          event.stopPropagation();
+          event.preventDefault();
           taskNo = $(this).siblings("input[name=taskNo]").val();
-          clickRp = $(this);
+          let clickRp = $(this);
           taskRefList = "";
-
           $.ajax({
             url:"tpList.tk",
             data:{"taskNo":taskNo},
@@ -490,17 +504,25 @@
                 taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>"
                              + tpList[i].userName + " " + tpList[i].positionName + "</div>";
               }
-              clickRp.popover ({
-              content: taskRefList,
-              html: true
-            })
+              // popover 실행
+              popOver(clickRp, event);
             }, error:function(){
               console.log("참조자 리스트 조회 실패");
             }
           })
 
-          
         })
+
+        function popOver(e, event){
+          event.stopPropagation();
+          e.popover ({
+            html: true,
+            // container:"body",
+            content: taskRefList,
+            // selector:true,
+            trigger:"hover"
+          })
+        }
       </script>
 
       <!-- drag&drop sorting -->
@@ -601,7 +623,7 @@
                   <tr>
                     <th>참조자 :</th>
                     <td>
-                      <select name="department" id="dept-select">
+                      <select name="department" id="dept-select" onchange="loadEmpSelect(1, this);">
                       </select>
                       <select name="userNo" id="emp-select">
                       </select>
@@ -609,8 +631,10 @@
                   </tr>
                   <tr>
                     <th><input type="hidden" name="userNo" id="taskUserNo"></th>
-                    <td><div id="selected-area"></div></td>
-                    <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                    <td>
+                      <div id="selected-area"></div>
+                      <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                    </td>
                   </tr>
                   <tr>
                     <th>상태</th>
@@ -639,47 +663,73 @@
 
       <!-- 셀렉트 정보 가져오기 -->
       <script>
-        function selectList(){
-          const noneOption = "<option value='none'>선택</option>";
-          $("#dept-select").html(noneOption);
-          $("#emp-select").html(noneOption);
+        let dList;
+        let eList;
+        let noneOption;
+        let newAssignUser;
+
+        function selectList(type){
+          noneOption = "<option value='none'>선택</option>";
+          if(type == "add"){
+            $("#dept-select").html(noneOption);
+            $("#emp-select").html(noneOption);
+          }else if(type == "update"){
+            $("#dept-select2").html(noneOption);
+            $("#emp-select2").html(noneOption);
+          }
+          
           $("#selected-area").empty();
           
           let userNo = ${loginUser.userNo};
+
           $.ajax({
             url:"selectList.tk",
             data:{"projectNo":projectNo, "userNo":userNo},
             success:function(obj){
-              let dList = obj.dList;
-              let eList = obj.eList;
-              
+              dList = obj.dList;
+              eList = obj.eList;
               let deptValue = "";
               for(let i=0; i<dList.length; i++){
                 deptValue += "<option value='" + dList[i].departmentNo + "'>" + dList[i].departmentName + "</option>";
               }
-              $("#dept-select").append(deptValue);
-
-              $("#dept-select").change(function(){
-                $("#emp-select").html(noneOption);
-                
-                let dept = $(this).val();
-                let empValue = "";
-                
-                for(let i=0; i<eList.length; i++){
-                  if(dept == eList[i].departmentNo){
-                    empValue += "<option value='" + eList[i].userNo + "'>" + eList[i].userName + " " + eList[i].positionName + "</option>";
-                  }
-                }
-                $("#emp-select").append(empValue);
-                $("#invalidMsg").css("display", "none");
-              })
+              
+              if(type == "add"){
+                $("#dept-select").append(deptValue);
+              }else if(type == "update"){
+                $("#dept-select2").append(deptValue);
+              }
+              
 
             }, error:function(){
               console.log("부서 조회 실패");
             }
           })
         }
+        
+        function newAssign(e){
+          newAssignUser = $(e).val();
+        }
+
+        function loadEmpSelect(num, d){
+          let dept = $(d).val();
+          let empValue = "";
+          for(let i=0; i<eList.length; i++){
+            if(dept == eList[i].departmentNo && newAssignUser != eList[i].userNo ){
+              empValue += "<option value='" + eList[i].userNo + "'>" + eList[i].userName + " " + eList[i].positionName + "</option>";
+            }
+          }
+
           
+          if(num == 1){
+            $("#emp-select").html(noneOption);
+            $("#emp-select").append(empValue);
+          }else if(num == 2){
+            $("#emp-select2").html(noneOption);
+            $("#emp-select2").append(empValue);
+          }
+          $("#invalidMsg, #invalidMsg2").css("display", "none");
+
+        }
       </script>
 
       <script>
@@ -697,8 +747,7 @@
           if($("#selected-area").text().includes(selectUserName)){
             $("#invalidMsg").css("display", "block");
           }else if(selectUserName != "선택"){
-            // selectedList.push($("#emp-selected option:selected").val());
-            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete.png'></div>"
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete-red.png'></div>"
                         + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
                         + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
             $("#selected-area").append(taskRefUser);
@@ -708,7 +757,6 @@
         // 삭제하기
         function deleteUser(e){
           $(e).remove();
-          // selectedList.pop()
         }
 
         // 모달에 프로젝트번호 추가
@@ -719,7 +767,7 @@
 
       
 
-      <!-- 업무 수정 Modal -->
+      <!-- 업무 수정(상세) Modal -->
       <div class="modal" id="update-task-modal">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -730,39 +778,51 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <form action="updateTask.tk" method="post" enctype="multipart/form-data">
+            <form action="" method="post" enctype="multipart/form-data" id="taskUpdateForm">
               <!-- Modal body -->
               <div class="modal-body">
                 <table class="add-form">
                   <tr>
+                    <input type="hidden" name="taskNo">
                     <th width="100px;">* 업무명 : </th>
-                    <td><input type="text" class="task-title-inpt" name="taskName" placeholder="업무명을 입력해주세요." required></td>
+                    <td><input type="text" class="task-title-inpt" id="dTaskName" name="taskName" placeholder="업무명을 입력해주세요." required></td>
                   </tr>
                   <tr>
                     <th>* 업무상세 :</th>
-                    <td><textarea name="taskContent" cols="30" rows="5" style="resize: none;" placeholder="업무 상세내용을 입력해주세요." required></textarea></td>
+                    <td><textarea id="dTaskContent" name="taskContent" cols="30" rows="5" style="resize: none;" placeholder="업무 상세내용을 입력해주세요." required></textarea></td>
                   </tr>
                   <tr>
                     <th>첨부파일 :</th>
-                    <td><input type="file" name="upfile"></td>
+                    <td>
+                      <br>
+                      <input type="file" id="reupfile" name="reupfile">
+                      <div class="file" id="currentFile-area"></div>
+                      <input type="hidden" id="currentFile" name="originName">
+                      <input type="hidden" id="currientFilePath" name="filePath">
+                    </td>
                   </tr>
                   <tr>
                     <th>담당자 :</th>
-                    <td><input type="hidden" name="assignUser" value="${loginUser.userNo}">${loginUser.userName}</td>
-                  </tr>
-                  <tr>
-                    <th>참조자 :</th>
                     <td>
-                      <select name="department" id="dept-select">
-                      </select>
-                      <select name="userNo" id="emp-select">
+                      <select name="assignUser" id="dAssignUser" onchange="newAssign(this);">
                       </select>
                     </td>
                   </tr>
                   <tr>
-                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
-                    <td><div id="selected-area"></div></td>
-                    <div id="invalidMsg">이미 선택된 직원입니다.</div>
+                    <th>참조자 :</th>
+                    <td>
+                      <select name="department" id="dept-select2" onchange="loadEmpSelect(2, this);">
+                      </select>
+                      <select name="userNo" id="emp-select2">
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th><input type="hidden" name="userNo" id="dTaskUserNo"></th>
+                    <td>
+                      <div id="selected-area2"></div>
+                      <div id="invalidMsg2">이미 선택된 직원입니다.</div>
+                    </td>
                   </tr>
                   <tr>
                     <th>상태</th>
@@ -781,7 +841,8 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="submit" class="btn btn-purple">추가</button>
+              <button type="submit" class="btn-outline-red" onclick="confirm('삭제하시겠습니까?'); taskUpdateFormSubmit('deleteTask.tk')">삭제</button>
+              <button type="submit" class="btn btn-purple" onclick="taskUpdateFormSubmit('updateTask.tk')">수정</button>
             </div>
           </form>
 
@@ -793,19 +854,103 @@
       <script>
         function taskDetailLoad(e){
           let tn = $(e).children("input[name=taskNo]").val();
-          
+          $("#update-task-modal input[name=projectNo]").val(projectNo);
+
           $.ajax({
             url:"detail.tk",
-            data:{"taskNo":tn},
+            data:{"taskNo":tn, "projectNo":projectNo},
             success:function(obj){
               let t = obj.t;
               let tpList = obj.tpList;
+              let ppList = obj.ppList;
+              $("#dAssignUser").empty();
+              $("#currentFile-area").empty();
+
+              // task detail
+              $("#dTaskName").val(t.taskName);
+              $("#dTaskContent").text(t.taskContent);
+              
+              // 담당자 select
+              let userValue = "" 
+
+              userValue += "<option selected value='" + t.assignUser + "'>" + t.assignUserName + "</option>";
+              for(let i=0; i<ppList.length; i++){
+                if(t.assignUser != ppList[i].userNo){
+                  userValue += "<option value='" + ppList[i].userNo + "'>" + ppList[i].userName + "</option>";
+                }
+              }
+              $("#dAssignUser").append(userValue);
+
+              let fileValue = ""
+              if(t.originName != null){
+                fileValue = "<img src='resources/icons/clip.png'>"
+                          + "<a id='currentFile' href='" + t.filePath + "' download='" + t.originName +"'>"
+                          + t.originName + "</a>"
+                          + "<img id='delete-file-btn' src='resources/icons/delete-red.png' onclick='deleteFile();'>";
+                           
+                $("#currentFile-area").html(fileValue);
+                $("#currentFile").val(t.originName);
+                $("#currientFilePath").val(t.filePath);
+              }
+              // task 참조자 셀렉트
+              selectList("update");
+              $("#selected-area2").empty();
+
+              let selectedUserList = "";
+              for(let i=0; i<tpList.length; i++){
+                selectedUserList += "<div class='select-user' onclick='deleteUser(this);'>" + tpList[i].userName + " " + tpList[i].positionName + "<img src='resources/icons/delete-red.png'></div>"
+                                  + "<input type='hidden' name='selectUser' value='" + tpList[i].userNo + "'>"
+                                  + "<input type='hidden' name='selectUserDept' value='" + tpList[i].departmentNo + "'>";
+              }
+              $("#selected-area2").html(selectedUserList);
+             
+              // 선택된 참조자 리스트
+              $("#emp-select2").change(function(){
+                selectUserDept = $("#dept-select2 option:selected").val();
+                selectUserName = $("#emp-select2 option:selected").text();
+                selectUserNo = $("#emp-select2 option:selected").val();
+
+                if($("#selected-area2").html().includes(selectUserName)){
+                  $("#invalidMsg2").css("display", "block");
+                }else if(selectUserName != "선택"){
+                  taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete-red.png'></div>"
+                              + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
+                              + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
+                  $("#selected-area2").append(taskRefUser);
+                }
+              })
+
+              // 상태 선택
+              $("select[name=taskStatus] option").each(function(){
+                  if ($(this).val() == t.taskStatus) {
+                    $(this).prop("selected", true);
+                  }
+              }); 
+              
+              // taskNo 추가
+              $("#update-task-modal input[name=taskNo]").val(tn);
+              // 프로젝트 번호 추가
+              $("#update-task-modal input[name=projectNo]").val(projectNo);
+
+              $("#update-task-modal").modal("show");
+
+              // 참조자 -> 담당자 순으로 선택 시 중복선택 막는 부분은 나중에...
 
               
+
             }, error:function(){
               console.log("업무 상세 불러오기 실패");
             }
           })
+        }
+
+        function deleteFile(){
+          $("#currentFile-area").empty();
+          $("#currentFile").val("");
+        }
+
+        function taskUpdateFormSubmit(action){
+          $("#taskUpdateForm").attr("action", action).submit();
         }
       </script>
 

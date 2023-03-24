@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ppicachu.ppic.mail.model.vo.Mail;
 import com.ppicachu.ppic.mail.model.vo.MailAttachment;
+import com.ppicachu.ppic.mail.model.vo.MailStatus;
 
 @Repository
 public class MailDao {	
@@ -23,23 +24,34 @@ public class MailDao {
 		return result;
 	}
 	
-	public int insertStatus(SqlSessionTemplate sqlSession, Mail m) {
+	public int insertStatus(SqlSessionTemplate sqlSession, MailStatus status, Mail m) {
 		int result = 0;
-		for(String s : m.getRecipientArr()) {
-			m.setSenderMail(s);
-			m.setMailType("1");
-			result = sqlSession.insert("mailMapper.insertStatus", m);
+
+		if(!m.getRecipientArr()[0].equals("")) {
+			for(String s : m.getRecipientArr()) {
+				System.out.println("받은사람 : " + s);
+				status.setRecipientMail(s);
+				status.setMailType("1");
+				result = sqlSession.insert("mailMapper.insertStatus", status);
+			}
 		}
-		for(String s : m.getRefArr()) {
-			m.setRefMail(s);
-			m.setMailType("2");
-			result = sqlSession.insert("mailMapper.insertStatus", m);
+		if(!m.getRefArr()[0].equals("")) {
+			for(String s : m.getRefArr()) {
+				System.out.println("참조 : " + s);
+				status.setRecipientMail(s);
+				status.setMailType("2");
+				result = sqlSession.insert("mailMapper.insertStatus", status);
+			}			
 		}
-		for(String s : m.getHidRefArr()) {
-			m.setHidRefMail(s);
-			m.setMailType("3");
-			result = sqlSession.insert("mailMapper.insertStatus", m);
+		if(!m.getHidRefArr()[0].equals("")) {
+			for(String s : m.getHidRefArr()) {
+				System.out.println("숨은참조 : " + s);
+				status.setRecipientMail(s);
+				status.setMailType("3");
+				result = sqlSession.insert("mailMapper.insertStatus", status);
+			}			
 		}
+		
 		return result;
 	}
 }

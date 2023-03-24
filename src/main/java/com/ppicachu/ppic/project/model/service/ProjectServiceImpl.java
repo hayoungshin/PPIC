@@ -76,6 +76,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return pDao.selectTaskDetail(sqlSession, taskNo);
 	}
 
+	@Override
+	public int updateTask(Task t) {
+		return pDao.updateTask(sqlSession, t);
+	}
+
 	
 
 

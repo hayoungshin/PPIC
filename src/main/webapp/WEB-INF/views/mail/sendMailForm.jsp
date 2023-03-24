@@ -249,7 +249,8 @@
 						}
 					}
 					console.log(fileArr);
-					$("#upfiles")[0].files = fileArr.files;
+					$("#upfiles").files = fileArr.files;
+					console.log($("#upfiles")[0].files);
                 }
 				
 				$(document).on("click", ".files", function(e){
@@ -261,7 +262,8 @@
 						}
 					}
 					console.log(fileArr);
-					$("#upfiles")[0].files = fileArr.files;
+					$("#upfiles").files = fileArr.files;
+					console.log($("#upfiles")[0].files);
 				})
 
 				fileList.addEventListener("dragenter",function(e){
@@ -286,7 +288,8 @@
 						fileList.innerHTML += "<p class='files'>" + "<img src='resources/icons/close.png' style='width:7px; margin-bottom:3px'> " + e.dataTransfer.files[i].name + "</p>";
 					}
 					console.log(fileArr);
-					$("#upfiles")[0].files = fileArr.files;
+					$("#upfiles").files = fileArr.files;
+					console.log($("#upfiles")[0].files);
 				})
 			</script>
 			
