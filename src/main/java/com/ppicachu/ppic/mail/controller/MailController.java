@@ -10,8 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.common.template.FileUpload;
+import com.ppicachu.ppic.common.template.Pagination;
 import com.ppicachu.ppic.mail.model.service.MailService;
 import com.ppicachu.ppic.mail.model.vo.Mail;
 import com.ppicachu.ppic.mail.model.vo.MailAttachment;
@@ -27,9 +30,20 @@ public class MailController {
 	@Autowired
 	private MemberService memService;
 	
+	/**
+	 * @param currentPage 페이징처리
+	 * @return 메일 메뉴 초기화면 : 받은 메일 목록
+	 */
 	@RequestMapping("recieveList.ml")
-	public String recieveMailList() {
-		return "mail/recieveMailListView";
+	public ModelAndView selectRecieveList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		int listCount = mService.selectRecieveListCount(userMail);	// 전체 받은메일 개수
+
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<Mail> list = mService.selectRecieveList(pi, userMail);
+		
+		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/recieveMailListView");
+		return mv;
 	}
 	
 	@RequestMapping("recieveDetail.ml")
@@ -43,7 +57,7 @@ public class MailController {
 	}
 	
 	@RequestMapping("sendList.ml")
-	public String sendMailList() {
+	public String selectSendList() {
 		return "mail/sendMailListView";
 	}
 	
@@ -53,7 +67,7 @@ public class MailController {
 	}
 	
 	@RequestMapping("importantList.ml")
-	public String importantMailList() {
+	public String selectImportantList() {
 		return "mail/importantMailListView";
 	}
 	
@@ -63,7 +77,7 @@ public class MailController {
 	}
 	
 	@RequestMapping("tempList.ml")
-	public String tempMailList() {
+	public String selectTempList() {
 		return "mail/tempMailListView";
 	}
 	
@@ -73,7 +87,7 @@ public class MailController {
 	}
 	
 	@RequestMapping("binList.ml")
-	public String binMailList() {
+	public String selectBinList() {
 		return "mail/binMailListView";
 	}
 	

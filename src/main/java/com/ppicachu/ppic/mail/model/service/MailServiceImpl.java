@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.mail.model.dao.MailDao;
 import com.ppicachu.ppic.mail.model.vo.Mail;
 import com.ppicachu.ppic.mail.model.vo.MailAttachment;
@@ -29,10 +30,18 @@ public class MailServiceImpl implements MailService{
 			result2 = mDao.sendAttachment(sqlSession, list);			
 		}
 		int result3 = mDao.insertStatus(sqlSession, status, m);
-		System.out.println("result1 : " + result1);
-		System.out.println("result2 : " + result2);
-		System.out.println("result3 : " + result3);
+		
 		return result1 * result2 * result3;
+	}
+
+	@Override
+	public int selectRecieveListCount(String userMail) {
+		return mDao.selectRecieveListCount(sqlSession, userMail);
+	}
+
+	@Override
+	public ArrayList<Mail> selectRecieveList(PageInfo pi, String userMail) {
+		return mDao.selectRecieveList(sqlSession, userMail, pi);
 	}
 	
 }

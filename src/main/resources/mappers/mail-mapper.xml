@@ -11,8 +11,13 @@
 		<result column="hid_ref_mail" property="hidRefMail"/>
 		<result column="mail_title" property="mailTitle"/>
 		<result column="mail_content" property="mailContent"/>
-		<result column="send_date" property="sendDate"/>
+		<result column="sent_date" property="sentDate"/>
 		<result column="temp_status" property="tempStatus"/>
+
+		<result column="important_status" property="importantStatus"/>		
+		<result column="read_status" property="readStatus"/>
+		<result column="mail_type" property="mailType"/>
+		<result column="attachment_status" property="attachmentStatus"/>
 	</resultMap>
 	
 	<resultMap id="mailAttachmentResult" type="MailAttachment">
@@ -85,5 +90,49 @@
 		  , #{importantStatus}
 		  )
 	</insert>
+	
+	<select id="selectRecieveListCount" resultType="_int">
+		select count(*)
+		  from mail_status
+		 where recipient_mail = #{userMail}
+		   and bin_status = 'N'
+	</select>
+	
+	<select id="selectRecieveList" resultMap="mailResult">
+		select
+		       mail_no
+		     , sender_mail
+		     , mail_title
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , (
+		        select important_status
+		          from mail_status s
+		         where m.mail_no = s.mail_no
+		           and recipient_mail = #{userMail}
+		       ) important_status
+		     , (
+		        select count(read_date)
+		          from mail_status s
+		         where m.mail_no = s.mail_no
+		           and recipient_mail = #{userMail}
+		       ) read_status
+		     , (
+		        select mail_type
+		          from mail_status s
+		         where m.mail_no = s.mail_no
+		           and recipient_mail = #{userMail}
+		       ) mail_type
+		     , (
+		        select count(*)
+		          from mail_attachment at
+		         where m.mail_no = at.mail_no
+		       ) attachment_status
+		  from mail m
+		 where recipient_mail like '%' || #{userMail} || '%'
+		    or ref_mail like '%' || #{userMail} || '%'
+		    or hid_ref_mail like '%' || #{userMail} || '%'
+		 order
+		    by mail_no desc
+	</select>
 	
 </mapper>
