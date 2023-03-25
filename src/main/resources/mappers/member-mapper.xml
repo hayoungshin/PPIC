@@ -114,6 +114,7 @@
 		     , birthday
 		     , position_name as "POSITION"
 		     , department_name as "DEPARTMENT"
+		     , department_no
 		     , employee_no
 		     , profile_img
 		     , to_char(hire_date, 'YYYY.MM.DD') "hire_date"
