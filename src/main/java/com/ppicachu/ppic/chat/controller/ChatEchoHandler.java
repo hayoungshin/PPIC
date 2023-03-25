@@ -44,13 +44,14 @@ public class ChatEchoHandler extends TextWebSocketHandler{
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
  
         // 전달받은 메세지
-    	// roomNo,sendNo,chatContent,notRead
+    	// roomNo,sendNo,chatContent,notRead,sendDate
         String msg = message.getPayload();
         String[] strs = msg.split(",");
         String roomNo = strs[0];
 		String sendNo = strs[1];
 		String chatContent = strs[2];
 		String notRead = strs[3];
+		String sendDate = strs[4];
 		
         // 받은 메세지에 담긴 roomId로 해당 채팅방을 찾아온다.
         Chat chatRoom = cService.selectChatRoom(Integer.parseInt(strs[0]));
@@ -96,7 +97,7 @@ public class ChatEchoHandler extends TextWebSocketHandler{
             	cService.updateChat(cc);
         	}
         	
-        	// roomNo,sendNo,chatContent,notRead,maxChat,lastRead
+        	// roomNo,sendNo,chatContent,notRead,sendDate,maxChat,lastRead
         	msg += "," + maxChat + "," + lastRead;
         	
         	TextMessage textMessage = new TextMessage(msg);
@@ -107,7 +108,7 @@ public class ChatEchoHandler extends TextWebSocketHandler{
             
         }
         // 채팅 메세지 입력 시
-        else if(RoomList.get(chatRoom.getRoomNo()) != null && !strs[2].equals("ENTER-CHAT") && chatRoom != null) {
+        else if(RoomList.get(chatRoom.getRoomNo()) != null && !strs[2].equals("ENTER-CHAT") && !strs[2].equals("OUT-CHAT")&& chatRoom != null) {
             
             // 현재 session 수
             int sessionCount = 0;
@@ -121,6 +122,7 @@ public class ChatEchoHandler extends TextWebSocketHandler{
 			map.put("sendNo", sendNo);
 			map.put("chatContent", chatContent);
 			map.put("notRead", Integer.parseInt(notRead) - sessionCount + 1);
+			map.put("outMsg", 0);
 			
             int a = cService.insertChat(map);
             int b = cService.updateChatRoom(Integer.parseInt(roomNo));
@@ -139,7 +141,7 @@ public class ChatEchoHandler extends TextWebSocketHandler{
             cService.updateNotreadChat(hm);
             cService.updateLastreadChat(hm);
             
-         // roomNo,sendNo,chatContent,notRead,sendName,sendProfile,realnotread,chatNo
+            // roomNo,sendNo,chatContent,notRead,sendDate,sendName,sendProfile,realnotread,chatNo
             msg += "," + ((Member)session.getAttributes().get("loginUser")).getUserName() 
             	+ "," + ((Member)session.getAttributes().get("loginUser")).getProfileImg() 
             	+ "," + (Integer.parseInt(notRead) - sessionCount + 1)
@@ -151,6 +153,29 @@ public class ChatEchoHandler extends TextWebSocketHandler{
             for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
                 sess.sendMessage(textMessage);
             }
+        } 
+        // 채팅방 완전히 나가기 시
+        else if(RoomList.get(chatRoom.getRoomNo()) != null && strs[2].equals("OUT-CHAT") && chatRoom != null) {
+        	
+        	if(notRead.equals("1")) { // 그룹 채팅의 경우
+        		// roomNo,sendNo,chatContent,groupSta,sendDate,sendName
+            	msg += "," + ((Member)session.getAttributes().get("loginUser")).getUserName();
+            	System.out.println("퇴장 메세지 : " + msg);
+            	TextMessage textMessage = new TextMessage(msg);
+            	for(WebSocketSession sess : RoomList.get(chatRoom.getRoomNo())) {
+                    sess.sendMessage(textMessage);
+                }
+            	
+            	// DB에 저장
+                HashMap<String, Object> map = new HashMap<>();
+    			map.put("roomNo", roomNo);
+    			map.put("sendNo", sendNo);
+    			map.put("chatContent", ((Member)session.getAttributes().get("loginUser")).getUserName() + "님이 나갔습니다.");
+    			map.put("notRead", 0);
+    			map.put("outMsg", 1);
+    			
+            	int a = cService.insertChat(map);
+        	}
         }
     }
     

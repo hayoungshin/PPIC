@@ -335,8 +335,11 @@
 	        	const d = new Date();
 	        	if(no == 1){
 	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString());
-	        	} else{
+	        	} else if(no == 2){
 	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
+	        	} else{
+	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString())
+	        				+ (d.getHours() < 12 ? " 오전 " : " 오후 ") + (d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()) + ":" + (d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes());
 	        	}
 	        }
 	     	

@@ -275,6 +275,19 @@
     	opacity:0.8;
    	}
    	#profile-area img{cursor:pointer;}
+   	
+   	.exit{
+        text-align:center; 
+        border-radius:5px;   
+        background: rgb(240, 240, 240);
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        color: black;
+        display: flex;
+        padding:5px 10px;
+        font-size:0.9em;
+    }
 </style>
 </head>
 <body>
@@ -643,6 +656,7 @@
         		url:"chatRoomList.chat",
         		data:{participantNo:${loginUser.userNo}},
         		success:function(list){
+        			console.log(list)
         			let value = "<div id='chatRoomList-area'><table width='270'>";
         			let value2 = "<table id='search-area'>"
 	    					+	"<tr>"
@@ -655,9 +669,9 @@
         				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
         			}
         			for(let i=0; i<list.length; i++){
-        				value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
-        				
-       						if(list[i].groupCount <= 2){
+        				if(list[i].groupSta == 0 && (list[i].exitDate == undefined || list[i].sendDateD > list[i].exitDate) || list[i].groupSta == 1 && list[i].exitDate == undefined){
+        					value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
+       						if(list[i].groupSta == 0){
        							for(let j=0; j<list[i].memList.length; j++){
 	       							value += "<img src='"
 	       							if(list[i].memList[j].profileImg != undefined){
@@ -667,7 +681,7 @@
 	           						}
 	       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
        							}
-       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 5){
+       						} else if(list[i].groupSta == 1 && list[i].groupCount <= 5){
        							for(let j=0; j<list[i].memList.length; j++){
    									value += "<img src='"
           							if(list[i].memList[j].profileImg != undefined){
@@ -689,7 +703,9 @@
        							}
        						}
         				for(let j=0; j<list[i].memList.length; j++){
-        					party += list[i].memList[j].userName + ","
+        					if(list[i].memList[j].exitDate == undefined){
+        						party += list[i].memList[j].userName + ","
+        					}
         				}
         				value += "</td><td><b>"
         				if(list[i].roomName != undefined){
@@ -730,27 +746,25 @@
         				}
        						value += "</td>"
         							+ "<td class='table-time'><small>"
-        					if(list[i].sendDate != undefined){
-				        		if(list[i].sendDate.includes(dateFormat(1))){
-									value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
-								}else if(list[i].sendDate.includes(dateFormat(2))){
-									value += "어제"
-								} else{
-									value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
-								}
-								value += "</small><br>"
-								if(list[i].notreadChat != 0){
-									value += "<span>" + list[i].notreadChat + "</span>"
-								}else{
-									value += "<span style='background:none;'></span>"
-								}
-        					}
+			        		if(list[i].sendDate.includes(dateFormat(1))){
+								value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+							}else if(list[i].sendDate.includes(dateFormat(2))){
+								value += "어제"
+							} else{
+								value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+							}
+							value += "</small><br>"
+							if(list[i].notreadChat != 0){
+								value += "<span>" + list[i].notreadChat + "</span>"
+							}else{
+								value += "<span style='background:none;'></span>"
+							}
         				value += "</td></tr>"
+        				}
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
         			$("#search-div").html(value2);
-        			console.log(value)
         		},error:function(){
         			console.log("채팅 리스트 조회용 ajax 통신 실패");
         		}
@@ -771,9 +785,9 @@
         				value += "<tr><td>검색 내역이 없습니다.</td></tr>"
         			}
         			for(let i=0; i<list.length; i++){
-        				value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
-        				
-       						if(list[i].groupCount <= 2){
+        				if(list[i].groupSta == 0 && (list[i].exitDate == undefined || list[i].sendDateD > list[i].exitDate) || list[i].groupSta == 1 && list[i].exitDate == undefined){
+        					value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
+       						if(list[i].groupSta == 0){
        							for(let j=0; j<list[i].memList.length; j++){
 	       							value += "<img src='"
 	       							if(list[i].memList[j].profileImg != undefined){
@@ -783,7 +797,7 @@
 	           						}
 	       							value += "' class='rounded-circle chatProfileImg pro-chat'>"
        							}
-       						} else if(list[i].groupCount > 2 && list[i].groupCount <= 5){
+       						} else if(list[i].groupSta == 1 && list[i].groupCount <= 5){
        							for(let j=0; j<list[i].memList.length; j++){
    									value += "<img src='"
           							if(list[i].memList[j].profileImg != undefined){
@@ -805,13 +819,15 @@
        							}
        						}
         				for(let j=0; j<list[i].memList.length; j++){
-        					party += list[i].memList[j].userName + ","
+        					if(list[i].memList[j].exitDate == undefined){
+        						party += list[i].memList[j].userName + ","
+        					}
         				}
         				value += "</td><td><b>"
         				if(list[i].roomName != undefined){
         					value += list[i].roomName
         				}else{
-        					let sub = party.substring(0, party.length - 1).split(",");
+        					let sub = party.substring(0, party.length - 1).split(",")
         					if(i != list.length - 1){
         						if(sub.slice(sub.length - list[i].groupCount + 1).length < 4){
         							value += sub.slice(sub.length - list[i].groupCount + 1)
@@ -846,22 +862,21 @@
         				}
        						value += "</td>"
         							+ "<td class='table-time'><small>"
-        					if(list[i].sendDate != undefined){
-				        		if(list[i].sendDate.includes(dateFormat(1))){
-									value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
-								}else if(list[i].sendDate.includes(dateFormat(2))){
-									value += "어제"
-								} else{
-									value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
-								}
-								value += "</small><br>"
-								if(list[i].notreadChat != 0){
-									value += "<span>" + list[i].notreadChat + "</span>"
-								}else{
-									value += "<span style='background:none;'></span>"
-								}
-        					}
+			        		if(list[i].sendDate.includes(dateFormat(1))){
+								value += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+							}else if(list[i].sendDate.includes(dateFormat(2))){
+								value += "어제"
+							} else{
+								value += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+							}
+							value += "</small><br>"
+							if(list[i].notreadChat != 0){
+								value += "<span>" + list[i].notreadChat + "</span>"
+							}else{
+								value += "<span style='background:none;'></span>"
+							}
         				value += "</td></tr>"
+        				}
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
@@ -1035,7 +1050,7 @@
             })
             arr.push(${loginUser.userNo});
             let arrDup = [...new Set(arr)]
-        	newChat(arrDup);
+        	newChat(arrDup, 1);
         })
 
         // 주소록 더블클릭시 이벤트
@@ -1044,7 +1059,7 @@
      			let arr = [];
             	arr.push(${loginUser.userNo});
             	arr.push(clickNo);
-     			newChat(arr);
+     			newChat(arr, 0);
      		}else{ // 이미 생성된 1:1 채팅이 있을 때
      			$.ajax({
      				url:"notReadRoom.chat",
@@ -1059,11 +1074,12 @@
      	}
      	
      	// 새로운 채팅 생성
-     	function newChat(arr){
+     	function newChat(arr, no){
             $.ajax({
    				url:"create.chat",
        			data:{
-       				participant:arr
+       				participant:arr,
+       				groupSta:no
            		},success:function(boardNo){
            			$("input[name=openChatRoomNo]").val(boardNo);
            			openChat(boardNo, 0);
@@ -1082,40 +1098,62 @@
      		$.ajax({
    				url:"open.chat",
        			data:{
-       				roomNo:no
+       				roomNo:no,
+       				participantNo:${loginUser.userNo}
            		},success:function(list){
            			$("input[name=openChatRoomNo]").val(no);
            			let value1 = "<div class='chat-area'>"
            			let value2 = "";
            			for(let i=0; i<list.length; i++){
-           				if(list[i].sendNo != ${loginUser.userNo}){
-           					value1 += "<div><span class='send-user'>"
-	           						+		 "<img src='"
-	       							if(list[i].sendProfile != undefined){
-	           							value1 += list[i].sendProfile
-	          						}else{
-	          							value1 += "resources/icons/profile.png"
-	          						}
-	      							value1 += "' class='rounded-circle chatProfileImg pro-small'>"
-	    									+ list[i].sendName + "</span>"
-           									+ "<div class='chat-message other'>"
-               								+ "<div class='send-message'>" + list[i].chatContent + "</div>"
-               						if(list[i].notRead != 0){
-               							value1 += "<span class='notreadCount' id='" + list[i].chatNo + "'>" + list[i].notRead + "</span>"
-               						}
-               						value1 += "</div></div>"
-           				}else{
-           					value1 += "<div class='chat-message mine'>"
-       						if(list[i].notRead != 0){
-       							value1 += "<span class='notreadCount' id='" + list[i].chatNo + "'>" + list[i].notRead + "</span>"
-       						}
-           					value1 += "<div class='send-message'>" + list[i].chatContent + "</div></div>"
-           				}
-           				if(list[i].chatContent == undefined){
-           					value1 = "<div class='chat-area'>";
+           				if(list[i].exitDate == undefined || list[i].sendDateD > list[i].exitDate){
+							if(list[i].outMsg == 0){
+								if(list[i].sendNo != ${loginUser.userNo}){
+	               					value1 += "<div><span class='send-user'>"
+	    	           						+		 "<img src='"
+	    	       							if(list[i].sendProfile != undefined){
+	    	           							value1 += list[i].sendProfile
+	    	          						}else{
+	    	          							value1 += "resources/icons/profile.png"
+	    	          						}
+	    	      							value1 += "' class='rounded-circle chatProfileImg pro-small'>"
+	    	    									+ list[i].sendName + "</span>"
+	               									+ "<div class='chat-message other'>"
+	                   								+ "<div class='send-message'>" + list[i].chatContent + "</div><span class='notreadCount' id='" + list[i].chatNo + "'>"
+	           								if(list[i].notRead != 0){
+	                           					value1 += list[i].notRead + "<br>"
+	                           				}
+	           								if(list[i].sendDate.includes(dateFormat(1))){
+	            								value1 += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+	             							}else if(list[i].sendDate.includes(dateFormat(2))){
+	             								value1 += "어제"
+	             							} else{
+	             								value1 += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+	             							}
+	                   						
+	               							value1 += "</span></div></div>"
+	               				}else{
+	               					value1 += "<div class='chat-message mine'><span class='notreadCount' id='" + list[i].chatNo + "'>"
+	           						if(list[i].notRead != 0){
+	           							value1 += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + list[i].notRead + "<br>"
+	           						}
+	               					if(list[i].sendDate.includes(dateFormat(1))){
+	    								value1 += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
+	    							}else if(list[i].sendDate.includes(dateFormat(2))){
+	    								value1 += "어제"
+	    							} else{
+	    								value1 += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
+	    							}
+	       							value1 += "</span><div class='send-message'>" + list[i].chatContent + "</div></div>"
+	               				}
+	               				if(list[i].chatContent == undefined){
+	               					value1 = "<div class='chat-area'>";
+	               				}
+							}else{
+								value1 += "<div class='exit'>" + list[i].chatContent + "</div>";
+							}
            				}
            				for(let j=0; j<list[i].memList.length; j++){
-           					if(list[i].groupCount == 2){
+           					if(list[i].groupSta == 0){
            						if(list[i].memList[j].userNo != ${loginUser.userNo}){
            							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
            									+ "<span id='roomName-area'><span id='roomName'>" 
@@ -1165,52 +1203,54 @@
      				roomNo:no,
      				participantNo:${loginUser.userNo}
      			},success:function(list){
+     				console.log(list)
      				if(num == 1){
      					let me = "<div><img src='";
          				let others = "";
-         				let button = "<img src='resources/icons/sign_out.png' width='25' height='25'>"
-         					/* onclick='chatOut(" + list[0].roomNo + ")' */
+         				let button = "<img src='resources/icons/sign_out.png' width='25' height='25' onclick='chatOut(" + list[0].roomNo + "," + list[0].groupSta + ")'>"
          				for(let i=0; i<list.length; i++){
-         					if(list[i].userNo == ${loginUser.userNo}){
-         						if(list[i].profileImg != undefined){
-         							me += list[i].profileImg
-        						}else{
-        							me += "resources/icons/profile.png"
-        						}
-         						me += "' class='rounded-circle pro-small'>"
-        							+ list[i].userName + "<span class='conn";
-        						if(list[i].connSta == 0){
-        							me += " online";
-        			       		} else if(list[i].connSta == 1){
-        			       			me += " offline";
-        			       		} else if(list[i].connSta == 2){
-        			       			me += " out";
-        			       		}
-        						me += "'></span><span id='chatMe'>나</span></div>";
-         					}else{
-         						others += "<div><input type='hidden'><img src='"
-         						if(list[i].profileImg != undefined){
-         							others += list[i].profileImg
-        						}else{
-        							others += "resources/icons/profile.png"
-        						}
-         						others += "' class='rounded-circle collegeProfileImg pro-small'>"
-        							+ "<input type='hidden' value='" + list[i].userNo +"'>"
-        							+ "<input type='hidden' value='" + list[i].userName +"'>"
-        							+ "<input type='hidden' value='" + list[i].department +"'>"
-        							+ "<input type='hidden' value='" + list[i].position +"'>"
-        							+ "<input type='hidden' value='" + list[i].mail +"'>"
-        							+ "<input type='hidden' value='" + list[i].phone +"'>"
-        							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
-        							+ list[i].userName + "<span class='conn";
-        						if(list[i].connSta == 0){
-        							others += " online";
-        			       		} else if(list[i].connSta == 1){
-        			       			others += " offline";
-        			       		} else if(list[i].connSta == 2){
-        			       			others += " out";
-        			       		}
-        						others += "'></span></div>";
+         					if(list[i].groupSta == 1 && list[i].exitDate == undefined || list[i].groupSta == 0){
+         						if(list[i].userNo == ${loginUser.userNo}){
+             						if(list[i].profileImg != undefined){
+             							me += list[i].profileImg
+            						}else{
+            							me += "resources/icons/profile.png"
+            						}
+             						me += "' class='rounded-circle pro-small'>"
+            							+ list[i].userName + "<span class='conn";
+            						if(list[i].connSta == 0){
+            							me += " online";
+            			       		} else if(list[i].connSta == 1){
+            			       			me += " offline";
+            			       		} else if(list[i].connSta == 2){
+            			       			me += " out";
+            			       		}
+            						me += "'></span><span id='chatMe'>나</span></div>";
+             					}else{
+             						others += "<div><input type='hidden'><img src='"
+             						if(list[i].profileImg != undefined){
+             							others += list[i].profileImg
+            						}else{
+            							others += "resources/icons/profile.png"
+            						}
+             						others += "' class='rounded-circle collegeProfileImg pro-small'>"
+            							+ "<input type='hidden' value='" + list[i].userNo +"'>"
+            							+ "<input type='hidden' value='" + list[i].userName +"'>"
+            							+ "<input type='hidden' value='" + list[i].department +"'>"
+            							+ "<input type='hidden' value='" + list[i].position +"'>"
+            							+ "<input type='hidden' value='" + list[i].mail +"'>"
+            							+ "<input type='hidden' value='" + list[i].phone +"'>"
+            							+ "<input type='hidden' value='" + list[i].chatLike +"'>"
+            							+ list[i].userName + "<span class='conn";
+            						if(list[i].connSta == 0){
+            							others += " online";
+            			       		} else if(list[i].connSta == 1){
+            			       			others += " offline";
+            			       		} else if(list[i].connSta == 2){
+            			       			others += " out";
+            			       		}
+            						others += "'></span></div>";
+             					}
          					}
          				}
      					$("#participants").html(me + others);
@@ -1269,18 +1309,27 @@
      	}
      	
      	// 방 나가기
-     	/* function chatOut(no){
+     	function chatOut(no, groupSta){
      		$.ajax({
      			url:"out.chat",
      			data:{
      				roomNo:no,
-     				userNo:${loginUser.userNo}
+     				userNo:${loginUser.userNo},
+     				groupSta:groupSta
      			},success:function(result){
-     				console.log(result)
+     				if(result > 0){
+     					if(sockChat){
+     		     			let chatMsg = no + ",${loginUser.userNo},OUT-CHAT," + groupSta + ", ";
+     		     			sockChat.send(chatMsg);
+     		     			onClose();
+     		     			chatRoomList();
+     		     		}
+     				}
      			}
      		})
-     	} */
+     	}
      	
+     	// 읽었을 때 숫자 알림
      	function readChat(notread){
      		let $chatCount = Number($("#chat-count").text());
 	 		if($chatCount - notread == 0){
@@ -1304,79 +1353,95 @@
      	function sendMessage(no, groupCount){ 
      		if($("#message").val() != ""){
      			if(sockChat){
-         			let chatMsg = no + ",${loginUser.userNo}," + $("#message").val() + "," + (groupCount - 1);
+         			let chatMsg = no + ",${loginUser.userNo}," + $("#message").val() + "," + (groupCount - 1) + "," + dateFormat(3);
          			sockChat.send(chatMsg);
         			$("#message").val("");
          		}
      		}
+     		console.log("")
 		}
      	
      	// 방 입장
      	function onOpen(){
 	 		if(sockChat){
-     			let chatMsg = $("input[name=openChatRoomNo]").val() + ",${loginUser.userNo},ENTER-CHAT,1";
+     			let chatMsg = $("input[name=openChatRoomNo]").val() + ",${loginUser.userNo},ENTER-CHAT, , ";
      			sockChat.send(chatMsg);
      		}
 	 	}
 	 	
 		function onMessage(evt){
 			let msgArr = evt.data.split(",");
+			console.log(msgArr[2])
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
 			if(msgArr[2] == "ENTER-CHAT"){
 				$(".notreadCount").each(function(){
-					if($(this).attr("id") > msgArr[5] && $(this).attr("id") <= msgArr[4]){
+					$html = $(this).html();
+					if($(this).attr("id") > msgArr[6] && $(this).attr("id") <= msgArr[5]){
 						if(msgArr[1] == ${loginUser.userNo}){
 							if(!$(this).parent().attr("class").includes("mine")){
-								if((Number($(this).text()) - 1) == 0){
-									$(this).text("");
+								if((Number($html.substring(0,$html.indexOf("<"))) - 1) == 0){
+									$(this).html($html.substring($html.indexOf("<")));
 								}else{
-									$(this).text(Number($(this).text()) - 1);
+									$(this).html(Number($html.substring(0,$html.indexOf("<"))) - 1 + $html.substring($html.indexOf("<")));
 								}
 							}
 						}else{
-							if($(this).parent().attr("class").includes("mine")){
-								if((Number($(this).text()) - 1) == 0){
-									$(this).text("");
-								}else{
-									$(this).text(Number($(this).text()) - 1);
-								}
+							if((Number($html.substring(90,$html.indexOf("<"))) - 1) == 0){
+								$(this).html($html.substring($html.indexOf("<")));
 							}else{
-								if((Number($(this).text()) - 1) == 0){
-									$(this).text("");
-								}else{
-									$(this).text(Number($(this).text()) - 1);
-								}
+								$(this).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + (Number($html.substring(90,$html.indexOf("<"))) - 1) + $html.substring($html.indexOf("<")));
 							}
 						}
 					}
 				})
-			} else{
+			} else if(msgArr[2] == "OUT-CHAT"){
+				if(msgArr[3] == 1){
+					$msg = "<div class='exit'>" + msgArr[5] + "님이 나갔습니다.</div>"
+					$(".chat-area").append($msg);
+					$("#groupCount").text(Number($("#groupCount").text()) - 1);
+					$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
+				}
+			}else{
 				if(msgArr[1] == ${loginUser.userNo}){
-					if(msgArr[6] != 0){
-						$msg = "<span class='notreadCount' id='" + msgArr[7] + "'>" + msgArr[6] + "</span>"
-							+ "<div class='send-message'>" + msgArr[2] + "</div>"
-					}else{
-						$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+					$msg = "<span class='notreadCount' id='" + msgArr[8] + "'>"
+					if(msgArr[7] != 0){
+						$msg += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + msgArr[7] + "<br>"
 					}
+					if(msgArr[4].includes(dateFormat(1))){
+						$msg += msgArr[4].substring(msgArr[4].indexOf("오")) 
+					}else if(msgArr[4].includes(dateFormat(2))){
+						$msg += "어제"
+					} else{
+						$msg += msgArr[4].substring(0, msgArr[4].indexOf("오"))
+					}
+					$msg += "</span><div class='send-message'>" + msgArr[2] + "</div>"
 					$chatDiv = $("<div class='chat-message'>").append($msg);
 					$chatDiv.addClass("mine");
 					$chatAllDiv = $chatDiv;
 				}else{
 					$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
-					if(msgArr[6] != 0){
-						$msg += "<span class='notreadCount' id='" + msgArr[7] + "'>" + msgArr[6] + "</span>"
+					if(msgArr[7] != 0){
+						$msg += "<span class='notreadCount' id='" + msgArr[8] + "'>" + msgArr[7] + "<br>"
 					}
+					if(msgArr[4].includes(dateFormat(1))){
+						$msg += msgArr[4].substring(msgArr[4].indexOf("오")) 
+					}else if(msgArr[4].includes(dateFormat(2))){
+						$msg += "어제"
+					} else{
+						$msg += msgArr[4].substring(0, msgArr[4].indexOf("오"))
+					}
+					$msg += "</span>"
 					$chatDiv = $("<div class='chat-message'>").append($msg);
 					let userVal = "<img src='";
-					if(msgArr[5] != "null"){
-						userVal += msgArr[5]
+					if(msgArr[6] != "null"){
+						userVal += msgArr[6]
 					}else{
 						userVal += "resources/icons/profile.png"
 					}
 					userVal += "' class='rounded-circle chatProfileImg pro-small'>"
-							+ msgArr[4]
+							+ msgArr[5]
 					let $userSpan = $("<span class='send-user'>").html(userVal);
 					$chatDiv.addClass("other");
 					$chatAllDiv = $("<div>").append($chatDiv);

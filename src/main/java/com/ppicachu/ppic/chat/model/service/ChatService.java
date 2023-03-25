@@ -31,7 +31,7 @@ public interface ChatService {
 	int insertParticipant(ArrayList<Integer> checkNo);
 	
 	// 7. 채팅방 화면
-	ArrayList<Chat> selectChat(int roomNo);
+	ArrayList<Chat> selectChat(Chat c);
 	
 	// 8. 채팅 입력
 	int insertChat(HashMap<String, Object> map);
@@ -65,5 +65,9 @@ public interface ChatService {
 	// 16. 채팅 알림
 	int selectNotRead(int userNo);
 	int selectNotReadRoom(Chat c);
+	
+	// 17. 채팅 나가기
+	int updateExitDate(Chat c);
+	int updateGroupCount(int roomNo);
 	
 }

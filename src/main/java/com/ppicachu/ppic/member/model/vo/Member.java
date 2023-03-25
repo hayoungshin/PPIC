@@ -2,6 +2,8 @@ package com.ppicachu.ppic.member.model.vo;
 
 import java.util.ArrayList;
 
+import com.ppicachu.ppic.chat.model.vo.Chat;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,8 +46,12 @@ public class Member {
 	private String chatLike;
 	private int roomNo;
 	private int lastreadChat;
+	private int groupCount;
+	private int groupSta;
+	private String exitDate;
 	
 	private String absenteeism;
 	private String leavearly;
 	private String behindtime;
+	
 }

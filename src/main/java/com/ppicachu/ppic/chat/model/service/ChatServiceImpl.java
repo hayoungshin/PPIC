@@ -61,8 +61,8 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	@Override
-	public ArrayList<Chat> selectChat(int roomNo) {
-		return cDao.selectChat(sqlSession, roomNo);
+	public ArrayList<Chat> selectChat(Chat c) {
+		return cDao.selectChat(sqlSession, c);
 	}
 
 	@Override
@@ -138,6 +138,16 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public int selectNotReadRoom(Chat c) {
 		return cDao.selectNotReadRoom(sqlSession, c);
+	}
+
+	@Override
+	public int updateExitDate(Chat c) {
+		return cDao.updateExitDate(sqlSession, c);
+	}
+
+	@Override
+	public int updateGroupCount(int roomNo) {
+		return cDao.updateGroupCount(sqlSession, roomNo);
 	}
 
 	

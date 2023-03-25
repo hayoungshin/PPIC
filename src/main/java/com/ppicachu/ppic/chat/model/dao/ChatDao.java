@@ -45,8 +45,8 @@ public class ChatDao {
 		return sqlSession.insert("chatMapper.insertParticipant", checkNo); 
 	}
 	 
-	public ArrayList<Chat> selectChat(SqlSessionTemplate sqlSession, int roomNo){
-		return (ArrayList)sqlSession.selectList("chatMapper.selectChat", roomNo); 
+	public ArrayList<Chat> selectChat(SqlSessionTemplate sqlSession, Chat c){
+		return (ArrayList)sqlSession.selectList("chatMapper.selectChat", c); 
 	}
 	
 	public int insertChat(SqlSessionTemplate sqlSession, HashMap<String, Object> map) { 
@@ -108,5 +108,13 @@ public class ChatDao {
 	
 	public int selectNotReadRoom(SqlSessionTemplate sqlSession, Chat c) {
 		return sqlSession.selectOne("chatMapper.selectNotReadRoom", c);
+	}
+	
+	public int updateExitDate(SqlSessionTemplate sqlSession, Chat c) {
+		return sqlSession.update("chatMapper.updateExitDate", c); 
+	}
+	
+	public int updateGroupCount(SqlSessionTemplate sqlSession, int roomNo) {
+		return sqlSession.update("chatMapper.updateGroupCount", roomNo); 
 	}
 }
