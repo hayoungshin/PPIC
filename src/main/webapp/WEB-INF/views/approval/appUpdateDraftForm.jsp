@@ -400,7 +400,18 @@
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addRef"></i>
 	                            <br clear="both">
 	                            
-	                            <div id="r-person-content"></div>
+	                            <div id="r-person-content">
+		                            <c:forEach var="p" items="${ ad.process }">
+		                            	<c:if test="${ p.approvalRole eq '참조' }">
+			                            	<div class="level-area-pk">
+			                            		<div class="level-person">
+						                            <span class="person-img">🙋🏻‍♂️</span>
+						                            ${ p.departmentName }부 ${ p.userName } ${ p.positionName }
+						                        </div>
+						                    </div>
+						                </c:if>
+						            </c:forEach>
+	                            </div>
 	                            
 	                        </div>
 	                        <br>

@@ -11,7 +11,6 @@
 	.second-1, .second-2{box-sizing: border-box; float: left;}
 
     .title-area{float: left;}
-    #title-area-selop{float: left; margin-top: 5px; margin-left: 50px;}
     
     .second-1{width: 75%;}
     .form-area{padding: 30px;}
@@ -188,10 +187,10 @@
 			let value = "<tr>"
 				  	  +		"<td align='right'>"
 				  	  +			"<a class='deleteTr'><i class='far fa-minus-square'></i></a>"
-				  	  +			"<input type='text' name='fcaList[" + trNo + "].account' style='width:355px; height:35px;'>"
+				  	  +			"<input type='text' name='fcaList[" + trNo + "].account' style='width:208px; height:35px;'>"
 				  	  +		"</td>"
-				  	  +		"<td><input type='text' name='fcaList[" + trNo + "].userHistory' style='width:380px; height:35px;'></td>"
-				  	  +		"<td><input type='number' name='fcaList[" + trNo + "].price' style='width:185px; height:35px;'></td>"
+				  	  +		"<td><input type='text' name='fcaList[" + trNo + "].userHistory' style='width:572px; height:35px;'></td>"
+				  	  +		"<td><input type='number' name='fcaList[" + trNo + "].price' style='width:138px; height:35px;'></td>"
 				  	  + "</tr>";
 			tr_content.innerHTML += value;
 			trNo++;
@@ -288,21 +287,13 @@
 	</script>
 	
 	<div id="content" align="center">
-        <form action="insert.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
+        <form action="update.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
 	        <div class="first">
 	            <div class="title-area"><h2><b>수정하기</b></h2></div>
 	            <div id="title-area-selop">
+		            <input type="hidden" name="approvalNo" value="${ ad.approvalNo }">
 		            <input type="hidden" name="form" value="지출결의서">
-			        <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" style="width:130px; background-color:#6F50F8; border:0px;">
-		              지출결의서
-		            </button>
-		            <div class="dropdown-menu">
-		              <a class="dropdown-item" href="enrollForm.ap?form=1">업무기안</a>
-		              <a class="dropdown-item" href="enrollForm.ap?form=2">인사발령품의서</a>
-		              <a class="dropdown-item" href="enrollForm.ap?form=3">비품신청서</a>
-		              <a class="dropdown-item" href="enrollForm.ap?form=4">지출결의서</a>
-		            </div>
-	            </div>
+			    </div>
 	        </div>
 	        <br clear="both">
 	
@@ -312,47 +303,45 @@
 	                    <table id="tb" class="table-bordered">
 	                        <thead>
 	                            <tr>
-	                                <th colspan="4"><br><h2><b>지출결의서</b></h2><br></th>
+	                                <th colspan="6"><br><h2><b>지출결의서</b></h2><br></th>
 	                            </tr>
 	                            <tr>
-	                                <th width="20%">작성일</th>
+                                	<th width="13%">작성일</th>
 	                                <td width="20%" id="current-date"></td>
-	                                <th width="20%">완료일</th>
-	                                <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
+	                                <th width="13%">완료일</th>
+	                                <td width="20%"><span style="color:#6F50F8;">완료시 자동생성</span></td>
+	                            	<th width="13%">문서번호</th>
+                                	<td width="21%"><span style="color:#6F50F8;">완료시 자동생성</span></td>
 	                            </tr>
 	                            <c:forEach var="m" items="${ mList }">
 		                            <c:if test="${ loginUser.userNo eq m.userNo }">
 			                            <tr>
-			                                <th>부서</th>
-			                                <td>${ m.department }부</td>
-			                                <th>문서번호</th>
-			                                <td>기안 완료시 자동으로 생성됩니다.</td>
-			                            </tr>
-			                            <tr>
-			                                <th>직급</th>
-			                                <td>${ m.position }</td>
 			                                <th>작성자</th>
 			                                <td>${ m.userName }</td>
+			                                <th>부서</th>
+			                                <td>${ m.department }부</td>
+			                                <th>직급</th>
+			                                <td>${ m.position }</td>
 			                                <input type="hidden" name="userNo" value="${ loginUser.userNo }">
 			                            </tr>
 			                        </c:if>
 			                    </c:forEach>
 	                            <tr>
 	                                <th>제목</th>
-	                                <td colspan="3"><input type="text" id="title" name="title" style="width:770px; height:35px;" required></td>
+	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요" value="${ ad.app.title }"></td>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
 	                            <tr>
-	                                <td colspan="4">
+	                                <td colspan="6">
 	
 	                                    <!-- 지출결의서일 경우 -->
 	                                    <table id="tb" class="table-bordered">
 		                                    <thead>
 		                                        <tr>
-		                                            <th style="width:40%">거래처</th>
-		                                            <th style="width:40%">사용내역</th>
-		                                            <th style="width:20%">금액</th>
+		                                            <th style="width:25%">거래처</th>
+		                                            <th style="width:60%">사용내역</th>
+		                                            <th style="width:15%">금액</th>
 		                                        </tr>
 											</thead>
 											
@@ -360,7 +349,22 @@
 	                                        <div class="add-btn-area"><button type="button" class="btnn-pp" onclick="tr_add();">+ 행추가</button></div>
 	                                        <br clear="both">
 	
-	                                        <tbody id="tr-content"></tbody>
+	                                        <tbody id="tr-content">
+	                                        	<c:forEach var="c" items="${ ad.cash }" varStatus="status">
+	                                        		<script>
+														trNo++;
+													</script>
+													
+													<tr>
+														<td align='right'>
+														<a class='deleteTr'><i class='far fa-minus-square'> <!-- 공백 안생기게 하기 위함 -->
+														</i></a><input type='text' name='fcaList[${ status.index }].account' style='width:208px; height:35px;' value='${ c.account }'>
+														</td>
+														<td><input type='text' name='fcaList[${ status.index }].userHistory' style='width:572px; height:35px;' value='${ c.userHistory }'></td>
+														<td><input type='number' name='fcaList[${ status.index }].price' style='width:138px; height:35px;' value='${ c.price }'></td>
+													</tr>
+												</c:forEach>
+	                                        </tbody>
 	                                        
 	                                        <tfoot>
 		                                        <tr>
@@ -401,13 +405,38 @@
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addAgr"></i>
 	                            <br clear="both">
 	
-	                            <div id="a-person-content"></div>
+	                            <div id="a-person-content">
+	                            	<c:forEach var="p" items="${ ad.process }">
+				                        <c:if test="${ p.processOrder ne 0 }">
+				                        	<div class="level-area">
+					                            <div class="level">
+					                            	<h6><b>${ p.processOrder }단계</b></h6>
+					                            </div>
+					                            <div class="level-person">
+					                                <span class="person-img">🧑🏻‍💻</span>
+					                                ${ p.departmentName }부 <span id="nm">${ p.userName }</span> ${ p.positionName }
+					                            </div>
+					                    	</div>
+					                    </c:if>
+									</c:forEach>
+	                            </div>
 	
 	                            <div class="person-title"><h5><b>참조자</b></h5></div>
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addRef"></i>
 	                            <br clear="both">
 	                            
-	                            <div id="r-person-content"></div>
+	                            <div id="r-person-content">
+		                            <c:forEach var="p" items="${ ad.process }">
+		                            	<c:if test="${ p.approvalRole eq '참조' }">
+			                            	<div class="level-area-pk">
+			                            		<div class="level-person">
+						                            <span class="person-img">🙋🏻‍♂️</span>
+						                            ${ p.departmentName }부 ${ p.userName } ${ p.positionName }
+						                        </div>
+						                    </div>
+						                </c:if>
+						            </c:forEach>
+	                            </div>
 	                            
 	                        </div>
 	                        <br>

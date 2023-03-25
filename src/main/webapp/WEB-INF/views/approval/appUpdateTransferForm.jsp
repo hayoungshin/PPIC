@@ -348,7 +348,7 @@
 	</c:forEach>
 	
 	<div id="content" align="center">
-        <form action="insert.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
+        <form action="update.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
 		    <div class="first">
 	            <div class="title-area"><h2><b>수정하기</b></h2></div>
 	            <div id="title-area-selop">
@@ -544,13 +544,38 @@
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addAgr"></i>
 	                            <br clear="both">
 	
-	                            <div id="a-person-content"></div>
+	                            <div id="a-person-content">
+	                            	<c:forEach var="p" items="${ ad.process }">
+				                        <c:if test="${ p.processOrder ne 0 }">
+				                        	<div class="level-area">
+					                            <div class="level">
+					                            	<h6><b>${ p.processOrder }단계</b></h6>
+					                            </div>
+					                            <div class="level-person">
+					                                <span class="person-img">🧑🏻‍💻</span>
+					                                ${ p.departmentName }부 <span id="nm">${ p.userName }</span> ${ p.positionName }
+					                            </div>
+					                    	</div>
+					                    </c:if>
+									</c:forEach>
+	                            </div>
 	
 	                            <div class="person-title"><h5><b>참조자</b></h5></div>
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addRef"></i>
 	                            <br clear="both">
 	                            
-	                            <div id="r-person-content"></div>
+	                            <div id="r-person-content">
+		                            <c:forEach var="p" items="${ ad.process }">
+		                            	<c:if test="${ p.approvalRole eq '참조' }">
+			                            	<div class="level-area-pk">
+			                            		<div class="level-person">
+						                            <span class="person-img">🙋🏻‍♂️</span>
+						                            ${ p.departmentName }부 ${ p.userName } ${ p.positionName }
+						                        </div>
+						                    </div>
+						                </c:if>
+						            </c:forEach>
+	                            </div>
 	                            
 	                        </div>
 	                        <br>

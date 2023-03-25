@@ -11,7 +11,6 @@
 	.second-1, .second-2{box-sizing: border-box; float: left;}
 
     .title-area{float: left;}
-    #title-area-selop{float: left; margin-top: 5px; margin-left: 50px;}
     
     .second-1{width: 75%;}
     .form-area{padding: 30px;}
@@ -188,13 +187,13 @@
 			let value = "<tr>"
 					  +		"<td align='right'>"
 					  +			"<a class='deleteTr'><i class='far fa-minus-square'></i></a>"
-					  +			"<input type='text' name='fcoList[" + trNo + "].name' style='width:220px; height:35px;'>"
+					  +			"<input type='text' name='fcoList[" + trNo + "].name' style='width:305px; height:35px;'>"
 					  +		"</td>"
-					  +		"<td><input type='number' name='fcoList[" + trNo + "].unit' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' name='fcoList[" + trNo + "].count' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' name='fcoList[" + trNo + "].price' style='width:110px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].unit' style='width:111px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].count' style='width:111px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].price' style='width:111px; height:35px;'></td>"
 					  +		"<td><span class='toPrice'>?</span>원</td>"
-					  +		"<td><input type='text' name='fcoList[" + trNo + "].reason' style='width:245px; height:35px;'></td>"
+					  +		"<td><input type='text' name='fcoList[" + trNo + "].reason' style='width:161px; height:35px;'></td>"
 					  + "</tr>";
 			tr_content.innerHTML += value;
 			trNo++;
@@ -295,20 +294,12 @@
 	</script>
 	
 	<div id="content" align="center">
-        <form action="insert.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
+        <form action="update.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
 			<div class="first">
 	            <div class="title-area"><h2><b>수정하기</b></h2></div>
 	            <div id="title-area-selop">
+	            	<input type="hidden" name="approvalNo" value="${ ad.approvalNo }">
 		            <input type="hidden" name="form" value="비품신청서">
-			        <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" style="width:130px; background-color:#6F50F8; border:0px;">
-		              비품신청서
-		            </button>
-		            <div class="dropdown-menu">
-		              <a class="dropdown-item" href="enrollForm.ap?form=1">업무기안</a>
-		              <a class="dropdown-item" href="enrollForm.ap?form=2">인사발령품의서</a>
-		              <a class="dropdown-item" href="enrollForm.ap?form=3">비품신청서</a>
-		              <a class="dropdown-item" href="enrollForm.ap?form=4">지출결의서</a>
-		            </div>
 	            </div>
 	        </div>
 	        <br clear="both">
@@ -319,50 +310,48 @@
 	                    <table id="tb" class="table-bordered">
 	                        <thead>
 	                            <tr>
-	                                <th colspan="4"><br><h2><b>비품신청서</b></h2><br></th>
+	                                <th colspan="6"><br><h2><b>비품신청서</b></h2><br></th>
 	                            </tr>
 	                            <tr>
-	                                <th width="20%">작성일</th>
+                                	<th width="13%">작성일</th>
 	                                <td width="20%" id="current-date"></td>
-	                                <th width="20%">완료일</th>
-	                                <td width="40%">기안 완료시 자동으로 생성됩니다.</td>
+	                                <th width="13%">완료일</th>
+	                                <td width="20%"><span style="color:#6F50F8;">완료시 자동생성</span></td>
+	                            	<th width="13%">문서번호</th>
+                                	<td width="21%"><span style="color:#6F50F8;">완료시 자동생성</span></td>
 	                            </tr>
 	                            <c:forEach var="m" items="${ mList }">
 		                            <c:if test="${ loginUser.userNo eq m.userNo }">
 			                            <tr>
-			                                <th>부서</th>
-			                                <td>${ m.department }부</td>
-			                                <th>문서번호</th>
-			                                <td>기안 완료시 자동으로 생성됩니다.</td>
-			                            </tr>
-			                            <tr>
-			                                <th>직급</th>
-			                                <td>${ m.position }</td>
 			                                <th>작성자</th>
 			                                <td>${ m.userName }</td>
+			                                <th>부서</th>
+			                                <td>${ m.department }부</td>
+			                                <th>직급</th>
+			                                <td>${ m.position }</td>
 			                                <input type="hidden" name="userNo" value="${ loginUser.userNo }">
 			                            </tr>
 			                        </c:if>
 			                    </c:forEach>
 	                            <tr>
 	                                <th>제목</th>
-	                                <td colspan="3"><input type="text" id="title" name="title" style="width:770px; height:35px;" required></td>
+	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요" value="${ ad.app.title }"></td>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
 	                            <tr>
-	                                <td colspan="4">
+	                                <td colspan="6">
 	
 	                                    <!-- 비품신청서일 경우 -->
 	                                    <table id="tb" class="table-bordered">
 	                                        <thead>
 		                                        <tr>
-		                                            <th style="width:26%">품명</th>
+		                                            <th style="width:35%">품명</th>
 		                                            <th style="width:12%">단위</th>
 		                                            <th style="width:12%">수량</th>
 		                                            <th style="width:12%">단가</th>
 		                                            <th style="width:12%">금액</th>
-		                                            <th style="width:26%">사유</th>
+		                                            <th style="width:17%">사유</th>
 		                                        </tr>
 											</thead>
 											
@@ -370,7 +359,25 @@
 	                                        <div class="add-btn-area"><button type="button" class="btnn-pp" onclick="tr_add();">+ 행추가</button></div>
 	                                        <br clear="both">
 	
-											<tbody id="tr-content"></tbody>
+											<tbody id="tr-content">
+												<c:forEach var="c" items="${ ad.consume }" varStatus="status">
+													<script>
+														trNo++;
+													</script>
+			                                        
+			                                        <tr>
+					  									<td align='right'>
+					 										<a class='deleteTr'><i class='far fa-minus-square'> <!-- 공백 안생기게 하기 위함 -->
+															</i></a><input type='text' name='fcoList[${ status.index }].name' style='width:305px; height:35px;' value='${ c.name }'>
+														</td>
+														<td><input type='number' name='fcoList[${ status.index }].unit' style='width:111px; height:35px;' value='${ c.unit }'></td>
+														<td><input type='number' name='fcoList[${ status.index }].count' style='width:111px; height:35px;' value='${ c.count }'></td>
+														<td><input type='number' name='fcoList[${ status.index }].price' style='width:111px; height:35px;' value='${ c.price }'></td>
+														<td><span class='toPrice'>?</span>원</td>
+														<td><input type='text' name='fcoList[${ status.index }].reason' style='width:161px; height:35px;' value='${ c.reason }'></td>
+													</tr>
+			                                    </c:forEach>
+											</tbody>
 	                                        
 	                                        <tfoot>
 		                                        <tr>
@@ -407,13 +414,38 @@
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addAgr"></i>
 	                            <br clear="both">
 	
-	                            <div id="a-person-content"></div>
+	                            <div id="a-person-content">
+	                            	<c:forEach var="p" items="${ ad.process }">
+				                        <c:if test="${ p.processOrder ne 0 }">
+				                        	<div class="level-area">
+					                            <div class="level">
+					                            	<h6><b>${ p.processOrder }단계</b></h6>
+					                            </div>
+					                            <div class="level-person">
+					                                <span class="person-img">🧑🏻‍💻</span>
+					                                ${ p.departmentName }부 <span id="nm">${ p.userName }</span> ${ p.positionName }
+					                            </div>
+					                    	</div>
+					                    </c:if>
+									</c:forEach>
+	                            </div>
 	
 	                            <div class="person-title"><h5><b>참조자</b></h5></div>
 	                            <i class="fas fa-plus plus" data-toggle="modal" data-target="#addRef"></i>
 	                            <br clear="both">
 	                            
-	                            <div id="r-person-content"></div>
+	                            <div id="r-person-content">
+		                            <c:forEach var="p" items="${ ad.process }">
+		                            	<c:if test="${ p.approvalRole eq '참조' }">
+			                            	<div class="level-area-pk">
+			                            		<div class="level-person">
+						                            <span class="person-img">🙋🏻‍♂️</span>
+						                            ${ p.departmentName }부 ${ p.userName } ${ p.positionName }
+						                        </div>
+						                    </div>
+						                </c:if>
+						            </c:forEach>
+	                            </div>
 	                            
 	                        </div>
 	                        <br>

@@ -188,10 +188,10 @@
 			let value = "<tr>"
 				  	  +		"<td align='right'>"
 				  	  +			"<a class='deleteTr'><i class='far fa-minus-square'></i></a>"
-				  	  +			"<input type='text' name='fcaList[" + trNo + "].account' style='width:355px; height:35px;'>"
+				  	  +			"<input type='text' name='fcaList[" + trNo + "].account' style='width:208px; height:35px;'>"
 				  	  +		"</td>"
-				  	  +		"<td><input type='text' name='fcaList[" + trNo + "].userHistory' style='width:380px; height:35px;'></td>"
-				  	  +		"<td><input type='number' name='fcaList[" + trNo + "].price' style='width:185px; height:35px;'></td>"
+				  	  +		"<td><input type='text' name='fcaList[" + trNo + "].userHistory' style='width:572px; height:35px;'></td>"
+				  	  +		"<td><input type='number' name='fcaList[" + trNo + "].price' style='width:138px; height:35px;'></td>"
 				  	  + "</tr>";
 			tr_content.innerHTML += value;
 			trNo++;
@@ -348,9 +348,9 @@
 	                                    <table id="tb" class="table-bordered">
 		                                    <thead>
 		                                        <tr>
-		                                            <th style="width:40%">거래처</th>
-		                                            <th style="width:40%">사용내역</th>
-		                                            <th style="width:20%">금액</th>
+		                                            <th style="width:25%">거래처</th>
+		                                            <th style="width:60%">사용내역</th>
+		                                            <th style="width:15%">금액</th>
 		                                        </tr>
 											</thead>
 											

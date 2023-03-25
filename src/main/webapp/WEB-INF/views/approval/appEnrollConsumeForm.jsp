@@ -188,13 +188,13 @@
 			let value = "<tr>"
 					  +		"<td align='right'>"
 					  +			"<a class='deleteTr'><i class='far fa-minus-square'></i></a>"
-					  +			"<input type='text' name='fcoList[" + trNo + "].name' style='width:220px; height:35px;'>"
+					  +			"<input type='text' name='fcoList[" + trNo + "].name' style='width:305px; height:35px;'>"
 					  +		"</td>"
-					  +		"<td><input type='number' name='fcoList[" + trNo + "].unit' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' name='fcoList[" + trNo + "].count' style='width:110px; height:35px;'></td>"
-					  +		"<td><input type='number' name='fcoList[" + trNo + "].price' style='width:110px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].unit' style='width:111px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].count' style='width:111px; height:35px;'></td>"
+					  +		"<td><input type='number' name='fcoList[" + trNo + "].price' style='width:111px; height:35px;'></td>"
 					  +		"<td><span class='toPrice'>?</span>원</td>"
-					  +		"<td><input type='text' name='fcoList[" + trNo + "].reason' style='width:245px; height:35px;'></td>"
+					  +		"<td><input type='text' name='fcoList[" + trNo + "].reason' style='width:161px; height:35px;'></td>"
 					  + "</tr>";
 			tr_content.innerHTML += value;
 			trNo++;
@@ -355,12 +355,12 @@
 	                                    <table id="tb" class="table-bordered">
 	                                        <thead>
 		                                        <tr>
-		                                            <th style="width:26%">품명</th>
+		                                            <th style="width:35%">품명</th>
 		                                            <th style="width:12%">단위</th>
 		                                            <th style="width:12%">수량</th>
 		                                            <th style="width:12%">단가</th>
 		                                            <th style="width:12%">금액</th>
-		                                            <th style="width:26%">사유</th>
+		                                            <th style="width:17%">사유</th>
 		                                        </tr>
 											</thead>
 											

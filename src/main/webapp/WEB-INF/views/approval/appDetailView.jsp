@@ -366,35 +366,35 @@
                                     <!-- 비품신청서일 경우 -->
                                     <table id="fco" class="table-bordered">
                                         <tr>
-                                            <th>품명</th>
-                                            <th>사유</th>
-                                            <th>단위</th>
-                                            <th>수량</th>
-                                            <th>단가</th>
-                                            <th>금액</th>
+                                            <th style="width:35%">품명</th>
+                                            <th style="width:12%">단위</th>
+                                            <th style="width:12%">수량</th>
+                                            <th style="width:12%">단가</th>
+                                            <th style="width:12%">금액</th>
+                                            <th style="width:17%">사유</th>
                                         </tr>
 										<c:forEach var="c" items="${ ad.consume }">
 	                                        <tr>
 	                                            <td>${ c.name }</td>
-	                                            <td>${ c.reason }</td>
 	                                            <td>${ c.unit }</td>
 	                                            <td>${ c.count }</td>
 	                                            <td>${ c.price }</td>
 	                                            <td>${ c.count * c.price }</td>
+	                                            <td>${ c.reason }</td>
 	                                        </tr>
 	                                    </c:forEach>
                                         <tr>
-                                            <th colspan="2">합계</th>
-                                            <td colspan="4">?</td>
+                                            <th>합계</th>
+                                            <td colspan="5">?</td>
                                         </tr>
                                     </table>
 
                                     <!-- 지출결의서일 경우 -->
                                     <table id="fca" class="table-bordered">
                                         <tr>
-                                            <th>거래처</th>
-                                            <th>사용내역</th>
-                                            <th>금액</th>
+                                            <th style="width:25%">거래처</th>
+                                            <th style="width:60%">사용내역</th>
+                                            <th style="width:15%">금액</th>
                                         </tr>
                                         <c:set var="total" value="0"/>
 										<c:forEach var="c" items="${ ad.cash }">
