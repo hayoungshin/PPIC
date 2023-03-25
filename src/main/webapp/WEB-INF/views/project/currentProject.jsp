@@ -111,14 +111,14 @@
     -webkit-line-clamp:2;
     -webkit-box-orient: vertical;
   }
-  .userImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
+  .profileImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
   .file{color:gray; margin-bottom:10px;}
   .file>img{width:13px; margin:0 5px;}
   .file>a{color:rgb(25, 25, 25);}
   #delete-file-btn{cursor:pointer;}
   .ref-people{display:inline-block; width:180px; text-align:right; font-size:12px;}
   .status{display:inline-block; color:white; width:50px; border-radius:5px; text-align:center; font-size:12px;}
-  .tp-userImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
+  .tp-profileImg{width:20px; height:20px; border-radius:20px; margin-right:7px;}
 
   /* 상태 */
   .status-wait{background:#ecd718; }
@@ -164,7 +164,7 @@
     width:12px;
     margin:3px;
   }
-  #invalidMsg, #invalidMsg2{
+  #invalidMsg1, #invalidMsg2{
     font-size:12px;
     color:red;
     display:none;
@@ -175,6 +175,12 @@
     background:#ffffff;
     color:red;
     padding:2px 6px;
+  }
+  #deleteProjForm>button{
+    float:right;
+    font-size:12px;
+    text-decoration:underline;
+    background:white;
   }
 </style>
 </head>
@@ -198,7 +204,7 @@
         <div class="swiper mySwiper">
           <div class="swiper-wrapper">
 	          <c:forEach var="p" items="${pList}">
-	            <div class="swiper-slide" onclick="clickEl(this);">
+	            <div class="swiper-slide" onclick="clickProject(this);">
 	              <div class="project-box">
                   <input type="hidden" name="projectNo" value="${p.projectNo}">
                   <input type="hidden" name="projectDetail" value="${p.detail}">
@@ -254,51 +260,72 @@
       <!-- 프로젝트 클릭 -->
       <script>
         let firstSilde;
+        
+        // 프로젝트 관련
         let projectNo;
+        let projectName;
+        let projectDetail;
+        let pm;
+
+        // 프로젝트 디테일 정보
+        // 프로젝트참여자 리스트
+        let ppList;
+        // 업무리스트
+        let tList;
+        // 업무 참조자 리스트
+        let tpList;
+        let noneProfile = "resources/icons/none-profile.png";
+        let noneOption = "<option value='none'>선택</option>";
+
+        // 전체 부서
+        let dList;
+        // 전체 직원
+        let mList;
 
         $(function(){
           firstSlide = $(".swiper-slide-active");
-          clickEl(firstSlide);
+          clickProject(firstSlide);
         })
 
-        function clickEl(e){
-          if(e != firstSlide){
-              // 비우기
-              $("#task-list .col").empty();
-            }
+        function clickProject(e){
           
-            $(e).addClass("active");
-            $(e).siblings().removeClass("active");
-            
-            let projectName = $(e).find(".project-title").text();
-            $("#p-title").html("<b>" + projectName + "</b>");
+          // projectbox border
+          $(e).addClass("active");
+          $(e).siblings().removeClass("active");
+          
+          projectNo = $(e).find("input[name=projectNo]").val();
+          
+          projectName = $(e).find(".project-title").text();
+          $("#p-title").html("<b>" + projectName + "</b>");
 
-            let projectDetail = $(e).find("input[name=projectDetail]").val();
-            $("#p-detail").text(projectDetail);
+          projectDetail = $(e).find("input[name=projectDetail]").val();
+          $("#p-detail").text(projectDetail);
 
-            projectNo = $(e).find("input[name=projectNo]").val();
-
-            detailLoad(projectNo);
+          detailLoad(projectNo);
         }
 
         function detailLoad(projectNo){
+          // task 전체 비우기
           $("#task-list .col").empty();
+          // 내 작업만 보기 체크 해제
           $("#filter-check").prop("checked", false);
+
             $.ajax({
               url:"detail.pr",
               data:{"projectNo":projectNo},
               success:function(obj){
-                let ppList = obj.ppList;
-                let tList = obj.tList;
+                ppList = obj.ppList;
+                tList = obj.tList;
+                tpList = obj.tpList;
 
                 // 참여자 정보 출력
                 let member = "";
-                let pm = "";
+                pm = "";
                 for(let i=0; i<ppList.length; i++){
                   if(ppList[i].pmStatus != "Y"){
                     member += ppList[i].userName + " " + ppList[i].positionName + " (" + ppList[i].departmentName + "), ";
                   }else if(ppList[i].pmStatus == "Y"){
-                    pm = "PM : " + ppList[i].userName;
+                    pm = "PM : " + ppList[i].userName + " " + ppList[i].positionName + " (" + ppList[i].departmentName + ")";
                   }
                 }
                 member = "참여자 : " + member.substring(0, member.lastIndexOf(","));
@@ -306,49 +333,50 @@
                 $("#pm").text(pm);
 
                 // 작업 리스트 출력
-                let task;
                 let task1 = "";
                 let task2 = "";
                 let task3 = "";
                 let task4 = "";
-                // let tasks = ["", "", "", ""]; // 상태별 task
+                let taskValue = "";
 
                 for(let i=0; i<tList.length; i++){
-                  if(tList[i].userImg == null){
-                    tList[i].userImg = "resources/icons/none-profile.png";
-                  }
 
                   // 상태별 div
-                  task = "<div class='task-box' onclick='taskDetailLoad(this)'>"
+                  taskValue = "<div class='task-box' onclick='taskDetailLoad(this)'>"
                          + "<input type='hidden' name='taskNo' value='" + tList[i].taskNo + "'>"
                          + "<div class='task-title'>" + tList[i].taskName + "</div>"
                          + "<input type='hidden' name='userNo' value='" + tList[i].userNo + "'>"
-                         + "<input type='hidden' name='assignUser' value='" + tList[i].assignUser + "'>"
-                         + "<div><img class='userImg' src='" + tList[i].userImg + "'>" + tList[i].assignUser + " " + tList[i].positionName + "</div>";
+                         + "<input type='hidden' name='assignUser' value='" + tList[i].assignUser + "'>";
+                  
+                  if(tList[i].projectParticipants[0].profileImg == null) {
+                    tList[i].projectParticipants[0].profileImg = noneProfile;
+                  }
+                  taskValue += "<div><img class='profileImg' src='" + tList[i].projectParticipants[0].profileImg + "'>" + tList[i].assignUserName + " " + tList[i].projectParticipants[0].positionName + "</div>";
+
                   if(tList[i].originName != null){
-                    task += "<div class='file'><img src='resources/icons/clip.png'>" + tList[i].originName + "</div>"; 
+                    taskValue += "<div class='file'><img src='resources/icons/clip.png'>" + tList[i].originName + "</div>"; 
                   }
 
                   switch(tList[i].taskStatus){
-                    case "1": task1 += task + "<div class='status status-wait'>대기</div>"
-                                     + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
+                    case "1": task1 += taskValue + "<div class='status status-wait'>대기</div>"
+                                     + "<div class='ref-people'>참조자 " + tpList[i].length + "명</div>"
                                      + "</div>";
-                              task = "";
+                              taskValue = "";
                               break;
-                    case "2": task2 += task + "<div class='status status-working'>진행중</div>"
-                                     + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
+                    case "2": task2 += taskValue + "<div class='status status-working'>진행중</div>"
+                                     + "<div class='ref-people'>참조자 " + tpList[i].length + "명</div>"
                                      + "</div>";
-                              task = "";
+                              taskValue = "";
                               break;
-                    case "3": task3 += task + "<div class='status status-done'>완료</div>"
-                                     + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
+                    case "3": task3 += taskValue + "<div class='status status-done'>완료</div>"
+                                     + "<div class='ref-people'>참조자 " + tpList[i].length + "명</div>"
                                      + "</div>";
-                              task = "";
+                              taskValue = "";
                               break;
-                    case "4": task4 += task + "<div class='status status-hold'>보류</div>"
-                                     + "<div class='ref-people'>참조자 " + tList[i].refPeopleCnt + "명</div>"
+                    case "4": task4 += taskValue + "<div class='status status-hold'>보류</div>"
+                                     + "<div class='ref-people'>참조자 " + tpList[i].length + "명</div>"
                                      + "</div>";
-                              task = "";
+                              taskValue = "";
                               break;
                   }
                   
@@ -364,7 +392,7 @@
                 doneRatio();
 
                 // 셀렉트 조회
-                selectList("add");
+                selectList("addTask");
 
               }, error:function(){
                 console.log("정보 가져오기 실패");
@@ -375,6 +403,19 @@
       </script>
 
       <h5 id="p-title"></h5>
+      <form action="deleteProj.pr" method="get" id="deleteProjForm">
+        <input type="hidden" name="projectNo">
+        <c:if test="${fn:contains(loginUser.authorityNo, '0') || fn:contains(loginUser.authorityNo, '8')}">
+          <button type="submit">프로젝트 삭제</button>
+        </c:if>
+      </form>
+
+      <script>
+        $(function(){
+          $("#deleteProjForm input[name=projectNo]").val(projectNo);
+        })
+      </script>
+
       <div class="p-summary">
         <div id="p-detail"></div>
         <br>
@@ -448,7 +489,7 @@
         <script>
           $("#filter-check").change(function(){
             if($(this).prop("checked")){
-              $("input[name=userNo]").each(function(){
+              $("#task-list input[name=assignUsers]").each(function(){
                 if($(this).val() != "${loginUser.userNo}"){
                   $(this).parent(".task-box").prop("style", "display:none");
                 }
@@ -486,43 +527,40 @@
         // 참조인 리스트 popover
         let taskNo = "";
         let taskRefList = "";
-        $(document).on("click", ".ref-people", function(){
-          event.stopPropagation();
-          event.preventDefault();
+        $(document).on("mouseenter", ".ref-people", function(){
+          
+          hoverEl = $(this);
+          taskRefList = ""; // 리셋
           taskNo = $(this).siblings("input[name=taskNo]").val();
-          let clickRp = $(this);
-          taskRefList = "";
-          $.ajax({
-            url:"tpList.tk",
-            data:{"taskNo":taskNo},
-            success:function(obj){
-              let tpList = obj.tpList;
-              for(let i=0; i<tpList.length; i++){
-                if(tpList[i].userImg == null){
-                  tpList[i].userImg = "resources/icons/none-profile.png";
+          
+          for (let i=0; i<tpList.length; i++) {
+            for (let j=0; j<tpList[i].length; j++) {
+              if(tpList[i][j].taskNo == taskNo){
+                if(tpList[i][j].profileImg == null){
+                  tpList[i][j].profileImg = noneProfile;
                 }
-                taskRefList += "<div><img class='tp-userImg' src='" + tpList[i].userImg + "'>"
-                             + tpList[i].userName + " " + tpList[i].positionName + "</div>";
-              }
-              // popover 실행
-              popOver(clickRp, event);
-            }, error:function(){
-              console.log("참조자 리스트 조회 실패");
+                  taskRefList += "<div><img class='tp-profileImg' src='"
+                               + tpList[i][j].profileImg + "'>"
+                               + tpList[i][j].userName + " "
+                               + tpList[i][j].positionName + "</div>";
+                }
             }
-          })
+              
+          }
 
-        })
-
-        function popOver(e, event){
-          event.stopPropagation();
-          e.popover ({
+          hoverEl.popover ({
             html: true,
             // container:"body",
             content: taskRefList,
             // selector:true,
+            content:taskRefList,
+            placement:"right",
             trigger:"hover"
           })
-        }
+          
+        })
+        
+        
       </script>
 
       <!-- drag&drop sorting -->
@@ -587,6 +625,152 @@
             
           });
         });
+      </script>
+
+
+      <!-- 프로젝트 추가 Modal -->
+      <div class="modal" id="add-project-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h5 class="modal-title"><b>프로젝트 생성</b></h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <form action="addProject.pr" method="post">
+              <!-- Modal body -->
+              <div class="modal-body">
+                <table class="add-form">
+                  <tr>
+                    <th width="100px;">* 프로젝트명 : </th>
+                    <td><input type="text" class="task-title-inpt" name="projectName" placeholder="프로젝트명을 입력해주세요." required></td>
+                  </tr>
+                  <tr>
+                    <th>* 상세내용 :</th>
+                    <td><textarea name="project" cols="30" rows="5" style="resize: none;" placeholder="프로젝트 상세내용을 입력해주세요." required></textarea></td>
+                  </tr>
+                  <tr>
+                    <th>시작일 : </th>
+                    <td><input type="date" name="startDate"></td>
+                  </tr>
+                  <tr>
+                    <th>종료일 : </th>
+                    <td><input type="date" name="endDate"></td>
+                  </tr>
+                  <tr>
+                    <th>PM :</th>
+                    <td>
+                      <select name="projectManager" id="p-dept-select">
+                        <option value="none">선택</option>
+                        <c:forEach var="d" items="${dList}">
+                          <option value="${d.departmentNo}">${d.departmentName}</option>
+                        </c:forEach>
+                      </select>
+                      <select name="projectManager" id="p-mem-select">
+                        <option value="none">선택</option>
+                        <c:forEach var="m" items="${mList}">
+                          <option value="${m.userNo}" value2="${m.departmentNo}" style="display:none;">${m.userName}</option>
+                        </c:forEach>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>참여자 :</th>
+                    <td>
+                      <select name="department" id="p-dept-select2">
+                        <option value="none">선택</option>
+                        <c:forEach var="d" items="${dList}">
+                          <option value="${d.departmentNo}">${d.departmentName}</option>
+                        </c:forEach>
+                      </select>
+                      <select name="userNo" id="p-mem-select2">
+                        <option value="none">선택</option>
+                        <c:forEach var="m" items="${mList}">
+                          <option value="${m.userNo}" value2="${m.departmentNo}" value3="${m.position}" style="display:none;">${m.userName}</option>
+                        </c:forEach>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
+                    <td>
+                      <div id="selected-area"></div>
+                      <div id="invalidMsg1">이미 선택된 직원입니다.</div>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-purple">프로젝트 생성</button>
+            </div>
+          </form>
+
+          </div>
+        </div>
+      </div><!-- add-project-modal-->
+
+      <script>
+        // PM select
+        $("#p-dept-select").change(function(){
+          var selectedDept = $("#p-dept-select option:selected").val();
+          $("#p-mem-select option").each(function(){
+              if($(this).attr("value2") == selectedDept){
+               $(this).css("display", "block");
+              }else{
+                $(this).css("display", "none");
+              }
+            })
+        })
+
+        // participants select
+        $("#p-dept-select2").change(function(){
+          var selectedDept = $("#p-dept-select2 option:selected").val();
+          $("#p-mem-select2 option").each(function(){
+              if($(this).attr("value2") == selectedDept){
+               $(this).css("display", "block");
+              }else{
+                $(this).css("display", "none");
+              }
+            })
+        })
+
+        // 선택한 정보 selected-area에 추가하기
+        let selectedEl = ""; // 선택된 요소
+        let taskRefUser = ""; // 추가할 요소
+        let selectUserDept = ""; // 유저 부서번호
+        let selectUserName = ""; // 유저명
+        let selectUserNo = ""; // 유저번호
+        let selectUserPs = ""; // 유저직위
+        $("#p-mem-select2").change(function(){
+          $("#invalidMsg1").css("display", "none");
+          selectedEl = $("#p-mem-select2 option:selected");
+          selectUserDept = selectedEl.attr("value2");
+          selectUserName = selectedEl.text();
+          selectUserNo = selectedEl.attr("value");
+          selectUserPs = selectedEl.attr("value3");
+
+          if($("#selected-area").text().includes(selectUserName)){
+            $("#invalidMsg1").css("display", "block");
+          }else{
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
+                        + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
+                        + "</div>";
+            $("#selected-area").append(taskRefUser);
+            $("#invalidMsg1").css("display", "none");
+          }
+        })
+
+
+        // 선택유저 삭제하기
+        function deleteUser(e){
+          $(e).remove();
+        }
+
       </script>
 
       <!-- 업무 추가 Modal -->
@@ -663,76 +847,80 @@
 
       <!-- 셀렉트 정보 가져오기 -->
       <script>
-        let dList;
         let eList;
-        let noneOption;
         let newAssignUser;
 
-        function selectList(type){
-          noneOption = "<option value='none'>선택</option>";
-          if(type == "add"){
-            $("#dept-select").html(noneOption);
-            $("#emp-select").html(noneOption);
-          }else if(type == "update"){
-            $("#dept-select2").html(noneOption);
-            $("#emp-select2").html(noneOption);
-          }
+        // function selectList(type){
+        //   noneOption = "<option value='none'>선택</option>";
+        //   if(type == "add"){
+        //   if(type == "addTask"){
+        //     $("#dept-select").html(noneOption);
+        //     $("#emp-select").html(noneOption);
+        //   }else if(type == "update"){
+        //   }else if(type == "updateTask"){
+        //     $("#dept-select2").html(noneOption);
+        //     $("#emp-select2").html(noneOption);
+        //   }
           
-          $("#selected-area").empty();
+        //   $("#selected-area").empty();
           
-          let userNo = ${loginUser.userNo};
+        //   //let userNo = ${loginUser.userNo};
 
-          $.ajax({
-            url:"selectList.tk",
-            data:{"projectNo":projectNo, "userNo":userNo},
-            success:function(obj){
-              dList = obj.dList;
-              eList = obj.eList;
-              let deptValue = "";
-              for(let i=0; i<dList.length; i++){
-                deptValue += "<option value='" + dList[i].departmentNo + "'>" + dList[i].departmentName + "</option>";
-              }
+        //   $.ajax({
+        //     url:"selectList.tk",
+        //     data:{"projectNo":projectNo, "userNo":userNo},
+        //     success:function(obj){
+        //       dList = obj.dList;
+        //       eList = obj.eList;
+        //       // dList = obj.dList;
+        //       // eList = obj.eList;
+        //       let deptValue = "";
+        //       for(let i=0; i<dList.length; i++){
+        //         deptValue += "<option value='" + dList[i].departmentNo + "'>" + dList[i].departmentName + "</option>";
+        //       }
               
-              if(type == "add"){
-                $("#dept-select").append(deptValue);
-              }else if(type == "update"){
-                $("#dept-select2").append(deptValue);
-              }
+        //       if(type == "add"){
+        //       if(type == "addTask"){
+        //         $("#dept-select").append(deptValue);
+        //       }else if(type == "update"){
+        //       }else if(type == "updateTask"){
+        //         $("#dept-select2").append(deptValue);
+        //       }
               
 
-            }, error:function(){
-              console.log("부서 조회 실패");
-            }
-          })
-        }
+        //     }, error:function(){
+        //       console.log("부서 조회 실패");
+        //     }
+        //   })
+        // }
         
-        function newAssign(e){
-          newAssignUser = $(e).val();
-        }
+      //   function newAssign(e){
+      //     newAssignUser = $(e).val();
+      //   }
 
-        function loadEmpSelect(num, d){
-          let dept = $(d).val();
-          let empValue = "";
-          for(let i=0; i<eList.length; i++){
-            if(dept == eList[i].departmentNo && newAssignUser != eList[i].userNo ){
-              empValue += "<option value='" + eList[i].userNo + "'>" + eList[i].userName + " " + eList[i].positionName + "</option>";
-            }
-          }
+      //   function loadEmpSelect(num, d){
+      //     let dept = $(d).val();
+      //     let empValue = "";
+      //     for(let i=0; i<eList.length; i++){
+      //       if(dept == eList[i].departmentNo && newAssignUser != eList[i].userNo ){
+      //         empValue += "<option value='" + eList[i].userNo + "'>" + eList[i].userName + " " + eList[i].positionName + "</option>";
+      //       }
+      //     }
 
           
-          if(num == 1){
-            $("#emp-select").html(noneOption);
-            $("#emp-select").append(empValue);
-          }else if(num == 2){
-            $("#emp-select2").html(noneOption);
-            $("#emp-select2").append(empValue);
-          }
-          $("#invalidMsg, #invalidMsg2").css("display", "none");
+      //     if(num == 1){
+      //       $("#emp-select").html(noneOption);
+      //       $("#emp-select").append(empValue);
+      //     }else if(num == 2){
+      //       $("#emp-select2").html(noneOption);
+      //       $("#emp-select2").append(empValue);
+      //     }
+      //     $("#invalidMsg, #invalidMsg2").css("display", "none");
 
-        }
-      </script>
+      //   }
+      // </script>
 
-      <script>
+      <!-- <script>
         // 선택한 정보 selected-area에 추가하기
         let taskRefUser = "";
         let selectUserDept = "";
@@ -748,9 +936,13 @@
             $("#invalidMsg").css("display", "block");
           }else if(selectUserName != "선택"){
             taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete-red.png'></div>"
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + "<img src='resources/icons/delete-red.png'>"
                         + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
                         + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>"
+                        + "</div>";
             $("#selected-area").append(taskRefUser);
+            $("#invalidMsg").css("display", "none");
           }
         })
 
@@ -763,7 +955,7 @@
         $("#add-task").click(function(){
           $("#add-task-modal input[name=projectNo]").val(projectNo);
         })
-      </script>
+      </script> -->
 
       
 
@@ -819,6 +1011,7 @@
                   </tr>
                   <tr>
                     <th><input type="hidden" name="userNo" id="dTaskUserNo"></th>
+                    <th></th>
                     <td>
                       <div id="selected-area2"></div>
                       <div id="invalidMsg2">이미 선택된 직원입니다.</div>
@@ -894,13 +1087,17 @@
               }
               // task 참조자 셀렉트
               selectList("update");
+              selectList("updateTask");
               $("#selected-area2").empty();
 
               let selectedUserList = "";
               for(let i=0; i<tpList.length; i++){
                 selectedUserList += "<div class='select-user' onclick='deleteUser(this);'>" + tpList[i].userName + " " + tpList[i].positionName + "<img src='resources/icons/delete-red.png'></div>"
+                selectedUserList += "<div class='select-user' onclick='deleteUser(this);'>" + tpList[i].userName + " " + tpList[i].positionName + "<img src='resources/icons/delete-red.png'>"
                                   + "<input type='hidden' name='selectUser' value='" + tpList[i].userNo + "'>"
                                   + "<input type='hidden' name='selectUserDept' value='" + tpList[i].departmentNo + "'>";
+                                  + "<input type='hidden' name='selectUserDept' value='" + tpList[i].departmentNo + "'>"
+                                  + "</div>";
               }
               $("#selected-area2").html(selectedUserList);
              
@@ -917,6 +1114,7 @@
                               + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
                               + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
                   $("#selected-area2").append(taskRefUser);
+                  $("#invalidMsg").css("display", "none");
                 }
               })
 
@@ -959,6 +1157,7 @@
 
 
 
+    
 
 
 

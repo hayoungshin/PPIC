@@ -55,8 +55,8 @@ public class MailServiceImpl implements MailService{
 	}
 
 	@Override
-	public Mail selectRecieve(int mailNo) {
-		return mDao.selectRecieve(sqlSession, mailNo);
+	public Mail selectRecieve(MailStatus status) {
+		return mDao.selectRecieve(sqlSession, status);
 	}
 
 	@Override

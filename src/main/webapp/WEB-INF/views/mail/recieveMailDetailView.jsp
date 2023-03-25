@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,6 +78,7 @@
 	</div>
 
 
+	<br>
 	<table style="font-size:14px;">
 		<tr>
 			<td colspan="6" style="font-size:18px; font-weight:600; padding:5px 0px; color:rgb(60,60,60);">
@@ -85,7 +87,7 @@
 		</tr>
 		<tr>
 			<th style="width:100px;">보낸 사람</th>
-			<td style="width:1000px;">${ m.recipientArr }</td>
+			<td style="width:1000px;">${ m.senderMail }</td>
 		</tr>
 		<tr>
 			<th>받는 사람</th>
@@ -96,7 +98,14 @@
 			<td>${ m.hidRefMail }</td>
 			<td style="width:120px; text-align:center;">${ m.sentDate }</td>
 			<td style="width:35px; text-align:center;">
-				<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
+				<c:choose>
+					<c:when test="${ m.importantStatus eq 'Y' }">
+						<img src="resources/icons/star-y.png" style="cursor:pointer; width:18px;">
+					</c:when>
+					<c:otherwise>
+						<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
+					</c:otherwise>
+				</c:choose>
 			</td>
 			<td style="width:35px; text-align:center;">
 				<div class="tool-tip">
@@ -119,17 +128,32 @@
 	</table>
 	<hr>
 	<div id="attachment-area">
-		<div style="margin-bottom:5px; font-size:15px;">
-			첨부파일 <span style="color:#6F50F8; font-weight:600;">2</span>개 <br>
+		<div style="margin-bottom:5px; font-size:14px;">
+			첨부파일
+			<c:choose>
+				<c:when test="${ fn:length(list) eq 0 }">
+					없음
+				</c:when>
+				<c:otherwise>
+					<span style="color:#6F50F8; font-weight:600;">${ fn:length(list) }</span>개 <br>
+				</c:otherwise>
+			</c:choose>
 		</div>
-		<a href="변경이름" download="원본이름"><img src="resources/icons_files/pdf.png">원본이름</a> <div></div>
-		<a href="변경이름" download="원본이름"><img src="resources/icons_files/xls.png">원본이름</a>
+		<c:forEach var="f" items="${ list }">
+			<a href="${ f.changeName }" download="${ f.originName }">${ f.originName }</a> <br>
+		</c:forEach>
+		 <div></div>
 	</div>
 	<hr>
 	<div style="margin:10px 20px;">
-		안녕하세요<br>
-		어떤팀 신하영입니다.<br><br>
-		안녕히계세요.
+		<c:choose>
+			<c:when test="${ not empty m.mailContent }">
+				${ m.mailContent }
+			</c:when>
+			<c:otherwise>
+				(내용없음)
+			</c:otherwise>
+		</c:choose>
 	</div>
 </body>
 </html>

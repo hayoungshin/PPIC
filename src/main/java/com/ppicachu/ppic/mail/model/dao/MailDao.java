@@ -74,8 +74,8 @@ public class MailDao {
 	public int updateReadDate(SqlSessionTemplate sqlSession, MailStatus status) {
 		return sqlSession.update("mailMapper.updateReadDate", status);
 	}
-	public Mail selectRecieve(SqlSessionTemplate sqlSession, int mailNo) {
-		return sqlSession.selectOne("mailMapper.selectRecieve", mailNo);
+	public Mail selectRecieve(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.selectOne("mailMapper.selectRecieve", status);
 	}
 	public ArrayList<MailAttachment> selectAttachmentList(SqlSessionTemplate sqlSession, int mailNo){
 		return (ArrayList)sqlSession.selectList("mailMapper.selectAttachmentList", mailNo);

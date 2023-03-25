@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.project.model.vo;
 
+import java.util.ArrayList;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +27,12 @@ public class Task {
 	private String modifyDate;
 	private String deleteStatus;
 	
+	private ArrayList<ProjectParticipant> projectParticipants;
 	private String positionName;
 	private String userNo;
 	private String userImg;
 	private int refPeopleCnt;
 	private String assignUserName;
+	private String departmentNo;
 	
 }

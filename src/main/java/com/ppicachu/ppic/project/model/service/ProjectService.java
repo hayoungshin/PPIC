@@ -18,7 +18,7 @@ public interface ProjectService {
 	ArrayList<Task> selectTaskList(int projectNo);
 	
 	// 작업 참조자정보 조회
-	ArrayList<ProjectParticipant> selectTaskParticipants(int taskNo);
+	ArrayList<ArrayList<ProjectParticipant>> selectTaskParticipants(ArrayList<Task> tList);
 	// 작업 참조자 수
 	int selectCountTaskParticipants(int taskNo);
 	
@@ -39,5 +39,13 @@ public interface ProjectService {
 	
 	// task update
 	int updateTask(Task t);
+	
+	// task 참조자 전체 삭제
+	int deleteTaskParticipant(int taskNo);
+	// task 참조자 전체 추가
+	int addTaskParticipant(ArrayList<ProjectParticipant> updateList);
+	
+	// task 삭제
+	int deleteTask(int taskNo);
 	
 }

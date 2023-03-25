@@ -149,15 +149,22 @@
 		   and recipient_mail = #{ recipientMail }
 	</update>
 	<select id="selectRecieve" resultMap="mailResult">
-		select
+		 select
 		       mail_no
+		     , sender_mail
 		     , mail_title
 		     , recipient_mail
 		     , ref_mail
 		     , hid_ref_mail
 		     , mail_content
 		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
-		  from mail
+		     , (
+		        select important_status
+		          from mail_status s
+		         where s.mail_no = m.mail_no
+		           and recipient_mail = #{recipientMail}
+		       ) important_status
+		  from mail m
 		 where mail_no = #{mailNo}
 	</select>
 	<select id="selectAttachmentList" resultMap="mailAttachmentResult">
