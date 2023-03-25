@@ -115,13 +115,26 @@
 			</script>
            
 			<div class="memberCategory" style="float:left;" >
-                
-                <!-- 관리자만 보이게 할거임 -->
-                <a href="memberList.me" >구성원</a>
-                <a href="memberAuth.me" style="color:black;" >권한설정</a>
-               
+	                <a href="memberList.me" >구성원</a>
+	                <a href="memberAuth.me" style="color:black;" >권한설정</a>
                 <br>
             </div>
+            
+            <script>
+				$(function(){
+	        		
+	        		$(".memberCategory").hide();
+	        		
+	        		var a = "${loginUser.authorityNo}";
+	        		
+	
+	        		if (a.includes('4') || a.includes('0')) {
+	        			$(".memberCategory").show();
+	       			} else {
+	       				
+	       			}
+	        	})
+			</script>
 
 			<br><br><br>
 			
@@ -133,11 +146,11 @@
 					<button class="btn-purple" style="float:right; margin-right:20px;" data-toggle="modal" data-target="#authUpdate">권한추가</button>
 					
 					<div style="float:right; margin-right:20px;">
-						<img src="resources/icons/up-down.png" style="width:25px; ">
+						
 					</div>
 					
 					<div style="float:right; margin-right:10px;">
-						<img src="resources/icons/search.png" style="width:25px; ">
+						
 					</div>
 					
 					
@@ -210,6 +223,8 @@
 	                
 	                    <form action="authUpdate.me" method="post" >
 	                        <div class="form-group">
+	                        	<input type="hidden" id="userId" name="userId" value="${ loginUser.userId }" >
+                            	<input type="hidden" id="userPwd" name="userPwd" value="${ loginUser.userPwd }" >
 	                            <label>이름 </label>
 	                            <select name="userNo" id="userNo" style="width:300px">
 							    	<c:forEach var="m" items="${ list1 }">
@@ -268,7 +283,7 @@
 						                            }
 						                            
 						                            console.log(che_data);
-					                      	  })}
+					                      	  })
 				                     	</script>
 		                            	
 		                            	

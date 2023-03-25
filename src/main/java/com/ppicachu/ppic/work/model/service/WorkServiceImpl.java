@@ -127,5 +127,26 @@ public class WorkServiceImpl implements WorkService {
 		return wDao.workCalendar(sqlSession, userNo);
 	}
 
+	@Override
+	public int updateWorkTime(int userNo) {
+		return wDao.updateWorkTime(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Member> selectAllMember() {
+		return wDao.selectAllMember(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Member> selectWorkCountList() {
+		return wDao.selectWorkCountList(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Member> selectTimeCountList() {
+		return wDao.selectTimeCountList(sqlSession);
+	}
+	
+	
 	
 }

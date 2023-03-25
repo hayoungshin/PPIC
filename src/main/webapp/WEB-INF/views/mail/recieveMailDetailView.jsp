@@ -80,21 +80,21 @@
 	<table style="font-size:14px;">
 		<tr>
 			<td colspan="6" style="font-size:18px; font-weight:600; padding:5px 0px; color:rgb(60,60,60);">
-				메일제목입니다 안녕하세요안녕하세여~~~~
+				${ m.mailTitle }
 			</td>
 		</tr>
 		<tr>
 			<th style="width:100px;">보낸 사람</th>
-			<td style="width:1000px;">박사원</td>
+			<td style="width:1000px;">${ m.recipientArr }</td>
 		</tr>
 		<tr>
 			<th>받는 사람</th>
-			<td>나, 이이름, 박이름 에게</td>
+			<td>${ m.recipientMail }</td>
 		</tr>
 		<tr>
 			<th>참조</th>
-			<td>최뭐뭐</td>
-			<td style="width:120px; text-align:center;">23-03-08 11:50</td>
+			<td>${ m.hidRefMail }</td>
+			<td style="width:120px; text-align:center;">${ m.sentDate }</td>
 			<td style="width:35px; text-align:center;">
 				<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
 			</td>

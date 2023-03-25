@@ -515,10 +515,32 @@
 	            
 	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
 	            <button type="submit" class="btnn-pk" onclick="tem();">임시저장</button>
-		        <button type="submit" class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
+		        <button type="submit" class="btnn-pp" id="forAlarm">작성</button><!-- 작성완료시 상세로 -->
 	        </div>
         </form>
     </div>
+    
+    <!-- 알림 관련 (지우지 말아주세요 >_<) -->
+    <script>
+    	document.getElementById("forAlarm").onclick = function(){
+			let agrUserNo = document.getElementsByName("agrUserNo")[0].value;
+			if(socket){
+				let socketMsg1 = "2,${loginUser.userNo},${loginUser.userName}," + agrUserNo + ",0," + document.getElementById("title").value;
+				socket.send(socketMsg1);
+			}
+			if(document.getElementsByName("refUserNo").length > 0){
+				let refUserNo = "";
+				for(let i=0; i<document.getElementsByName("refUserNo").length; i++){
+					refUserNo += "/" + document.getElementsByName("refUserNo")[i].value;
+				}
+				refUserNo = refUserNo.substring(1);
+				if(socket){
+					let socketMsg2 = "3,${loginUser.userNo},${loginUser.userName}," + refUserNo + ",0," + document.getElementById("title").value;
+					socket.send(socketMsg2);
+				}
+			}
+		}
+    </script>
 
 </body>
 </html>

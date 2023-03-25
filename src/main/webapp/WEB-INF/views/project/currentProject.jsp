@@ -653,7 +653,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="submit" class="btn btn-purple">추가</button>
+              <button type="submit" class="btn btn-purple" id="add-btn">추가</button>
             </div>
           </form>
 
@@ -964,6 +964,20 @@
 
     </div>
     </div>
+    
+    <script>
+    	document.getElementById("add-btn").onclick = function(){
+    		let taskAlarm = "";
+    		for(let i = 0; i<document.getElementsByName("selectUser").length; i++){
+    			taskAlarm += "/" + document.getElementsByName("selectUser")[i].value;
+    		}
+    		taskAlarm = taskAlarm.substring(1);
+    		if(socket){
+	          let socketMsg = "5,${loginUser.userNo},${loginUser.userName}," + taskAlarm + ",1," + document.getElementsByName("taskName")[0].value;
+	          socket.send(socketMsg);
+		  	}
+    	}
+    </script>
 
 </body>
 </html>

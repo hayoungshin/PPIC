@@ -135,4 +135,38 @@
 		    by mail_no desc
 	</select>
 	
+	<select id="selectReadStatus" resultType="_int">
+		select count(read_date)
+		  from mail_status
+		 where recipient_mail = #{recipientMail}
+		   and mail_no = #{mailNo}
+	</select>
+	<update id="updateReadDate">
+		update
+			   mail_status
+		   set read_date = sysdate
+		 where mail_no = #{ mailNo }
+		   and recipient_mail = #{ recipientMail }
+	</update>
+	<select id="selectRecieve" resultMap="mailResult">
+		select
+		       mail_no
+		     , mail_title
+		     , recipient_mail
+		     , ref_mail
+		     , hid_ref_mail
+		     , mail_content
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		  from mail
+		 where mail_no = #{mailNo}
+	</select>
+	<select id="selectAttachmentList" resultMap="mailAttachmentResult">
+		select
+		       file_no
+		     , origin_name
+		     , change_name
+		  from mail_attachment
+		 where mail_no = #{mailNo}
+	</select>
+	
 </mapper>

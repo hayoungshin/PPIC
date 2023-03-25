@@ -87,9 +87,14 @@
 							</c:otherwise>
 						</c:choose>
 					</td>
-					<td style="width:200px" onclick="toDetail();">${ m.senderMail }</td>
-					<td style="width:750px" onclick="toDetail();">${ m.mailTitle }</td>
-					<td style="width:150px; text-align:right;" onclick="toDetail();">${ m.sentDate }</td>
+					<td style="width:200px" onclick="toDetail(this);">${ m.senderMail }</td>
+					<td style="width:750px" onclick="toDetail(this);">
+						${ m.mailTitle }
+						<c:if test="${ m.attachmentStatus eq '1' }">
+							<img src="resources/icons/clip.png" style="width:18px; margin:0px 5px;">
+						</c:if>
+					</td>
+					<td style="width:150px; text-align:right;" onclick="toDetail(this);">${ m.sentDate }</td>
 				</tr>
 			</c:forEach>
 			</tbody>
@@ -97,8 +102,9 @@
 
 	
 		<script>
-			function toDetail(){
-				location.href = "recieveDetail.ml";
+			function toDetail(e){
+				console.log(e.parentNode.childNodes[1].childNodes[1].value);
+				location.href = "recieveDetail.ml?no=" + e.parentNode.childNodes[1].childNodes[1].value;
 			}
 		</script>
 	

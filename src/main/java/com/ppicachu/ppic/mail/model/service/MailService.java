@@ -16,4 +16,9 @@ public interface MailService {
 	int selectRecieveListCount(String userMail);
 	ArrayList<Mail> selectRecieveList(PageInfo pi, String userMail);
 
+	// 3. 받은메일 상세 조회 서비스
+	int selectReadStatus(MailStatus status);
+	int updateReadDate(MailStatus status);
+	Mail selectRecieve(int mailNo);
+	ArrayList<MailAttachment> selectAttachmentList(int mailNo);
 }
