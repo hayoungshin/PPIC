@@ -339,7 +339,14 @@
 	  )
 	  values
 	  (
-	  	seq_pjno.currval
+  	  <choose>
+	  	<when test='projectNo == 0'>
+	  		seq_pjno.currval
+	  	</when>
+	  	<otherwise>
+	  		#{projectNo}
+	  	</otherwise>
+	  </choose>
 	  , #{departmentNo}
 	  , #{userNo}
 	  <choose>
@@ -353,4 +360,20 @@
 	  )
 </insert>
 
+<update id="updateProject">
+	update project
+	   set project_manager = #{projectManager}
+	   	 , project_name = #{projectName}
+	     , start_date = #{startDate}
+	     , end_date = #{endDate}
+	     , detail = #{detail}
+	     , modify_date = sysdate
+	 where project_no = #{projectNo}
+</update>
+
+<delete id="deleteProjectParticipants">
+	delete
+	  from p_participant
+	 where project_no = #{projectNo}
+</delete>
 </mapper>

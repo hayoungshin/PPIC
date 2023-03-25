@@ -266,6 +266,8 @@
         let projectName;
         let projectDetail;
         let pm;
+        let startDate;
+        let endDate;
 
         // 프로젝트 디테일 정보
         // 프로젝트참여자 리스트
@@ -301,6 +303,10 @@
           projectDetail = $(e).find("input[name=projectDetail]").val();
           $("#p-detail").text(projectDetail);
 
+          let schedule = $(e).find(".project-schedule").text();
+          startDate = schedule.substring(5, 13);
+          endDate = schedule.substring(17);
+          
           detailLoad(projectNo);
         }
 
@@ -406,7 +412,7 @@
       <form action="" method="get" id="deleteProjForm">
         <input type="hidden" name="projectNo">
         <c:if test="${fn:contains(loginUser.authorityNo, '0') || fn:contains(loginUser.authorityNo, '8')}">
-          <button type="submit">프로젝트 수정</button>
+          <button type="button" onclick="updateProjectForm();">프로젝트 수정</button>
           <button type="submit">프로젝트 삭제</button>
         </c:if>
       </form>
@@ -653,12 +659,12 @@
                     <td><textarea name="detail" cols="30" rows="5" style="resize: none;" placeholder="프로젝트 상세내용을 입력해주세요." required></textarea></td>
                   </tr>
                   <tr>
-                    <th>시작일 : </th>
-                    <td><input type="date" name="startDate"></td>
+                    <th>* 시작일 : </th>
+                    <td><input type="date" name="startDate" required></td>
                   </tr>
                   <tr>
-                    <th>종료일 : </th>
-                    <td><input type="date" name="endDate"></td>
+                    <th>* 종료일 : </th>
+                    <td><input type="date" name="endDate" required></td>
                   </tr>
                   <tr>
                     <th>* PM :</th>
@@ -714,6 +720,7 @@
         </div>
       </div><!-- add-project-modal-->
 
+      <!-- 프로젝트 생성 관련 -->
       <script>
         // PM select
         $("#p-dept-select").change(function(){
@@ -763,7 +770,6 @@
                         + "<input type='hidden' name='projectParticipants[" + n + "].departmentNo' value='" + selectUserDept + "'>";
                         + "</div>";
             n++;
-            console.log(n);
             $("#selected-area").append(taskRefUser);
             $("#invalidMsg1").css("display", "none");
           }
@@ -774,6 +780,160 @@
         function deleteUser(e){
           $(e).remove();
           n--;
+        }
+
+      </script>
+
+
+      <!-- 프로젝트 수정 Modal -->
+      <div class="modal" id="update-project-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h5 class="modal-title"><b>프로젝트 수정</b></h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <form action="updteProject.pr" method="post">
+              <!-- Modal body -->
+              <div class="modal-body">
+                <table class="add-form">
+                  <tr>
+                    <th width="100px;">* 프로젝트명 : </th>
+                    <td>
+                      <input type="text" class="task-title-inpt" name="projectName" placeholder="프로젝트명을 입력해주세요." required>
+                      <input type="hidden" name="projectNo">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>* 상세내용 :</th>
+                    <td><textarea name="detail" cols="30" rows="5" style="resize: none;" placeholder="프로젝트 상세내용을 입력해주세요." required></textarea></td>
+                  </tr>
+                  <tr>
+                    <th>* 시작일 : </th>
+                    <td><input type="date" name="startDate" required></td>
+                  </tr>
+                  <tr>
+                    <th>* 종료일 : </th>
+                    <td><input type="date" name="endDate" required></td>
+                  </tr>
+                  <tr>
+                    <th>* PM :</th>
+                    <td>
+                      <select name="projectManagerDept" id="p-dept-select3">
+                        <option value="none">선택</option>
+                        <c:forEach var="d" items="${dList}">
+                          <option value="${d.departmentNo}">${d.departmentName}</option>
+                        </c:forEach>
+                      </select>
+                      <select name="projectManager" id="p-mem-select3">
+                        <option value="none">선택</option>
+                        <c:forEach var="m" items="${mList}">
+                          <option value="${m.userNo}" value2="${m.departmentNo}" style="display:none;">${m.userName}</option>
+                        </c:forEach>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>참여자 :</th>
+                    <td>
+                      <select name="ppDeptSelect" id="p-dept-select4">
+                        <option value="none">선택</option>
+                        <c:forEach var="d" items="${dList}">
+                          <option value="${d.departmentNo}">${d.departmentName}</option>
+                        </c:forEach>
+                      </select>
+                      <select name="ppSelect" id="p-mem-select4">
+                        <option value="none">선택</option>
+                        <c:forEach var="m" items="${mList}">
+                          <option value="${m.userNo}" value2="${m.departmentNo}" value3="${m.position}" style="display:none;">${m.userName}</option>
+                        </c:forEach>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
+                    <td>
+                      <div id="selected-area2"></div>
+                      <div id="invalidMsg2">이미 선택된 직원입니다.</div>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-purple">프로젝트 수정</button>
+            </div>
+          </form>
+
+          </div>
+        </div>
+      </div><!-- update-project-modal-->
+
+      <!-- 프로젝트 수정 관련 -->
+      <script>
+       function updateProjectForm(){
+         $("#update-project-modal input[name=projectName]").val(projectName);
+         $("#update-project-modal input[name=projectNo]").val(projectNo);
+         $("#update-project-modal textarea[name=detail]").val(projectDetail);
+         // $("#update-project-modal input[name=startDate]").datepicker(setDate, new Date(2022,02,20)); 안됨
+
+         $("#update-project-modal").modal("show");
+       }
+
+        $("#p-dept-select3").change(function(){
+          var selectedDept = $("#p-dept-select3 option:selected").val();
+          $("#p-mem-select3 option").each(function(){
+              if($(this).attr("value2") == selectedDept){
+               $(this).css("display", "block");
+              }else{
+                $(this).css("display", "none");
+              }
+            })
+        })
+
+        // participants select
+        $("#p-dept-select4").change(function(){
+          var selectedDept = $("#p-dept-select4 option:selected").val();
+          $("#p-mem-select4 option").each(function(){
+              if($(this).attr("value2") == selectedDept){
+               $(this).css("display", "block");
+              }else{
+                $(this).css("display", "none");
+              }
+            })
+        })
+
+
+        let k = 0;
+        $("#p-mem-select4").change(function(){
+          $("#invalidMsg1").css("display", "none");
+          selectedEl = $("#p-mem-select4 option:selected");
+          selectUserDept = selectedEl.attr("value2");
+          selectUserName = selectedEl.text();
+          selectUserNo = selectedEl.attr("value");
+          selectUserPs = selectedEl.attr("value3");
+
+          if($("#selected-area2").text().includes(selectUserName)){
+            $("#invalidMsg2").css("display", "block");
+          }else{
+            taskRefUser = "<div class='select-user' onclick='deleteUser2(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
+                        + "<input type='hidden' name='projectParticipants[" + k + "].userNo' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='projectParticipants[" + k + "].departmentNo' value='" + selectUserDept + "'>";
+                        + "</div>";
+            k++;
+            $("#selected-area2").append(taskRefUser);
+            $("#invalidMsg2").css("display", "none");
+          }
+        })
+
+        // 선택유저 삭제하기
+        function deleteUser2(e){
+          $(e).remove();
+          k--;
         }
 
       </script>

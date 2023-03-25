@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,7 @@ public class ProjectController {
 	@ResponseBody
 	@RequestMapping(value="detail.pr", produces="application/json; charset=UTF-8")
 	public String selectProjectParticipants(int projectNo) {
+		//Project p = pService.selectProjectList(projectNo);
 		// 프로젝트 참여자 리스트
 		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
 		// task 리스트
@@ -91,17 +93,18 @@ public class ProjectController {
 	// 프로젝트 생성
 	@RequestMapping("addProject.pr")
 	public String addProject(Project p, String projectManagerDept, HttpSession session, Model model) {
+		// 프로젝트 추가
+		int result = pService.insertProject(p);
+		
+		// 참여자 추가
 		ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
-		System.out.println(ppList);
 		for(int i=0; i<ppList.size(); i++) {
 			if(ppList.get(i).getUserNo() != null) {
-				ppList.get(i).setProjectNo(p.getProjectNo());
 				ppList.get(i).setPmStatus("N");
 			}else if(ppList.get(i).getUserNo() == null) {
 				ppList.remove(i);
 			}
 		}
-		System.out.println(ppList);
 		
 		// pm 추가
 		ProjectParticipant pm = new ProjectParticipant();
@@ -109,8 +112,6 @@ public class ProjectController {
 		pm.setDepartmentNo(projectManagerDept);
 		pm.setPmStatus("Y");
 		ppList.add(pm);
-		
-		int result = pService.insertProject(p);
 		
 		int result2 = 0;
 		if(result > 0) {
@@ -121,13 +122,55 @@ public class ProjectController {
 			session.setAttribute("alertMsg", "프로젝트가 생성되었습니다.");
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {
-			model.addAttribute("errorMsg", "프로젝트 생 실패");
+			model.addAttribute("errorMsg", "프로젝트 생성 실패");
 			return "common/errorPage";
 		}
 		
 		
 	}
+	
+	@RequestMapping("updteProject.pr")
+	public String updateProject(Project p, String projectManagerDept, HttpSession session, Model model) {
 		
+		// 프로젝트 업데이트
+		int result = pService.updateProject(p);
+		
+		
+		// 기존 참여자 정보 삭제
+		int result2 = 0;
+		int result3 = 0;
+		if(result > 0) {
+			result2 = pService.deleteProjectParticipants(p.getProjectNo());
+		
+			ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
+			for(int i=0; i<ppList.size(); i++) {
+				if(ppList.get(i).getUserNo() != null) {
+					ppList.get(i).setProjectNo(p.getProjectNo());
+					ppList.get(i).setPmStatus("N");
+				}else if(ppList.get(i).getUserNo() == null) {
+					ppList.remove(i);
+				}
+			}
+			
+			// pm 추가
+			ProjectParticipant pm = new ProjectParticipant();
+			pm.setProjectNo(p.getProjectNo());
+			pm.setUserNo(p.getProjectManager());
+			pm.setDepartmentNo(projectManagerDept);
+			pm.setPmStatus("Y");
+			ppList.add(pm);
+			result3 = pService.insertProjectParticipants(ppList);
+		}
+		
+		if(result*result3 > 0) {
+			session.setAttribute("alertMsg", "프로젝트가 수정되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "프로젝트 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
 		
 	/*
 	// task참조자 리스트
