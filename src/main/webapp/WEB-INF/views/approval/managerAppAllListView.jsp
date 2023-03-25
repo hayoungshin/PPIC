@@ -14,62 +14,8 @@
 	
 	<script>
 		window.onload = function(){
-			// 개인 mouseover
-			const m1 = document.getElementById("menu-1")
-			m1.addEventListener("mouseover", function(){
-				const arr1 = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr1.length; i++){
-		        	arr1[i].style = 'display:block';
-				}
-			});
-			m1.addEventListener("mouseout", function(){
-				const arr1 = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr1.length; i++){
-		        	arr1[i].style = 'display:none';
-				}
-			});
-			
-			// 부서 mouseover
-			const m2 = document.getElementById("menu-2")
-			m2.addEventListener("mouseover", function(){
-				const arr3 = document.getElementsByClassName("menu3");
-				for(let i=0; i<arr3.length; i++){
-		        	arr3[i].style = 'display:block';
-				}
-				const arrm2 = document.getElementsByClassName("m2");
-				for(let i=0; i<arrm2.length; i++){
-		        	arrm2[i].style = 'margin-left: 19px';
-				}
-			});
-			m2.addEventListener("mouseout", function(){
-				const arr3 = document.getElementsByClassName("menu3");
-				for(let i=0; i<arr3.length; i++){
-		        	arr3[i].style = 'display:none';
-				}
-				const arrm2 = document.getElementsByClassName("m2");
-				for(let i=0; i<arrm2.length; i++){
-		        	arrm2[i].style = '';
-				}
-			});
-			
-			// 전체문서관리 black
-			document.getElementById("menu-3").style = 'color:black; font-weight:600';
-
-			document.getElementById("menu-3").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
-			
-			// 개인-, 부서- none
-			const arr1 = document.getElementsByClassName("menu1");
-			for(let i=0; i<arr1.length; i++){
-	        	arr1[i].style = 'display:none';
-			}
-			const arr2 = document.getElementsByClassName("menu2");
-			for(let i=0; i<arr2.length; i++){
-	        	arr2[i].style = 'display:none';
-			}
-			const arr3 = document.getElementsByClassName("menu3");
-			for(let i=0; i<arr3.length; i++){
-	        	arr3[i].style = 'display:none';
-			}
+			// 전체문서관리 count
+			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
@@ -100,12 +46,10 @@
 					ckedCnt += 1;
 				}
 			}
-			
 			let ckMode = false;
 			if(bx.length == ckedCnt){
 				ckMode = true;
 			}
-			
 			document.getElementById("allCkBox").checked = ckMode;
 		}
 		

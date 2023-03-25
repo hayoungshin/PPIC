@@ -11,26 +11,7 @@
 	.title-area{float: left;}
 	.title-area-enroll{float: left; padding-top: 5px; padding-left: 50px;}
 	
-	.menu{float: left; margin: 0px 40px 10px 10px;}
-	.menu a{text-decoration: none;}
-	.m0, .m1{height: 30px;}
-	.m2, .m3{height: 20px;}
-	
-	#menu-1
-	, #menu-1-1, #menu-1-2, #menu-1-3
-	, #menu-1-1-1, #menu-1-1-2, #menu-1-1-3
-	, #menu-2
-	, #menu-2-1, #menu-2-2
-	, #menu-3, #menu-4{color: gray;}
-	
-	#menu-1:hover
-	, #menu-1-1:hover, #menu-1-2:hover, #menu-1-3:hover
-	, #menu-1-1-1:hover, #menu-1-1-2:hover, #menu-1-1-3:hover
-	, #menu-2:hover
-	, #menu-2-1:hover, #menu-2-2:hover
-	, #menu-3:hover, #menu-4:hover{cursor: pointer; color: black; font-weight:600;}
-
-	#switch-area{float: left; margin-left: 10px; margin-top: 6px;}
+	#switch-area{float: left; margin-left: 10px; /* margin-top: 6px; */}
 	.search-option{background-color: lightgray; border-radius: 10px; padding: 6px; padding-left: 10px; margin-bottom: 10px;}
 	/* 검색, 정렬, 필터 */
 	.two-btn-area{float: right;}
@@ -61,43 +42,63 @@
 	#tb tr{height: 35px;}
 	
 	.del-btn-area{float: right;}
+	
+	#navigator{width:600px; height:40px; box-sizing:border-box;}
+	#content ul{list-style-type:none;}
+	#navi{padding:0; margin:0; width:100%; height:100%;}
+	#navi>li{float:left; width:25%; /* height:100%; */}
+	.menu{
+		box-sizing:margin-box;
+		color:gray;
+		font-weight:900;
+		width:100%;/*블럭요소*/
+		height:100%;/*블럭요소*/
+		display:block;
+		line-height:35px;
+	}
+	.m-1{font-size:20px;}
+	.m-2{font-size:18px;}
+	.m-3{font-size:15px;}
+	.m-small{height:20px;}
+	#navi a{text-decoration:none;}
+	#navi a:hover{color:black;}
+	#navi>li>ul{padding:0; margin:0; display:none;}
+	#navi>li:hover>ul{display:block; background-color:white;}
 </style>
 </head>
 <body>
-	<div id="content">
+	<div id="content" style="position: relative; z-index: 1;">
 		<div class="content-1">
 			<div class="t-area">
 		    	<div class="title-area"><h2><b>전자결재</b></h2></div>
 			    <div class="title-area-enroll"><button type="button" class="btnn-pp" onclick="location.href='enrollForm.ap?form=0';">+ 작성하기</button></div>    
 			</div>
 			<br clear="both">
-			
-			<div class="menu"><a href="list.ap?myi=1"><h4 id="menu-1">개인 문서함</h4></a></div>
-			<div class="menu"><a href="list.ap?dpi=1"><h4 id="menu-2">부서 문서함</h4></a></div>
-			
-			<!-- if 관리자일 경우 -->
-			<div class="menu m0"><div class="menu0"><a href="list.ap?a=1"><h4 id="menu-3">전체 문서 관리</h4></a></div></div>
-			<div class="menu m0"><div class="menu0"><a href="list.ap?d=1"><h4 id="menu-4">삭제 문서 관리</h4></a></div></div>
-			
-			<br clear="both">
-			
-			<!-- 개인 문서함일 경우 -->
-			<div class="menu m1"><div class="menu1"><a href="list.ap?myi=1"><h5 id="menu-1-1">기안 문서함</h5></a></div></div>
-			<div class="menu m1"><div class="menu1"><a href="list.ap?myr=1"><h5 id="menu-1-2">참조 문서함</h5></a></div></div>
-			<div class="menu m1"><div class="menu1"><a href="list.ap?myb=1"><h5 id="menu-1-3">중요</h5></a></div></div>
-			
-			<br clear="both">
-			
-			<!-- 개인 문서함 _ 기안 문서함일 경우-->
-			<div class="menu m2"><div class="menu2"><a href="list.ap?myi=1"><h6 id="menu-1-1-1">진행중</h6></a></div></div>
-			<div class="menu m2"><div class="menu2"><a href="list.ap?mye=1"><h6 id="menu-1-1-2">완료</h6></a></div></div>
-			<div class="menu m2"><div class="menu2"><a href="list.ap?myt=1"><h6 id="menu-1-1-3">임시저장</h6></a></div></div>
-			
-			<!-- 부서 문서함일 경우 -->
-			<div class="menu m3"><div class="menu3"><a href="list.ap?dpi=1"><h6 id="menu-2-1">진행중</h6></a></div></div>
-			<div class="menu m3"><div class="menu3"><a href="list.ap?dpe=1"><h6 id="menu-2-2">완료</h6></a></div></div>
-			
-			<br clear="both">
+			<div id="navigator">
+				<ul id="navi">
+					<li><span class="menu m-1">개인문서함</span>
+						<ul style="position: relative; z-index: 2;">
+							<li class="m-small"><span class="menu m-2">기안문서함</span>
+								<li class="m-small"><a href="list.ap?myi=1" class="menu m-3">진행중</a></li>
+								<li class="m-small"><a href="list.ap?mye=1" class="menu m-3">완료</a></li>
+								<li><a href="list.ap?myt=1" class="menu m-3">임시저장</a></li>
+							</li>
+							<li><a href="list.ap?myr=1" class="menu m-2">참조문서함</a></li>
+							<li><a href="list.ap?myb=1" class="menu m-2">중요</a></li>
+						</ul>
+					</li>
+					<li><span class="menu m-1">부서문서함</span>
+						<ul style="position: relative; z-index: 2;">
+							<li><a href="list.ap?dpi=1" class="menu m-2">진행중</a></li>
+							<li><a href="list.ap?dpe=1" class="menu m-2">완료</a></li>
+						</ul>
+					</li>
+					<li><a href="list.ap?a=1" class="menu m-1">전체문서관리</a></li>
+					<li><a href="list.ap?d=1" class="menu m-1">삭제문서관리</a></li>
+				</ul>
+			</div>
+
+			<br>
 		
 			<!-- 개인 문서함 _ 기안 문서함 _ 진행중일 경우-->
 			<div class="custom-control custom-switch" id="switch-area" style="display: none;">

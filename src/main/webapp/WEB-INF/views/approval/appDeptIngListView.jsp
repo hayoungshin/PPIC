@@ -14,48 +14,8 @@
 	
 	<script>
 		window.onload = function(){
-			// 개인 mouseover
-			const m1 = document.getElementById("menu-1")
-			m1.addEventListener("mouseover", function(){
-				const arr1 = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr1.length; i++){
-		        	arr1[i].style = 'display:block';
-				}
-				const arr3 = document.getElementsByClassName("menu3");
-				for(let i=0; i<arr3.length; i++){
-		        	arr3[i].style = 'display:none';
-				}
-			});
-			m1.addEventListener("mouseout", function(){
-				const arr1 = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr1.length; i++){
-		        	arr1[i].style = 'display:none';
-				}
-				const arr3 = document.getElementsByClassName("menu3");
-				for(let i=0; i<arr3.length; i++){
-		        	arr3[i].style = 'display:block';
-				}
-			});
-			
-			// 부서-진행중 black
-			document.getElementById("menu-2").style = 'color:black; font-weight:600';
-			document.getElementById("menu-2-1").style = 'color:black; font-weight:600';
-
-			document.getElementById("menu-2-1").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
-			
-			// 개인- none
-			const arr1 = document.getElementsByClassName("menu1");
-			for(let i=0; i<arr1.length; i++){
-	        	arr1[i].style = 'display:none';
-			}
-			const arr2 = document.getElementsByClassName("menu2");
-			for(let i=0; i<arr2.length; i++){
-	        	arr2[i].style = 'display:none';
-			}
-			const arrm2 = document.getElementsByClassName("m2");
-			for(let i=0; i<arrm2.length; i++){
-	        	arrm2[i].style = 'margin-left: 19px';
-			}
+			// 부서-진행중 count
+			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");

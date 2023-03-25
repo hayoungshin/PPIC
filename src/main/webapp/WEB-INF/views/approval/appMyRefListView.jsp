@@ -14,81 +14,9 @@
 	
 	<script>
 		window.onload = function(){
-			// 부서 mouseover
-			const m2 = document.getElementById("menu-2")
-			m2.addEventListener("mouseover", function(){
-				const arr1 = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr1.length; i++){
-		        	arr1[i].style = 'display:none';
-				}
-				const arr2 = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr2.length; i++){
-		        	arr2[i].style = 'display:none';
-				}
-				const arr3 = document.getElementsByClassName("menu3");
-				for(let i=0; i<arr3.length; i++){
-		        	arr3[i].style = 'display:block';
-				}
-				const arrm2 = document.getElementsByClassName("m2");
-				for(let i=0; i<arrm2.length; i++){
-		        	arrm2[i].style = 'margin-left: 19px';
-				}
-			});
-			m2.addEventListener("mouseout", function(){
-				const arr1 = document.getElementsByClassName("menu1");
-				for(let i=0; i<arr1.length; i++){
-		        	arr1[i].style = 'display:block';
-				}
-				const arr3 = document.getElementsByClassName("menu3");
-				for(let i=0; i<arr3.length; i++){
-		        	arr3[i].style = 'display:none';
-				}
-				const arrm2 = document.getElementsByClassName("m2");
-				for(let i=0; i<arrm2.length; i++){
-		        	arrm2[i].style = '';
-				}
-			});
-			
-			// 기안 mouseover
-			const m11 = document.getElementById("menu-1-1")
-			m11.addEventListener("mouseover", function(){
-				const arr2 = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr2.length; i++){
-		        	arr2[i].style = 'display:block';
-				}
-			});
-			m11.addEventListener("mouseout", function(){
-				const arr2 = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr2.length; i++){
-		        	arr2[i].style = 'display:none';
-				}
-			});
-			
-			// 중요 mouseover
-			const m13 = document.getElementById("menu-1-3")
-			m13.addEventListener("mouseover", function(){
-				const arr2 = document.getElementsByClassName("menu2");
-				for(let i=0; i<arr2.length; i++){
-		        	arr2[i].style = 'display:none';
-				}
-			});
-			
-			// 개인-참조 black
-			document.getElementById("menu-1").style = 'color:black; font-weight:600';
-			document.getElementById("menu-1-2").style = 'color:black; font-weight:600';
+			// 개인-참조 count
+			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
 
-			document.getElementById("menu-1-2").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
-
-			// 개인-기안-, 부서- none
-			const arr2 = document.getElementsByClassName("menu2");
-			for(let i=0; i<arr2.length; i++){
-	        	arr2[i].style = 'display:none';
-			}
-			const arr3 = document.getElementsByClassName("menu3");
-			for(let i=0; i<arr3.length; i++){
-	        	arr3[i].style = 'display:none';
-			}
-			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
 			for(let i=0; i<tr.length; i++){
