@@ -2,9 +2,12 @@ package com.ppicachu.ppic.project.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -83,6 +86,46 @@ public class ProjectController {
 		int result = pService.updateTaskStatus(t);
 		
 		return (result > 0) ? "success" : "failed";
+	}
+	
+	// 프로젝트 생성
+	@RequestMapping("addProject.pr")
+	public String addProject(Project p, String projectManagerDept, HttpSession session, Model model) {
+		ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
+		System.out.println(ppList);
+		for(int i=0; i<ppList.size(); i++) {
+			if(ppList.get(i).getUserNo() != null) {
+				ppList.get(i).setProjectNo(p.getProjectNo());
+				ppList.get(i).setPmStatus("N");
+			}else if(ppList.get(i).getUserNo() == null) {
+				ppList.remove(i);
+			}
+		}
+		System.out.println(ppList);
+		
+		// pm 추가
+		ProjectParticipant pm = new ProjectParticipant();
+		pm.setUserNo(p.getProjectManager());
+		pm.setDepartmentNo(projectManagerDept);
+		pm.setPmStatus("Y");
+		ppList.add(pm);
+		
+		int result = pService.insertProject(p);
+		
+		int result2 = 0;
+		if(result > 0) {
+			result2 = pService.insertProjectParticipants(ppList);
+		}
+		
+		if(result*result2 > 0) {
+			session.setAttribute("alertMsg", "프로젝트가 생성되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "프로젝트 생 실패");
+			return "common/errorPage";
+		}
+		
+		
 	}
 		
 		

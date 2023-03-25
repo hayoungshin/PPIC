@@ -48,4 +48,9 @@ public interface ProjectService {
 	// task 삭제
 	int deleteTask(int taskNo);
 	
+	// project 추가
+	int insertProject(Project p);
+	// project참여자 추가
+	int insertProjectParticipants(ArrayList<ProjectParticipant> ppList);
+	
 }

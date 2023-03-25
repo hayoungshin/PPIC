@@ -306,5 +306,51 @@
 	 where task_no = #{taskNo}
 </delete>
 
+<insert id="insertProject">
+	insert
+	  into project
+	  (
+	  	project_no
+	  , project_manager
+	  , project_name
+	  , start_date
+	  , end_date
+	  , detail
+	  )
+	  values
+	  (
+	    seq_pjno.nextval
+	  , #{projectManager}
+	  , #{projectName}
+	  , #{startDate}
+	  , #{endDate}
+	  , #{detail}
+	  )
+</insert>
+
+<insert id="insertProjectParticipants">
+	insert
+	  into p_participant
+	  (
+	  	project_no
+	  , department_no
+	  , user_no
+	  , pm_status
+	  )
+	  values
+	  (
+	  	seq_pjno.currval
+	  , #{departmentNo}
+	  , #{userNo}
+	  <choose>
+	  	<when test='pmStatus == "Y"'>
+	  		, 'Y'
+	  	</when>
+	  	<otherwise>
+	  		, 'N'
+	  	</otherwise>
+	  </choose>
+	  )
+</insert>
 
 </mapper>

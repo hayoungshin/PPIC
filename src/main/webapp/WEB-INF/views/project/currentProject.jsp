@@ -403,9 +403,10 @@
       </script>
 
       <h5 id="p-title"></h5>
-      <form action="deleteProj.pr" method="get" id="deleteProjForm">
+      <form action="" method="get" id="deleteProjForm">
         <input type="hidden" name="projectNo">
         <c:if test="${fn:contains(loginUser.authorityNo, '0') || fn:contains(loginUser.authorityNo, '8')}">
+          <button type="submit">프로젝트 수정</button>
           <button type="submit">프로젝트 삭제</button>
         </c:if>
       </form>
@@ -649,7 +650,7 @@
                   </tr>
                   <tr>
                     <th>* 상세내용 :</th>
-                    <td><textarea name="project" cols="30" rows="5" style="resize: none;" placeholder="프로젝트 상세내용을 입력해주세요." required></textarea></td>
+                    <td><textarea name="detail" cols="30" rows="5" style="resize: none;" placeholder="프로젝트 상세내용을 입력해주세요." required></textarea></td>
                   </tr>
                   <tr>
                     <th>시작일 : </th>
@@ -660,9 +661,9 @@
                     <td><input type="date" name="endDate"></td>
                   </tr>
                   <tr>
-                    <th>PM :</th>
+                    <th>* PM :</th>
                     <td>
-                      <select name="projectManager" id="p-dept-select">
+                      <select name="projectManagerDept" id="p-dept-select">
                         <option value="none">선택</option>
                         <c:forEach var="d" items="${dList}">
                           <option value="${d.departmentNo}">${d.departmentName}</option>
@@ -679,13 +680,13 @@
                   <tr>
                     <th>참여자 :</th>
                     <td>
-                      <select name="department" id="p-dept-select2">
+                      <select name="ppDeptSelect" id="p-dept-select2">
                         <option value="none">선택</option>
                         <c:forEach var="d" items="${dList}">
                           <option value="${d.departmentNo}">${d.departmentName}</option>
                         </c:forEach>
                       </select>
-                      <select name="userNo" id="p-mem-select2">
+                      <select name="ppSelect" id="p-mem-select2">
                         <option value="none">선택</option>
                         <c:forEach var="m" items="${mList}">
                           <option value="${m.userNo}" value2="${m.departmentNo}" value3="${m.position}" style="display:none;">${m.userName}</option>
@@ -745,6 +746,7 @@
         let selectUserName = ""; // 유저명
         let selectUserNo = ""; // 유저번호
         let selectUserPs = ""; // 유저직위
+        let n = 0;
         $("#p-mem-select2").change(function(){
           $("#invalidMsg1").css("display", "none");
           selectedEl = $("#p-mem-select2 option:selected");
@@ -757,9 +759,11 @@
             $("#invalidMsg1").css("display", "block");
           }else{
             taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
-                        + "<input type='hidden' name='selectUser' value='" + selectUserNo + "'>"
-                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
+                        + "<input type='hidden' name='projectParticipants[" + n + "].userNo' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='projectParticipants[" + n + "].departmentNo' value='" + selectUserDept + "'>";
                         + "</div>";
+            n++;
+            console.log(n);
             $("#selected-area").append(taskRefUser);
             $("#invalidMsg1").css("display", "none");
           }
@@ -769,6 +773,7 @@
         // 선택유저 삭제하기
         function deleteUser(e){
           $(e).remove();
+          n--;
         }
 
       </script>

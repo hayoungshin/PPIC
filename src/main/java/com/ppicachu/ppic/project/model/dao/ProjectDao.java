@@ -85,4 +85,16 @@ public class ProjectDao {
 		return sqlSession.delete("projectMapper.deleteTask", taskNo);
 	}
 	
+	public int insertProject(SqlSessionTemplate sqlSession, Project p) {
+		return sqlSession.insert("projectMapper.insertProject", p);
+	}
+	
+	public int insertProjectParticipants(SqlSessionTemplate sqlSession, ArrayList<ProjectParticipant> ppList) {
+		int result = 0;
+		for(int i=0; i<ppList.size(); i++) {
+			result += sqlSession.insert("projectMapper.insertProjectParticipants", ppList.get(i));
+		}
+		
+		return result;
+	}
 }
