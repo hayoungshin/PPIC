@@ -29,6 +29,6 @@ public class Mail {
 	// 메일 리스트 조회용
 	private String importantStatus;	// Y|N
 	private String readStatus;		// 0|1
-	private String mailType;		// 1받은 2참조 3숨은참조
+	private String mailType;		// 1받은 2참조 3숨은참조 4받은
 	private String attachmentStatus;// 0|1
 }

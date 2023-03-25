@@ -25,15 +25,20 @@ public class MailDao {
 		}
 		return result;
 	}
+	public int insertSender(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.insert("mailMapper.insertSender", status);
+	}
 	public int insertStatus(SqlSessionTemplate sqlSession, MailStatus status, Mail m) {
-		int result = 0;
-
+		int result1 = 1;
+		int result2 = 1;
+		int result3 = 1;
+		
 		if(!m.getRecipientArr()[0].equals("")) {
 			for(String s : m.getRecipientArr()) {
 				System.out.println("받은사람 : " + s);
 				status.setRecipientMail(s);
 				status.setMailType("1");
-				result = sqlSession.insert("mailMapper.insertStatus", status);
+				result1 = sqlSession.insert("mailMapper.insertStatus", status);
 			}
 		}
 		if(!m.getRefArr()[0].equals("")) {
@@ -41,7 +46,7 @@ public class MailDao {
 				System.out.println("참조 : " + s);
 				status.setRecipientMail(s);
 				status.setMailType("2");
-				result = sqlSession.insert("mailMapper.insertStatus", status);
+				result2 = sqlSession.insert("mailMapper.insertStatus", status);
 			}			
 		}
 		if(!m.getHidRefArr()[0].equals("")) {
@@ -49,17 +54,17 @@ public class MailDao {
 				System.out.println("숨은참조 : " + s);
 				status.setRecipientMail(s);
 				status.setMailType("3");
-				result = sqlSession.insert("mailMapper.insertStatus", status);
+				result3 = sqlSession.insert("mailMapper.insertStatus", status);
 			}			
 		}
 		
-		return result;
+		return result1 * result2 * result3;
 	}
 	
 	public int selectRecieveListCount(SqlSessionTemplate sqlSession, String userMail) {
 		return sqlSession.selectOne("mailMapper.selectRecieveListCount", userMail);
 	}
-	public ArrayList<Mail> selectRecieveList(SqlSessionTemplate sqlSession, String userMail, PageInfo pi){
+	public ArrayList<MailStatus> selectRecieveList(SqlSessionTemplate sqlSession, String userMail, PageInfo pi){
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
 		int limit = pi.getBoardLimit();	// 몇개 조회
@@ -79,6 +84,10 @@ public class MailDao {
 	}
 	public ArrayList<MailAttachment> selectAttachmentList(SqlSessionTemplate sqlSession, int mailNo){
 		return (ArrayList)sqlSession.selectList("mailMapper.selectAttachmentList", mailNo);
+	}
+	
+	public int selectSendListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectSendListCount", userMail);
 	}
 	
 }

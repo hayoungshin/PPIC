@@ -14,11 +14,15 @@ public interface MailService {
 	
 	// 2. 받은메일 리스트 조회 서비스
 	int selectRecieveListCount(String userMail);
-	ArrayList<Mail> selectRecieveList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectRecieveList(PageInfo pi, String userMail);
 
 	// 3. 받은메일 상세 조회 서비스
 	int selectReadStatus(MailStatus status);
 	int updateReadDate(MailStatus status);
 	Mail selectRecieve(MailStatus status);
 	ArrayList<MailAttachment> selectAttachmentList(int mailNo);
+	
+	// 4. 보낸메일 리스트 조회 서비스
+	int selectSendListCount(String userMail);
+	ArrayList<Mail> selectSendList(PageInfo pi, String userMail);
 }

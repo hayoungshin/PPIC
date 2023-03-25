@@ -42,7 +42,7 @@ public class MailController {
 		int listCount = mService.selectRecieveListCount(userMail);	// 전체 받은메일 개수
 
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-		ArrayList<Mail> list = mService.selectRecieveList(pi, userMail);
+		ArrayList<MailStatus> list = mService.selectRecieveList(pi, userMail);
 		
 		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/recieveMailListView");
 		return mv;
@@ -86,7 +86,7 @@ public class MailController {
 	}
 	
 	@RequestMapping("sendList.ml")
-	public String selectSendList() {
+	public String selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
 		return "mail/sendMailListView";
 	}
 	

@@ -29,9 +29,10 @@ public class MailServiceImpl implements MailService{
 		if(list.size() != 0) {	// 첨부파일이 넘어왔으면
 			result2 = mDao.sendAttachment(sqlSession, list);			
 		}
-		int result3 = mDao.insertStatus(sqlSession, status, m);
+		int result3 = mDao.insertSender(sqlSession, status);
+		int result4 = mDao.insertStatus(sqlSession, status, m);
 		
-		return result1 * result2 * result3;
+		return result1 * result2 * result3 * result4;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class MailServiceImpl implements MailService{
 	}
 
 	@Override
-	public ArrayList<Mail> selectRecieveList(PageInfo pi, String userMail) {
+	public ArrayList<MailStatus> selectRecieveList(PageInfo pi, String userMail) {
 		return mDao.selectRecieveList(sqlSession, userMail, pi);
 	}
 
@@ -62,6 +63,16 @@ public class MailServiceImpl implements MailService{
 	@Override
 	public ArrayList<MailAttachment> selectAttachmentList(int mailNo) {
 		return mDao.selectAttachmentList(sqlSession, mailNo);
+	}
+
+	@Override
+	public int selectSendListCount(String userMail) {
+		return mDao.selectSendListCount(sqlSession, userMail);
+	}
+
+	@Override
+	public ArrayList<Mail> selectSendList(PageInfo pi, String userMail) {
+		return null;
 	}
 
 	

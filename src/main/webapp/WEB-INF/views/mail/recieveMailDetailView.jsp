@@ -127,30 +127,25 @@
 		</tr>
 	</table>
 	<hr>
-	<div id="attachment-area">
-		<div style="margin-bottom:5px; font-size:14px;">
-			첨부파일
-			<c:choose>
-				<c:when test="${ fn:length(list) eq 0 }">
-					없음
-				</c:when>
-				<c:otherwise>
-					<span style="color:#6F50F8; font-weight:600;">${ fn:length(list) }</span>개 <br>
-				</c:otherwise>
-			</c:choose>
+	<c:if test="${ fn:length(list) ne 0 }">
+		<div id="attachment-area">
+			<div style="margin-bottom:5px; font-size:14px;">
+				첨부파일 <span style="color:#6F50F8; font-weight:600;">${ fn:length(list) }</span>개 <br>
+			</div>
+			<c:forEach var="f" items="${ list }">
+				<a href="${ f.changeName }" download="${ f.originName }">${ f.originName }</a> <br>
+			</c:forEach>
 		</div>
-		<c:forEach var="f" items="${ list }">
-			<a href="${ f.changeName }" download="${ f.originName }">${ f.originName }</a> <br>
-		</c:forEach>
-		 <div></div>
-	</div>
-	<hr>
+		<hr>
+	</c:if>
+
 	<div style="margin:10px 20px;">
 		<c:choose>
 			<c:when test="${ not empty m.mailContent }">
 				${ m.mailContent }
 			</c:when>
 			<c:otherwise>
+				<br>
 				(내용없음)
 			</c:otherwise>
 		</c:choose>
