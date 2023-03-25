@@ -61,16 +61,15 @@ public class MailController {
 		int result = 0;
 		if(readStatus == 1) {	// 읽었던 메일
 			// 메일기본정보
-			Mail m = mService.selectRecieve(no);
+			Mail m = mService.selectRecieve(status);
 			// 메일 첨부파일
 			ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
-			
 			mv.addObject("m", m).addObject("list", list).setViewName("mail/recieveMailDetailView");
 		} else {				// 안읽었던 메일
 			result = mService.updateReadDate(status);
 			//읽은 시간 먼저 업데이트
 			if(result > 0) {
-				Mail m = mService.selectRecieve(no);
+				Mail m = mService.selectRecieve(status);
 				ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
 				mv.addObject("m", m).addObject("list", list).setViewName("mail/recieveMailDetailView");
 			} else {

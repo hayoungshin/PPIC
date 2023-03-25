@@ -19,6 +19,6 @@ public interface MailService {
 	// 3. 받은메일 상세 조회 서비스
 	int selectReadStatus(MailStatus status);
 	int updateReadDate(MailStatus status);
-	Mail selectRecieve(int mailNo);
+	Mail selectRecieve(MailStatus status);
 	ArrayList<MailAttachment> selectAttachmentList(int mailNo);
 }
