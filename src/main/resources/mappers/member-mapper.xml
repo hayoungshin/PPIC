@@ -50,6 +50,7 @@
 		     , department_name as "DEPARTMENT"
 		     , profile_img
 		     , status
+		     , department_no
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)

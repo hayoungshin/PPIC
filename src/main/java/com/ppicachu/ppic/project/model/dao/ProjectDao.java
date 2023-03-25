@@ -25,8 +25,12 @@ public class ProjectDao {
 		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskList", projectNo);
 	}
 	
-	public ArrayList<ProjectParticipant> selectTaskParticipants(SqlSessionTemplate sqlSession, int taskNo) {
-		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskParticipants", taskNo);
+	public ArrayList<ArrayList<ProjectParticipant>> selectTaskParticipants(SqlSessionTemplate sqlSession, ArrayList<Task> tList) {
+		ArrayList<ArrayList<ProjectParticipant>> tpList = new ArrayList<>();
+		for(int i=0; i<tList.size(); i++) {
+			tpList.add((ArrayList)sqlSession.selectList("projectMapper.selectTaskParticipants", tList.get(i).getTaskNo()));
+		}
+		return tpList;
 	}
 	
 	public int selectCountTaskParticipants(SqlSessionTemplate sqlSession, int taskNo) {
@@ -63,6 +67,22 @@ public class ProjectDao {
 	
 	public int updateTask(SqlSessionTemplate sqlSession, Task t) {
 		return sqlSession.update("projectMapper.updateTask", t);
+	}
+	
+	public int deleteTaskParticipant(SqlSessionTemplate sqlSession, int taskNo) {
+		return sqlSession.delete("projectMapper.deleteTaskParticipant", taskNo);
+	}
+	
+	public int addTaskParticipant(SqlSessionTemplate sqlSession, ArrayList<ProjectParticipant> updateList) {
+		int result = 0;
+		for(int i=0; i<updateList.size(); i++) {
+			result += sqlSession.insert("projectMapper.addTaskParticipant", updateList.get(i));
+		}
+		return result;
+	}
+	
+	public int deleteTask(SqlSessionTemplate sqlSession, int taskNo) {
+		return sqlSession.delete("projectMapper.deleteTask", taskNo);
 	}
 	
 }

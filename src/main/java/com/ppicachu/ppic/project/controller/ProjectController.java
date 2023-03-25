@@ -1,23 +1,18 @@
 package com.ppicachu.ppic.project.controller;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.ppicachu.ppic.common.template.FileUpload;
+import com.ppicachu.ppic.member.model.service.MemberService;
+import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
 import com.ppicachu.ppic.project.model.service.ProjectService;
 import com.ppicachu.ppic.project.model.vo.Project;
@@ -30,16 +25,24 @@ public class ProjectController {
 	@Autowired
 	private ProjectService pService;
 	
+	@Autowired
+	private MemberService mService;
+	
 	// 로그인유저의 프로젝트 리스트 조회
 	@RequestMapping("list.pr")
 	public ModelAndView selectProjectList(@RequestParam(value="no")int userNo, ModelAndView mv) {
+		// 프로젝트 리스트
 		ArrayList<Project> pList = pService.selectProjectList(userNo);
-		mv.addObject("pList", pList).setViewName("project/currentProject");
+		// 부서 전체, 직원 전체
+		ArrayList<Department> dList = mService.selectDeptList();
+		ArrayList<Member> mList = mService.selectListMember();
 		
+		
+		mv.addObject("pList", pList).addObject("dList", dList).addObject("mList", mList).setViewName("project/currentProject");
 		return mv;
 	}
 	
-	// 프로젝트 참여자 상세정보 조회
+	// 프로젝트 상세정보 조회
 	@ResponseBody
 	@RequestMapping(value="detail.pr", produces="application/json; charset=UTF-8")
 	public String selectProjectParticipants(int projectNo) {
@@ -47,32 +50,23 @@ public class ProjectController {
 		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
 		// task 리스트
 		ArrayList<Task> tList = pService.selectTaskList(projectNo);
+		// task 참조자 리스트
+		ArrayList<ArrayList<ProjectParticipant>> tpList = pService.selectTaskParticipants(tList);
+		
 		// task 참조자 수
-		int tpCount = 0;
-		for(int i=0; i<tList.size(); i++) {
-			tpCount = pService.selectCountTaskParticipants(tList.get(i).getTaskNo());
-			tList.get(i).setRefPeopleCnt(tpCount);
-		}
+//		int tpCount = 0;
+//		for(int i=0; i<tList.size(); i++) {
+//			tpCount = pService.selectCountTaskParticipants(tList.get(i).getTaskNo());
+//			tList.get(i).setRefPeopleCnt(tpCount);
+//		}
 		
 		JSONObject jObj = new JSONObject();
 		jObj.put("ppList", ppList);
 		jObj.put("tList", tList);
-		
-		return new Gson().toJson(jObj);
-		
-	}
-	
-	// task참조자 리스트
-	@ResponseBody
-	@RequestMapping(value="tpList.tk", produces="application/json; charset=UTF-8")
-	public String selectTaskParticipants(int taskNo) {
-		// task 참조자 리스트
-		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(taskNo);
-		
-		JSONObject jObj = new JSONObject();
 		jObj.put("tpList", tpList);
 		
 		return new Gson().toJson(jObj);
+		
 	}
 	
 	// task drag&drop 상태변경
@@ -90,6 +84,22 @@ public class ProjectController {
 		
 		return (result > 0) ? "success" : "failed";
 	}
+		
+		
+	/*
+	// task참조자 리스트
+	@ResponseBody
+	@RequestMapping(value="tpList.tk", produces="application/json; charset=UTF-8")
+	public String selectTaskParticipants(int taskNo) {
+		// task 참조자 리스트
+		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(taskNo);
+		
+		JSONObject jObj = new JSONObject();
+		jObj.put("tpList", tpList);
+		
+		return new Gson().toJson(jObj);
+	}
+	
 	
 	// 프로젝트에 참여중인 부서/멤버 조회
 	@ResponseBody
@@ -188,8 +198,35 @@ public class ProjectController {
 		}
 		
 		int result = pService.updateTask(t);
+		Task t2 = pService.selectTaskDetail(t.getTaskNo());
 		
-		if(result > 0) {
+		// 참조자 정보 업데이트
+		// 기존 참조자 전체 지우기
+		int result2 = pService.deleteTaskParticipant(t.getTaskNo());
+		
+		// 새 참조자리스트 추가
+		ArrayList<ProjectParticipant> updateList = new ArrayList<>();
+		for(int i=0; i<selectUser.length; i++) {
+			ProjectParticipant p = new ProjectParticipant();
+			p.setProjectNo(t.getProjectNo());
+			p.setTaskNo(t.getTaskNo());
+			p.setUserNo(selectUser[i]);
+			p.setDepartmentNo(selectUserDept[i]);
+			updateList.add(p);
+		}
+		// assign 유저 추가
+		ProjectParticipant p = new ProjectParticipant();
+		p.setProjectNo(t2.getProjectNo());
+		p.setTaskNo(t2.getTaskNo());
+		p.setUserNo(t2.getAssignUser());
+		p.setDepartmentNo(t2.getDepartmentNo());
+		p.setTaskAssign("Y");
+		updateList.add(p);
+		
+		int	result3 = pService.addTaskParticipant(updateList);
+		
+		
+		if(result*result3 > 0) {
 			session.setAttribute("alertMsg", "업무가 수정되었습니다.");
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {
@@ -199,8 +236,22 @@ public class ProjectController {
 	}
 	
 	@RequestMapping("deleteTask.tk")
-	public String deleteTask(Task t) {
+	public String deleteTask(int taskNo, Model model, HttpSession session) {
+		// 업무 삭제
+		int result = pService.deleteTask(taskNo);
 		
-		return "";
+		int result2 = 0;
+		if(result > 0) {
+			// 참조자 삭제
+			result2 = pService.deleteTaskParticipant(taskNo);
+		}
+		if(result*result2 > 0) {
+			session.setAttribute("alertMsg", "업무가 삭제되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "업무 삭제 실패");
+			return "common/errorPage";
+		}
 	}
+	*/
 }
