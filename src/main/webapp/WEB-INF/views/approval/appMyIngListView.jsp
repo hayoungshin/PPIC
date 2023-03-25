@@ -142,10 +142,10 @@
 								+	"</tr>";
 						}else{
 							for(let i=0; i<map.agreeList.length; i++){
-								arr +=	"<tr>"
+								arr +=	"<tr class='trOver'>"
 									+		"<td>" + map.agreeList[i].userName + "</td>"
 									+		"<td>" + map.agreeList[i].form + "</td>"
-									+		"<td>" + map.agreeList[i].title + "</td>"
+									+		"<td class='titleTd'>" + map.agreeList[i].title + "</td>"
 									+		"<td>";
 								if(map.agreeList[i].originName != null){
 									arr +=		"<img src='resources/icons/clip.png' height='20px'>";

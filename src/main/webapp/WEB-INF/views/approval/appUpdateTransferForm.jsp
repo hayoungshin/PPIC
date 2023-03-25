@@ -170,15 +170,6 @@
 					}
 				});
 			}
-			
-			// 기존 값
-			for(let i=0; i<${ad.transfer.length}; i++){
-				$('select[name^=ftrList] option').each(function(index){
-					if($(this).eq(0).html() == '${ ad.transfer[0].promotePosition }'){
-						$(this).eq(0).prop('selected', true);
-					}
-				});
-			}
 		}
 		
 		// 승인자 추가
@@ -341,6 +332,20 @@
 			document.getElementById("title-area-selop").innerHTML += "<input type='hidden' name='tem' value='임시저장'>";
 		}
 	</script>
+	
+	<c:forEach var="t" items="${ ad.transfer }" varStatus="status">
+		<script>
+			// 기존 값
+			$(function(){
+				const $options = $('select[name^=ftrList]').eq(${status.index}).children();
+				for(let i=0; i<$options.length; i++){
+					if($options.eq(i).html() == '${ t.promotePosition }'){
+						$options.eq(i).prop('selected', true);
+					}
+				}
+			});
+		</script>
+	</c:forEach>
 	
 	<div id="content" align="center">
         <form action="insert.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">

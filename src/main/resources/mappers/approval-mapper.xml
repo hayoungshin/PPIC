@@ -150,7 +150,11 @@
 				ap.user_no in (
 		                       select user_no
 		                         from member
-		                        where department = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
+		                        where department = (
+		                        					 select department_no
+		                        					   from dept
+		                        					  where department_name = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
+		                        				   )
 		                      )
 			</if>
 			<if test="myi != 0 or dpi != 0">
@@ -211,7 +215,11 @@
 				ap.user_no in (
 		                       select user_no
 		                         from member
-		                        where department = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
+		                        where department = (
+		                        					 select department_no
+		                        					   from dept
+		                        					  where department_name = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
+		                        				   )
 		                      )
 			</if>
 			<if test="myi != 0 or dpi != 0">
@@ -271,7 +279,11 @@
 				ap.user_no in (
 		                       select user_no
 		                         from member
-		                        where department = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
+		                        where department = (
+		                        					 select department_no
+		                        					   from dept
+		                        					  where department_name = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
+		                        				   )
 		                      )
 			</if>
 		</where>
