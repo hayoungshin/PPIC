@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.ppicachu.ppic.common.template.FileUpload;
 import com.ppicachu.ppic.member.model.service.MemberService;
 import com.ppicachu.ppic.member.model.vo.Department;
 import com.ppicachu.ppic.member.model.vo.Member;
@@ -45,10 +48,12 @@ public class ProjectController {
 		return mv;
 	}
 	
+	
 	// 프로젝트 상세정보 조회
 	@ResponseBody
 	@RequestMapping(value="detail.pr", produces="application/json; charset=UTF-8")
 	public String selectProjectParticipants(int projectNo) {
+		//Project p = pService.selectProjectList(projectNo);
 		// 프로젝트 참여자 리스트
 		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
 		// task 리스트
@@ -72,6 +77,7 @@ public class ProjectController {
 		
 	}
 	
+	
 	// task drag&drop 상태변경
 	@ResponseBody
 	@RequestMapping("updateStatus.tk")
@@ -88,20 +94,22 @@ public class ProjectController {
 		return (result > 0) ? "success" : "failed";
 	}
 	
+	
 	// 프로젝트 생성
 	@RequestMapping("addProject.pr")
 	public String addProject(Project p, String projectManagerDept, HttpSession session, Model model) {
+		// 프로젝트 추가
+		int result = pService.insertProject(p);
+		
+		// 참여자 추가
 		ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
-		System.out.println(ppList);
 		for(int i=0; i<ppList.size(); i++) {
 			if(ppList.get(i).getUserNo() != null) {
-				ppList.get(i).setProjectNo(p.getProjectNo());
 				ppList.get(i).setPmStatus("N");
 			}else if(ppList.get(i).getUserNo() == null) {
 				ppList.remove(i);
 			}
 		}
-		System.out.println(ppList);
 		
 		// pm 추가
 		ProjectParticipant pm = new ProjectParticipant();
@@ -110,7 +118,7 @@ public class ProjectController {
 		pm.setPmStatus("Y");
 		ppList.add(pm);
 		
-		int result = pService.insertProject(p);
+		
 		
 		int result2 = 0;
 		if(result > 0) {
@@ -121,13 +129,57 @@ public class ProjectController {
 			session.setAttribute("alertMsg", "프로젝트가 생성되었습니다.");
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {
-			model.addAttribute("errorMsg", "프로젝트 생 실패");
+			model.addAttribute("errorMsg", "프로젝트 생성 실패");
 			return "common/errorPage";
 		}
 		
 		
 	}
+	
+	@RequestMapping("updteProject.pr")
+	public String updateProject(Project p, String projectManagerDept, HttpSession session, Model model) {
 		
+		// 프로젝트 업데이트
+		int result = pService.updateProject(p);
+		
+		
+		// 기존 참여자 정보 삭제
+		int result2 = 0;
+		int result3 = 0;
+		if(result > 0) {
+			result2 = pService.deleteProjectParticipants(p.getProjectNo());
+		
+			ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
+			for(int i=0; i<ppList.size(); i++) {
+				if(ppList.get(i).getUserNo() != null) {
+					ppList.get(i).setProjectNo(p.getProjectNo());
+					ppList.get(i).setPmStatus("N");
+				}else if(ppList.get(i).getUserNo() == null) {
+					ppList.remove(i);
+				}
+			}
+			
+			// pm 추가
+			ProjectParticipant pm = new ProjectParticipant();
+			pm.setProjectNo(p.getProjectNo());
+			pm.setUserNo(p.getProjectManager());
+			pm.setDepartmentNo(projectManagerDept);
+			pm.setPmStatus("Y");
+			ppList.add(pm);
+			result3 = pService.insertProjectParticipants(ppList);
+		}
+		
+		
+		
+		if(result*result3 > 0) {
+			session.setAttribute("alertMsg", "프로젝트가 수정되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "프로젝트 수정 실패");
+			return "common/errorPage";
+		}
+		
+	}
 		
 	/*
 	// task참조자 리스트
@@ -159,13 +211,12 @@ public class ProjectController {
 		jObj.put("eList", eList);
 		
 		return new Gson().toJson(jObj);
-	}
+	}*/
+	
 	
 	// task 추가
 	@RequestMapping("addTask.tk")
-	public String insertTask(Task t, MultipartFile upfile,
-						   String[] selectUser, String[] selectUserDept,
-						   HttpSession session, Model model) {
+	public String insertTask(Task t, String assignUserDept, MultipartFile upfile, HttpSession session, Model model) {
 		
 		// 첨부파일 업로드
 		if(!upfile.getOriginalFilename().equals("")) {
@@ -173,10 +224,29 @@ public class ProjectController {
 			t.setFilePath(saveFilePath);
 			t.setOriginName(upfile.getOriginalFilename());
 		}
-		
 		// task insert
 		int result1 = pService.insertTask(t);
 		
+		// 참여자 추가
+		ArrayList<ProjectParticipant> taskRefUser = t.getProjectParticipants();
+		for(int i=0; i<taskRefUser.size(); i++) {
+			if(taskRefUser.get(i).getUserNo() != null) {
+				taskRefUser.get(i).setProjectNo(t.getProjectNo());
+				taskRefUser.get(i).setTaskAssign("N");
+			}else if(taskRefUser.get(i).getUserNo() == null) {
+				taskRefUser.remove(i);
+			}
+		}
+		// task 담당자 추가
+		ProjectParticipant assign = new ProjectParticipant();
+		assign.setProjectNo(t.getProjectNo());
+		assign.setUserNo(t.getAssignUser());
+		assign.setDepartmentNo(assignUserDept);
+		assign.setTaskAssign("Y");
+		taskRefUser.add(assign);
+		
+		System.out.println(taskRefUser);
+		/*
 		// 참여자 정보 insert
 		ArrayList<ProjectParticipant> taskRefUser = new ArrayList<>();
 		for(int i=0; i<selectUser.length; i++) {
@@ -186,7 +256,8 @@ public class ProjectController {
 			p.setDepartmentNo(selectUserDept[i]);
 			taskRefUser.add(p);
 		}
-
+		*/
+		
 		int result2 = pService.insertTaskParticipants(taskRefUser);
 		if(result1*result2 > 0) {
 			session.setAttribute("alertMsg", "업무가 추가되었습니다.");
@@ -197,6 +268,8 @@ public class ProjectController {
 		}
 	}
 	
+	
+	/*
 	@ResponseBody
 	@RequestMapping(value="detail.tk", produces="application/json; charset=UTF-8")
 	public String selectTaskDetail(int taskNo, int projectNo) {

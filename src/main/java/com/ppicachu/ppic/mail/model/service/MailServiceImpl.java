@@ -71,8 +71,13 @@ public class MailServiceImpl implements MailService{
 	}
 
 	@Override
-	public ArrayList<Mail> selectSendList(PageInfo pi, String userMail) {
-		return null;
+	public ArrayList<MailStatus> selectSendList(PageInfo pi, String userMail) {
+		return mDao.selectSendList(sqlSession, userMail);
+	}
+
+	@Override
+	public Mail selectSend(int mailNo) {
+		return mDao.selectSend(sqlSession, mailNo);
 	}
 
 	

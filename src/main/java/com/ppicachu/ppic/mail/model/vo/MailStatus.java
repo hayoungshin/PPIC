@@ -25,4 +25,5 @@ public class MailStatus {
 	private String sentDate;
 	private String attachmentStatus;	// 0|1
 	
+	private String[] recipientArr;
 }

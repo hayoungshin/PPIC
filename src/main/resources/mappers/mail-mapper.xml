@@ -93,14 +93,12 @@
 		    mail_no
 		  , sender_mail
 		  , mail_type
-		  , important_status
 		  )
 		  values
 		  (
 		   seq_mailno.currval
 		  , #{senderMail}
 		  , 4
-		  , #{importantStatus}
 		  )
 		  
 	</insert>
@@ -175,7 +173,7 @@
 		     , ref_mail
 		     , hid_ref_mail
 		     , mail_content
-		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , to_char(sent_date, 'yy-mm-dd hh24:mi') sent_date
 		     , (
 		        select important_status
 		          from mail_status s
@@ -191,6 +189,53 @@
 		     , origin_name
 		     , change_name
 		  from mail_attachment
+		 where mail_no = #{mailNo}
+	</select>
+	
+	<select id="selectSendListCount" resultType="_int">
+		select 
+			   count(*)
+		  from mail_status
+		 where sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+	</select>
+	<select id="selectSendList" resultMap="mailStatusResult">
+		select s.mail_no
+		     , m.recipient_mail
+		     , mail_title
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+		 order
+		    by mail_no desc
+	</select>
+	<select id="selectSend" resultMap="mailResult">
+		select
+		       mail_no
+		     , sender_mail
+		     , mail_title
+		     , recipient_mail
+		     , ref_mail
+		     , hid_ref_mail
+		     , mail_content
+		     , to_char(sent_date, 'yy-mm-dd hh24:mi') sent_date
+		     , (
+		        select important_status
+		          from mail_status s
+		         where s.mail_no = m.mail_no
+		           and mail_type = 4
+		       ) important_status
+		  from mail m
 		 where mail_no = #{mailNo}
 	</select>
 	
