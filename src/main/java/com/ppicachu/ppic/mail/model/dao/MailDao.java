@@ -89,5 +89,11 @@ public class MailDao {
 	public int selectSendListCount(SqlSessionTemplate sqlSession, String userMail) {
 		return sqlSession.selectOne("mailMapper.selectSendListCount", userMail);
 	}
+	public ArrayList<MailStatus> selectSendList(SqlSessionTemplate sqlSession, String userMail){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectSendList", userMail);
+	}
+	public Mail selectSend(SqlSessionTemplate sqlSession, int mailNo) {
+		return sqlSession.selectOne("mailMapper.selectSend", mailNo);
+	}
 	
 }

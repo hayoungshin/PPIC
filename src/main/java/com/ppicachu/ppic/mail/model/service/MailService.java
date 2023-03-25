@@ -24,5 +24,8 @@ public interface MailService {
 	
 	// 4. 보낸메일 리스트 조회 서비스
 	int selectSendListCount(String userMail);
-	ArrayList<Mail> selectSendList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectSendList(PageInfo pi, String userMail);
+	
+	// 5. 보낸메일 상세 조회 서비스
+	Mail selectSend(int mailNo);
 }
