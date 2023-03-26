@@ -43,8 +43,22 @@
 
 	<div class="boardOuter"> 
         <div align="right" style="width:1200px;">
-            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            <button class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal" disabled>삭제</button>
         </div>
+        <script>
+	        $(function(){
+	        	$("input[name=deleteReport], #chkAll").change(function(){
+	       			$(this).each(function(){
+	       				if($("input[name=deleteReport]:checked").length > 0){
+	           				$("#modal-btn").prop("disabled", false);
+	           			}else{
+	           				$("#modal-btn").prop("disabled", true);
+	           			}
+	       			})
+	       		})
+	        })
+       		
+        </script>
         <br>
         <table class="table" id="report-table" style="width:1200px;">
             <thead>
