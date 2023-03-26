@@ -219,20 +219,35 @@
   insert
     into p_participant
     (
-	   project_no
-	 , task_no
+	   task_no
+	 , project_no
 	 , department_no
 	 , user_no
 	 , task_assign
   	)
   	values
   	(
-	  #{projectNo}
-	, seq_tkno.currval
-    , #{departmentNo}
-    , #{userNo}
-    , 'N'
+    <choose>
+	  	<when test='taskNo == 0'>
+	  		seq_tkno.currval
+	  	</when>
+	  	<otherwise>
+	  		#{taskNo}
+	  	</otherwise>
+	  </choose>
+	  , #{projectNo}
+	  , #{departmentNo}
+	  , #{userNo}
+	  <choose>
+	  	<when test='taskAssign == "Y"'>
+	  		, 'Y'
+	  	</when>
+	  	<otherwise>
+	  		, 'N'
+	  	</otherwise>
+	  </choose>
   	)
+  	
 </insert>
 
 <select id="selectTaskDetail" resultMap="taskResult">
@@ -306,5 +321,74 @@
 	 where task_no = #{taskNo}
 </delete>
 
+<insert id="insertProject">
+	insert
+	  into project
+	  (
+	  	project_no
+	  , project_manager
+	  , project_name
+	  , start_date
+	  , end_date
+	  , detail
+	  )
+	  values
+	  (
+	    seq_pjno.nextval
+	  , #{projectManager}
+	  , #{projectName}
+	  , #{startDate}
+	  , #{endDate}
+	  , #{detail}
+	  )
+</insert>
 
+<insert id="insertProjectParticipants">
+	insert
+	  into p_participant
+	  (
+	  	project_no
+	  , department_no
+	  , user_no
+	  , pm_status
+	  )
+	  values
+	  (
+  	  <choose>
+	  	<when test='projectNo == 0'>
+	  		seq_pjno.currval
+	  	</when>
+	  	<otherwise>
+	  		#{projectNo}
+	  	</otherwise>
+	  </choose>
+	  , #{departmentNo}
+	  , #{userNo}
+	  <choose>
+	  	<when test='pmStatus == "Y"'>
+	  		, 'Y'
+	  	</when>
+	  	<otherwise>
+	  		, 'N'
+	  	</otherwise>
+	  </choose>
+	  )
+</insert>
+
+<update id="updateProject">
+	update project
+	   set project_manager = #{projectManager}
+	   	 , project_name = #{projectName}
+	     , start_date = #{startDate}
+	     , end_date = #{endDate}
+	     , detail = #{detail}
+	     , modify_date = sysdate
+	 where project_no = #{projectNo}
+</update>
+
+<delete id="deleteProjectParticipants">
+	delete
+	  from p_participant
+	 where project_no = #{projectNo}
+</delete>
 </mapper>

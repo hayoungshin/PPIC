@@ -20,4 +20,10 @@ public class MailStatus {
 	private String importantStatus;
 	private String deleteDate;		// 삭제예정일
 	
+	// 받은 메일 리스트 조회용
+	private String mailTitle;
+	private String sentDate;
+	private String attachmentStatus;	// 0|1
+	
+	private String[] recipientArr;
 }

@@ -42,7 +42,7 @@ public class MailController {
 		int listCount = mService.selectRecieveListCount(userMail);	// 전체 받은메일 개수
 
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-		ArrayList<Mail> list = mService.selectRecieveList(pi, userMail);
+		ArrayList<MailStatus> list = mService.selectRecieveList(pi, userMail);
 		
 		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/recieveMailListView");
 		return mv;
@@ -86,13 +86,32 @@ public class MailController {
 	}
 	
 	@RequestMapping("sendList.ml")
-	public String selectSendList() {
-		return "mail/sendMailListView";
+	public ModelAndView selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		int listCount = mService.selectSendListCount(userMail);	// 전체 보낸메일 개수
+
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<MailStatus> list = mService.selectSendList(pi, userMail);
+		
+		for(MailStatus m : list) {
+			m.setRecipientArr(m.getRecipientMail().split(","));
+		}
+		
+		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/sendMailListView");
+		
+		return mv;
 	}
 	
 	@RequestMapping("sendDetail.ml")
-	public String selectsendMail() {
-		return "mail/sendMailDetailView";
+	public ModelAndView selectsendMail(int no, HttpSession session, ModelAndView mv) {
+		
+		// 메일기본정보
+		Mail m = mService.selectSend(no);
+		// 메일 첨부파일
+		ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+		mv.addObject("m", m).addObject("list", list).setViewName("mail/sendMailDetailView");
+		
+		return mv;
 	}
 	
 	@RequestMapping("importantList.ml")

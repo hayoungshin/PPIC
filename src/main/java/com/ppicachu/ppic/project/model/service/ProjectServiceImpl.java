@@ -96,6 +96,27 @@ public class ProjectServiceImpl implements ProjectService {
 		return pDao.deleteTask(sqlSession, taskNo);
 	}
 
+	@Override
+	public int insertProject(Project p) {
+		return pDao.insertProject(sqlSession, p);
+	}
+
+	@Override
+	public int insertProjectParticipants(ArrayList<ProjectParticipant> ppList) {
+		return pDao.insertProjectParticipants(sqlSession, ppList);
+	}
+
+	@Override
+	public int updateProject(Project p) {
+		return pDao.updateProject(sqlSession, p);
+	}
+
+	@Override
+	public int deleteProjectParticipants(int projectNo) {
+		return pDao.deleteProjectParticipants(sqlSession, projectNo);
+	}
+	
+
 	
 
 

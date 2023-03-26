@@ -79,7 +79,7 @@
 					</td>
 					<td style="width:70px; text-align:left;" onclick="toDetail();">
 						<c:choose>
-							<c:when test="${ m.readStatus eq '1' }">	<!-- 읽음 -->
+							<c:when test="${ not empty m.readDate }">	<!-- 읽음 -->
 								<img src="resources/icons/mail-opened.png" style="width:20px;">
 							</c:when>
 							<c:otherwise>	<!-- 안읽음 -->
@@ -90,7 +90,7 @@
 					<td style="width:200px" onclick="toDetail(this);">${ m.senderMail }</td>
 					<td style="width:750px" onclick="toDetail(this);">
 						${ m.mailTitle }
-						<c:if test="${ m.attachmentStatus eq '1' }">
+						<c:if test="${ m.attachmentStatus ne '0' }">
 							<img src="resources/icons/clip.png" style="width:18px; margin:0px 5px;">
 						</c:if>
 					</td>

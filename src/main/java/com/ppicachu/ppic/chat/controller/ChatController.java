@@ -87,9 +87,10 @@ public class ChatController {
 	
 	@ResponseBody
 	@RequestMapping("create.chat")
-	public int ajaxCreateChat(@RequestParam(value="participant[]") ArrayList<Integer> participant) {
+	public int ajaxCreateChat(@RequestParam(value="participant[]") ArrayList<Integer> participant, int groupSta) {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("groupCount", participant.size());
+		map.put("groupSta", groupSta);
 		int result1 = cService.insertChatRoom(map);
 		int result2 = cService.insertParticipant(participant);
 		
@@ -98,8 +99,8 @@ public class ChatController {
 	
 	@ResponseBody
 	@RequestMapping(value="open.chat", produces="application/json; charset=UTF-8")
-	public String ajaxOpenChat(int roomNo) {
-		ArrayList<Chat> list = cService.selectChat(roomNo);
+	public String ajaxOpenChat(Chat c) {
+		ArrayList<Chat> list = cService.selectChat(c);
 		return new Gson().toJson(list);
 	}
 	
@@ -137,6 +138,21 @@ public class ChatController {
 	@RequestMapping("notReadRoom.chat")
 	public int ajaxNotReadRoom(Chat c) {
 		int result = cService.selectNotReadRoom(c);
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("out.chat")
+	public int ajaxOutChat(Chat c) {
+		int result = 0;
+		if(c.getGroupSta() == 0) {
+			result = cService.updateExitDate(c);
+		}else {
+			int result1 = cService.updateExitDate(c);
+			int result2 = cService.updateGroupCount(c.getRoomNo());
+			result = result1 * result2;
+		}
+		
 		return result;
 	}
 	

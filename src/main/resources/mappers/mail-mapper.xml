@@ -27,6 +27,21 @@
 		<result column="change_name" property="changeName"/>
 	</resultMap>
 	
+	<resultMap id="mailStatusResult" type="MailStatus">
+		<result column="mail_no" property="mailNo"/>
+		<result column="sender_mail" property="senderMail"/>
+		<result column="recipient_mail" property="recipientMail"/>
+		<result column="mail_type" property="mailType"/>
+		<result column="read_date" property="readDate"/>
+		<result column="bin_status" property="binStatus"/>
+		<result column="important_status" property="importantStatus"/>
+		<result column="delete_date" property="deleteDate"/>
+		
+		<result column="mail_title" property="mailTitle"/>
+		<result column="sent_date" property="sentDate"/>
+		<result column="attachment_status" property="attachmentStatus"/>
+	</resultMap>
+	
 	<insert id="sendMail">
 		insert
 		  into mail
@@ -71,6 +86,23 @@
 		  )
 	</insert>
 	
+	<insert id="insertSender">
+		insert
+		  into mail_status
+		  (
+		    mail_no
+		  , sender_mail
+		  , mail_type
+		  )
+		  values
+		  (
+		   seq_mailno.currval
+		  , #{senderMail}
+		  , 4
+		  )
+		  
+	</insert>
+	
 	<insert id="insertStatus">
 		insert
 		  into mail_status
@@ -98,39 +130,23 @@
 		   and bin_status = 'N'
 	</select>
 	
-	<select id="selectRecieveList" resultMap="mailResult">
-		select
-		       mail_no
-		     , sender_mail
+	<select id="selectRecieveList" resultMap="mailStatusResult">
+		select s.mail_no
+		     , s.sender_mail
 		     , mail_title
 		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
-		     , (
-		        select important_status
-		          from mail_status s
-		         where m.mail_no = s.mail_no
-		           and recipient_mail = #{userMail}
-		       ) important_status
-		     , (
-		        select count(read_date)
-		          from mail_status s
-		         where m.mail_no = s.mail_no
-		           and recipient_mail = #{userMail}
-		       ) read_status
-		     , (
-		        select mail_type
-		          from mail_status s
-		         where m.mail_no = s.mail_no
-		           and recipient_mail = #{userMail}
-		       ) mail_type
+		     , important_status
+		     , read_date
+		     , mail_type
 		     , (
 		        select count(*)
-		          from mail_attachment at
-		         where m.mail_no = at.mail_no
-		       ) attachment_status
-		  from mail m
-		 where recipient_mail like '%' || #{userMail} || '%'
-		    or ref_mail like '%' || #{userMail} || '%'
-		    or hid_ref_mail like '%' || #{userMail} || '%'
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.recipient_mail = #{userMail}
+		   and bin_status = 'N'
 		 order
 		    by mail_no desc
 	</select>
@@ -157,7 +173,7 @@
 		     , ref_mail
 		     , hid_ref_mail
 		     , mail_content
-		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , to_char(sent_date, 'yy-mm-dd hh24:mi') sent_date
 		     , (
 		        select important_status
 		          from mail_status s
@@ -175,5 +191,53 @@
 		  from mail_attachment
 		 where mail_no = #{mailNo}
 	</select>
+	
+	<select id="selectSendListCount" resultType="_int">
+		select 
+			   count(*)
+		  from mail_status
+		 where sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+	</select>
+	<select id="selectSendList" resultMap="mailStatusResult">
+		select s.mail_no
+		     , m.recipient_mail
+		     , mail_title
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+		 order
+		    by mail_no desc
+	</select>
+	<select id="selectSend" resultMap="mailResult">
+		select
+		       mail_no
+		     , sender_mail
+		     , mail_title
+		     , recipient_mail
+		     , ref_mail
+		     , hid_ref_mail
+		     , mail_content
+		     , to_char(sent_date, 'yy-mm-dd hh24:mi') sent_date
+		     , (
+		        select important_status
+		          from mail_status s
+		         where s.mail_no = m.mail_no
+		           and mail_type = 4
+		       ) important_status
+		  from mail m
+		 where mail_no = #{mailNo}
+	</select>
+	
 	
 </mapper>

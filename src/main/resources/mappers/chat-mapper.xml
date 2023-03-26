@@ -7,13 +7,19 @@
 		<result column ="room_name" property="roomName" />
 		<result column ="notread_chat" property="notreadChat" />
 		<result column ="chat_content" property="chatContent" />
+		<result column ="out_msg" property="outMsg" />
 		<result column ="send_date" property="sendDate" />
 		<result column ="group_count" property="groupCount" />
+		<result column ="group_sta" property="groupSta" />
 		<result column ="send_no" property="sendNo" />
+		<result column ="send_date" property="sendDate" />
+		<result column ="send_date_d" property="sendDateD" />
 		<result column ="chat_no" property="chatNo" />
 		<result column ="not_read" property="notRead" />
 		<result column ="send_name" property="sendName" />
 		<result column ="send_profile" property="sendProfile" />
+		<result column ="modify_date" property="modifyDate" />
+		<result column ="exit_date" property="exitDate" />
 		<collection property="memList" resultMap="memberResult" />
 	</resultMap>
 	
@@ -29,6 +35,9 @@
 		<result column ="chat_like" property="chatLike" />
 		<result column = "room_no" property="roomNo"/>
 		<result column = "lastread_chat" property="lastreadChat"/>
+		<result column ="group_count" property="groupCount" />
+		<result column ="group_sta" property="groupSta" />
+		<result column ="exit_date_m" property="exitDate" />
 	</resultMap>
 
 	<update id="updateConn">
@@ -61,7 +70,7 @@
                                     join chatroom using(room_no)
                                     where user_no = m.user_no
                                       and user_no != #{userNo} 
-                                      and group_count = 2)) "room_no"
+                                      and group_sta = 'N')) "room_no"
 		  from member m
 		  join dept on (m.department = dept.department_no) 
 		  join position on (m.position = position.position_no)
@@ -118,6 +127,7 @@
 		       cr.room_no
 		     , room_name
 		     , group_count
+		     , group_sta
 		     , (select notread_chat
                   from participant
                 where user_no = ${participantNo}
@@ -126,6 +136,12 @@
 		     , to_char(modify_date, 'YYYY.MM.DD PM HH:MI') "send_date"
              , user_name
              , profile_img
+             , exit_date "exit_date_m"
+             , modify_date "send_date_d"
+             , (select exit_date
+                  from participant
+                  where user_no = #{participantNo}
+                    and room_no = cr.room_no) "exit_date"
 		  from chatroom cr
 		  join participant cp on(cr.room_no = cp.room_no)
 		  left join chat c on(cr.last_chat = c.chat_no)
@@ -151,11 +167,13 @@
 		  (
 		    room_no
 		  , group_count
+		  , group_sta
 		  )
 		  values
 		  (
 		    seq_chatroomno.nextval
 		  , #{groupCount}
+		  , #{groupSta}
 		  )
 	</insert>
 	
@@ -182,10 +200,14 @@
 		       r.room_no
 		     , room_name
 		     , group_count
+		     , group_sta
 		     , send_no
+		     , to_char(modify_date, 'YYYY.MM.DD PM HH:MI') "send_date"
+		     , send_date "send_date_d"
 		     , chat_no
 		     , chat_content
 		     , not_read
+		     , out_msg
 		     , m.user_name "send_name"
 		     , m.profile_img "send_profile"
 		     , p.user_no
@@ -193,6 +215,10 @@
 		     , mb.profile_img
 		     , mb.conn_sta
 		     , lastread_chat
+		     , (select exit_date
+                  from participant
+                 where user_no = #{participantNo}
+                   and room_no = #{roomNo}) "exit_date"
 		  from chatroom r
 		  left join chat c on(r.room_no = c.room_no)
 		  left join member m on(send_no = user_no)
@@ -211,6 +237,7 @@
 		  , send_no
 		  , chat_content
 		  , not_read
+		  , out_msg
 		  )
 		  values
 		  (
@@ -219,6 +246,7 @@
 		  , #{sendNo}
 		  , #{chatContent}
 		  , #{notRead}
+		  , #{outMsg}
 		  )
 	</insert>
 	
@@ -255,6 +283,7 @@
 	<select id="selectChatRoom" resultMap="chatResult">
 		select 
 		       room_no
+		     , group_count
 		  from chatroom
 		 where room_no = #{roomNo}
 	</select>
@@ -323,13 +352,17 @@
                   from chat_like
                  where myuser_no = #{participantNo}
                    and likeuser_no = m.user_no) "chat_like"
-             , room_no
+             , p.room_no
+             , group_count
+             , group_sta
+             , exit_date "exit_date_m"
 		  from member m
 		  join dept on (m.department = dept.department_no) 
 		  join position on (m.position = position.position_no)
           join participant p on(m.user_no = p.user_no)
+          join chatroom cr on(p.room_no = cr.room_no)
 		 where status='Y'
-		   and room_no = #{roomNo}
+		   and p.room_no = #{roomNo}
 	</select>
 	
 	<update id="updateRoomName">
@@ -342,7 +375,13 @@
 	<select id="selectNotRead" resultType="_int">
 		select nvl(sum(notread_chat), 0)
 		  from participant
+          join chatroom using(room_no)
 		 where user_no = #{userNo}
+           and (group_sta = 1 
+           and exit_date is null 
+            or group_sta = 0
+           and (exit_date <![CDATA[<]]> modify_date
+            or exit_date is null))
 	</select>
 	
 	<select id="selectNotReadRoom" resultType="_int">
@@ -351,4 +390,19 @@
 		 where user_no = #{participantNo}
 		   and room_no = #{roomNo}
 	</select>
+	
+	<update id="updateExitDate">
+		update
+		       participant
+		   set exit_date = sysdate
+		 where room_no = #{roomNo}
+		   and user_no = #{userNo}
+	</update>
+	
+	<update id="updateGroupCount">
+		update
+		       chatroom
+		   set group_count = group_count - 1
+		 where room_no = #{roomNo}
+	</update>
 </mapper>

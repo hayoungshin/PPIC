@@ -8,7 +8,7 @@ import com.ppicachu.ppic.project.model.vo.ProjectParticipant;
 import com.ppicachu.ppic.project.model.vo.Task;
 
 public interface ProjectService {
-	// 프로젝트 조회
+	// 프로젝트 리스트 조회
 	ArrayList<Project> selectProjectList(int userNo);
 	
 	// 프로젝트 참여자정보 조회
@@ -47,5 +47,17 @@ public interface ProjectService {
 	
 	// task 삭제
 	int deleteTask(int taskNo);
+	
+	// project 추가
+	int insertProject(Project p);
+	// project참여자 추가
+	int insertProjectParticipants(ArrayList<ProjectParticipant> ppList);
+	
+	// project 수정
+	int updateProject(Project p);
+	
+	// project 참여자 전체 삭제
+	int deleteProjectParticipants(int projectNo);
+	
 	
 }
