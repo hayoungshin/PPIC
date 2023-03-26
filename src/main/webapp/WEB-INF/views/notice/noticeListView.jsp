@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,10 +21,12 @@
         document.getElementsByClassName("menus")[0].className += ' clicked';
     </script>
     <div class="boardOuter">
-		<!-- 글쓰기 버튼 관리자만 보여짐 -->
-	    <div align="right">
-	        <a href="enrollForm.no" class="btn" id="write">글쓰기</a>
-	    </div>
+    	<c:set var = "authorityNo" value = "${loginUser.authorityNo}"/>
+		<c:if test="${fn:contains(authorityNo, '0') or fn:contains(authorityNo, '3')}">
+		    <div align="right">
+		        <a href="enrollForm.no" class="btn" id="write">글쓰기</a>
+		    </div>
+	    </c:if>
 	    <br>
 	    <table class="table" id="noticeList">
 	        <thead>
@@ -124,7 +127,7 @@
 	            	</c:choose>
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage ne pi.maxPage }">
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
 	            	<li><a href="list.no?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>

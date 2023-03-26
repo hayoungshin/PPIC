@@ -75,7 +75,7 @@
         </script>
         
         <div id="paging">
-            <ul>
+	       	<ul>
           		<c:if test="${ pi.currentPage ne 1 }">
               		<li><a href="list.bo?cpage=${ pi.currentPage - 1 } "><</a></li>
               	</c:if>
@@ -103,10 +103,9 @@
 			            	</c:choose>
 	            		</c:otherwise>
 	            	</c:choose>
-	            	
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage ne pi.maxPage }">
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
 	            	<li><a href="list.bo?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>

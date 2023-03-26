@@ -195,7 +195,7 @@ public class BoardController {
 		
 		if(result > 0) {
 			session.setAttribute("alertMsg", "게시글 신고 완료되었습니다.");
-			return "redirect:list.bo";
+			return "redirect:detail.bo?userNo=" + r.getReportMno() + "&no=" + r.getReportBno();
 		} else {
 			m.addAttribute("errorMsg", "게시글 신고 실패");
 			return "common/errorPage";
@@ -234,10 +234,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping("deleteReport.bo")
-	public String deleteReport(int reportNo, HttpSession session, Model m) {
-		int result = bService.deleteReport(reportNo);
-		
-		if(result > 0) {
+	public String deleteReport(String reportNo, HttpSession session, Model m) {
+		String[] reportArr = reportNo.split(",");
+		int result = bService.deleteReport(reportArr);
+		if(result != 0) {
 			session.setAttribute("alertMsg", "성공적으로 신고 삭제 되었습니다.");
 			return "redirect:manage.bo";
 		} else {

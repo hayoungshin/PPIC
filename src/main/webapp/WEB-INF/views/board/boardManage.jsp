@@ -117,13 +117,15 @@
 			})
 			
 			$("#modal-btn").click(function(){
-				let reportNo = "";
+				let arr = [];
 	         	$("input[name=deleteReport]:checked").each(function(){
-	         		 let arr = $(this).val(); 
-	         		 reportNo += arr + ","
+	         		 arr.push($(this).val()); 
 	         	})
-	         	reportNo = reportNo.substring(0, reportNo.length-1);
-	            $("#deleteModal input[name=reportNo]").val(reportNo);
+	            $("#deleteModal input[name=reportNo]").val(arr);
+			})
+			$(function(){
+				console.log(${ pi.startPage})
+				console.log(${ pi.endPage})
 			})
 	    </script>
 				    
@@ -144,7 +146,7 @@
 	            	</c:choose>
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage ne pi.maxPage }">
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
 	            	<li><a href="manage.bo?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>

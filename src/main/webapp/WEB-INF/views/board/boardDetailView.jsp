@@ -70,10 +70,16 @@
                     <div class="dropdown btn-align">
                         <img src="resources/icons/dots.png" class="dropdown-toggle" data-toggle="dropdown" height="15" width="15">
                         <div class="dropdown-menu">
-                            <c:if test="${ loginUser.userNo eq b.boardWriter }">
-	                            <a class="dropdown-item" href="#" onclick="postFormSubmit(1)">수정</a>
-	                            <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#deleteModal">삭제</a>
-                            </c:if>
+                        	<c:choose>
+	                            <c:when test="${ loginUser.userNo eq b.boardWriter }">
+		                            <a class="dropdown-item" href="#" onclick="postFormSubmit(1)">수정</a>
+		                            <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#deleteModal">삭제</a>
+	                            </c:when>
+	                            <c:otherwise>
+	                            	<a class="dropdown-item" style="color:lightgray;">수정</a>
+		                            <a class="dropdown-item" style="color:lightgray;">삭제</a>
+	                            </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </td>
@@ -208,9 +214,9 @@
             <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
+                	<div align="right"><button type="button" class="close" data-dismiss="modal">&times;</button></div><br>
 	                <div align="center" id="message">
 	                    <p></p>
-	                    <a class="btn" data-dismiss="modal" id="exit-btn">확인</a>
 	                </div>
                 </div>
             </div>
