@@ -97,18 +97,20 @@ public class ProjectController {
 	
 	// 프로젝트 생성
 	@RequestMapping("addProject.pr")
-	public String addProject(Project p, String projectManagerDept, HttpSession session, Model model) {
+	public String addProject(Project p, String projectManagerDept, 
+							 String[] selectUserNo, String[] selectUserDept,
+							 HttpSession session, Model model) {
 		// 프로젝트 추가
 		int result = pService.insertProject(p);
 		
 		// 참여자 추가
-		ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
-		for(int i=0; i<ppList.size(); i++) {
-			if(ppList.get(i).getUserNo() != null) {
-				ppList.get(i).setPmStatus("N");
-			}else if(ppList.get(i).getUserNo() == null) {
-				ppList.remove(i);
-			}
+		ArrayList<ProjectParticipant> ppList = new ArrayList<>();
+		for(int i=0; i<selectUserNo.length; i++) {
+			ProjectParticipant pp = new ProjectParticipant();
+			pp.setUserNo(selectUserNo[i]);
+			pp.setDepartmentNo(selectUserDept[i]);
+			pp.setPmStatus("N");
+			ppList.add(pp);
 		}
 		
 		// pm 추가
@@ -137,7 +139,9 @@ public class ProjectController {
 	}
 	
 	@RequestMapping("updteProject.pr")
-	public String updateProject(Project p, String projectManagerDept, HttpSession session, Model model) {
+	public String updateProject(Project p, String projectManagerDept,
+								String[] selectUserNo, String[] selectUserDept,
+								HttpSession session, Model model) {
 		
 		// 프로젝트 업데이트
 		int result = pService.updateProject(p);
@@ -149,14 +153,14 @@ public class ProjectController {
 		if(result > 0) {
 			result2 = pService.deleteProjectParticipants(p.getProjectNo());
 		
-			ArrayList<ProjectParticipant> ppList = p.getProjectParticipants();
-			for(int i=0; i<ppList.size(); i++) {
-				if(ppList.get(i).getUserNo() != null) {
-					ppList.get(i).setProjectNo(p.getProjectNo());
-					ppList.get(i).setPmStatus("N");
-				}else if(ppList.get(i).getUserNo() == null) {
-					ppList.remove(i);
-				}
+			ArrayList<ProjectParticipant> ppList = new ArrayList<>();
+			for(int i=0; i<selectUserNo.length; i++) {
+				ProjectParticipant pp = new ProjectParticipant();
+				pp.setProjectNo(p.getProjectNo());
+				pp.setUserNo(selectUserNo[i]);
+				pp.setDepartmentNo(selectUserDept[i]);
+				pp.setPmStatus("N");
+				ppList.add(pp);
 			}
 			
 			// pm 추가
@@ -216,7 +220,9 @@ public class ProjectController {
 	
 	// task 추가
 	@RequestMapping("addTask.tk")
-	public String insertTask(Task t, String assignUserDept, MultipartFile upfile, HttpSession session, Model model) {
+	public String insertTask(Task t, String assignUserDept, 
+							 String[] selectUserNo, String[] selectUserDept,
+							 MultipartFile upfile, HttpSession session, Model model) {
 		
 		// 첨부파일 업로드
 		if(!upfile.getOriginalFilename().equals("")) {
@@ -227,16 +233,16 @@ public class ProjectController {
 		// task insert
 		int result1 = pService.insertTask(t);
 		
-		// 참여자 추가
-		ArrayList<ProjectParticipant> taskRefUser = t.getProjectParticipants();
-		for(int i=0; i<taskRefUser.size(); i++) {
-			if(taskRefUser.get(i).getUserNo() != null) {
-				taskRefUser.get(i).setProjectNo(t.getProjectNo());
-				taskRefUser.get(i).setTaskAssign("N");
-			}else if(taskRefUser.get(i).getUserNo() == null) {
-				taskRefUser.remove(i);
+		// 참조자 추가
+		ArrayList<ProjectParticipant> taskRefUser =  new ArrayList<>();
+		for(int i=0; i<selectUserNo.length; i++) {
+				ProjectParticipant pp = new ProjectParticipant();
+				pp.setUserNo(selectUserNo[i]);
+				pp.setDepartmentNo(selectUserDept[i]);
+				pp.setProjectNo(t.getProjectNo());
+				pp.setTaskAssign("N");
+				taskRefUser.add(pp);
 			}
-		}
 		// task 담당자 추가
 		ProjectParticipant assign = new ProjectParticipant();
 		assign.setProjectNo(t.getProjectNo());
@@ -244,19 +250,6 @@ public class ProjectController {
 		assign.setDepartmentNo(assignUserDept);
 		assign.setTaskAssign("Y");
 		taskRefUser.add(assign);
-		
-		System.out.println(taskRefUser);
-		/*
-		// 참여자 정보 insert
-		ArrayList<ProjectParticipant> taskRefUser = new ArrayList<>();
-		for(int i=0; i<selectUser.length; i++) {
-			ProjectParticipant p = new ProjectParticipant();
-			p.setProjectNo(t.getProjectNo());
-			p.setUserNo(selectUser[i]);
-			p.setDepartmentNo(selectUserDept[i]);
-			taskRefUser.add(p);
-		}
-		*/
 		
 		int result2 = pService.insertTaskParticipants(taskRefUser);
 		if(result1*result2 > 0) {

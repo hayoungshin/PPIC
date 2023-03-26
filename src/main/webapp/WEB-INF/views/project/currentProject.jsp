@@ -753,7 +753,6 @@
         let selectUserName = ""; // 유저명
         let selectUserNo = ""; // 유저번호
         let selectUserPs = ""; // 유저직위
-        let n = 0;
         $("#p-mem-select2").change(function(){
           $(".invalidMsg").css("display", "none");
           selectedEl = $("#p-mem-select2 option:selected");
@@ -766,10 +765,9 @@
             $(".invalidMsg").css("display", "block");
           }else{
             taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
-                        + "<input type='hidden' name='projectParticipants[" + n + "].userNo' value='" + selectUserNo + "'>"
-                        + "<input type='hidden' name='projectParticipants[" + n + "].departmentNo' value='" + selectUserDept + "'>";
+                        + "<input type='hidden' name='selectUserNo' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
                         + "</div>";
-            n++;
             $("#selected-area").append(taskRefUser);
             $(".invalidMsg").css("display", "none");
           }
@@ -779,7 +777,6 @@
         // 선택유저 삭제하기
         function deleteUser(e){
           $(e).remove();
-          n--;
         }
 
       </script>
@@ -908,7 +905,6 @@
         })
 
 
-        let k = 0;
         $("#p-mem-select4").change(function(){
           $(".invalidMsg").css("display", "none");
           selectedEl = $("#p-mem-select4 option:selected");
@@ -920,21 +916,14 @@
           if($("#selected-area2").text().includes(selectUserName)){
             $(".invalidMsg").css("display", "block");
           }else{
-            taskRefUser = "<div class='select-user' onclick='deleteUser2(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
-                        + "<input type='hidden' name='projectParticipants[" + k + "].userNo' value='" + selectUserNo + "'>"
-                        + "<input type='hidden' name='projectParticipants[" + k + "].departmentNo' value='" + selectUserDept + "'>";
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
+                        + "<input type='hidden' name='selectUserNo' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
                         + "</div>";
-            k++;
             $("#selected-area2").append(taskRefUser);
             $(".invalidMsg").css("display", "none");
           }
         })
-
-        // 선택유저 삭제하기
-        function deleteUser2(e){
-          $(e).remove();
-          k--;
-        }
 
       </script>
 
@@ -1035,7 +1024,7 @@
          $("#add-task-modal").modal("show");
 
         }
-        let l = 0;
+        
         $("#emp-select1").change(function(){
           $(".invalidMsg").css("display", "none");
           selectedEl = $("#emp-select1 option:selected");
@@ -1047,25 +1036,14 @@
           if($("#selected-area3").text().includes(selectUserName)){
             $(".invalidMsg").css("display", "block");
           }else{
-            taskRefUser = "<div class='select-user' onclick='deleteUser3(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
-                        + "<input type='hidden' name='projectParticipants[" + l + "].userNo' value='" + selectUserNo + "'>"
-                        + "<input type='hidden' name='projectParticipants[" + l + "].departmentNo' value='" + selectUserDept + "'>";
+            taskRefUser = "<div class='select-user' onclick='deleteUser(this);'>" + selectUserName + " " + selectUserPs + "<img src='resources/icons/delete-red.png'>"
+                        + "<input type='hidden' name='selectUserNo' value='" + selectUserNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + selectUserDept + "'>";
                         + "</div>";
-            l++;
             $("#selected-area3").append(taskRefUser);
             $(".invalidMsg").css("display", "none");
           }
         })
-
-        // 선택유저 삭제하기
-        function deleteUser3(e){
-          $(e).remove();
-          l--;
-        }
-
-        
-       
-      
 
       
       </script>
