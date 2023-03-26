@@ -15,7 +15,7 @@
 	<script>
 		window.onload = function(){
 			// 전체문서관리 count
-			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
+			document.getElementById("menu-area").innerHTML += "전체문서관리 <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
@@ -59,13 +59,12 @@
 			let ckNoArr = [];
 			let ckedCnt = 0;
 			for(let i=0; i<bx.length; i++){
-				/* if(bx[i].checked){
+				if(bx[i].checked){
 					ckedCnt += 1;
-					ckNoArr.push(bx[i].previousElementSibling.value);
-				} */
-				console.log(bx[i]);
+					ckNoArr.push(bx[i].parentElement.previousElementSibling.value);
+				}
 			}
-			/* if(ckedCnt == 0){
+			if(ckedCnt == 0){
 				alert('선택된 결재문서가 없습니다.');
 				return false;
 			} else if(confirm(ckedCnt + '개의 결재문서를 삭제하시겠습니까?')){
@@ -79,7 +78,7 @@
 						console.log("삭제용 ajax통신 실패");
 					}
 				});
-			} */
+			}
 			return false;
 		}
 	</script>

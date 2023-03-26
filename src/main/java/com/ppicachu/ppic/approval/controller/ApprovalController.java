@@ -2,6 +2,7 @@ package com.ppicachu.ppic.approval.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -55,12 +56,6 @@ public class ApprovalController {
 			int listCount = aService.selectMaListCount(md);
 			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 			ArrayList<Approval> list = aService.selectMaList(md, pi);
-			m.addAttribute("pi", pi);
-			m.addAttribute("list", list);
-		} else if(md.getMye() != 0 || md.getDpe() != 0) { // 개인-기안-완료, 부서-완료
-			int listCount = aService.selectListCount(md);
-			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-			ArrayList<Approval> list = aService.selectEdList(md, pi);
 			m.addAttribute("pi", pi);
 			m.addAttribute("list", list);
 		} else if(md.getMyt() != 0) { // 개인-기안-임시저장
@@ -141,7 +136,6 @@ public class ApprovalController {
 		if(no.contains(",")) {
 			noArr = no.split(",");
 		}
-		
 		int result = aService.deleteApproval(noArr);
 		
 		return result;
@@ -152,7 +146,22 @@ public class ApprovalController {
 	 */
 	@ResponseBody
 	@RequestMapping("removeApproval.ap")
-	public int AjaxRemoveApproval(ArrayList<Approval> aList) {
+	public int AjaxRemoveApproval(String no, String form) {
+		String[] noArr = {no};
+		if(no.contains(",")) {
+			noArr = no.split(",");
+		}
+		String[] formArr = {form};
+		if(form.contains(",")) {
+			formArr = form.split(",");
+		}
+		ArrayList<Approval> aList = new ArrayList<>();
+		for(int i=0; i<noArr.length; i++) {
+			Approval a = new Approval();
+			a.setApprovalNo(Integer.parseInt(noArr[i]));
+			a.setForm(formArr[i]);
+			aList.add(a);
+		}
 		int result = aService.removeApproval(aList);
 		
 		return result;
@@ -168,7 +177,6 @@ public class ApprovalController {
 		if(no.contains(",")) {
 			noArr = no.split(",");
 		}
-		
 		int result = aService.recoverApproval(noArr);
 		
 		return result;
@@ -230,6 +238,7 @@ public class ApprovalController {
 			ac.setRole("변경");
 			int result2 = aService.insertChange(ac);
 		}
+		
 		return result;
 	}
 	
@@ -426,5 +435,23 @@ public class ApprovalController {
 		return page;
 	}
 	
+	/**
+	 * 상신취소
+	 */
+	@RequestMapping("cancelApproval.ap")
+	public String cancelApproval(Approval a, Model m) {
+		// update approvalStatus
+		int result = aService.updateApprovalStatus(a);
+		
+		// updateForm
+		String page = updateForm(a.getApprovalNo(), a.getForm(), m);
+		
+		return page;
+	}
+	
 	/* 검색? */
+	@RequestMapping("search.ap")
+	public String search() {
+		return "approval/appSearchListView";
+	}
 }

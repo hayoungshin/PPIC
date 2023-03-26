@@ -221,6 +221,11 @@
 				}
 			});
 		}
+		
+		// 상신취소
+		function cancel(){
+			location.href="cancelApproval.ap?approvalNo=${ad.approvalNo}&form=${ad.app.form}";
+		}
 	</script>
 
 	<div id="content" align="center">
@@ -235,9 +240,11 @@
                 <div class="first-1-2">
                    	
 					<c:if test="${ ad.app.userName eq loginUser.userName }"><!-- 관리자일경우 삭제? -->
-						<div class="btn-align">
-				   			<div class="three-btn btnn-gr">상신취소</div>
-						</div>
+						<c:if test="${ ad.app.approvalStatus ne '승인' and ad.app.approvalStatus ne '반려' }">
+							<div class="btn-align">
+					   			<div class="three-btn btnn-gr" onclick="return cancel();">상신취소</div>
+							</div>
+						</c:if>
 						<div class="btn-align">
 				   			<div class="three-btn btnn-rd" onclick="return ajaxDel();">삭제</div>
 						</div>

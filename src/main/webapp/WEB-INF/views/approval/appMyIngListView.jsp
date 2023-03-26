@@ -15,7 +15,7 @@
 	<script>
 		window.onload = function(){
 			// 개인-기안-진행중 count
-			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
+			document.getElementById("menu-area").innerHTML += "개인 &gt; 기안 &gt; 진행중 <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 승인필요 block
 			document.getElementById("switch-area").style = 'display:block';
@@ -220,10 +220,10 @@
 			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 				<c:choose>
 					<c:when test="${ p eq pi.currentPage }">
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
+						<a href="list.ap?myi=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
 					</c:when>
 					<c:otherwise>
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+						<a href="list.ap?myi=1&cpage=${ p }" class="btnn-pp">${ p }</a>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

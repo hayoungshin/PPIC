@@ -45,9 +45,6 @@ public interface ApprovalService {
 	int selectListCount(MyDept md); // + 개인-기안-완료 / 부서-완료
 	ArrayList<Approval> selectList(MyDept md, PageInfo pi);
 	
-	// <조회> 개인-기안-완료 / 부서-완료 목록 페이지 조회 서비스 (페이징)
-	ArrayList<Approval> selectEdList(MyDept md, PageInfo pi);
-	
 	// <조회> 개인-기안-임시저장 목록 페이지 조회 서비스 (페이징)
 	int selectTemListCount(MyDept md);
 	ArrayList<Approval> selectTemList(MyDept md, PageInfo pi);
@@ -89,6 +86,9 @@ public interface ApprovalService {
 	// <상세> 결재선 update
 	int updateProcess(AppProcess ap);
 	int updateCurrentOrder(Approval a);
+	
+	// <상세> 결재상태 update
+	int updateApprovalStatus(Approval a);
 	
 	
 	/* delete */

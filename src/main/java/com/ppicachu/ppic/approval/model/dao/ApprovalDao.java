@@ -33,13 +33,6 @@ public class ApprovalDao {
 		return (ArrayList)sqlSession.selectList("approvalMapper.selectList", md, rowBounds);
 	}
 
-	public ArrayList<Approval> selectEdList(SqlSessionTemplate sqlSession, MyDept md, PageInfo pi) {
-		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
-		int limit = pi.getBoardLimit();
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		return (ArrayList)sqlSession.selectList("approvalMapper.selectEdList", md, rowBounds);
-	}
-
 	public int selectTemListCount(SqlSessionTemplate sqlSession, MyDept md) {
 		return sqlSession.selectOne("approvalMapper.selectTemListCount", md);
 	}
@@ -200,5 +193,9 @@ public class ApprovalDao {
 			result = sqlSession.insert("approvalMapper.insertCash", fcaList.get(i));
 		}
 		return result;
+	}
+
+	public int updateApprovalStatus(SqlSessionTemplate sqlSession, Approval a) {
+		return sqlSession.update("approvalMapper.updateApprovalStatus", a);
 	}
 }

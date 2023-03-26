@@ -15,11 +15,29 @@
 	<script>
 		window.onload = function(){
 			// 개인-중요 count
-			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
+			document.getElementById("menu-area").innerHTML += "개인 &gt; 중요 <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
 			for(let i=0; i<tr.length; i++){
+				// 삭제버튼 mouseover
+				tr[i].addEventListener("mouseover", function(){
+					const writer = this.childNodes[3].childNodes[1].childNodes[1].innerHTML;
+					const btn = this.childNodes[3].childNodes[1].childNodes[3]
+					if(writer == '${loginUser.userName}'){
+						btn.style = 'position:absolute; top:-4px; left:25px; display:block;';
+					}
+				});
+				
+				// 삭제버튼 mouseout
+				tr[i].addEventListener("mouseout", function(){
+					const writer = this.childNodes[3].childNodes[1].childNodes[1].innerHTML;
+					const btn = this.childNodes[3].childNodes[1].childNodes[3]
+					if(writer == '${loginUser.userName}'){
+						btn.style = 'position:absolute; top:-4px; left:25px; display:none;';
+					}
+				});
+				
 				// 상세 onclick
 				tr[i].childNodes[7].addEventListener("click", function(){
 					const no = this.parentNode.childNodes[1].value;
@@ -48,6 +66,24 @@
 					console.log("중요용 ajax통신 실패");
 				}
 			});
+		}
+		
+		// Ajax 삭제 update
+		function del(){
+			if(confirm('결재문서를 삭제하시겠습니까?')){
+				const el = window.event.target;
+				const no = el.parentNode.parentNode.parentNode.childNodes[1].value;
+				$.ajax({
+					url:"deleteApproval.ap?no=" + no,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}, error:function(){
+						console.log("삭제용 ajax통신 실패");
+					}
+				});
+			}
 		}
 	</script>
 	
@@ -78,7 +114,12 @@
 		                <c:forEach var="a" items="${ list }">
 			                <tr class="trOver">
 			                    <input type="hidden" name="approvalNo" value="${ a.approvalNo }">
-			                    <td>${ a.userName }</td>
+			                    <td>
+			                    	<div style="position:relative;">
+			                    		<span>${ a.userName }</span>
+				                    	<div class="btnn-rd" style="position:absolute; top:-4px; left:25px; display:none;" onclick="return del();">삭제</div>
+				                    </div>
+			                    </td>
 			                    <td>${ a.form }</td>
 			                    <td class="titleTd">${ a.title }</td>
 			                    <td>
@@ -133,10 +174,10 @@
 			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 				<c:choose>
 					<c:when test="${ p eq pi.currentPage }">
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
+						<a href="list.ap?myb=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
 					</c:when>
 					<c:otherwise>
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+						<a href="list.ap?myb=1&cpage=${ p }" class="btnn-pp">${ p }</a>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

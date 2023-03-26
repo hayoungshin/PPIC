@@ -15,7 +15,7 @@
 	<script>
 		window.onload = function(){
 			// 개인-기안-임시저장 count
-			//document.getElementById("").innerHTML += " <span style='color:#fdbaba;'>${pi.listCount}</span>";
+			document.getElementById("menu-area").innerHTML += "개인 &gt; 기안 &gt; 임시저장 <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
@@ -51,6 +51,37 @@
 				ckMode = true;
 			}
 			document.getElementById("allCkBox").checked = ckMode;
+		}
+		
+		// Ajax 영구삭제 delete
+		function remove(){
+			const bx = document.getElementsByClassName("ckBoxes");
+			let ckNoArr = [];
+			let formArr = [];
+			let ckedCnt = 0;
+			for(let i=0; i<bx.length; i++){
+				if(bx[i].checked){
+					ckedCnt += 1;
+					ckNoArr.push(bx[i].parentElement.previousElementSibling.value);
+					formArr.push(bx[i].parentElement.nextElementSibling.nextElementSibling.innerHTML);
+				}
+			}
+			if(ckedCnt == 0){
+				alert('선택된 결재문서가 없습니다.');
+				return false;
+			} else if(confirm(ckedCnt + '개의 결재문서를 영구삭제하시겠습니까?')){
+				$.ajax({
+					url:"removeApproval.ap?no=" + ckNoArr + "&form=" + formArr,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}, error:function(){
+						console.log("삭제용 ajax통신 실패");
+					}
+				});
+			}
+			return false;
 		}
 	</script>
 	
@@ -97,7 +128,7 @@
             </tbody>
         </table>
 		
-		<div class="del-btn-area"><button class="btnn-rd">선택 문서 삭제</button></div>
+		<div class="del-btn-area"><button class="btnn-rd" onclick="return remove();">선택 문서 삭제</button></div>
         <br clear="both">
 
         <div align="center">
@@ -108,10 +139,10 @@
 			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 				<c:choose>
 					<c:when test="${ p eq pi.currentPage }">
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
+						<a href="list.ap?myt=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
 					</c:when>
 					<c:otherwise>
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+						<a href="list.ap?myt=1&cpage=${ p }" class="btnn-pp">${ p }</a>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

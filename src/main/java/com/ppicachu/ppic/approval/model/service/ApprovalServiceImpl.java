@@ -40,11 +40,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public ArrayList<Approval> selectEdList(MyDept md, PageInfo pi) {
-		return aDao.selectEdList(sqlSession, md, pi);
-	}
-
-	@Override
 	public int selectTemListCount(MyDept md) {
 		return aDao.selectTemListCount(sqlSession, md);
 	}
@@ -174,6 +169,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public int insertCash(ArrayList<FormCash> fcaList) {
 		return aDao.insertCash(sqlSession, fcaList);
+	}
+
+	@Override
+	public int updateApprovalStatus(Approval a) {
+		return aDao.updateApprovalStatus(sqlSession, a);
 	}
 
 }

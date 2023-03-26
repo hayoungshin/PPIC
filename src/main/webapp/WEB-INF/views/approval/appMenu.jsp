@@ -11,7 +11,8 @@
 	.title-area{float: left;}
 	.title-area-enroll{float: left; padding-top: 5px; padding-left: 50px;}
 	
-	#switch-area{float: left; margin-left: 10px; /* margin-top: 6px; */}
+	#menu-area{float: left; font-size:13px; margin-top:4px;}
+	#switch-area{float: left; margin-left: 35px;}
 	.search-option{background-color: lightgray; border-radius: 10px; padding: 6px; padding-left: 10px; margin-bottom: 10px;}
 	/* 검색, 정렬, 필터 */
 	.two-btn-area{float: right;}
@@ -100,9 +101,11 @@
 
 			<br>
 		
+			<div id="menu-area"></div>
+			    
 			<!-- 개인 문서함 _ 기안 문서함 _ 진행중일 경우-->
 			<div class="custom-control custom-switch" id="switch-area" style="display: none;">
-			    <input type="checkbox" class="custom-control-input" id="switch1" onclick="switchBox();">
+				<input type="checkbox" class="custom-control-input" id="switch1" onclick="switchBox();">
 			    <label class="custom-control-label" for="switch1">승인필요</label>
 		    </div>
 		    
@@ -122,7 +125,7 @@
 		    		</select>
 			    	<input type="hidden" name="search-op" value="">
 			    	<input type="text" name="keyword">
-			    	<button class="btnn-sb">검색</button>
+			    	<button class="btnn-sb" onclick="location.href='search.ap'">검색</button>
 				</div>
 				<div class="btn-align">
 				<img src="resources/icons/search.png" class="two-btn" onclick="selectHow(0);">
