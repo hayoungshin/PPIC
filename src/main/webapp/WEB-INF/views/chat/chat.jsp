@@ -276,7 +276,7 @@
    	}
    	#profile-area img{cursor:pointer;}
    	
-   	.exit{
+   	.exit, .date{
         text-align:center; 
         border-radius:5px;   
         background: rgb(240, 240, 240);
@@ -665,9 +665,6 @@
 	            			+ 			"<button id='chatRoomSearch-btn'><img src='resources/icons/search.png' height='25px' width='25px'></button>"
 	            			+		"</td></tr></table>"
         			let party = "";
-        			if(list.length == 0){
-        				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
-        			}
         			for(let i=0; i<list.length; i++){
         				if(list[i].groupSta == 0 && (list[i].exitDate == undefined || list[i].sendDateD > list[i].exitDate) || list[i].groupSta == 1 && list[i].exitDate == undefined){
         					value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
@@ -703,7 +700,7 @@
        							}
        						}
         				for(let j=0; j<list[i].memList.length; j++){
-        					if(list[i].memList[j].exitDate == undefined){
+        					if(list[i].groupSta == 0 || list[i].groupSta == 1 && list[i].memList[j].exitDate == undefined){
         						party += list[i].memList[j].userName + ","
         					}
         				}
@@ -761,6 +758,9 @@
 							}
         				value += "</td></tr>"
         				}
+        			}
+        			if(list.length == 0 || value == "<div id='chatRoomList-area'><table width='270'>"){
+        				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
@@ -781,9 +781,6 @@
         		},success:function(list){
         			let value = "<div id='chatRoomList-area'><table width='270'>";
         			let party = "";
-        			if(list.length == 0){
-        				value += "<tr><td>검색 내역이 없습니다.</td></tr>"
-        			}
         			for(let i=0; i<list.length; i++){
         				if(list[i].groupSta == 0 && (list[i].exitDate == undefined || list[i].sendDateD > list[i].exitDate) || list[i].groupSta == 1 && list[i].exitDate == undefined){
         					value += "<tr ondblclick='openChat(" + list[i].roomNo + "," + list[i].notreadChat + ")'><td style='width:50px'>"
@@ -819,7 +816,7 @@
        							}
        						}
         				for(let j=0; j<list[i].memList.length; j++){
-        					if(list[i].memList[j].exitDate == undefined){
+        					if(list[i].groupSta == 0 || list[i].groupSta == 1 && list[i].memList[j].exitDate == undefined){
         						party += list[i].memList[j].userName + ","
         					}
         				}
@@ -877,6 +874,9 @@
 							}
         				value += "</td></tr>"
         				}
+        			}
+        			if(list.length == 0 || value == "<div id='chatRoomList-area'><table width='270'>"){
+        				value += "<tr><td>채팅 내역이 없습니다.</td></tr>"
         			}
         			value += "</table><div id='plus-btn'>+</div></div>"
         			$("#chat-body").html(value);
@@ -1055,6 +1055,7 @@
 
         // 주소록 더블클릭시 이벤트
         function chatOne(no, clickNo){
+     		console.log(no)
      		if(no == 0){ // 전에 생성된 1:1 채팅이 없을 때
      			let arr = [];
             	arr.push(${loginUser.userNo});
@@ -1106,73 +1107,64 @@
            			let value2 = "";
            			for(let i=0; i<list.length; i++){
            				if(list[i].exitDate == undefined || list[i].sendDateD > list[i].exitDate){
-							if(list[i].outMsg == 0){
-								if(list[i].sendNo != ${loginUser.userNo}){
-	               					value1 += "<div><span class='send-user'>"
-	    	           						+		 "<img src='"
-	    	       							if(list[i].sendProfile != undefined){
-	    	           							value1 += list[i].sendProfile
-	    	          						}else{
-	    	          							value1 += "resources/icons/profile.png"
-	    	          						}
-	    	      							value1 += "' class='rounded-circle chatProfileImg pro-small'>"
-	    	    									+ list[i].sendName + "</span>"
-	               									+ "<div class='chat-message other'>"
-	                   								+ "<div class='send-message'>" + list[i].chatContent + "</div><span class='notreadCount' id='" + list[i].chatNo + "'>"
-	           								if(list[i].notRead != 0){
-	                           					value1 += list[i].notRead + "<br>"
-	                           				}
-	           								if(list[i].sendDate.includes(dateFormat(1))){
-	            								value1 += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
-	             							}else if(list[i].sendDate.includes(dateFormat(2))){
-	             								value1 += "어제"
-	             							} else{
-	             								value1 += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
-	             							}
-	                   						
-	               							value1 += "</span></div></div>"
-	               				}else{
-	               					value1 += "<div class='chat-message mine'><span class='notreadCount' id='" + list[i].chatNo + "'>"
-	           						if(list[i].notRead != 0){
-	           							value1 += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + list[i].notRead + "<br>"
+           					if(list[i].sendDate != undefined){
+           						let $sendDate = list[i].sendDate.substring(0,13)
+               					if(i == 0 || i > 0 && $sendDate != list[i-1].sendDate.substring(0,13) || list[i-1].exitDate != undefined || list[i-1].sendDateD <= list[i-1].exitDate){
+               						value1 += "<div class='date'>💌 " + $sendDate + "</div>"
+               					}
+								if(list[i].outMsg == 0){
+									if(list[i].sendNo != ${loginUser.userNo}){
+		               					value1 += "<div><span class='send-user'>"
+		    	           						+		 "<img src='"
+		    	       							if(list[i].sendProfile != undefined){
+		    	           							value1 += list[i].sendProfile
+		    	          						}else{
+		    	          							value1 += "resources/icons/profile.png"
+		    	          						}
+		    	      							value1 += "' class='rounded-circle chatProfileImg pro-small'>"
+		    	    									+ list[i].sendName + "</span>"
+		               									+ "<div class='chat-message other'>"
+		                   								+ "<div class='send-message'>" + list[i].chatContent + "</div><span class='notreadCount' id='" + list[i].chatNo + "'>"
+		           								if(list[i].notRead != 0){
+		                           					value1 += list[i].notRead + "<br>"
+		                           				}
+		               							value1 += list[i].sendDate.substring(14) + "</span></div></div>"
+		               				}else{
+		               					value1 += "<div class='chat-message mine'><span class='notreadCount' id='" + list[i].chatNo + "'>"
+		           						if(list[i].notRead != 0){
+		           							value1 += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + list[i].notRead + "<br>"
+		           						}
+		       							value1 += list[i].sendDate.substring(14) + "</span><div class='send-message'>" + list[i].chatContent + "</div></div>"
+		               				}
+		               				if(list[i].chatContent == undefined){
+		               					value1 = "<div class='chat-area'>";
+		               				}
+								}else{
+									value1 += "<div class='exit'>" + list[i].chatContent + "</div>";
+								}
+	           				}
+	           				for(let j=0; j<list[i].memList.length; j++){
+	           					if(list[i].groupSta == 0){
+	           						if(list[i].memList[j].userNo != ${loginUser.userNo}){
+	           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
+	           									+ "<span id='roomName-area'><span id='roomName'>" 
+	           							if(list[i].roomName == undefined){
+	           								value2 += list[i].memList[j].userName;
+	           							}else{
+	           								value2 += list[i].roomName;
+	           							}
+	           							value2 += "</span></span>";
 	           						}
-	               					if(list[i].sendDate.includes(dateFormat(1))){
-	    								value1 += list[i].sendDate.substring(list[i].sendDate.indexOf("오")) 
-	    							}else if(list[i].sendDate.includes(dateFormat(2))){
-	    								value1 += "어제"
-	    							} else{
-	    								value1 += list[i].sendDate.substring(0, list[i].sendDate.indexOf("오"))
-	    							}
-	       							value1 += "</span><div class='send-message'>" + list[i].chatContent + "</div></div>"
-	               				}
-	               				if(list[i].chatContent == undefined){
-	               					value1 = "<div class='chat-area'>";
-	               				}
-							}else{
-								value1 += "<div class='exit'>" + list[i].chatContent + "</div>";
-							}
-           				}
-           				for(let j=0; j<list[i].memList.length; j++){
-           					if(list[i].groupSta == 0){
-           						if(list[i].memList[j].userNo != ${loginUser.userNo}){
-           							value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
-           									+ "<span id='roomName-area'><span id='roomName'>" 
-           							if(list[i].roomName == undefined){
-           								value2 += list[i].memList[j].userName;
-           							}else{
-           								value2 += list[i].roomName;
-           							}
-           							value2 += "</span></span>";
-           						}
-           					}else{
-           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
-           						if(list[i].roomName == undefined){
-           							value2 += "<span id='roomName-area'><span id='roomName'>그룹채팅";
-           						}else{
-           							value2 += "<span id='roomName-area'><span id='roomName'>" + list[i].roomName;
-           						}
-           						value2 += "</span> <span id='groupCount'>"+ list[i].groupCount + "</span></span></span>"
-           					}
+	           					}else{
+	           						value2 = "<div id='profile-area'><img src='resources/icons/left-arrow.png' id='toList-btn' onclick='onClose();'>"
+	           						if(list[i].roomName == undefined){
+	           							value2 += "<span id='roomName-area'><span id='roomName'>그룹채팅";
+	           						}else{
+	           							value2 += "<span id='roomName-area'><span id='roomName'>" + list[i].roomName;
+	           						}
+	           						value2 += "</span> <span id='groupCount'>"+ list[i].groupCount + "</span></span></span>"
+	           					}
+	           				}
            				}
            			}
            			value1 += "</div><div class='input-area'>"
@@ -1358,7 +1350,6 @@
         			$("#message").val("");
          		}
      		}
-     		console.log("")
 		}
      	
      	// 방 입장
@@ -1371,10 +1362,10 @@
 	 	
 		function onMessage(evt){
 			let msgArr = evt.data.split(",");
-			console.log(msgArr[2])
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
+			let $sendDate;
 			if(msgArr[2] == "ENTER-CHAT"){
 				$(".notreadCount").each(function(){
 					$html = $(this).html();
@@ -1409,14 +1400,7 @@
 					if(msgArr[7] != 0){
 						$msg += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + msgArr[7] + "<br>"
 					}
-					if(msgArr[4].includes(dateFormat(1))){
-						$msg += msgArr[4].substring(msgArr[4].indexOf("오")) 
-					}else if(msgArr[4].includes(dateFormat(2))){
-						$msg += "어제"
-					} else{
-						$msg += msgArr[4].substring(0, msgArr[4].indexOf("오"))
-					}
-					$msg += "</span><div class='send-message'>" + msgArr[2] + "</div>"
+					$msg += msgArr[4].substring(14) + "</span><div class='send-message'>" + msgArr[2] + "</div>"
 					$chatDiv = $("<div class='chat-message'>").append($msg);
 					$chatDiv.addClass("mine");
 					$chatAllDiv = $chatDiv;
@@ -1425,14 +1409,7 @@
 					if(msgArr[7] != 0){
 						$msg += "<span class='notreadCount' id='" + msgArr[8] + "'>" + msgArr[7] + "<br>"
 					}
-					if(msgArr[4].includes(dateFormat(1))){
-						$msg += msgArr[4].substring(msgArr[4].indexOf("오")) 
-					}else if(msgArr[4].includes(dateFormat(2))){
-						$msg += "어제"
-					} else{
-						$msg += msgArr[4].substring(0, msgArr[4].indexOf("오"))
-					}
-					$msg += "</span>"
+					$msg += msgArr[4].substring(14) + "</span>"
 					$chatDiv = $("<div class='chat-message'>").append($msg);
 					let userVal = "<img src='";
 					if(msgArr[6] != "null"){
@@ -1447,10 +1424,14 @@
 					$chatAllDiv = $("<div>").append($chatDiv);
 					$chatAllDiv = $chatAllDiv.prepend($userSpan);
 				}
-				$(".chat-area").append($chatAllDiv);
+				let $sendDateMsg = msgArr[4].substring(0,13)
+				if($(".date").text() == "" || $(".date").text().slice(-13) != $sendDateMsg){
+					$sendDate = "<div class='date'>💌 " + $sendDateMsg + "</div>"
+				}
+				$(".chat-area").append($sendDate).append($chatAllDiv);
 				$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
 				if(socket){
-					let socketMsg2 = "newchat, , ," + receiveList + ", , ";
+					let socketMsg2 = "newchat, , ," + receiveList + ", , ," + msgArr[0];
 					socket.send(socketMsg2);
 				}
 			}

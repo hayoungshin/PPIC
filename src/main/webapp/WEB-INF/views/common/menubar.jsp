@@ -308,14 +308,15 @@
 			 	}
 				 	
 		   		function onMessage(evt){
-		   			if(evt.data == "새채팅"){
-		   				if(sockChat == null || sockChat.readyState != 1){
+		   			let msgArr = evt.data.split(",");
+		   			if(msgArr[0] == "새채팅"){
+		   				if(sockChat == null || sockChat.readyState != 1 || $("#search-div input").val() != msgArr[1]){
 				     		let $chatCount = Number($("#chat-count").text());
 				     		if($chatCount == 0){
 				     			$("#chat-count").css("display", "block");
 				     		}
 				     		$("#chat-count").text($chatCount + 1);
-				     		if($("#chat-btn").hasClass("menuClicked")){
+				     		if($("#chat-btn").hasClass("menuClicked") && (sockChat == null || sockChat.readyState != 1)){
 				     			chatRoomList();
 			   				}
 		   				}
@@ -338,7 +339,7 @@
 	        	} else if(no == 2){
 	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
 	        	} else{
-	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString())
+	        		return d.getFullYear() + "년 " + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "월 " + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString()) + "일 "
 	        				+ (d.getHours() < 12 ? " 오전 " : " 오후 ") + (d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()) + ":" + (d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes());
 	        	}
 	        }
