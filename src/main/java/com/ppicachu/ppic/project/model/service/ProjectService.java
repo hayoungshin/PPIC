@@ -59,5 +59,7 @@ public interface ProjectService {
 	// project 참여자 전체 삭제
 	int deleteProjectParticipants(int projectNo);
 	
+	// project 삭제
+	int deleteProject(int projectNo);
 	
 }

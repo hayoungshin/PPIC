@@ -406,11 +406,11 @@
       </script>
 
       <h5 id="p-title"></h5>
-      <form action="" method="get" id="deleteProjForm">
+      <form action="deleteProject.pr" method="get" id="deleteProjForm">
         <input type="hidden" name="projectNo">
         <c:if test="${fn:contains(loginUser.authorityNo, '0') || fn:contains(loginUser.authorityNo, '8')}">
           <button type="button" onclick="updateProjectForm();">프로젝트 수정</button>
-          <button type="submit">프로젝트 삭제</button>
+          <button type="submit" onclick="return confirm('정말 삭제할까요?')">프로젝트 삭제</button>
         </c:if>
       </form>
 

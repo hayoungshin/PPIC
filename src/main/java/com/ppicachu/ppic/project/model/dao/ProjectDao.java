@@ -105,4 +105,8 @@ public class ProjectDao {
 	public int deleteProjectParticipants(SqlSessionTemplate sqlSession, int projectNo) {
 		return sqlSession.delete("projectMapper.deleteProjectParticipants", projectNo);
 	}
+	
+	public int deleteProject(SqlSessionTemplate sqlSession, int projectNo) {
+		return sqlSession.update("projectMapper.deleteProject", projectNo);
+	}
 }

@@ -318,7 +318,7 @@ public class ProjectController {
 		p.setTaskAssign("Y");
 		updateList.add(p);
 		
-		int	result3 = pService.addTaskParticipant(updateList);
+		int	result3 = pService.insertTaskParticipants(updateList);
 		
 		
 		if(result*result3 > 0) {
@@ -345,6 +345,19 @@ public class ProjectController {
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {
 			model.addAttribute("errorMsg", "업무 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("deleteProject.pr")
+	public String deleteProject(int projectNo, HttpSession session, Model model) {
+		int result = pService.deleteProject(projectNo);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "프로젝트가 삭제되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "프로젝트 삭제 실패");
 			return "common/errorPage";
 		}
 	}
