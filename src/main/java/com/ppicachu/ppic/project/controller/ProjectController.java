@@ -1,5 +1,6 @@
 package com.ppicachu.ppic.project.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
@@ -262,21 +263,6 @@ public class ProjectController {
 	}
 	
 	
-	/*
-	@ResponseBody
-	@RequestMapping(value="detail.tk", produces="application/json; charset=UTF-8")
-	public String selectTaskDetail(int taskNo, int projectNo) {
-		Task t = pService.selectTaskDetail(taskNo);
-		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
-		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(taskNo);
-		JSONObject jObj = new JSONObject();
-		jObj.put("t", t);
-		jObj.put("ppList", ppList);
-		jObj.put("tpList", tpList);
-		
-		return new Gson().toJson(jObj);
-		
-	}
 	
 	@RequestMapping("updateTask.tk")
 	public String updateTask(Task t, MultipartFile reupfile,
@@ -362,5 +348,5 @@ public class ProjectController {
 			return "common/errorPage";
 		}
 	}
-	*/
+	
 }

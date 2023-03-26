@@ -86,6 +86,7 @@
 	  left join dept d on (m.department = d.department_no)
 	  left join position ps on (m.position = ps.position_no)
 	 where pp.project_no = #{projectNo}
+	   and pm_status is not null
 </select>
 
 <select id="selectTaskList" resultMap="taskResult">
