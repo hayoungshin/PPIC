@@ -15,7 +15,7 @@
 	<script>
 		window.onload = function(){
 			// 검색 count
-			document.getElementById("menu-area").innerHTML += "${keyword}에 대한 검색 <span style='color:#fdbaba;'>${pi.listCount}</span>";
+			document.getElementById("menu-area").innerHTML += "에 대한 검색 <span style='color:#fdbaba;'>${pi.listCount}</span>";
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
