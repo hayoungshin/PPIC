@@ -1,5 +1,7 @@
 package com.ppicachu.ppic.work.model.vo;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +27,9 @@ public class Work {
 	private String behindtime;
 	
 	// calendar 관련
+	private String title;
+	private Date start;
+	private Date end;
 	
 	
 	// 채팅관련

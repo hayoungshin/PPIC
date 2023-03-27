@@ -226,11 +226,34 @@
 	                        	<input type="hidden" id="userId" name="userId" value="${ loginUser.userId }" >
                             	<input type="hidden" id="userPwd" name="userPwd" value="${ loginUser.userPwd }" >
 	                            <label>이름 </label>
-	                            <select name="userNo" id="userNo" style="width:300px">
+	                            <select class="dept" name="dept" id="dept">
+							    	<option value="">소속</option>
+							    	<c:forEach var="d" items="${ list3 }">
+						            	<option value="${ d.departmentNo }"> ${ d.departmentName }</option>
+						            </c:forEach>
+							    </select>
+							    
+							    <select class="userNo" name="userNo" id="userNo">
+							    	<option value="">이름</option>
 							    	<c:forEach var="m" items="${ list1 }">
-							    			<option value="${m.userNo}"> [${m.employeeNo }] ${ m.userName }(${m.department }&nbsp;|&nbsp;${m.position }) </option>
+							    			<option value="${m.userNo}" value2="${m.departmentNo}" value3="${m.position}" style="display:none;">[${m.position}] ${m.userName}</option>
 							    	</c:forEach>
 						        </select>
+						        
+						        <script>
+						        	
+							        $("#dept").change(function(){
+							          var selectedDept = $("#dept option:selected").val();
+							          $("#userNo option").each(function(){
+							              if($(this).attr("value2") == selectedDept){
+							               $(this).css("display", "block");
+							              }else{
+							                $(this).css("display", "none");
+							              }
+							            })
+							        })
+			
+						        </script>
 	
 	                            <br><br>
 	

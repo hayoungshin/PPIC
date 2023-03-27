@@ -61,4 +61,10 @@ public interface MemberService {
 	//15. 멤버 권한 부여 서비스 
 	int authUpdate(Member m);
 	
+	// 16. 시스템 회원가입 조회 서비스
+	ArrayList<Member> newMemberList();
+	
+	// 17. 회원가입 회원 승인 서비스
+	int newMemberApproval (Member m);
+	
 }

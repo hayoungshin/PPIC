@@ -2,6 +2,7 @@ package com.ppicachu.ppic.work.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -50,7 +51,11 @@ public class WorkController {
 	
 	/* 근무_출퇴근기록 */
 	@RequestMapping("workList.wo")
-	public String workList() {
+	public String workList(int no, Model model) {
+		
+		ArrayList<Work> list = wService.workCalendar(no);
+	      model.addAttribute("list",list);
+		
 		return "work/workCalendarView";
 	}
 	
@@ -103,14 +108,14 @@ public class WorkController {
 		ArrayList<Member> mlist = wService.selectAllMember();
 		ArrayList<Member> hlist = wService.selectHolidayList();
 		ArrayList<Member> wlist = wService.selectWorkCountList();
-		//ArrayList<Member> tlist = wService.selectTimeCountList();
+		ArrayList<Member> tlist = wService.selectTimeCountList();
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
 		map.put("mlist", mlist);
 		map.put("hlist", hlist);
 		map.put("wlist", wlist);
-		//map.put("tlist", tlist);
+		map.put("tlist", tlist);
 		
 		return new Gson().toJson(map);
 	}
@@ -246,22 +251,22 @@ public class WorkController {
 	
 	/* 미승인 휴가 삭제하기  */
 	@RequestMapping("holiyApplyDelete.ho")
-	public String holidayApplyDelete(Holiday h) {
+	public String holidayApplyDelete(Holiday h, HttpSession session) {
 		int result = wService.holidayApplyDelete(h);
-		
+		session.setAttribute("alertMsg", "삭제완료");
 		return "redirect:holiApply.ho";
 	}
 	
 	/* 미승인 휴가 승인,거절하기 */
 	@RequestMapping("approve.ho")
-	public String holidayApprove(Holiday h) {
+	public String holidayApprove(Holiday h, HttpSession session) {
 		// holiday_apply 테이블 업데이트
 		int result = wService.holidayApprove(h);
 		
 		if(result>0) { 
 			// holiday insert
 			int result2 = wService.holidayInsert(h);
-			
+			session.setAttribute("alertMsg", "승인완료");
 			return "redirect:holiApprove.ho";
 			
 		}else { 
@@ -273,14 +278,14 @@ public class WorkController {
 	
 	/* 관리자 휴가 지급하기 */
 	@RequestMapping("holidayGive.ho")
-	public String holidayGive(Holiday h, Model model) {
+	public String holidayGive(Holiday h, HttpSession session) {
 		int result = wService.holidayGive(h);
 		
 		if(result>0) { 
-			model.addAttribute("alertMsg", "휴가지급 성공");
+			session.setAttribute("alertMsg", "휴가 지급 성공");
 			return "redirect:holiGive.ho";
 		}else { 
-			model.addAttribute("errorMsg", "휴가지급 실패");
+			session.setAttribute("errorMsg", "휴가지급 실패");
 			return "redirect:holiGive.ho";
 		}
 		
@@ -288,26 +293,27 @@ public class WorkController {
 	
 	/* 관리자 휴가 회수하기 */
 	@RequestMapping("holiWithDraw.ho")
-	public String holidayWithDraw(Holiday h, Model model) {
+	public String holidayWithDraw(Holiday h, HttpSession session) {
 		int result = wService.holidayInsert(h);
 		if(result>0) { 
-			model.addAttribute("alertMsg", "휴가회수 성공");
+			session.setAttribute("alertMsg", "휴가 회수 성공");
 			return "redirect:holiGive.ho";
 		}else { 
-			model.addAttribute("errorMsg", "휴가회수 실패");
+			session.setAttribute("errorMsg", "휴가회수 실패");
 			return "redirect:holiGive.ho";
 		}
 	}
 	
 	@ResponseBody
 	@RequestMapping(value="workCalendar.wo", produces="application/json; charset=utf-8")
-	public String ajaxWorkCalendar(int userNo, Model model) {
-      
-      ArrayList<Work> list = wService.workCalendar(userNo);
-      model.addAttribute("list",list);
-      
-      
-	  return new Gson().toJson(list);
+	public String ajaxWorkCalendar(int no, Model model) {
+		ArrayList<Work> list = wService.workCalendar(no);
+	      
+	      
+	    HashMap<String,Object> map = new HashMap<String,Object>();
+	    map.put("list", list);
+	      
+	    return new Gson().toJson(map);
 	}
 	
 }

@@ -75,8 +75,7 @@
            
             <div class="workcategory" style="float:left;" >
                 <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
-                <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
-				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
+				<a href="holiInfo.ho?no=${loginUser.userNo }" style="color:black;">휴가현황</a>
                 <a href="holiApply.ho?no=${loginUser.userNo }">휴가신청</a>
                 
                 

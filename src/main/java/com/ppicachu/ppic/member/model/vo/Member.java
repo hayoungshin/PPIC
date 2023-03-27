@@ -54,4 +54,6 @@ public class Member {
 	private String leavearly;
 	private String behindtime;
 	
+	private String workTime;
+	private String workCount;
 }

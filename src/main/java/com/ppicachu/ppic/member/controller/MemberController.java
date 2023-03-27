@@ -77,7 +77,7 @@ public class MemberController {
 	/* 구성원_관리자 */
 	@RequestMapping("memberList.me")
 	public String memberList(Model model) {
-		ArrayList<Member> list1 = mService.selectListMember();
+		ArrayList<Member> list1 = mService.newMemberList();
 		ArrayList<Department> list2 = mService.selectDeptList();
 		
 		model.addAttribute("list1", list1);
@@ -118,16 +118,16 @@ public class MemberController {
 	@RequestMapping("memberAuth.me")
 	public String memberAuth(Model model) {
 		ArrayList<Member> list1 = mService.selectListMember();
-		
 		ArrayList<Member> list2 = mService.authMemberList();
+		ArrayList<Department> list3 = mService.selectDeptList();
 		for(Member item:list2) {
 			String[] checkList = item.getAuthorityNo().split(",");
 			item.setAuthority(checkList);
 		}
 		
 		model.addAttribute("list1", list1);
-		
 		model.addAttribute("list2", list2);
+		model.addAttribute("list3", list3);
 		
 		return "member/memberAuthView";
 	}
@@ -233,6 +233,22 @@ public class MemberController {
 			session.setAttribute("loginUser", updateMem);
 			session.setAttribute("alertMsg", "권한부여가 완료되었습니다");
 			return "redirect:memberAuth.me";
+		} else {
+			return "common/errorPage";
+		}
+	}
+	
+	/* 신규가입자 승인 서비스 */
+	@RequestMapping("newMemberUpdate.me")
+	public String newMemberList(Member m, HttpSession session) {
+		
+		int result = mService.newMemberApproval(m);
+		
+		if(result >0) {
+		
+			session.setAttribute("alertMsg", "사용이 승인되었습니다.");
+			
+			return "redirect:memberList.me";
 		} else {
 			return "common/errorPage";
 		}
