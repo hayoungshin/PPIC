@@ -54,6 +54,7 @@
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
+		  where member_sign = 'Y'
 		  order
 		 	by department_no, position_no
 	</select>
@@ -85,6 +86,7 @@
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
 		 where status='Y'
+		   and member_sign='Y'
 		   and user_no = #{userNo}
 	</select>
 	
@@ -98,6 +100,7 @@
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
 		 where status='Y'
+		   and member_sign='Y'
 		 order
 		 	by department_no, position_no
 	</select>
@@ -262,6 +265,8 @@
 		     , position = #{position}
 		     , phone = #{phone}
 		     , address = #{address}
+		     , employee_no = #{employeeNo}
+		     , hire_date = #{hireDate}
 		 where user_no = #{userNo}
 	</update>
 	
@@ -276,12 +281,34 @@
 		  join dept on (member.department = dept.department_no)
 		  join position on (member.position = position.position_no) 
 		  where authority_no is not null
+		    and member_sign='Y'
+		    and status='Y'
 	</select>
 	
 	<update id="authUpdate">
 		update 
 			   member
 		   set authority_no = #{auth}
+		 where user_no = #{userNo}
+	</update>
+	
+	<select id="newMemberList" resultMap="memberResult">
+		select 
+		      user_no
+		    , user_name
+		    , position_name as "POSITION"
+			, department_name as "DEPARTMENT"
+		    , authority_no
+		  from member
+		  join dept on (member.department = dept.department_no)
+		  join position on (member.position = position.position_no) 
+		  where member_sign ='N'
+	</select>
+	
+	<update id="newMemberApproval">
+		update 
+			   member
+		   set member_sign = #{memberSign}
 		 where user_no = #{userNo}
 	</update>
 </mapper>

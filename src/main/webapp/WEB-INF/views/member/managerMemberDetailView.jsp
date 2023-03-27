@@ -247,7 +247,6 @@
 
             <div class="myPagecategory" style="float:left" >
                 <a style="color:black">인사정보</a>
-                <a style="color:lightgray">문서</a>
                 <hr>
             </div>
 
@@ -330,7 +329,7 @@
                             	</tr>
                             	<tr height="40px">
                             		<td>사번</td>
-                            		<td>${ m.employeeNo }</td>
+                            		<td><input type="text" id="phone" name="employeeNo" value="${ m.employeeNo }"></td>
                             	</tr>
                             	<tr height="40px">
                             		<td>상태</td>
@@ -347,7 +346,7 @@
                             	</tr>
                             	<tr height="40px">
                             		<td>입사일</td>
-                            		<td>${ m.hireDate }</td>
+                            		<td><input type="Date" id="phone" name="hireDate" value="${ m.hireDate }"></td>
                             	</tr>
                             	<tr height="60px">
                             		<td>소속</td>

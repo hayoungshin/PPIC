@@ -243,8 +243,8 @@
             </script>
 
             <div class="myPagecategory" style="float:left" >
-                <a style="color:black">인사정보</a>
-                <a style="color:lightgray">문서</a>
+                <a style="color:black" href="myPage.me">인사정보</a>
+                <a style="color:lightgray" href="myList.doc">문서</a>
                 <hr>
             </div>
 
