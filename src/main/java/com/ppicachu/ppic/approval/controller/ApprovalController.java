@@ -116,6 +116,23 @@ public class ApprovalController {
 	}
 	
 	/**
+	 * 검색 목록
+	 * @return pi, list
+	 */
+	@RequestMapping(value="search.ap", produces="application/json; charset=utf-8")
+	public String search(@RequestParam(value="cpage", defaultValue="1") int currentPage, Approval a, Model m, HttpSession session) {
+		a.setDepartment(((Member)session.getAttribute("loginUser")).getDepartment());
+		
+		int listCount = aService.selectSearchListCount(a);
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<Approval> list = aService.selectSearchList(a, pi);
+		m.addAttribute("pi", pi);
+		m.addAttribute("list", list);
+		
+		return "approval/appSearchListView";
+	}
+	
+	/**
 	 * 중요 update (=)
 	 */
 	@ResponseBody
@@ -447,11 +464,5 @@ public class ApprovalController {
 		String page = updateForm(a.getApprovalNo(), a.getForm(), m);
 		
 		return page;
-	}
-	
-	/* 검색? */
-	@RequestMapping("search.ap")
-	public String search() {
-		return "approval/appSearchListView";
 	}
 }

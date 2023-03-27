@@ -15,6 +15,7 @@ public class Approval {
 	private int approvalNo;
 	private String department;
 	private String position;
+	private int userNo;
 	private String userName;
 	private String form;
 	private String title;
@@ -26,7 +27,10 @@ public class Approval {
 	private String completeDate;
 	private String completeNo;
 	private String bookmark;
-	private int userNo;
 	
 	private String tem;
+	
+	private String agrUserName;
+	private String refUserName;
+	private String orderBy;
 }

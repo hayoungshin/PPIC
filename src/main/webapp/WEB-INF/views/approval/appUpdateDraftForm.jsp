@@ -8,44 +8,175 @@
 <title>PPIC</title>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <style>
-	.second-1, .second-2{box-sizing: border-box; float: left;}
+	.second-1, .second-2{
+		box-sizing: border-box; 
+		float: left;
+	}
 
-    .title-area{float: left;}
+    /* 수정하기 */
+    .title-area{
+		float: left;
+	}
     
-    .second-1{width: 75%;}
-    .form-area{padding: 30px;}
-    #tb{width:100%; text-align: center;}
-    #tb tr{height:40px;}
+    /* 기안 */
+    .second-1{
+		width: 75%;
+	}
+    .form-area{
+		padding: 30px;
+	}
+    #tb{
+		width:100%; 
+		text-align: center;
+	}
+    #tb tr{
+		height:40px;
+	}
     
-    .second-2{width: 25%;}
-    .agree-area{margin-top: 6px; border: 1px solid lightgray;}
-    .line{width: 80%;}
-    .line-content{text-align: left;}
-    .person-title{float: left; width: 90px;}
-    .level-area{border:1px solid #b09eff; border-radius:10px; padding: 10px; margin-bottom: 10px;}
-    .level-area-pk{border:1px solid #fdbaba; border-radius:10px; padding: 10px; margin-bottom: 10px;}
-    .level{padding-left: 10px;}
-    .person-img{font-size: x-large;}
+    /* 승인, 참조 */
+    .second-2{
+		width: 25%;
+	}
+    .agree-area{
+		margin-top: 6px; 
+		border: 1px solid lightgray;
+	}
+    .line{
+		width: 80%;
+	}
+    .line-content{
+		text-align: left;
+	}
+    .person-title{
+		float: left; 
+		width: 90px;
+	}
+    .level-area{
+		border:1px solid #b09eff; 
+		border-radius:10px; 
+		padding: 10px; 
+		margin-bottom: 10px;
+	}
+    .level-area-pk{
+		border:1px solid #fdbaba; 
+		border-radius:10px; 
+		padding: 10px; 
+		margin-bottom: 10px;
+	}
+    .level{
+		padding-left: 10px;
+	}
+    .person-img{
+		font-size: x-large;
+	}
     
-    .btnn-pp{font-size: 14px; background-color: white; color: #6F50F8; border:1px solid #6F50F8; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-pp:hover{background-color: #6F50F8; color: white; transition: 0.3s;}
-    .btnn-gr{font-size: 14px; background-color: white; color: gray; border:1px solid gray; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-gr:hover{background-color: gray; color: white; transition: 0.3s;}
-    .btnn-pk{font-size: 14px; background-color: white; color: #fdbaba; border:1px solid #fdbaba; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-pk:hover{background-color: #fdbaba; color: white; transition: 0.3s;}
-    .btnn-sb{font-size: 14px; background-color: white; color: #00b5d1; border:1px solid #00b5d1; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-sb:hover{background-color: #00b5d1; color: white; transition: 0.3s;}
+    /* button */
+    .btnn-pp{
+		font-size: 14px; 
+		background-color: white; 
+		color: #6F50F8; 
+		border:1px solid #6F50F8; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-pp:hover{
+		background-color: #6F50F8; 
+		color: white; 
+		transition: 0.3s;
+	}
+    .btnn-gr{
+		font-size: 14px; 
+		background-color: white; 
+		color: gray; 
+		border:1px solid gray; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-gr:hover{
+		background-color: gray; 
+		color: white; 
+		transition: 0.3s;
+	}
+    .btnn-pk{
+		font-size: 14px; 
+		background-color: white; 
+		color: #fdbaba; 
+		border:1px solid #fdbaba; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-pk:hover{
+		background-color: #fdbaba; 
+		color: white; 
+		transition: 0.3s;
+	}
+    .btnn-sb{
+		font-size: 14px;
+		background-color: white; 
+		color: #00b5d1; 
+		border:1px solid #00b5d1; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-sb:hover{
+		background-color: #00b5d1; 
+		color: white; 
+		transition: 0.3s;
+	}
 
-    .a-content-1, .r-content-1{height: 300px; width: 250px; float: left; overflow: auto;}
-    .a-content-1::-webkit-scrollbar, .r-content-1::-webkit-scrollbar{width: 8px;}
-    .a-content-1::-webkit-scrollbar-thumb, .r-content-1::-webkit-scrollbar-thumb{background: lightgray; border-radius: 10px;}
-    .a-content-2, .r-content-2{border: 1px solid lightgray; margin-left: 10px; height: 300px; width: 200px; float: left; overflow: auto;}
-    .a-content-2::-webkit-scrollbar, .r-content-2::-webkit-scrollbar{width: 8px;}
-    .a-content-2::-webkit-scrollbar-thumb, .r-content-2::-webkit-scrollbar-thumb{background: lightgray; border-radius: 10px;}
+    /* 승인, 참조 modal */
+    .a-content-1, .r-content-1{
+		height: 300px; 
+		width: 250px; 
+		float: left; 
+		overflow: auto;
+	}
+    .a-content-1::-webkit-scrollbar, .r-content-1::-webkit-scrollbar{
+		width: 8px;
+	}
+    .a-content-1::-webkit-scrollbar-thumb, .r-content-1::-webkit-scrollbar-thumb{
+		background: lightgray; 
+		border-radius: 10px;
+	}
+    .a-content-2, .r-content-2{
+		border: 1px solid lightgray; 
+		margin-left: 10px; 
+		height: 300px; 
+		width: 200px; 
+		float: left; 
+		overflow: auto;
+	}
+    .a-content-2::-webkit-scrollbar, .r-content-2::-webkit-scrollbar{
+		width: 8px;
+	}
+    .a-content-2::-webkit-scrollbar-thumb, .r-content-2::-webkit-scrollbar-thumb{
+		background: lightgray; 
+		border-radius: 10px;
+	}
     
-    .insert .file-list {height: 140px; border: 1px solid lightgray; padding: 5px;}
-	.insert .file-list .filebox p {font-size: 14px; display: inline-block; margin-bottom: 3px;}
-	.insert .file-list .filebox .delete i{color: rgb(255, 100, 100); margin-left: 5px;}
+    /* 첨부파일 */
+    .insert .file-list {
+		height: 140px; 
+		border: 1px solid lightgray;
+		padding: 5px;
+	}
+	.insert .file-list .filebox p {
+		font-size: 14px; 
+		display: inline-block; 
+		margin-bottom: 3px;
+	}
+	.insert .file-list .filebox .delete i{
+		color: rgb(255, 100, 100); 
+		margin-left: 5px;
+	}
 </style>
 </head>
 <body>
@@ -90,7 +221,7 @@
 			// 승인자 모달 각 행
 			const a_tr = document.getElementsByClassName("a-trOver");
 			for(let i=0; i<a_tr.length; i++){
-				// 상세 onclick
+				// user 선택 onclick
 				a_tr[i].childNodes[5].addEventListener("click", function(){
 					const check_img = this.nextSibling.nextSibling.childNodes[0]; // 화살표 이미지
 					const input_userNo = this.previousSibling.previousSibling.previousSibling.previousSibling.value; // userNo
@@ -122,7 +253,7 @@
 			// 참조자 모달 각 행
 			const r_tr = document.getElementsByClassName("r-trOver");
 			for(let i=0; i<r_tr.length; i++){
-				// 상세 onclick
+				// user 선택 onclick
 				r_tr[i].childNodes[5].addEventListener("click", function(){
 					const check_img = this.nextSibling.nextSibling.childNodes[0]; // 화살표 이미지
 					const input_userNo = this.previousSibling.previousSibling.previousSibling.previousSibling.value; // userNo
@@ -256,8 +387,7 @@
 				$file.eq(i).attr("id", "file" + i);
 		    }
 		    
-		    // input type="file"에 multiple 속성을 사용할 경우 
-            // 선택된 파일들에 접근하면 FileList로 처리됨 
+		    // input type="file"에 multiple 속성을 사용할 경우 선택된 파일들에 접근하면 FileList로 처리됨 
             let files = $("#file")[0].files; // 선택된 파일들  (FileList)
             let fileArr = Array.from(files); // 파일들을 배열로 변환 (즉, FileList => Array)
             
@@ -329,7 +459,7 @@
 	                            <tr>
 	                                <td colspan="6">
 	
-	                                    <!-- 업무기안일 경우 -->
+	                                    <!-- 업무기안 -->
 	                                    <table id="tb" class="table-bordered">
 	                                        <tr>
 	                                            <th width="20%">시행일자</th>
@@ -357,14 +487,15 @@
 	                            </tr>
 	                        </tbody>
 	                    </table>
+
 	                    <div class="custom-file insert">
 	                    	<input type="file" class="custom-file-input" id="file" name="upfile" onchange="addFile(this);" multiple>
 		                    <label class="custom-file-label" for="file">Choose file</label>
 		                    <div class="file-list"></div>
 		                    <span>※첨부파일은 5개까지 첨부 가능합니다.</span>
 	                    </div>
+
 	                </div>
-	    
 	            </div>
 	            
 	            <br>

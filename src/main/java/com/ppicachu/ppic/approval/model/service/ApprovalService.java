@@ -53,6 +53,10 @@ public interface ApprovalService {
 	int selectMaListCount(MyDept md);
 	ArrayList<Approval> selectMaList(MyDept md, PageInfo pi);
 	
+	// <검색> 검색 목록 페이지 조회 서비스 (페이징)
+	int selectSearchListCount(Approval a);
+	ArrayList<Approval> selectSearchList(Approval a, PageInfo pi);
+	
 	// <수정,상세> 업무기안 select
 	AppDetail selectDraftApp(int approvalNo);
 	

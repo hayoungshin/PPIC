@@ -7,48 +7,220 @@
 <meta charset="UTF-8">
 <title>PPIC</title>
 <style>
-	.second-1, .second-2{box-sizing: border-box; float: left;}
+	.second-1, .second-2{
+		box-sizing: border-box;
+		float: left;
+	}
 	
-    .first{text-align: left;}
-    .first-1{width: 75%; padding-left: 35px; padding-right: 35px;}
-    .first-1-1{float: left; visibility: hidden;}
-    .first-1-2{float: right;}
-	.three-btn{padding-left: 20px;}
-	.btn-align{float: left;}
+	/* 기안 */
+    .first{
+		text-align: left
+	}
+    .first-1{
+		width: 75%; 
+		padding-left: 35px; 
+		padding-right: 35px;
+	}
+    .first-1-1{
+		float: left; 
+		visibility: hidden;
+	}
+    .first-1-2{
+		float: right;
+	}
+	.three-btn{
+		padding-left: 20px;
+	}
+	.btn-align{
+		float: left;
+	}
 	
-	.second-1{width: 75%;}
-    .form-area{padding: 30px; padding-top: 10px;}
-    #tb{margin-top: 10px; margin-bottom: 7px; width: 100%; text-align: center;}
-	#tb tr{height: 40px;}
+	.second-1{
+		width: 75%;
+	}
+    .form-area{
+		padding: 30px; 
+		padding-top: 10px;
+	}
+    #tb{
+		margin-top: 10px; 
+		margin-bottom: 7px; 
+		width: 100%; 
+		text-align: center;
+	}
+	#tb tr{
+		height: 40px;
+	}
 	
-    .second-2{width: 25%;}
-    .agree-area{margin-top: 20px; border: 1px solid lightgray;}
-    .line{width: 80%;}
-    .line-content{text-align: left;}
-    .person-title{float: left; width: 90px;}
-    .level-area{border:1px solid #b09eff; border-radius:10px; padding: 10px; margin-bottom: 10px;}
-    .level-area-pk{border:1px solid #fdbaba; border-radius:10px; padding: 10px; margin-bottom: 10px;}
-    .level{padding-left: 10px;}
-    .person-img{font-size: x-large;}
+	/* 승인, 참조 */
+    .second-2{
+		width: 25%;
+	}
+    .agree-area{
+		margin-top: 20px; 
+		border: 1px solid lightgray;
+	}
+    .line{
+		width: 80%;
+	}
+    .line-content{
+		text-align: left;
+	}
+    .person-title{
+		float: left; 
+		width: 90px;
+	}
+    .level-area{
+		border:1px solid #b09eff; 
+		border-radius:10px; 
+		padding: 10px; 
+		margin-bottom: 10px;
+	}
+    .level-area-pk{
+		border:1px solid #fdbaba;
+		border-radius:10px; 
+		padding: 10px; 
+		margin-bottom: 10px;
+	}
+    .level{
+		padding-left: 10px;
+	}
+    .person-img{
+		font-size: x-large;
+	}
     
-    .third{width: 100%; text-align: left; padding-left: 40px;}
-    
-    .btnn-pp{text-decoration: none; font-size: 14px; background-color: white; color: #6F50F8; border:1px solid #6F50F8; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-	.btnn-pp:hover{cursor: pointer; text-decoration: none; background-color: #6F50F8; color: white; transition: 0.3s;}
-	.btnn-gr{text-decoration: none; font-size: 14px; background-color: white; color: gray; border:1px solid gray; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-gr:hover{cursor: pointer; text-decoration: none; background-color: gray; color: white; transition: 0.3s;}
-    .btnn-sb{text-decoration: none; font-size: 14px; background-color: white; color: #00b5d1; border:1px solid #00b5d1; border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-sb:hover{cursor: pointer; text-decoration: none; background-color: #00b5d1; color: white; transition: 0.3s;}
-    .btnn-rd{text-decoration: none; font-size: 14px; background-color: white; color: rgb(255, 100, 100); border:1px solid rgb(255, 100, 100); border-radius: 4px; padding: 4px; padding-left: 8px; padding-right: 8px;}
-    .btnn-rd:hover{cursor: pointer; text-decoration: none; background-color: rgb(255, 100, 100); color: white; transition: 0.3s;}
-    
-    .stt-pp{border-radius: 5px; border: 1px solid #6F50F8; background-color: #6F50F8; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
-    .stt-gr{border-radius: 5px; border: 1px solid gray; background-color: gray; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
-    .stt-pk{border-radius: 5px; border: 1px solid #fdbaba; background-color: #fdbaba; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
-    .stt-sb{border-radius: 5px; border: 1px solid #00b5d1; background-color: #00b5d1; color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
-    .stt-rd{border-radius: 5px; border: 1px solid rgb(255, 100, 100); background-color: rgb(255, 100, 100); color: white; padding-left: 4px; padding-right: 4px; margin-left: 15px;}
+	/* 변경사항 */
+    .third{
+		width: 100%; 
+		text-align: left; 
+		padding-left: 40px;
+	}
 
-	#fdr, #ftr, #fco, #fca{width: 100%;}
+    /* button */
+    .btnn-pp{
+		text-decoration: none; 
+		font-size: 14px; 
+		background-color: white; 
+		color: #6F50F8; 
+		border:1px solid #6F50F8; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+	.btnn-pp:hover{
+		cursor: pointer; 
+		text-decoration: none; 
+		background-color: #6F50F8; 
+		color: white; 
+		transition: 0.3s;
+	}
+	.btnn-gr{
+		text-decoration: none; 
+		font-size: 14px; 
+		background-color: white; 
+		color: gray; 
+		border:1px solid gray; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-gr:hover{
+		cursor: pointer; 
+		text-decoration: none; 
+		background-color: gray; 
+		color: white; 
+		transition: 0.3s;
+	}
+    .btnn-sb{
+		text-decoration: none; 
+		font-size: 14px; 
+		background-color: white; 
+		color: #00b5d1; 
+		border:1px solid #00b5d1; 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-sb:hover{
+		cursor: pointer; 
+		text-decoration: none; 
+		background-color: #00b5d1; 
+		color: white; 
+		transition: 0.3s;
+	}
+    .btnn-rd{
+		text-decoration: none; 
+		font-size: 14px; 
+		background-color: white; 
+		color: rgb(255, 100, 100); 
+		border:1px solid rgb(255, 100, 100); 
+		border-radius: 4px; 
+		padding: 4px; 
+		padding-left: 8px; 
+		padding-right: 8px;
+	}
+    .btnn-rd:hover{
+		cursor: pointer; 
+		text-decoration: none; 
+		background-color: rgb(255, 100, 100); 
+		color: white; 
+		transition: 0.3s;
+	}
+    
+	/* status */
+    .stt-pp{
+		border-radius: 5px; 
+		border: 1px solid #6F50F8; 
+		background-color: #6F50F8; 
+		color: white; 
+		padding-left: 4px; 
+		padding-right: 4px; 
+		margin-left: 15px;
+	}
+    .stt-gr{
+		border-radius: 5px; 
+		border: 1px solid gray; 
+		background-color: gray; 
+		color: white; 
+		padding-left: 4px; 
+		padding-right: 4px; 
+		margin-left: 15px;
+	}
+    .stt-pk{
+		border-radius: 5px; 
+		border: 1px solid #fdbaba; 
+		background-color: #fdbaba; 
+		color: white; 
+		padding-left: 4px; 
+		padding-right: 4px; 
+		margin-left: 15px;
+	}
+    .stt-sb{
+		border-radius: 5px; 
+		border: 1px solid #00b5d1; 
+		background-color: #00b5d1; 
+		color: white; 
+		padding-left: 4px; 
+		padding-right: 4px; 
+		margin-left: 15px;
+	}
+    .stt-rd{
+		border-radius: 5px; 
+		border: 1px solid rgb(255, 100, 100); 
+		background-color: rgb(255, 100, 100); 
+		color: white; 
+		padding-left: 4px; 
+		padding-right: 4px; 
+		margin-left: 15px;
+	}
+
+	/* form table */
+	#fdr, #ftr, #fco, #fca{
+		width: 100%;
+	}
 </style>
 </head>
 <body>
@@ -321,7 +493,7 @@
                             <tr>
                                 <td colspan="6">
                                     
-                                    <!-- 업무기안일 경우 -->
+                                    <!-- 업무기안 -->
                                     <table id="fdr" class="table-bordered">
                                         <tr>
                                             <th width="20%">시행일자</th>
@@ -337,7 +509,7 @@
                                         </tr>
                                     </table>
 
-                                    <!-- 인사발령품의서일 경우 -->
+                                    <!-- 인사발령품의서 -->
                                     <table id="ftr" class="table-bordered">
                                         <colgroup>
 				                    		<col style="width:15%">
@@ -370,7 +542,7 @@
 	                                    </c:forEach>
                                     </table>
 
-                                    <!-- 비품신청서일 경우 -->
+                                    <!-- 비품신청서 -->
                                     <table id="fco" class="table-bordered">
                                         <tr>
                                             <th style="width:35%">품명</th>
@@ -396,7 +568,7 @@
                                         </tr>
                                     </table>
 
-                                    <!-- 지출결의서일 경우 -->
+                                    <!-- 지출결의서 -->
                                     <table id="fca" class="table-bordered">
                                         <tr>
                                             <th style="width:25%">거래처</th>

@@ -55,6 +55,17 @@ public class ApprovalDao {
 		return (ArrayList)sqlSession.selectList("approvalMapper.selectMaList", md, rowBounds);
 	}
 
+	public int selectSearchListCount(SqlSessionTemplate sqlSession, Approval a) {
+		return sqlSession.selectOne("approvalMapper.selectSearchListCount", a);
+	}
+
+	public ArrayList<Approval> selectSearchList(SqlSessionTemplate sqlSession, Approval a, PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("approvalMapper.selectSearchList", a, rowBounds);
+	}
+
 	public int updateBook(SqlSessionTemplate sqlSession, Approval a) {
 		return sqlSession.update("approvalMapper.updateBook", a);
 	}

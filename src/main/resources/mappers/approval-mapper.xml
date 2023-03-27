@@ -250,7 +250,7 @@
 		 order
 		<choose>
 			<when test="mye != 0 or dpe != 0">
-		    	by complete_date desc, complete_no desc
+		    	by complete_no desc
 		    </when>
 		    <otherwise>
 		    	by approval_no desc
@@ -339,17 +339,32 @@
 		 order
 		    by approval_no desc
 	</select>
-	<!-- 
+
 	<select id="selectSearchListCount" resultType="_int">
 		select count(*)
-		  from app_process ap <!- app_process(결재선)이 기준 ->
+		  from app_process ap app_process(결재선)이 기준
 		  join approval a using(approval_no)
 		<where>
-			<if test="">
-				검색조건
+			<if test="title != null">
+				제목
 			</if>
-			<if test="">
-				검색조건
+			<if test="form != null">
+				양식
+			</if>
+			<if test=" != null">
+				조회기간
+			</if>
+			<if test=" != null">
+				작성자
+			</if>
+			<if test=" != null">
+				승인자
+			</if>
+			<if test=" != null">
+				참조자
+			</if>
+			<if test=" != null">
+				문서번호
 			</if>
 		</where>
 		  and (
@@ -360,19 +375,90 @@
 		                         where department = (
 		                        					  select department_no
 		                        					    from dept
-		                        					   where department_name = #{department} <!- 나의 부서에 포함된 부서원 조회 ->
+		                        					   where department_name = #{department} 나의 부서에 포함된 부서원 조회
 		                        				    )
 		                      )
 			  )
-		  and process_order <![CDATA[<=]]> current_order + 1 <!- 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함 ->
+		  and process_order <![CDATA[<=]]> current_order + 1 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함
 		  and approval_status != '임시저장'
 		  and a.status = 'Y'
 	</select>
-	
+	<!--  
 	<select id="selectSearchList" resultMap="approvalResult">
-	
-	</select>
-	 -->
+		select
+		       approval_no
+		     , user_name
+		     , form
+		     , title
+		     , (
+		        select origin_name 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함
+		          from attachment
+		         where approval_no = ref_no
+		           and category_no = 1
+                   and rownum = 1
+		       ) origin_name
+		     , approval_status
+		     , current_order
+		     , final_order
+		     , create_date
+		     , complete_date
+		     , complete_no
+		     , bookmark
+		  from app_process ap app_process(결재선)이 기준
+		  join approval a using(approval_no)
+		  join member m on (a.user_no = m.user_no)
+		<where>
+			<if test="title != null">
+				제목
+			</if>
+			<if test="form != '선택안함'">
+				양식
+			</if>
+			<if test=" != null">
+				조회기간
+			</if>
+			<if test=" != null">
+				작성자
+			</if>
+			<if test=" != null">
+				승인자
+			</if>
+			<if test=" != null">
+				참조자
+			</if>
+			<if test=" != null">
+				문서번호
+			</if>
+		</where>
+		  and (
+			  	ap.user_no = #{userNo}
+             or	ap.user_no in (
+		                        select user_no
+		                          from member
+		                         where department = (
+		                        					  select department_no
+		                        					    from dept
+		                        					   where department_name = #{department} 나의 부서에 포함된 부서원 조회
+		                        				    )
+		                      )
+			  )
+		  and process_order <![CDATA[<=]]> current_order + 1 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함
+		  and approval_status != '임시저장'
+		  and a.status = 'Y'
+		 order
+		<choose>
+			<when test="orderBy == ''">
+		    	by approval_no desc 최신순
+		    </when>
+		    <when test="orderBy == ''">
+		    	by approval_no asc 오래된순
+		    </when>
+		    <otherwise>
+		    	by complete_no desc 기안완료순
+		    </otherwise>
+		</choose>
+	</select>-->
+
 	<update id="updateBook">
 		update
 	      	   app_process
