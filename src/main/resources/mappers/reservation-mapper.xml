@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="reservationMapper">
+
+<resultMap id="reservationRoomResult" type="ReservationRoom">
+	<id column="room_res_no" property="roomResNo"/>
+	<result column="start_date" property="startDate"/>
+	<result column="end_date" property="endDate"/>
+	<result column="subject" property="subject"/>
+	<result column="room_no" property="roomNo"/>
+	<result column="res_user" property="resUser"/>
+	<result column="create_date" property="createDate"/>
+	<result column="modify_date" property="modifyDate"/>
+	<result column="res_user_name" property="resUserName"/>
+	<result column="res_department_no" property="resDeptNo"/>
+	<result column="res_department_name" property="resDeptName"/>
+	<result column="res_position_name" property="resPosition"/>
+	<collection property="rParticipants" resultMap="resParticipantResult"/>
+	<collection property="rooms" resultMap="roomResult"/>
+</resultMap>
+
+<resultMap id="roomResult" type="Room">
+	<id column="room_no" property="roomNo"/>
+	<result column="room_name" property="roomName"/>
+	<result column="create_date" property="createDate"/>
+	<result column="modify_date" property="modifyDate"/>
+	<result column="create_user" property="createUser"/>
+	<result column="delete_status" property="deleteStatus"/>
+</resultMap>
+
+<resultMap id="resParticipantResult" type="ResParticipant">
+	<id column="res_no" property="resNo"/>
+	<result column="rp_user_no" property="userNo"/>
+	<result column="r_type" property="rType"/>
+	<result column="rp_user_name" property="userName"/>
+	<result column="rp_department_no" property="deptNo"/>
+	<result column="rp_department_name" property="deptName"/>
+	<result column="rp_position_name" property="position"/>
+</resultMap>
+	
+	
+<select id="selectRoomList" resultMap="roomResult">
+	select
+		   room_no
+		 , room_name
+      from room
+     where delete_status = 'N'
+</select>
+
+<select id="selectReservationRoomListAll" resultMap="reservationRoomResult">
+	select
+		   room_res_no
+		 , start_date
+		 , end_date
+		 , subject
+		 , rr.room_no "room_no"
+		 , r.room_name "room_name"
+		 , res_user
+         , dd.department_no "res_department_no"
+         , dd.department_name "res_department_name"
+         , pp.position_name "res_position_name"
+		 , mm.user_name "res_user_name"
+		 , rr.create_date "create_date"
+		 , rr.modify_date "modify_date"
+		 , rp.user_no "rp_user_no"
+		 , m.user_name "rp_user_name"
+         , d.department_no "rp_department_no"
+         , d.department_name "rp_department_name"
+         , p.position_name "rp_position_name"
+	  from res_room rr
+	  left join r_participant rp on (rr.room_res_no = rp.res_no)
+	  left join member m on (rp.user_no = m.user_no)
+      left join member mm on (rr.res_user = mm.user_no)
+      left join dept d on (m.department = d.department_no)
+      left join dept dd on (mm.department = dd.department_no)
+      left join position p on (m.position = p.position_no)
+      left join position pp on (mm.position = pp.position_no)
+      left join room r on (rr.room_no = r.room_no)
+</select>
+
+</mapper>

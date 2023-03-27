@@ -37,6 +37,9 @@
 		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppChange" alias="AppChange" />
 		<typeAlias type="com.ppicachu.ppic.approval.model.vo.AppDetail" alias="AppDetail" />
 		<typeAlias type="com.ppicachu.ppic.work.model.vo.HolidayApply" alias="HolidayApply" />
+		<typeAlias type="com.ppicachu.ppic.reservation.model.vo.ReservationRoom" alias="ReservationRoom" />
+		<typeAlias type="com.ppicachu.ppic.reservation.model.vo.Room" alias="Room" />
+		<typeAlias type="com.ppicachu.ppic.reservation.model.vo.ResParticipant" alias="ResParticipant" />
 	</typeAliases>
 
 	
@@ -54,6 +57,7 @@
 		<mapper resource="/mappers/approval-mapper.xml" />
 		<mapper resource="/mappers/document-mapper.xml" />
 		<mapper resource="/mappers/project-mapper.xml" />
+		<mapper resource="/mappers/reservation-mapper.xml" />
 	</mappers>
 	
 	
