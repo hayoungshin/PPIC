@@ -94,6 +94,17 @@ public class MailController {
 		return "mail/sendMailForm";
 	}
 	
+	@RequestMapping("reply.ml")
+	public ModelAndView replayMail(int no, HttpSession session, ModelAndView mv) {
+		MailStatus status = new MailStatus();
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setMailNo(no);
+		Mail m = mService.selectRecieve(status);
+		
+		mv.addObject("m", m).setViewName("mail/replyMailForm");
+		return mv;
+	}
+	
 	@RequestMapping("sendList.ml")
 	public ModelAndView selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
 		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
@@ -199,7 +210,7 @@ public class MailController {
 		return "mail/binMailDetailView";
 	}
 	
-	@RequestMapping("send.ml")	// 중요메일일 경우 "on"
+	@RequestMapping("send.ml")																				// 중요메일일 경우 "on"
 	public String sendMail(Mail m, @RequestParam(value="mailTitle", defaultValue="(제목없음)") String mailTitle, String important, ArrayList<MultipartFile> upfiles, HttpSession session, Model model) {
 		
 		m.setMailTitle(mailTitle);
@@ -248,6 +259,9 @@ public class MailController {
 		}
 		
 	}
+	
+	
+	
 	
 	/**
 	 * 별 눌렀을 때 중요표시 설정, 해제

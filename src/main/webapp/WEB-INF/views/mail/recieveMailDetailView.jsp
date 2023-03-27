@@ -109,7 +109,7 @@
 			</td>
 			<td style="width:35px; text-align:center;">
 				<div class="tool-tip">
-					<img src="resources/icons/reply.png" style="cursor:pointer; width:20px;">	
+					<img onclick="location.href='reply.ml?no=${m.mailNo}'" src="resources/icons/reply.png" style="cursor:pointer; width:20px;">	
 					<span class="tooltiptext" style="font-size:12px;">답장</span>
 				  </div>
 			</td>
