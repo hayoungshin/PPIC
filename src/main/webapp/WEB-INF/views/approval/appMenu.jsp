@@ -275,6 +275,47 @@
 </style>
 </head>
 <body>
+	<script>
+		// search div block
+		function searchDiv(){
+			if(document.getElementById("search-input").style.display == "block"){
+				document.getElementById("search-input").style.display = "none";
+			}else{
+				document.getElementById("search-input").style.display = "block";
+			}
+		}
+
+		// input date block
+		function inputDate(){
+			let myselfRadio = document.getElementById("myself");
+			if(myselfRadio.checked == true){
+				document.getElementById("inputTr").style = "width: 100%; display:block";
+			}else{
+				document.getElementById("inputTr").style = "width: 100%; display:none";
+			}
+		}
+		
+		$(function(){
+			// 기간 선택 end max
+			let now_utc = Date.now(); // 지금 날짜를 밀리초로 가져옴
+			// getTimezoneOffset()은 현재 시간과의 차이를 분단위로 반환
+			let timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
+			// new Date(now_utc-timeOff).toISOString()은 '2023-03-20T18:09:38.134z'를 반환
+			let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+			document.getElementById("end").setAttribute("max", '2023-03-27');
+		});
+		
+		// 기간 선택 입력 start max
+		function startMax(){
+			$("#start").attr("max", $("#end").val());
+		}
+	
+		// 기간 선택 입력 end min
+		function endMin(){
+			$("#end").attr("min", $("#start").val());
+		}
+	</script>
+	
 	<div id="content" style="position: relative; z-index: 1;">
 		<div class="content-1">
 			<div class="t-area">
@@ -363,8 +404,8 @@
 								<tr height="40px">
 									<td>기간</td>
 									<td id="radio-td">
+										<input type="radio" name="period" id="all" onclick="inputDate();" selected> <label for="all">전체&nbsp;</label>
 										<input type="radio" name="period" id="week" onclick="inputDate();"> <label for="week">1주일&nbsp;</label>
-										<input type="radio" name="period" id="month" onclick="inputDate();"> <label for="month">1개월&nbsp;</label>
 										<input type="radio" name="period" id="three-month" onclick="inputDate();"> <label for="three-month">3개월&nbsp;</label>
 										<input type="radio" name="period" id="myself" onclick="inputDate();"> <label for="myself">직접입력</label>
 									</td>
@@ -379,7 +420,9 @@
 								<tr height="40px">
 									<td><!-- 빈칸 --></td>
 									<td>
-										<input type="date" name="createDate"> ~ <input type="date" name="completeDate">
+										<input type="date" name="createDate" id="start" onchange="endMin();">
+										~
+										<input type="date" name="completeDate" id="end" onchange="startMax();">
 									</td>
 								</tr>
 							</table>
@@ -392,7 +435,7 @@
 								<tr height="40px">
 									<td>정렬</td>
 									<td id="radio-td">
-										<input type="radio" name="orderBy" id="asc"> <label for="asc">최신순&nbsp;&nbsp;</label>
+										<input type="radio" name="orderBy" id="asc" selected> <label for="asc">최신순&nbsp;&nbsp;</label>
 										<input type="radio" name="orderBy" id="desc"> <label for="desc">오래된순&nbsp;&nbsp;</label>
 										<input type="radio" name="orderBy" id="com"> <label for="com">기안완료순</label>
 									</td>
@@ -410,24 +453,5 @@
 		</div>
 		
 	<!-- div 닫는 구문 하나 없음 -->
-	
-	<script>
-		function searchDiv(){
-			if(document.getElementById("search-input").style.display == "block"){
-				document.getElementById("search-input").style.display = "none";
-			}else{
-				document.getElementById("search-input").style.display = "block";
-			}
-		}
-
-		function inputDate(){
-			let myselfRadio = document.getElementById("myself");
-			if(myselfRadio.checked == true){
-				document.getElementById("inputTr").style = "width: 100%; display:block";
-			}else{
-				document.getElementById("inputTr").style = "width: 100%; display:none";
-			}
-		}
-	</script>
 </body>
 </html>

@@ -32,5 +32,6 @@ public class Approval {
 	
 	private String agrUserName;
 	private String refUserName;
+	private String period;
 	private String orderBy;
 }

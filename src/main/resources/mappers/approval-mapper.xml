@@ -342,29 +342,35 @@
 
 	<select id="selectSearchListCount" resultType="_int">
 		select count(*)
-		  from app_process ap app_process(결재선)이 기준
+		  from app_process <!-- ap app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
 		<where>
+			<if test="userName != null">
+				m.user_name like '%' || #{userName} || '%'
+			</if>
+			<if test="form != '선택안함'">
+				and form = #{form}
+			</if>
 			<if test="title != null">
-				제목
+				and title like '%' || #{title} || '%'
 			</if>
-			<if test="form != null">
-				양식
+			<if test="agrUserName != null">
+				and (mp.user_name like '%' || #{agrUserName} || '%' and process_order != 0)
 			</if>
-			<if test=" != null">
-				조회기간
+			<if test="refUserName != null">
+				and (mp.user_name like '%' || #{refUserName} || '%' and approval_role = '참조')
 			</if>
-			<if test=" != null">
-				작성자
+			<if test="completeNo != null">
+				and complete_no like '%' || #{completeNo} || '%'
 			</if>
-			<if test=" != null">
-				승인자
+			<if test="period == '1주일'">
+				and create_date between sysdate-8 and sysdate
 			</if>
-			<if test=" != null">
-				참조자
+			<if test="period == '3개월'">
+				and create_date between to_char(add_months(sysdate, -3), 'YY/MM/DD') and sysdate
 			</if>
-			<if test=" != null">
-				문서번호
+			<if test="period == '직접입력'">
+				and create_date between to_date(#{createDate}, 'YYYY-MM-DD') and to_date(#{completeDate}, 'YYYY-MM-DD')
 			</if>
 		</where>
 		  and (
@@ -375,23 +381,23 @@
 		                         where department = (
 		                        					  select department_no
 		                        					    from dept
-		                        					   where department_name = #{department} 나의 부서에 포함된 부서원 조회
+		                        					   where department_name = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
 		                        				    )
 		                      )
 			  )
-		  and process_order <![CDATA[<=]]> current_order + 1 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함
+		  and process_order <![CDATA[<=]]> current_order + 1 <!-- 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함 -->
 		  and approval_status != '임시저장'
 		  and a.status = 'Y'
 	</select>
-	<!--  
+	
 	<select id="selectSearchList" resultMap="approvalResult">
-		select
+		select distinct
 		       approval_no
-		     , user_name
+		     , m.user_name
 		     , form
 		     , title
 		     , (
-		        select origin_name 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함
+		        select origin_name <!-- 첨부파일의 유무만 보여주는 용도이므로 다중일 경우를 대비하여 하나만 가져오기 위함 -->
 		          from attachment
 		         where approval_no = ref_no
 		           and category_no = 1
@@ -404,30 +410,37 @@
 		     , complete_date
 		     , complete_no
 		     , bookmark
-		  from app_process ap app_process(결재선)이 기준
+		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
+		  join member mp on (ap.user_no = mp.user_no)
 		  join member m on (a.user_no = m.user_no)
 		<where>
-			<if test="title != null">
-				제목
+			<if test="userName != null">
+				m.user_name like '%' || #{userName} || '%'
 			</if>
 			<if test="form != '선택안함'">
-				양식
+				and form = #{form}
 			</if>
-			<if test=" != null">
-				조회기간
+			<if test="title != null">
+				and title like '%' || #{title} || '%'
 			</if>
-			<if test=" != null">
-				작성자
+			<if test="agrUserName != null">
+				and (mp.user_name like '%' || #{agrUserName} || '%' and process_order != 0)
 			</if>
-			<if test=" != null">
-				승인자
+			<if test="refUserName != null">
+				and (mp.user_name like '%' || #{refUserName} || '%' and approval_role = '참조')
 			</if>
-			<if test=" != null">
-				참조자
+			<if test="completeNo != null">
+				and complete_no like '%' || #{completeNo} || '%'
 			</if>
-			<if test=" != null">
-				문서번호
+			<if test="period == '1주일'">
+				and create_date between sysdate-8 and sysdate
+			</if>
+			<if test="period == '3개월'">
+				and create_date between to_char(add_months(sysdate, -3), 'YY/MM/DD') and sysdate
+			</if>
+			<if test="period == '직접입력'">
+				and create_date between to_date(#{createDate}, 'YYYY-MM-DD') and to_date(#{completeDate}, 'YYYY-MM-DD')
 			</if>
 		</where>
 		  and (
@@ -438,26 +451,26 @@
 		                         where department = (
 		                        					  select department_no
 		                        					    from dept
-		                        					   where department_name = #{department} 나의 부서에 포함된 부서원 조회
+		                        					   where department_name = #{department} <!-- 나의 부서에 포함된 부서원 조회 -->
 		                        				    )
 		                      )
 			  )
-		  and process_order <![CDATA[<=]]> current_order + 1 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함
+		  and process_order <![CDATA[<=]]> current_order + 1 <!-- 결재 진행상황 상 현재 순서보다 먼저이거나 같을때만 보여줘야 함 -->
 		  and approval_status != '임시저장'
 		  and a.status = 'Y'
 		 order
 		<choose>
-			<when test="orderBy == ''">
+			<when test="orderBy == '최신순'">
 		    	by approval_no desc 최신순
 		    </when>
-		    <when test="orderBy == ''">
+		    <when test="orderBy == '오래된순'">
 		    	by approval_no asc 오래된순
 		    </when>
 		    <otherwise>
 		    	by complete_no desc 기안완료순
 		    </otherwise>
 		</choose>
-	</select>-->
+	</select>
 
 	<update id="updateBook">
 		update

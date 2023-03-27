@@ -126,6 +126,7 @@ public class ApprovalController {
 		int listCount = aService.selectSearchListCount(a);
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		ArrayList<Approval> list = aService.selectSearchList(a, pi);
+		m.addAttribute("a", a);
 		m.addAttribute("pi", pi);
 		m.addAttribute("list", list);
 		
