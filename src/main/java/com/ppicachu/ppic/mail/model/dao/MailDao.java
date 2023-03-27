@@ -96,4 +96,11 @@ public class MailDao {
 		return sqlSession.selectOne("mailMapper.selectSend", mailNo);
 	}
 	
+	public int selectImportantListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectImportantListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectImportantList(SqlSessionTemplate sqlSession, String userMail){
+		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantList", userMail);
+	}
+	
 }

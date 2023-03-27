@@ -80,5 +80,15 @@ public class MailServiceImpl implements MailService{
 		return mDao.selectSend(sqlSession, mailNo);
 	}
 
+	@Override
+	public int selectImportantListCount(String userMail) {
+		return mDao.selectImportantListCount(sqlSession, userMail);
+	}
+
+	@Override
+	public ArrayList<MailStatus> selectImportantList(PageInfo pi, String userMail) {
+		return mDao.selectImportantList(sqlSession, userMail);
+	}
+
 	
 }
