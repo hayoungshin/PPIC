@@ -339,7 +339,7 @@
 	        		return d.getFullYear() + "." + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "." + ((d.getDate() - 1) > 9 ? (d.getDate()-1).toString() : "0" + (d.getDate()-1).toString());
 	        	} else{
 	        		return d.getFullYear() + "년 " + ((d.getMonth() + 1) > 9 ? (d.getMonth() + 1).toString() : "0" + (d.getMonth() + 1)) + "월 " + (d.getDate() > 9 ? d.getDate().toString() : "0" + d.getDate().toString()) + "일 "
-	        				+ (d.getHours() < 12 ? " 오전 " : " 오후 ") + (d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()) + ":" + (d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes());
+	        				+ (d.getHours() < 12 ? " 오전 " + (d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()) : " 오후 " + (d.getHours() - 12 >= 10 ? d.getHours() - 12 : '0' + (d.getHours() - 12))) + ":" + (d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes());
 	        	}
 	        }
 	     	
