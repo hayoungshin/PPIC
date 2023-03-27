@@ -79,6 +79,7 @@
 	      , m.user_no
 	      , m.user_name "user_name"
 	      , ps.position_name "position_name"
+	      , task_assign
 	      , pm_status
 	  from p_participant pp
       join project p on (pp.project_no = p.project_no)
@@ -86,7 +87,6 @@
 	  left join dept d on (m.department = d.department_no)
 	  left join position ps on (m.position = ps.position_no)
 	 where pp.project_no = #{projectNo}
-	   and pm_status is not null
 </select>
 
 <select id="selectTaskList" resultMap="taskResult">
@@ -387,10 +387,25 @@
 	 where project_no = #{projectNo}
 </update>
 
+<select id="selectTaskRefUser" resultMap="proParticipantsResult">
+	select
+		    project_no
+		  , task_no
+		  , department_no
+		  , user_no
+		  , task_assign
+	  from p_participant
+	 where project_no = #{projectNo}
+	   and task_assign = 'N'
+	   and pm_status is null
+</select>
+
 <delete id="deleteProjectParticipants">
 	delete
 	  from p_participant
 	 where project_no = #{projectNo}
+	   and task_assign = 'N'
+	    or task_assign is null
 </delete>
 
 <update id="deleteProject">

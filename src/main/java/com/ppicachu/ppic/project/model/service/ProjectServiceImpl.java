@@ -86,10 +86,10 @@ public class ProjectServiceImpl implements ProjectService {
 		return pDao.deleteTaskParticipant(sqlSession, taskNo);
 	}
 
-	@Override
-	public int addTaskParticipant(ArrayList<ProjectParticipant> updateList) {
-		return pDao.addTaskParticipant(sqlSession, updateList);
-	}
+//	@Override
+//	public int addTaskParticipant(ArrayList<ProjectParticipant> updateList) {
+//		return pDao.addTaskParticipant(sqlSession, updateList);
+//	}
 
 	@Override
 	public int deleteTask(int taskNo) {
@@ -110,6 +110,11 @@ public class ProjectServiceImpl implements ProjectService {
 	public int updateProject(Project p) {
 		return pDao.updateProject(sqlSession, p);
 	}
+	
+	@Override
+	public ArrayList<ProjectParticipant> selectTaskRefUser(int projectNo) {
+		return pDao.selectTaskRefUser(sqlSession, projectNo);
+	}
 
 	@Override
 	public int deleteProjectParticipants(int projectNo) {
@@ -120,7 +125,7 @@ public class ProjectServiceImpl implements ProjectService {
 	public int deleteProject(int projectNo) {
 		return pDao.deleteProject(sqlSession, projectNo);
 	}
-	
+
 	
 	
 
