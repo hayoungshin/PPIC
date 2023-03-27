@@ -35,7 +35,6 @@ public class MailDao {
 		
 		if(!m.getRecipientArr()[0].equals("")) {
 			for(String s : m.getRecipientArr()) {
-				System.out.println("받은사람 : " + s);
 				status.setRecipientMail(s);
 				status.setMailType("1");
 				result1 = sqlSession.insert("mailMapper.insertStatus", status);
@@ -43,7 +42,6 @@ public class MailDao {
 		}
 		if(!m.getRefArr()[0].equals("")) {
 			for(String s : m.getRefArr()) {
-				System.out.println("참조 : " + s);
 				status.setRecipientMail(s);
 				status.setMailType("2");
 				result2 = sqlSession.insert("mailMapper.insertStatus", status);
@@ -51,7 +49,6 @@ public class MailDao {
 		}
 		if(!m.getHidRefArr()[0].equals("")) {
 			for(String s : m.getHidRefArr()) {
-				System.out.println("숨은참조 : " + s);
 				status.setRecipientMail(s);
 				status.setMailType("3");
 				result3 = sqlSession.insert("mailMapper.insertStatus", status);

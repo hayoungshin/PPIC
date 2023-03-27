@@ -94,7 +94,14 @@ public class MailController {
 		return "mail/sendMailForm";
 	}
 	
-	@RequestMapping("reply.ml")
+	/**
+	 * 답장 페이지
+	 * @param no 메일번호
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping("replyForm.ml")
 	public ModelAndView replayMail(int no, HttpSession session, ModelAndView mv) {
 		MailStatus status = new MailStatus();
 		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
@@ -102,6 +109,24 @@ public class MailController {
 		Mail m = mService.selectRecieve(status);
 		
 		mv.addObject("m", m).setViewName("mail/replyMailForm");
+		return mv;
+	}
+	
+	/**
+	 * 전달 페이지
+	 * @param no 메일번호
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping("deliverForm.ml")
+	public ModelAndView deliverMail(int no, HttpSession session, ModelAndView mv) {
+		MailStatus status = new MailStatus();
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setMailNo(no);
+		Mail m = mService.selectRecieve(status);
+		
+		mv.addObject("m", m).setViewName("mail/deliverMailForm");
 		return mv;
 	}
 	

@@ -109,7 +109,7 @@
 			</td>
 			<td style="width:35px; text-align:center;">
 				<div class="tool-tip">
-					<img onclick="location.href='reply.ml?no=${m.mailNo}'" src="resources/icons/reply.png" style="cursor:pointer; width:20px;">	
+					<img onclick="location.href='replyForm.ml?no=${m.mailNo}'" src="resources/icons/reply.png" style="cursor:pointer; width:20px;">	
 					<span class="tooltiptext" style="font-size:12px;">답장</span>
 				  </div>
 			</td>
@@ -117,10 +117,10 @@
 				<div class="dropdown" id="dropdown">
 					<img src="resources/icons/dots.png" style="width:18px; cursor:pointer; opacity:0.7;" class="dropdown-toggle" data-toggle="dropdown">
 					<div class="dropdown-menu" style="font-size:13px; padding:0; left:-120px;">
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">답장</a>
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">전달</a>
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">삭제</a>
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">안읽음으로표시</a>
+						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='replyForm.ml?no=${m.mailNo}'">답장</span>
+						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='deliverForm.ml?no=${m.mailNo}'">전달</span>
+						<span class="dropdown-item" style="padding:5px 10px;" href="#">삭제</span>
+						<span class="dropdown-item" style="padding:5px 10px;" href="#">안읽음으로표시</span>
 					</div>
 				</div>
 			</td>
