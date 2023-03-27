@@ -26,4 +26,7 @@ public class MailStatus {
 	private String attachmentStatus;	// 0|1
 	
 	private String[] recipientArr;
+	
+	// 리스트에서 체크된 mailNo 받아오기 위해
+	private int[] mailNoArr;
 }
