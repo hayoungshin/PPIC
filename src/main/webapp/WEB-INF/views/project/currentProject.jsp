@@ -708,7 +708,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="submit" class="btn btn-purple">프로젝트 생성</button>
+              <button type="submit" class="btn btn-purple" id="project-add-btn">프로젝트 생성</button>
             </div>
           </form>
 
@@ -1322,12 +1322,22 @@
     <script>
     	document.getElementById("add-btn").onclick = function(){
     		let taskAlarm = "";
-    		for(let i = 0; i<document.getElementsByName("selectUserNo").length; i++){
-    			taskAlarm += "/" + document.getElementsByName("selectUserNo")[i].value;
+    		for(let i = 0; i<$("#add-task-modal input[name=selectUserNo]").length; i++){
+    			taskAlarm += "/" + $("#add-task-modal input[name=selectUserNo]").eq(i).val();
     		}
     		taskAlarm = taskAlarm.substring(1);
     		if(socket){
 	          let socketMsg = "5,${loginUser.userNo},${loginUser.userName}," + taskAlarm + ",1," + document.getElementsByName("taskName")[0].value;
+	          socket.send(socketMsg);
+		  	}
+    	}
+    	document.getElementById("project-add-btn").onclick = function(){
+    		let projectAlarm = $("select[name=projectManager]").val();
+    		for(let i = 0; i<$("#add-project-modal input[name=selectUserNo]").length; i++){
+    			projectAlarm += "/" + $("#add-project-modal input[name=selectUserNo]").eq(i).val()
+    		}
+    		if(socket){
+	          let socketMsg = "4,${loginUser.userNo},${loginUser.userName}," + projectAlarm + ",1," + document.getElementsByName("projectName")[0].value;
 	          socket.send(socketMsg);
 		  	}
     	}

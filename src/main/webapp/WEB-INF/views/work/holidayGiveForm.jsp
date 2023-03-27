@@ -91,7 +91,6 @@
            
             <div class="workcategory" style="float:left;" >
                 <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
-                <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
 				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
                 <a href="holiApply.ho?no=${loginUser.userNo }">휴가신청</a>
                 
@@ -102,7 +101,7 @@
 				<!-- 관리자만 보이게 할거임 -->
 				<a href="memberWork.wo">구성원근무</a>
 				<a href="memberHoli.ho">전사원휴가현황</a>
-				<a href="holiGive.ho">휴가지급|회수</a>
+				<a href="holiGive.ho"  style="color:black;">휴가지급|회수</a>
 				<a href="holiApprove.ho">휴가승인</a>
 			</div> 
             
@@ -143,26 +142,33 @@
 			            </c:forEach>
 				    </select>
 				    
-				    <select name="userNo" id="userNo">
+				    <select class="userNo" name="userNo" id="userNo">
+				    	<option value="">이름</option>
 				    	<c:forEach var="m" items="${ list1 }">
-				    			<option value="${m.userNo}"> ${ m.userName }(사번) </option>
+				    			<option value="${m.userNo}" value2="${m.departmentNo}" value3="${m.position}" style="display:none;">${m.userName}</option>
 				    	</c:forEach>
 			        </select>
 			        
 			        <script>
 			        	
-		        		$("select[name=dept]").change(function(){
-		        			var dept = $("select[name=dept] option:selected").text();
-		        			console.log(dept);
-		        		});
-			      
+				        $("#dept").change(function(){
+				          var selectedDept = $("#dept option:selected").val();
+				          $("#userNo option").each(function(){
+				              if($(this).attr("value2") == selectedDept){
+				               $(this).css("display", "block");
+				              }else{
+				                $(this).css("display", "none");
+				              }
+				            })
+				        })
+
 			        </script>
 				
 				    <br><br>
 				
 				    <label>지급내역</label>
 				    <select name="cause" id="cause">
-				        <option value="추가지급">연차</option>
+				        <option value="연차지급">연차</option>
 				        <option value="추가지급">여름휴가</option>
 				    </select>
 				
@@ -187,19 +193,37 @@
 			    <form action="holiWithDraw.ho" method="post">
 			        <label id="homem2">대상자</label>
 			        
-			        <select class="dept" name="dept" id="dept">
+			        <select class="dept" name="dept" id="dept2">
 				    	<option value="">소속</option>
 				    	<c:forEach var="d" items="${ list2 }">
 			            	<option value="${ d.departmentNo }"> ${ d.departmentName }</option>
 			            </c:forEach>
 				    </select>
 				    
-				    <select name="userNo" id="userNo">
+				    <select class="userNo" name="userNo" id="userNo2">
+				    	<option value="">이름</option>
 				    	<c:forEach var="m" items="${ list1 }">
-				    			<option value="${m.userNo}"> ${ m.userName }(사번) </option>
+				    			<option value="${m.userNo}" value2="${m.departmentNo}" value3="${m.position}" style="display:none;">${m.userName}</option>
 				    	</c:forEach>
 			        </select>
-			
+					
+					<script>
+			        	
+				        $("#dept2").change(function(){
+				          var selectedDept = $("#dept2 option:selected").val();
+				          $("#userNo2 option").each(function(){
+				              if($(this).attr("value2") == selectedDept){
+				               $(this).css("display", "block");
+				              }else{
+				                $(this).css("display", "none");
+				              }
+				            })
+				        })
+
+			        </script>
+					
+					
+					
 			        <br><br>
 			
 			        <label>회수내역</label>
@@ -215,7 +239,7 @@
 			        
 			        <br><br>
 			
-			        <input class="btn-purple btn-holi" id="holidaywithdraw-btn" type="button" value="저장">
+			        <input class="btn-purple btn-holi" id="holidaywithdraw-btn" type="submit" value="저장">
 			    </form>
 			    
 			</div>

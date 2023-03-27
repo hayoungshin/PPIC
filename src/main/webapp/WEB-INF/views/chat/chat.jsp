@@ -135,10 +135,11 @@
         width:18px; 
         border-radius:50%; 
         text-align: center; 
-        line-height: 17px; 
-        background:red; 
+        line-height: 18px; 
+        background:rgb(244, 89, 89);
         color:white;
         margin-top:3px;
+        font-size:5px;
     }
     .table-time{
         text-align: right;
@@ -364,7 +365,6 @@
 	   			url:"memList.chat",
 	   			data:{userNo:${loginUser.userNo}},
         		success:function(map){
-        			console.log(map)
         			let value1 = "<div class='detailView' id='memberList'>"
 		    					+ "<img src='resources/icons/up-arrow.png' height='15px' width='15px'>&nbsp;"
 		    					+ "내 부서"
@@ -411,7 +411,6 @@
 		        			       		} else if(map.memList[j].connSta == 2){
 		        			       			value1 += " out";
 		        			       		}
-		        						console.log(map.memList[1].connSta)
 		        						value1 += "'></span></span></div>";
 		        					}
 	        					}
@@ -656,7 +655,6 @@
         		url:"chatRoomList.chat",
         		data:{participantNo:${loginUser.userNo}},
         		success:function(list){
-        			console.log(list)
         			let value = "<div id='chatRoomList-area'><table width='270'>";
         			let value2 = "<table id='search-area'>"
 	    					+	"<tr>"
@@ -1055,7 +1053,6 @@
 
         // 주소록 더블클릭시 이벤트
         function chatOne(no, clickNo){
-     		console.log(no)
      		if(no == 0){ // 전에 생성된 1:1 채팅이 없을 때
      			let arr = [];
             	arr.push(${loginUser.userNo});
@@ -1195,7 +1192,6 @@
      				roomNo:no,
      				participantNo:${loginUser.userNo}
      			},success:function(list){
-     				console.log(list)
      				if(num == 1){
      					let me = "<div><img src='";
          				let others = "";
@@ -1365,7 +1361,6 @@
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
-			let $sendDate;
 			if(msgArr[2] == "ENTER-CHAT"){
 				$(".notreadCount").each(function(){
 					$html = $(this).html();

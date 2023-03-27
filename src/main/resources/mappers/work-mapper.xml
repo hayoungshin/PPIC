@@ -44,6 +44,8 @@
 		<result column="behindtime" property="behindtime" />
 		<result column="absenteeism" property="absenteeism" />
 		<result column="leavearly" property="leavearly" />
+		<result column="start" property="start" />
+		<result column="title" property="title" />
 	</resultMap>
 	
 	<resultMap id="memberResult" type="Member">
@@ -69,6 +71,8 @@
 		<result column="behindtime" property="behindtime" />
 		<result column="absenteeism" property="absenteeism" />
 		<result column="leavearly" property="leavearly" />
+		<result column="work_time" property="workTime" />
+		<result column="work_count" property="workCount" />
 	</resultMap>
 
 	<select id="selectHolidayList" resultMap="holidayResult2" >
@@ -355,13 +359,8 @@
 	
 	<select id="workCalendar" resultMap="workResult">
 		select
-		       work_no
-		     , user_no
-		     , to_char(work_date, 'MM"월"DD"일"') as work_date
-		     , to_char(work_in, 'hh24:MI') as work_in
-		     , to_char(work_out,'hh24:MI') as work_out
-		     , work_time
-		     , status
+		        work_date as "start"
+     			, to_char(work_in, 'hh24:MI') as "title"
 		  from work 
 		 where user_no=#{userNo}
 	</select>
@@ -399,5 +398,19 @@
 		 group
 		    by m.user_name, m.user_no
 		 order by user_no
+	</select>
+	
+	<select id="selectTimeCountList" resultMap="memberResult">
+		select 
+		       m.user_name
+		     , m.user_no 
+		     , SUM(w.WORK_TIME) as "work_time"
+		     , count(w.work_time) as "work_count"
+		  FROM member m
+		  join work w on (w.user_no = m.user_no)
+		 WHERE SUBSTR(WORK_DATE,0,8) BETWEEN (TO_CHAR(TRUNC(SYSDATE,'YY'),'YY/MM/DD') ) AND (LAST_DAY(SYSDATE))
+		 group
+		    by m.user_name, m.user_no
+		 order by user_no ASC
 	</select>
 </mapper>

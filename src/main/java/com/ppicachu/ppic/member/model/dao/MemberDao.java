@@ -88,5 +88,13 @@ public class MemberDao {
 	public int authUpdate(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.update("memberMapper.authUpdate", m);
 	}
+	
+	public ArrayList<Member> newMemberList(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("memberMapper.newMemberList");
+	}
+	
+	public int newMemberApproval(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.newMemberApproval", m);
+	}
 
 }

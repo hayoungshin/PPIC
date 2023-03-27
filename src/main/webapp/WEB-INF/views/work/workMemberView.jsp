@@ -68,7 +68,6 @@
            
             <div class="workcategory" style="float:left;" >
                 <a href="workList.wo?no=${loginUser.userNo }" >출퇴근기록</a>
-                <a href="workInfo.wo?no=${loginUser.userNo }" >올해근무정보</a>
 				<a href="holiInfo.ho?no=${loginUser.userNo }" >휴가현황</a>
                 <a href="holiApply.ho?no=${loginUser.userNo }">휴가신청</a>
                 
@@ -77,7 +76,7 @@
             </div>
 			<div class="workcategory mworkcategory">
 				<!-- 관리자만 보이게 할거임 -->
-				<a href="memberWork.wo">구성원근무</a>
+				<a href="memberWork.wo" style="color:black;">구성원근무</a>
 				<a href="memberHoli.ho">전사원휴가현황</a>
 				<a href="holiGive.ho">휴가지급|회수</a>
 				<a href="holiApprove.ho">휴가승인</a>
@@ -106,13 +105,7 @@
 			
 			
 			<div class="workyear" align="right">
-				<a>
-					<img src="resources/icons/left-arrow.png" style="width:20px; margin:1px 3px 3px 3px;">
-				</a> 
-			2023년 
-				<a>
-					<img src="resources/icons/right-arrow.png" style="width:20px; margin:1px 3px 3px 3px;">
-				</a>
+				
 			</div>
 	
 			<div class="memberwork"  >
@@ -156,6 +149,7 @@
 					function selectMemberList(){
 						$.ajax({
 							url:"ajaxMemberList.wo",
+							async: false, 
 							success:function(map){
 								
 								let value=""
@@ -163,19 +157,27 @@
 								for(let i=0; i<map.mlist.length; i++){
 									for(let i=0; i<map.hlist.length; i++){
 										for(let i=0; i<map.wlist.length; i++){
-											value += "<tr>" 
-												+		"<td width='200'>"
-						                        +    		map.mlist[i].userName + "<div class='bno' style='display:none;'>" + map.mlist[i].userNo + "</div>"
-												+		"</td>"
-												+		"<td width='150'>"+ map.mlist[i].department + "</td>"
-							                    +       "<td width='150'>"+ map.hlist[i].giveDay +"</td>"
-							                    +		"<td width='150'>"+ map.hlist[i].useDay +"</td>"		
-							                    +       "<td width='150'>"+ map.wlist[i].behindtime +"</td>"
-							                    +       "<td width='150'>"+ map.wlist[i].leavearly + "</td>"
-							                    +       "<td width='150'>"+ map.wlist[i].absenteeism + "</td>"
-							                    +       "<td width='150'>"+ "</td>"
-							                    +       "<td width='150'>"+ "</td>"
-												+ 	"</tr>";
+											for(let i=0; i<map.tlist.length; i++){
+												value += "<tr>" 
+													+		"<td width='200'>"
+							                        +    		map.mlist[i].userName + "<div class='bno' style='display:none;'>" + map.mlist[i].userNo + "</div>"
+													+		"</td>"
+													+		"<td width='150'>"+ map.mlist[i].department + "</td>"
+								                    +       "<td width='150'>"+ map.hlist[i].giveDay +"</td>"
+								                    +		"<td width='150'>"+ map.hlist[i].useDay +"</td>"		
+								                    +       "<td width='150'>"+ map.wlist[i].behindtime +"</td>"
+								                    +       "<td width='150'>"+ map.wlist[i].leavearly + "</td>"
+								                    +       "<td width='150'>"+ map.wlist[i].absenteeism + "</td>"
+								                    +       "<td width='150'>"+ map.tlist[i].workCount + "</td>"
+								                    +       "<td width='150'>";
+							    								if(map.tlist[i].workTime != null){
+							    									value += map.tlist[i].workTime ;
+							    								}else{
+							    									value += "-";
+							    								}
+			    								value +=	"</tr>";
+											}
+											break;
 										}
 										break;
 									}

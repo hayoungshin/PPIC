@@ -115,6 +115,16 @@ public class MemberServiceImpl implements MemberService{
 		return mDao.authUpdate(sqlSession, m);
 	}
 
+	@Override
+	public ArrayList<Member> newMemberList() {
+		return mDao.newMemberList(sqlSession);
+	}
+
+	@Override
+	public int newMemberApproval(Member m) {
+		return mDao.newMemberApproval(sqlSession, m);
+	}
+
 	
 
 

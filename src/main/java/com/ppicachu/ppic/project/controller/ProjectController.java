@@ -143,7 +143,6 @@ public class ProjectController {
 	public String updateProject(Project p, String projectManagerDept,
 								String[] selectUserNo, String[] selectUserDept,
 								HttpSession session, Model model) {
-		System.out.println(p);
 		// 프로젝트 업데이트
 		int result = pService.updateProject(p);
 		

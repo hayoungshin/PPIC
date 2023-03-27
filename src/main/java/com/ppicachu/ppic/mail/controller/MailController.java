@@ -94,6 +94,42 @@ public class MailController {
 		return "mail/sendMailForm";
 	}
 	
+	/**
+	 * 답장 페이지
+	 * @param no 메일번호
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping("replyForm.ml")
+	public ModelAndView replayMail(int no, HttpSession session, ModelAndView mv) {
+		MailStatus status = new MailStatus();
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setMailNo(no);
+		Mail m = mService.selectRecieve(status);
+		
+		mv.addObject("m", m).setViewName("mail/replyMailForm");
+		return mv;
+	}
+	
+	/**
+	 * 전달 페이지
+	 * @param no 메일번호
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping("deliverForm.ml")
+	public ModelAndView deliverMail(int no, HttpSession session, ModelAndView mv) {
+		MailStatus status = new MailStatus();
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setMailNo(no);
+		Mail m = mService.selectRecieve(status);
+		
+		mv.addObject("m", m).setViewName("mail/deliverMailForm");
+		return mv;
+	}
+	
 	@RequestMapping("sendList.ml")
 	public ModelAndView selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
 		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
@@ -199,7 +235,7 @@ public class MailController {
 		return "mail/binMailDetailView";
 	}
 	
-	@RequestMapping("send.ml")	// 중요메일일 경우 "on"
+	@RequestMapping("send.ml")																				// 중요메일일 경우 "on"
 	public String sendMail(Mail m, @RequestParam(value="mailTitle", defaultValue="(제목없음)") String mailTitle, String important, ArrayList<MultipartFile> upfiles, HttpSession session, Model model) {
 		
 		m.setMailTitle(mailTitle);
@@ -249,6 +285,9 @@ public class MailController {
 		
 	}
 	
+	
+	
+	
 	/**
 	 * 별 눌렀을 때 중요표시 설정, 해제
 	 * @param status mailNo, mailType 넘어옴
@@ -282,6 +321,41 @@ public class MailController {
 			result++;
 		}
 		return result == length;
+	}
+	
+	@RequestMapping("delete.ml")
+	public String deleteMail(int no, int type, HttpSession session, Model model) {
+		MailStatus status = new MailStatus();
+		status.setMailNo(no);
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setMailType(type);
+		
+		int result = mService.deleteMail(status);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "선택된 메일을 휴지통으로 이동하며 10일 보관 후 영구삭제됩니다.");
+			return "redirect:recieveList.ml";
+		} else {
+			model.addAttribute("errorMsg", "메일 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("listDelete.ml")
+	public boolean ajaxDeleteMail(MailStatus status, HttpSession session, Model model) {
+		
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.deleteMail(status);
+			result++;
+		}
+		return result == length;
+		
 	}
 	
 	

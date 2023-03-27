@@ -88,7 +88,7 @@
         margin-left: 275px;
     }
 
-	.organizationchart{ width:20%; padding: 20px; }
+	.organizationchart{ width:25%; padding: 10px; }
 
     #org{
         font-size: 20px;
@@ -162,11 +162,11 @@
 				    <div style="float:left; font-size: 18px; font-weight: bold; width:200px;">전체</div>
 				
 					<div style="float:right; margin-right:20px;">
-						<img src="resources/icons/up-down.png" style="width:25px; ">
+						
 					</div>
 					
 					<div style="float:right; margin-right:10px;">
-						<img src="resources/icons/search.png" style="width:25px; ">
+						
 					</div>
 					
 					<br><hr>
@@ -206,23 +206,44 @@
             <div class="v-line" style="float:left"></div>
             
             <div class="organizationchart" style="float:left">
-                <div id="org">조직도</div>
-				<div class="depttitle"> 전체 구성원 (00) </div>
+                <div id="org">사용승인</div>
                 <div class="deptlist">
-                  	<c:forEach var="d" items="${ list2 }" >
-						 <div class="deptname"> ${ d.departmentName } </div>
-					</c:forEach>
+                  	<table >
+	                		<tr  align="center">
+	                   			<td width="80px">이름</td>
+	                   			<td width="80px">부서</td>
+	                   			<td width="80px">직위</td>
+	                   			<td width="150px">승인</td>
+	                    	</tr>
+	                    	<c:forEach var="m" items="${ list1 }" >
+	                    		
+	                    		<tr height="50px" align="center">
+	                    			<td>${ m.userName } </td>
+	                    			<td>${ m.department }</td>
+	                    			<td>${ m.position }</td>
+	                    			<td> 
+	                    				<button type="button" onclick="newMember(${ m.userNo},'Y');" class="btn-purple" style="float:none">승인</button> 
+	                    				<button type="button" onclick="newMember(${ m.userNo},'N');">거절</button> 
+	                    			</td>
+	                    		</tr>
+		                    		
+							</c:forEach>
+							
+						</table>
                 </div>
             </div>
             
             <script>
 				$(function(){
 					selectMemberList();
+					
+					trans();
 				});
 				
 				function selectMemberList(){
 					$.ajax({
 						url:"ajaxMemberList.me",
+						async: false, 
 						success:function(map){
 							
 							let value=""
@@ -239,17 +260,41 @@
 										+		"</td>"
 										+		"<td>";
 										 			if(map.list1[i].status == 'Y'){
-										 				value += "재직" 	
+										 				value += "재직"; 	
 										 			}else{
-										 				value += "퇴직"
+										 				value += "퇴직";
 										 			}
 									value += 	"</td>"
-					                    +       "<td>"+ map.list1[i].employeeNo+"</td>"
-					                    +		"<td>"+ map.list1[i].hireDate +"</td>"		
-					                    +       "<td>"+ map.list1[i].resignDate +"</td>"
+					                    +       "<td>";
+					                				if(map.list1[i].employeeNo != null){
+					                					value += map.list1[i].employeeNo ;
+					                				}else{
+					                					value += "-";
+					                				}
+					                value +=	"</td>"
+					                	+       "<td>";
+	                								if(map.list1[i].hireDate != null){
+	                									value += map.list1[i].hireDate ;
+	                								}else{
+	                									value += "-";
+	                								}
+	                				value +=	"</td>"	
+	                					+       "<td>";
+				    								if(map.list1[i].resignDate != null){
+				    									value += map.list1[i].resignDate ;
+				    								}else{
+				    									value += "-";
+				    								}
+				    				value +=	"</td>"	
 					                    +       "<td>"+ map.list1[i].department +"</td>"
 					                    +       "<td>"+ map.list1[i].position +"</td>"
-					                    +       "<td>"+ map.list1[i].phone +"</td>"
+					                    +       "<td>";
+													if(map.list1[i].phone != null){
+														value += map.list1[i].phone ;
+													} else {
+														value += "-";	
+													}
+									value +=	"</td>"
 					                    +       "<td>"+ map.list1[i].mail +"</td>"
 										+ 	"</tr>";
 									}
@@ -269,12 +314,73 @@
 				}
 				
 				
+				
+				
 			</script>
                 
 		</div>
 			
 	</div>
-    	
+	
+	
+	
+    <div class="modal" id="updateForm" style="position: fixed; top: 300px; right: 600px; ">
+      		<div class="modal-dialog">
+          		<div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div >
+	                <button type="button" class="close" data-dismiss="modal" style="padding:10px;">&times;</button>
+                </div>
+           		
+                <!-- Modal body -->
+                <div class="modal-body" align="center">
+                	
+	                    				
+						<b>
+				                        사용 <span name="status"></span> 전입니다 <br>   
+				                        정말로 <span name="status"></span>하시겠습니까? <br><br>
+	                    </b>
+						<br>
+	                    <form action="newMemberUpdate.me" method="post">
+	                        
+	                        <input type="hidden" name="userNo" value="">
+	                        <input type="hidden" name="memberSign" value="">
+							
+	                        <button type="submit" class="btn-purple" >확인</button>
+	                    </form>
+	                    	
+                </div>
+               
+           	</div>
+       	</div>
+   	</div>	
+	
+	<script>
+		function newMember(a,b){
+			var a = a;
+			var b = b;
+			$('#updateForm').show();
+			
+			$(document).on("click",".close",function(){ 
+				$('#updateForm').hide();
+			});
+	  			
+	  		
+	  		$('input[name=userNo]').attr('value',a);
+	  		$('input[name=memberSign]').attr('value',b);
+	  		
+	  		if(b=='Y'){
+	  			$('span[name=status]').text('승인');
+	  		}else {
+	  			$('span[name=status]').text('거절');
+	  		}
+	  		
+	  		
+		}
+	</script>
+
+	
 	
 </body>
 </html>
