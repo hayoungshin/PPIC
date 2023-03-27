@@ -249,6 +249,21 @@ public class MailController {
 		
 	}
 	
+	@ResponseBody
+	@RequestMapping("deleteImportant.ml")
+	public int ajaxDeleteImportantStatus(MailStatus status, HttpSession session) {
+		status.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		return mService.deleteImportantStatus(status);
+	}
+	@ResponseBody
+	@RequestMapping("updateImportant.ml")
+	public int ajaxUpdateImportantStatus(MailStatus status, HttpSession session) {
+		status.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		return mService.updateImportantStatus(status);
+	}
+	
 	
 	//**************** 주소록 ****************
 	@RequestMapping("address.ml")

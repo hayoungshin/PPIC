@@ -65,7 +65,7 @@
 							<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }">
 						</td>
 						<td style="width:50px;text-align:right;">
-							<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
+							<img onclick="importantStatus(this);" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
 						</td>
 						<td style="width:70px; text-align:left;" onclick="toDetail(this);">
 							<c:choose>
@@ -113,6 +113,51 @@
 			</tbody>
 		</table>
 
+		<script>
+			function importantStatus(star){
+				const no = star.parentNode.parentNode.childNodes[1].childNodes[1].value;
+				const type = document.getElementById("mailType" + no).value;
+				
+				if(star.src.includes("star-y")){	// 중요메일이었을 때
+					$.ajax({
+						url:"deleteImportant.ml",
+						data:{
+							mailNo:no,
+							mailType:type
+						},
+						type:"post",
+						success:function(result){
+							if(result > 0){
+								star.src = "resources/icons/star.png";
+							} else {
+								alert("중요메일 해제 실패");
+							}
+						}, error:function(){
+							console.log("중요메일 해제용 ajax 통신실패")
+						}
+					})
+				} else {	// 중요메일이 아니었을 때
+					$.ajax({
+						url:"updateImportant.ml",
+						data:{
+							mailNo:no,
+							mailType:type
+						},
+						type:"post",
+						success:function(result){
+							if(result > 0){
+								star.src = "resources/icons/star-y.png";
+							} else {
+								alert("중요메일 등록 실패");
+							}
+						}, error:function(){
+							console.log("중요메일 해제용 ajax 통신실패")
+						}
+					})
+				}
+				
+			}
+		</script>
 	
 		<script>
 			function toDetail(e){

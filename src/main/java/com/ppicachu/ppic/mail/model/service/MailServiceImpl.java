@@ -90,5 +90,15 @@ public class MailServiceImpl implements MailService{
 		return mDao.selectImportantList(sqlSession, pi, userMail);
 	}
 
+	@Override
+	public int deleteImportantStatus(MailStatus status) {
+		return mDao.deleteImportantStatus(sqlSession, status);
+	}
+
+	@Override
+	public int updateImportantStatus(MailStatus status) {
+		return mDao.updateImportantStatus(sqlSession, status);
+	}
+
 	
 }

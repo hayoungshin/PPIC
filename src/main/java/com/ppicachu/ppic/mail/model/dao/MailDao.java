@@ -109,4 +109,11 @@ public class MailDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantList", userMail);
 	}
 	
+	public int deleteImportantStatus(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.update("mailMapper.deleteImportantStatus", status);
+	}
+	public int updateImportantStatus(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.update("mailMapper.updateImportantStatus", status);
+	}
+	
 }
