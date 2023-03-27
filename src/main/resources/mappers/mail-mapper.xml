@@ -180,6 +180,12 @@
 		         where s.mail_no = m.mail_no
 		           and recipient_mail = #{recipientMail}
 		       ) important_status
+		     , (
+		        select mail_type
+		          from mail_status s
+		         where s.mail_no = m.mail_no
+		           and recipient_mail = #{recipientMail}
+		       ) mail_type
 		  from mail m
 		 where mail_no = #{mailNo}
 	</select>
@@ -273,5 +279,25 @@
 		    by mail_no desc
 	</select>
 	
+	<update id="deleteImportantStatus">
+		update
+			   mail_status
+		   set important_status = 'N'
+		  where (recipient_mail = #{recipientMail}
+		     or sender_mail = #{senderMail})
+		    and mail_no = #{mailNo}
+		    and mail_type = #{mailType}
+		    and important_status = 'Y'
+	</update>
+	<update id="updateImportantStatus">
+		update
+			   mail_status
+		   set important_status = 'Y'
+		  where (recipient_mail = #{recipientMail}
+		     or sender_mail = #{senderMail})
+		    and mail_no = #{mailNo}
+		    and mail_type = #{mailType}
+		    and important_status = 'N'
+	</update>
 	
 </mapper>

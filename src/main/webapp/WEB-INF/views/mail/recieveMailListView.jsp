@@ -6,6 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	#table-head span:hover{
+		cursor:pointer;
+		font-weight:600;
+	}
+</style>
 </head>
 <body>
 	<jsp:include page="mailMenubar.jsp" />
@@ -20,23 +26,22 @@
 				<tr id="table-head">
 					<td colspan="6" style="width:30px;">
 	
-						<input type="checkbox" name="" id="">
+						<input type="checkbox" id="check-all" onclick="checkAll(this);">
 	
 						<div class="dropdown" style="display:inline-block;">
 							<button style="margin:0px; padding:0; background:none;" class="dropdown-toggle" data-toggle="dropdown"></button>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">전체선택</a>
-								<a class="dropdown-item" href="#">읽은메일</a>
-								<a class="dropdown-item" href="#">읽지않은메일</a>
-								<a class="dropdown-item" href="#">중요메일</a>
-								<a class="dropdown-item" href="#">중요표시안한메일</a>
-								<a class="dropdown-item" href="#">선택해제</a>
+								<span class="dropdown-item select-checkbox" id="select-all">전체선택</span>
+								<span class="dropdown-item select-checkbox" id="select-read">읽은메일</span>
+								<span class="dropdown-item select-checkbox" id="select-notread">읽지않은메일</span>
+								<span class="dropdown-item select-checkbox" id="select-important">중요메일</span>
+								<span class="dropdown-item select-checkbox" id="select-notimportant">중요표시안한메일</span>
 							</div>
 						</div>
 	
-						<a href="" style="margin:0px 48px;">읽음</a>
-						<a href="" style="margin:0px 60px;">삭제</a>
-						<span style="margin:0px 60px; color:gray;">│</span>
+						<span onclick="readMail();" style="margin:0px 48px;">읽음</span>
+						<span style="margin:0px 60px;">삭제</span>
+						<span style="margin:0px 60px; color:gray; cursor:default;">│</span>
 	
 						<div class="dropdown" style="display:inline-block;">
 							<a href="" style="margin:0px 30px 0px 60px;" class="dropdown-toggle" data-toggle="dropdown">이동</a>
@@ -63,27 +68,28 @@
 			</thead>
 			<tbody>
 			<c:forEach var="m" items="${ list }">
+				<input type="hidden" id="mailType${ m.mailNo }" value="${ m.mailType }">
 				<tr>
 					<td style="width:30px;">
-						<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }">
+						<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }" onclick="boxchecked();">
 					</td>
 					<td style="width:50px;text-align:right;">
 						<c:choose>
 							<c:when test="${ m.importantStatus eq 'Y' }">	<!-- 중요표시 O -->
-								<img src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
+								<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
 							</c:when>
 							<c:otherwise>	<!-- 중요표시 X -->
-								<img src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+								<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
 							</c:otherwise>
 						</c:choose>
 					</td>
 					<td style="width:70px; text-align:left;" onclick="toDetail();">
 						<c:choose>
 							<c:when test="${ not empty m.readDate }">	<!-- 읽음 -->
-								<img src="resources/icons/mail-opened.png" style="width:20px;">
+								<img class="read-status" src="resources/icons/mail-opened.png" style="width:20px;">
 							</c:when>
 							<c:otherwise>	<!-- 안읽음 -->
-								<img src="resources/icons/mail-c.png" style="width:20px;">
+								<img class="read-status" src="resources/icons/mail-c.png" style="width:20px;">
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -100,10 +106,148 @@
 			</tbody>
 		</table>
 
+		<!-- 체크박스 -->
+		<script>
+			function checkAll(all){
+				const list = document.getElementsByClassName("mailNo");
+				if(all.checked){
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = true;
+					})
+				} else {
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = false;
+					})
+				}
+			}
+			function boxchecked(){
+				let checkedCount = 0;
+				document.querySelectorAll(".mailNo").forEach(function(c){
+					if(c.checked == false){
+						checkedCount++;
+					}
+				});
+				if(checkedCount > 0){
+					document.getElementById("check-all").checked = false;
+				} else if(checkedCount == 0) {
+					document.getElementById("check-all").checked = true;
+				}
+			}
+			$(".select-checkbox").click(function(e){
+				document.getElementById("check-all").checked = false;
+				document.querySelectorAll(".mailNo").forEach(function(c){
+					c.checked = false;
+				})
+				const id = e.target.id;
+				if(id == "select-all"){
+					document.getElementById("check-all").checked = true;
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = true;
+					})
+				} else if(id == "select-read"){
+					document.querySelectorAll(".read-status").forEach(function(r){
+						if(r.src.includes("mail-opened")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				} else if(id == "select-notread"){
+					document.querySelectorAll(".read-status").forEach(function(r){
+						if(r.src.includes("mail-c")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				} else if(id == "select-important"){
+					document.querySelectorAll(".important-status").forEach(function(r){
+						if(r.src.includes("star-y")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				} else {
+					document.querySelectorAll(".important-status").forEach(function(r){
+						if(!r.src.includes("star-y")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				}
+			})
+		</script>
+		
+		<!-- 테이블 head 기능들 구현 : ajax -->
+		<script>
+			function readMail(){
+				var arr = [];
+				document.querySelectorAll('input[type=checkbox][name=mailNo]:checked').forEach(function(c){
+					arr.push(c.value);
+				})
+				
+				$.ajax({
+					url:"read.ml",
+					data:{mailNoArr:arr},
+					type:"post",
+					success:function(result){	// boolean 타입
+						if(result){
+							location.reload() 
+						} else {
+							alert("읽음처리 실패");
+						}
+					}, error:function(){
+						console.log("읽음처리용 ajax 통신실패")
+					}
+				})
+				
+			}
+		</script>
+		
+		<!-- 중요메일 설정, 해제 -->
+		<script>
+			function importantStatus(star){
+				const no = star.parentNode.parentNode.childNodes[1].childNodes[1].value;
+				const type = document.getElementById("mailType" + no).value;
+				
+				if(star.src.includes("star-y")){	// 중요메일이었을 때
+					$.ajax({
+						url:"deleteImportant.ml",
+						data:{
+							mailNo:no,
+							mailType:type
+						},
+						type:"post",
+						success:function(result){
+							if(result > 0){
+								star.src = "resources/icons/star.png";
+							} else {
+								alert("중요메일 해제 실패");
+							}
+						}, error:function(){
+							console.log("중요메일 해제용 ajax 통신실패")
+						}
+					})
+				} else {	// 중요메일이 아니었을 때
+					$.ajax({
+						url:"updateImportant.ml",
+						data:{
+							mailNo:no,
+							mailType:type
+						},
+						type:"post",
+						success:function(result){
+							if(result > 0){
+								star.src = "resources/icons/star-y.png";
+							} else {
+								alert("중요메일 등록 실패");
+							}
+						}, error:function(){
+							console.log("중요메일 해제용 ajax 통신실패")
+						}
+					})
+				}
+				
+			}
+		</script>
 	
+		<!-- 상세페이지로 이동 -->
 		<script>
 			function toDetail(e){
-				console.log(e.parentNode.childNodes[1].childNodes[1].value);
 				location.href = "recieveDetail.ml?no=" + e.parentNode.childNodes[1].childNodes[1].value;
 			}
 		</script>

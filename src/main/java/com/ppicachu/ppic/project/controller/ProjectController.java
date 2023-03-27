@@ -143,17 +143,32 @@ public class ProjectController {
 	public String updateProject(Project p, String projectManagerDept,
 								String[] selectUserNo, String[] selectUserDept,
 								HttpSession session, Model model) {
-		
+		System.out.println(p);
 		// 프로젝트 업데이트
 		int result = pService.updateProject(p);
 		
 		
-		// 기존 참여자 정보 삭제
 		int result2 = 0;
 		int result3 = 0;
+		int result4 = 0;
 		if(result > 0) {
+			// 현재 task 참조자 조회(작업 담당자 제외)
+			ArrayList<ProjectParticipant> currentTaskRefUser = pService.selectTaskRefUser(p.getProjectNo());
+			ArrayList<ProjectParticipant> updateTaskRefUser = new ArrayList<>();
+			// 업데이트된 유저중 기존에 참조하고 있던 작업이 있는지 확인
+			for(String no : selectUserNo) {
+			    for(ProjectParticipant tp : currentTaskRefUser) {
+			        if(tp.getUserNo().equals(no)) {
+			        	updateTaskRefUser.add(tp);
+			        }
+			    }
+			}
+			// 기존 참여자 정보 삭제(작업 담당자 제외)
 			result2 = pService.deleteProjectParticipants(p.getProjectNo());
+			// task 참조자 추가
+			result3 = pService.insertTaskParticipants(updateTaskRefUser);
 		
+			// 프로젝트 참여자 전체 추가
 			ArrayList<ProjectParticipant> ppList = new ArrayList<>();
 			for(int i=0; i<selectUserNo.length; i++) {
 				ProjectParticipant pp = new ProjectParticipant();
@@ -171,12 +186,11 @@ public class ProjectController {
 			pm.setDepartmentNo(projectManagerDept);
 			pm.setPmStatus("Y");
 			ppList.add(pm);
-			result3 = pService.insertProjectParticipants(ppList);
+			result4 = pService.insertProjectParticipants(ppList);
 		}
 		
 		
-		
-		if(result*result3 > 0) {
+		if(result*result4 > 0) {
 			session.setAttribute("alertMsg", "프로젝트가 수정되었습니다.");
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {

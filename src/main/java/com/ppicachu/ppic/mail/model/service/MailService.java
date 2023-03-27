@@ -30,4 +30,8 @@ public interface MailService {
 	// 6. 중요메일 리스트 조회 서비스
 	int selectImportantListCount(String userMail);
 	ArrayList<MailStatus> selectImportantList(PageInfo pi, String userMail);
+	
+	// 7. 중요메일 해제,등록 서비스
+	int deleteImportantStatus(MailStatus status);
+	int updateImportantStatus(MailStatus status);
 }

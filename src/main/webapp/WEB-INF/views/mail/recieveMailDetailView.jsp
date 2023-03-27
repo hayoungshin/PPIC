@@ -95,15 +95,15 @@
 		</tr>
 		<tr>
 			<th>참조</th>
-			<td>${ m.hidRefMail }</td>
+			<td>${ m.refMail }</td>
 			<td style="width:120px; text-align:center;">${ m.sentDate }</td>
 			<td style="width:35px; text-align:center;">
 				<c:choose>
 					<c:when test="${ m.importantStatus eq 'Y' }">
-						<img src="resources/icons/star-y.png" style="cursor:pointer; width:18px;">
+						<img onclick="importantStatus(this);" src="resources/icons/star-y.png" style="cursor:pointer; width:18px;">
 					</c:when>
 					<c:otherwise>
-						<img src="resources/icons/star.png" style="cursor:pointer; width:18px;">
+						<img onclick="importantStatus(this);" src="resources/icons/star.png" style="cursor:pointer; width:18px;">
 					</c:otherwise>
 				</c:choose>
 			</td>
@@ -150,5 +150,50 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
+	
+	<script>
+			function importantStatus(star){
+				
+				if(star.src.includes("star-y")){	// 중요메일이었을 때
+					$.ajax({
+						url:"deleteImportant.ml",
+						data:{
+							mailNo:${m.mailNo},
+							mailType:${m.mailType}
+						},
+						type:"post",
+						success:function(result){
+							if(result > 0){
+								star.src = "resources/icons/star.png";
+							} else {
+								alert("중요메일 해제 실패");
+							}
+						}, error:function(){
+							console.log("중요메일 해제용 ajax 통신실패")
+						}
+					})
+				} else {	// 중요메일이 아니었을 때
+					$.ajax({
+						url:"updateImportant.ml",
+						data:{
+							mailNo:${m.mailNo},
+							mailType:${m.mailType}
+						},
+						type:"post",
+						success:function(result){
+							if(result > 0){
+								star.src = "resources/icons/star-y.png";
+							} else {
+								alert("중요메일 등록 실패");
+							}
+						}, error:function(){
+							console.log("중요메일 해제용 ajax 통신실패")
+						}
+					})
+				}
+				
+			}
+		</script>
+	
 </body>
 </html>

@@ -249,6 +249,42 @@ public class MailController {
 		
 	}
 	
+	/**
+	 * 별 눌렀을 때 중요표시 설정, 해제
+	 * @param status mailNo, mailType 넘어옴
+	 * @param session
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("deleteImportant.ml")
+	public int ajaxDeleteImportantStatus(MailStatus status, HttpSession session) {
+		status.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		return mService.deleteImportantStatus(status);
+	}
+	@ResponseBody
+	@RequestMapping("updateImportant.ml")
+	public int ajaxUpdateImportantStatus(MailStatus status, HttpSession session) {
+		status.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		return mService.updateImportantStatus(status);
+	}
+	
+	@ResponseBody
+	@RequestMapping("read.ml")
+	public boolean readMail(MailStatus status, HttpSession session) {
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.updateReadDate(status);
+			result++;
+		}
+		return result == length;
+	}
+	
+	
 	
 	//**************** 주소록 ****************
 	@RequestMapping("address.ml")

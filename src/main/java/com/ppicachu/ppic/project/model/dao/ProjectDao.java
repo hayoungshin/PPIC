@@ -102,6 +102,10 @@ public class ProjectDao {
 		return sqlSession.update("projectMapper.updateProject", p);
 	}
 	
+	public ArrayList<ProjectParticipant> selectTaskRefUser(SqlSessionTemplate sqlSession, int projectNo) {
+		return (ArrayList)sqlSession.selectList("projectMapper.selectTaskRefUser", projectNo);
+	}
+	
 	public int deleteProjectParticipants(SqlSessionTemplate sqlSession, int projectNo) {
 		return sqlSession.delete("projectMapper.deleteProjectParticipants", projectNo);
 	}
