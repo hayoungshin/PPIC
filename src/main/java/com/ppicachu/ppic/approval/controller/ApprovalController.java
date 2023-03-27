@@ -121,8 +121,9 @@ public class ApprovalController {
 	 */
 	@RequestMapping(value="search.ap", produces="application/json; charset=utf-8")
 	public String search(@RequestParam(value="cpage", defaultValue="1") int currentPage, Approval a, Model m, HttpSession session) {
+		a.setUserNo(((Member)session.getAttribute("loginUser")).getUserNo());
 		a.setDepartment(((Member)session.getAttribute("loginUser")).getDepartment());
-		
+
 		int listCount = aService.selectSearchListCount(a);
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		ArrayList<Approval> list = aService.selectSearchList(a, pi);

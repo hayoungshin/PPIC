@@ -133,10 +133,10 @@
 			                    			<span class="stt-gr">${ a.approvalStatus }</span>
 			                    		</c:when>
 			                    		<c:when test="${ a.approvalStatus eq '진행중' }">
-			                    			<span class="stt-pp">${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }</span>
+			                    			<span class="stt-pp">${ a.approvalStatus } ${ a.currentOrder }/${ a.finalOrder }</span>
 			                    		</c:when>
 			                    		<c:when test="${ a.approvalStatus eq '승인' }">
-			                    			<span class="stt-sb">${ a.approvalStatus}</span>
+			                    			<span class="stt-sb">${ a.approvalStatus }</span>
 			                    		</c:when>
 			                    		<c:when test="${ a.approvalStatus eq '반려' }">
 			                    			<span class="stt-rd">${ a.approvalStatus }</span>

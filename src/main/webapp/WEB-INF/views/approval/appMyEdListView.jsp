@@ -133,7 +133,7 @@
 			                    			<span class="stt-rd">${ a.approvalStatus }</span>
 			                    		</c:when>
 			                    		<c:otherwise>
-			                    			<span class="stt-sb">${ a.approvalStatus}</span>
+			                    			<span class="stt-sb">${ a.approvalStatus }</span>
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>

@@ -187,7 +187,7 @@
 			                    			<span class="stt-gr">${ a.approvalStatus }</span>
 			                    		</c:when>
 			                    		<c:otherwise>
-			                    			<span class="stt-pp">${ a.approvalStatus} ${ a.currentOrder }/${ a.finalOrder }</span>
+			                    			<span class="stt-pp">${ a.approvalStatus } ${ a.currentOrder }/${ a.finalOrder }</span>
 			                    		</c:otherwise>
 			                    	</c:choose>
 			                    </td>

@@ -74,7 +74,8 @@
 	#navi>li{
 		float:left; 
 		width:25%; 
-		/* height:100%; */
+		height:100%;
+		transform:scale(1);
 	}
 	.menu{
 		box-sizing:margin-box;
@@ -85,17 +86,17 @@
 		display:block;
 		line-height:35px;
 	}
-	.m-1{
+	.menu-1{
 		font-size:20px;
 	}
-	.m-2{
+	.menu-2{
 		font-size:18px;
 	}
-	.m-3{
+	.menu-3{
 		font-size:15px;
 	}
-	.m-small{
-		height:20px;
+	.menu-small{
+		height:30px;
 	}
 	#navi a{
 		text-decoration:none;
@@ -111,6 +112,8 @@
 	#navi>li:hover>ul{
 		display:block; 
 		background-color:white;
+		border: 1px solid lightgray;
+		border-radius: 5px;
 	}
 	
 	/* 공통 */
@@ -272,6 +275,16 @@
 	.del-btn-area{
 		float: right;
 	}
+
+	/* z-index */
+	.content-1{
+		position: relative;
+		z-index: 2;
+	}
+	.content-2{
+		position: relative;
+		z-index: 1;
+	}
 </style>
 </head>
 <body>
@@ -316,7 +329,7 @@
 		}
 	</script>
 	
-	<div id="content" style="position: relative; z-index: 1;">
+	<div id="content">
 		<div class="content-1">
 			<div class="t-area">
 		    	<div class="title-area"><h2><b>전자결재</b></h2></div>
@@ -325,25 +338,25 @@
 			<br clear="both">
 			<div id="navigator">
 				<ul id="navi">
-					<li><span class="menu m-1">개인문서함</span>
-						<ul style="position: relative; z-index: 2;">
-							<li class="m-small"><span class="menu m-2">기안문서함</span>
-								<li class="m-small"><a href="list.ap?myi=1" class="menu m-3">진행중</a></li>
-								<li class="m-small"><a href="list.ap?mye=1" class="menu m-3">완료</a></li>
-								<li><a href="list.ap?myt=1" class="menu m-3">임시저장</a></li>
+					<li><span class="menu menu-1">개인문서함</span>
+						<ul>
+							<li class="menu-small"><span class="menu menu-2">&nbsp;기안문서함</span>
+								<li class="menu-small"><a href="list.ap?myi=1" class="menu menu-3">&nbsp;&nbsp;&nbsp;진행중</a></li>
+								<li class="menu-small"><a href="list.ap?mye=1" class="menu menu-3">&nbsp;&nbsp;&nbsp;완료</a></li>
+								<li><a href="list.ap?myt=1" class="menu menu-3">&nbsp;&nbsp;&nbsp;임시저장</a></li>
 							</li>
-							<li><a href="list.ap?myr=1" class="menu m-2">참조문서함</a></li>
-							<li><a href="list.ap?myb=1" class="menu m-2">중요</a></li>
+							<li><a href="list.ap?myr=1" class="menu menu-2">&nbsp;참조문서함</a></li>
+							<li><a href="list.ap?myb=1" class="menu menu-2">&nbsp;중요</a></li>
 						</ul>
 					</li>
-					<li><span class="menu m-1">부서문서함</span>
-						<ul style="position: relative; z-index: 2;">
-							<li><a href="list.ap?dpi=1" class="menu m-2">진행중</a></li>
-							<li><a href="list.ap?dpe=1" class="menu m-2">완료</a></li>
+					<li><span class="menu menu-1">부서문서함</span>
+						<ul>
+							<li><a href="list.ap?dpi=1" class="menu menu-2">&nbsp;진행중</a></li>
+							<li><a href="list.ap?dpe=1" class="menu menu-2">&nbsp;완료</a></li>
 						</ul>
 					</li>
-					<li><a href="list.ap?a=1" class="menu m-1">전체문서관리</a></li>
-					<li><a href="list.ap?d=1" class="menu m-1">삭제문서관리</a></li>
+					<li><a href="list.ap?a=1" class="menu menu-1">전체문서관리</a></li>
+					<li><a href="list.ap?d=1" class="menu menu-1">삭제문서관리</a></li>
 				</ul>
 			</div>
 
@@ -404,10 +417,10 @@
 								<tr height="40px">
 									<td>기간</td>
 									<td id="radio-td">
-										<input type="radio" name="period" id="all" onclick="inputDate();" selected> <label for="all">전체&nbsp;</label>
-										<input type="radio" name="period" id="week" onclick="inputDate();"> <label for="week">1주일&nbsp;</label>
-										<input type="radio" name="period" id="three-month" onclick="inputDate();"> <label for="three-month">3개월&nbsp;</label>
-										<input type="radio" name="period" id="myself" onclick="inputDate();"> <label for="myself">직접입력</label>
+										<input type="radio" name="period" value="all" id="all" onclick="inputDate();" checked> <label for="all">전체&nbsp;</label>
+										<input type="radio" name="period" value="week" id="week" onclick="inputDate();"> <label for="week">1주일&nbsp;</label>
+										<input type="radio" name="period" value="three-month" id="three-month" onclick="inputDate();"> <label for="three-month">3개월&nbsp;</label>
+										<input type="radio" name="period" value="myself" id="myself" onclick="inputDate();"> <label for="myself">직접입력</label>
 									</td>
 								</tr>
 							</table>
@@ -435,9 +448,9 @@
 								<tr height="40px">
 									<td>정렬</td>
 									<td id="radio-td">
-										<input type="radio" name="orderBy" id="asc" selected> <label for="asc">최신순&nbsp;&nbsp;</label>
-										<input type="radio" name="orderBy" id="desc"> <label for="desc">오래된순&nbsp;&nbsp;</label>
-										<input type="radio" name="orderBy" id="com"> <label for="com">기안완료순</label>
+										<input type="radio" name="orderBy" value="desc" id="desc" checked> <label for="desc">최신순&nbsp;&nbsp;</label>
+										<input type="radio" name="orderBy" value="asc" id="asc"> <label for="asc">오래된순&nbsp;&nbsp;</label>
+										<input type="radio" name="orderBy" value="complete" id="complete"> <label for="complete">기안완료순</label>
 									</td>
 								</tr>
 							</table>

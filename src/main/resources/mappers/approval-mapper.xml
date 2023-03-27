@@ -342,34 +342,36 @@
 
 	<select id="selectSearchListCount" resultType="_int">
 		select count(*)
-		  from app_process <!-- ap app_process(결재선)이 기준 -->
+		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
+		  join member mp on (ap.user_no = mp.user_no)
+		  join member m on (a.user_no = m.user_no)
 		<where>
-			<if test="userName != null">
+			<if test="userName != ''">
 				m.user_name like '%' || #{userName} || '%'
 			</if>
 			<if test="form != '선택안함'">
 				and form = #{form}
 			</if>
-			<if test="title != null">
+			<if test="title != ''">
 				and title like '%' || #{title} || '%'
 			</if>
-			<if test="agrUserName != null">
+			<if test="agrUserName != ''">
 				and (mp.user_name like '%' || #{agrUserName} || '%' and process_order != 0)
 			</if>
-			<if test="refUserName != null">
+			<if test="refUserName != ''">
 				and (mp.user_name like '%' || #{refUserName} || '%' and approval_role = '참조')
 			</if>
-			<if test="completeNo != null">
+			<if test="completeNo != ''">
 				and complete_no like '%' || #{completeNo} || '%'
 			</if>
-			<if test="period == '1주일'">
+			<if test="period == 'week'">
 				and create_date between sysdate-8 and sysdate
 			</if>
-			<if test="period == '3개월'">
+			<if test="period == 'three-month'">
 				and create_date between to_char(add_months(sysdate, -3), 'YY/MM/DD') and sysdate
 			</if>
-			<if test="period == '직접입력'">
+			<if test="period == 'myself'">
 				and create_date between to_date(#{createDate}, 'YYYY-MM-DD') and to_date(#{completeDate}, 'YYYY-MM-DD')
 			</if>
 		</where>
@@ -415,31 +417,31 @@
 		  join member mp on (ap.user_no = mp.user_no)
 		  join member m on (a.user_no = m.user_no)
 		<where>
-			<if test="userName != null">
+			<if test="userName != ''">
 				m.user_name like '%' || #{userName} || '%'
 			</if>
 			<if test="form != '선택안함'">
 				and form = #{form}
 			</if>
-			<if test="title != null">
+			<if test="title != ''">
 				and title like '%' || #{title} || '%'
 			</if>
-			<if test="agrUserName != null">
+			<if test="agrUserName != ''">
 				and (mp.user_name like '%' || #{agrUserName} || '%' and process_order != 0)
 			</if>
-			<if test="refUserName != null">
+			<if test="refUserName != ''">
 				and (mp.user_name like '%' || #{refUserName} || '%' and approval_role = '참조')
 			</if>
-			<if test="completeNo != null">
+			<if test="completeNo != ''">
 				and complete_no like '%' || #{completeNo} || '%'
 			</if>
-			<if test="period == '1주일'">
+			<if test="period == 'week'">
 				and create_date between sysdate-8 and sysdate
 			</if>
-			<if test="period == '3개월'">
+			<if test="period == 'three-month'">
 				and create_date between to_char(add_months(sysdate, -3), 'YY/MM/DD') and sysdate
 			</if>
-			<if test="period == '직접입력'">
+			<if test="period == 'myself'">
 				and create_date between to_date(#{createDate}, 'YYYY-MM-DD') and to_date(#{completeDate}, 'YYYY-MM-DD')
 			</if>
 		</where>
@@ -460,14 +462,14 @@
 		  and a.status = 'Y'
 		 order
 		<choose>
-			<when test="orderBy == '최신순'">
-		    	by approval_no desc 최신순
+			<when test="orderBy == 'desc'">
+		    	by approval_no desc
 		    </when>
-		    <when test="orderBy == '오래된순'">
-		    	by approval_no asc 오래된순
+		    <when test="orderBy == 'asc'">
+		    	by approval_no asc
 		    </when>
 		    <otherwise>
-		    	by complete_no desc 기안완료순
+		    	by complete_no desc
 		    </otherwise>
 		</choose>
 	</select>
