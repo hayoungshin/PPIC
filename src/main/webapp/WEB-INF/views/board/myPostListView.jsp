@@ -41,6 +41,10 @@
        </table>
        
        <script>
+       $(function(){
+			console.log(${ pi.startPage})
+			console.log(${ pi.endPage})
+		})
         	$(function(){
         		$("#myPostList>tbody>tr").click(function(){
         			location.href = 'detailMy.bo?userNo=${loginUser.userNo}&no=' + $(this).children(".no").text();
@@ -70,27 +74,42 @@
        
        <script>
         	document.querySelector("#searchForm option[value=${condition}]").selected = true;
-        </script>
+        	
+       </script>
        
        <div id="paging">
             <ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="myList.bo?cpage=${ pi.currentPage - 1 }&userNo=${loginUser.userNo}"></a></li>
+              		<li><a href="myList.bo?cpage=${ pi.currentPage - 1 }&userNo=${loginUser.userNo}"><</a></li>
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 	            	<c:choose>
 	            		<c:when test="${ pi.currentPage eq p }">
-		            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=${loginUser.userNo}">${ p }</a></li>
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li class="on"><a href="myList.bo?cpage=${ p }&userNo=${loginUser.userNo}">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li class="on"><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}&userNo=${loginUser.userNo}">${ p }</a></li>
+				            	</c:otherwise>
+	            			</c:choose>
 	            		</c:when>
 	            		<c:otherwise>
-		            		<li><a href="myList.bo?cpage=${ p }&userNo=${loginUser.userNo}">${ p }</a></li>
+	            			<c:choose>
+			            		<c:when test="${ empty condition }">
+				            		<li><a href="myList.bo?cpage=${ p }&userNo=${loginUser.userNo}">${ p }</a></li>
+				            	</c:when>
+				            	<c:otherwise>
+				            		<li><a href="searchMy.bo?cpage=${ p }&condition=${condition}&keyword=${keyword}&userNo=${loginUser.userNo}">${ p }</a></li>
+				            	</c:otherwise>
+			            	</c:choose>
 	            		</c:otherwise>
 	            	</c:choose>
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage ne pi.maxPage }">
-	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }&userNo=${loginUser.userNo}"></a></li>
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
+	            	<li><a href="myList.bo?cpage=${ pi.currentPage + 1 }&userNo=${loginUser.userNo}">></a></li>
 				</c:if>
            </ul>
         </div>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,9 +110,11 @@
 		            <div class="menus" onclick="location.href='list.no'">공지사항</div>
 		            <div class="menus" onclick="location.href='list.bo'">익명게시판</div>
 		            <div class="menus" onclick="location.href='myList.bo?userNo=${loginUser.userNo}'">나의 게시글</div>
-		            <!-- 관리자일 경우 보여짐 -->
-		            <div class="menus" onclick="location.href='manage.bo'">익명게시판 관리</div>
-		            <div class="menus" onclick="location.href='schedule.bo'">회사 일정 관리</div>
+		            <c:set var = "authorityNo" value = "${loginUser.authorityNo}"/>
+		            <c:if test="${fn:contains(authorityNo, '0') or fn:contains(authorityNo, '3')}">
+			            <div class="menus" onclick="location.href='manage.bo'">익명게시판 관리</div>
+			            <div class="menus" onclick="location.href='schedule.bo'">회사 일정 관리</div>
+		            </c:if>
 		        </div>
 		    </div>
 

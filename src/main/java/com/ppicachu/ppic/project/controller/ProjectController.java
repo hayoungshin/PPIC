@@ -1,5 +1,6 @@
 package com.ppicachu.ppic.project.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
@@ -262,21 +263,6 @@ public class ProjectController {
 	}
 	
 	
-	/*
-	@ResponseBody
-	@RequestMapping(value="detail.tk", produces="application/json; charset=UTF-8")
-	public String selectTaskDetail(int taskNo, int projectNo) {
-		Task t = pService.selectTaskDetail(taskNo);
-		ArrayList<ProjectParticipant> ppList = pService.selectProjectParticipants(projectNo);
-		ArrayList<ProjectParticipant> tpList = pService.selectTaskParticipants(taskNo);
-		JSONObject jObj = new JSONObject();
-		jObj.put("t", t);
-		jObj.put("ppList", ppList);
-		jObj.put("tpList", tpList);
-		
-		return new Gson().toJson(jObj);
-		
-	}
 	
 	@RequestMapping("updateTask.tk")
 	public String updateTask(Task t, MultipartFile reupfile,
@@ -332,7 +318,7 @@ public class ProjectController {
 		p.setTaskAssign("Y");
 		updateList.add(p);
 		
-		int	result3 = pService.addTaskParticipant(updateList);
+		int	result3 = pService.insertTaskParticipants(updateList);
 		
 		
 		if(result*result3 > 0) {
@@ -362,5 +348,18 @@ public class ProjectController {
 			return "common/errorPage";
 		}
 	}
-	*/
+	
+	@RequestMapping("deleteProject.pr")
+	public String deleteProject(int projectNo, HttpSession session, Model model) {
+		int result = pService.deleteProject(projectNo);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "프로젝트가 삭제되었습니다.");
+			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
+		}else {
+			model.addAttribute("errorMsg", "프로젝트 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
 }

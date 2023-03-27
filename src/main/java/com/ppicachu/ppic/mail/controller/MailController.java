@@ -115,8 +115,20 @@ public class MailController {
 	}
 	
 	@RequestMapping("importantList.ml")
-	public String selectImportantList() {
-		return "mail/importantMailListView";
+	public ModelAndView selectImportantList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		int listCount = mService.selectImportantListCount(userMail);	// 전체 보낸메일 개수
+
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<MailStatus> list = mService.selectImportantList(pi, userMail);
+		
+		for(MailStatus m : list) {
+			m.setRecipientArr(m.getRecipientMail().split(","));
+		}
+		
+		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/importantMailListView");
+		
+		return mv;
 	}
 	
 	@RequestMapping("importantDetail.ml")

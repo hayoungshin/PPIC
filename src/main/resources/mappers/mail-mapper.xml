@@ -239,5 +239,15 @@
 		 where mail_no = #{mailNo}
 	</select>
 	
+	<select id="selectImportantListCount" resultType="_int">
+		select 
+			   count(*)
+		  from mail_status
+		 where (sender_mail = #{userMail}
+		    or recipient_mail = #{userMail}
+		   and bin_status = 'N'
+           and important_status = 'Y'
+	</select>
+	
 	
 </mapper>

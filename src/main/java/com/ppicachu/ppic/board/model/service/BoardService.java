@@ -42,7 +42,7 @@ public interface BoardService {
 	int blindBoardUpdate(Report r);
 	
 	// 10. 신고 삭제 서비스
-	int deleteReport(int reportNo);
+	int deleteReport(String[] reportNo);
 	
 	// 11. 좋아요 삭제
 	int deleteLike(Board b);

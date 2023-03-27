@@ -70,7 +70,7 @@
                                     join chatroom using(room_no)
                                     where user_no = m.user_no
                                       and user_no != #{userNo} 
-                                      and group_sta = 'N')) "room_no"
+                                      and group_sta = 0)) "room_no"
 		  from member m
 		  join dept on (m.department = dept.department_no) 
 		  join position on (m.position = position.position_no)
@@ -202,7 +202,7 @@
 		     , group_count
 		     , group_sta
 		     , send_no
-		     , to_char(modify_date, 'YYYY.MM.DD PM HH:MI') "send_date"
+		     , to_char(send_date, 'YYYY"년" MM"월" DD"일" PM HH:MI') "send_date"
 		     , send_date "send_date_d"
 		     , chat_no
 		     , chat_content

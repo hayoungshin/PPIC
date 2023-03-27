@@ -92,7 +92,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public int deleteReport(int reportNo) {
+	public int deleteReport(String[] reportNo) {
 		return bDao.deleteReport(sqlSession, reportNo);
 	}
 

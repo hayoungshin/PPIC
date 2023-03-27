@@ -33,6 +33,9 @@
 		  from board b
 		  join member on(board_writer = user_no)
 		 where b.status = 'Y'
+		 <if test="userNo == ''">
+		   and blind_sta = 'N'
+		 </if>
 		 <if test="userNo != ''">
 		   and user_no = #{userNo}
 		 </if>
@@ -259,11 +262,13 @@
   	</update>
   	
   	<update id="deleteReport">
-  		update
-  		       report
-  		   set status = 'N'
-  		     , modify_date = sysdate
-  	 	 where report_no in (#{reportNo})
+  		<foreach collection="array" item="item" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+	  		update
+	  		       report
+	  		   set status = 'N'
+	  		     , modify_date = sysdate
+	  	 	 where report_no = #{item}
+  	 	 </foreach>
   	</update>
   	
   	<delete id="deleteLike">

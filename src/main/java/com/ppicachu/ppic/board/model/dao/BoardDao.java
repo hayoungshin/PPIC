@@ -86,7 +86,7 @@ public class BoardDao {
 		return sqlSession.update("boardMapper.blindBoardUpdate", r);
 	}
 	
-	public int deleteReport(SqlSessionTemplate sqlSession, int reportNo) {
+	public int deleteReport(SqlSessionTemplate sqlSession, String[] reportNo) {
 		return sqlSession.update("boardMapper.deleteReport", reportNo);
 	}
 	

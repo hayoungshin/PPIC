@@ -65,8 +65,8 @@
       left join position ps on (m.position = ps.position_no)
      where delete_status = 'N'
        and end_date >= sysdate
-       and pp.user_no = #{userNo}
-        or project_manager = #{userNo}
+       and (pp.user_no = #{userNo}
+        or project_manager = #{userNo})
      order
         by project_no
 </select>
@@ -86,6 +86,7 @@
 	  left join dept d on (m.department = d.department_no)
 	  left join position ps on (m.position = ps.position_no)
 	 where pp.project_no = #{projectNo}
+	   and pm_status is not null
 </select>
 
 <select id="selectTaskList" resultMap="taskResult">
@@ -288,7 +289,7 @@
 	 where task_no = #{taskNo}
 </delete>
 
-<insert id="addTaskParticipant">
+<!-- <insert id="addTaskParticipant">
 	insert
 	  into p_participant
 	  (
@@ -313,7 +314,7 @@
 	  	</otherwise>
 	  </choose>
 	  )
-</insert>
+</insert> -->
 
 <delete id="deleteTask">
 	update task
@@ -391,4 +392,10 @@
 	  from p_participant
 	 where project_no = #{projectNo}
 </delete>
+
+<update id="deleteProject">
+	update project
+	   set delete_status = 'Y'
+	 where project_no = #{projectNo}
+</update>
 </mapper>

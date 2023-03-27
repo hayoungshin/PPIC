@@ -43,8 +43,22 @@
 
 	<div class="boardOuter"> 
         <div align="right" style="width:1200px;">
-            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>
+            <button class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal" disabled>삭제</button>
         </div>
+        <script>
+	        $(function(){
+	        	$("input[name=deleteReport], #chkAll").change(function(){
+	       			$(this).each(function(){
+	       				if($("input[name=deleteReport]:checked").length > 0){
+	           				$("#modal-btn").prop("disabled", false);
+	           			}else{
+	           				$("#modal-btn").prop("disabled", true);
+	           			}
+	       			})
+	       		})
+	        })
+       		
+        </script>
         <br>
         <table class="table" id="report-table" style="width:1200px;">
             <thead>
@@ -117,13 +131,15 @@
 			})
 			
 			$("#modal-btn").click(function(){
-				let reportNo = "";
+				let arr = [];
 	         	$("input[name=deleteReport]:checked").each(function(){
-	         		 let arr = $(this).val(); 
-	         		 reportNo += arr + ","
+	         		 arr.push($(this).val()); 
 	         	})
-	         	reportNo = reportNo.substring(0, reportNo.length-1);
-	            $("#deleteModal input[name=reportNo]").val(reportNo);
+	            $("#deleteModal input[name=reportNo]").val(arr);
+			})
+			$(function(){
+				console.log(${ pi.startPage})
+				console.log(${ pi.endPage})
 			})
 	    </script>
 				    
@@ -144,7 +160,7 @@
 	            	</c:choose>
 				</c:forEach>
 				
-				<c:if test="${ pi.currentPage ne pi.maxPage }">
+				<c:if test="${ pi.currentPage lt pi.maxPage }">
 	            	<li><a href="manage.bo?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>
