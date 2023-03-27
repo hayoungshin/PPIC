@@ -137,7 +137,7 @@
 
 		<div id="mail-menu" style="margin-bottom:40px;">
 			<div class="mail-menu" style="margin-left:0;" onclick="location.href='recieveList.ml'">
-				받은메일 <span style="color:#6F50F8; font-weight:600">12</span>
+				받은메일 <span id="recieve-count" style="color:#6F50F8; font-weight:600"></span>
 			</div>
 			<div class="mail-menu" onclick="location.href='sendList.ml'">보낸메일</div>
 			<div class="mail-menu" onclick="location.href='importantList.ml'">중요메일</div>
@@ -244,6 +244,23 @@
 		</div>
 		</div>
 	</div>
+	
+	<script>
+		$(function(){
+			selectReceiveCount();
+		})
+		function selectReceiveCount(){
+			$.ajax({
+				url:"countRecieve.ml",
+				data:{},
+				success:function(count){
+					document.getElementById("recieve-count").innerHTML = count;
+				}, error:function(){
+					console.log("받은메일 개수 조회용 ajax 통신실패")
+				}
+			})
+		}
+	</script>
 
 </body>
 </html>

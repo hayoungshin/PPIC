@@ -72,7 +72,7 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	public ArrayList<MailStatus> selectSendList(PageInfo pi, String userMail) {
-		return mDao.selectSendList(sqlSession, userMail);
+		return mDao.selectSendList(sqlSession, pi, userMail);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	public ArrayList<MailStatus> selectImportantList(PageInfo pi, String userMail) {
-		return mDao.selectImportantList(sqlSession, userMail);
+		return mDao.selectImportantList(sqlSession, pi, userMail);
 	}
 
 	

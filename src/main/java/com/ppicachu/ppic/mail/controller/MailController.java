@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,6 +30,14 @@ public class MailController {
 	private MailService mService;
 	@Autowired
 	private MemberService memService;
+	
+	@ResponseBody
+	@RequestMapping("countRecieve.ml")
+	public int ajaxSelectReceiveCount(HttpSession session) {
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		int count = mService.selectRecieveListCount(userMail);
+		return count;
+	}
 	
 	/**
 	 * @param currentPage 페이징처리
@@ -127,13 +136,47 @@ public class MailController {
 		}
 		
 		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/importantMailListView");
-		
+		System.out.println(list);
 		return mv;
 	}
 	
 	@RequestMapping("importantDetail.ml")
-	public String selectImportantMail() {
-		return "mail/importantMailDetailView";
+	public ModelAndView selectImportantMail(int no, int type, HttpSession session, ModelAndView mv) {
+		if(type == 4) {	// 보낸 메일일 때
+			// 메일기본정보
+			Mail m = mService.selectSend(no);
+			// 메일 첨부파일
+			ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+			mv.addObject("m", m).addObject("list", list).setViewName("mail/sendMailDetailView");
+		} else {
+			
+			String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+			
+			MailStatus status = new MailStatus();
+			status.setMailNo(no);
+			status.setRecipientMail(userMail);
+			
+			int readStatus = mService.selectReadStatus(status);	// 1읽음|0안읽음
+			int result = 0;
+			if(readStatus == 1) {	// 읽었던 메일
+				// 메일기본정보
+				Mail m = mService.selectRecieve(status);
+				// 메일 첨부파일
+				ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+				mv.addObject("m", m).addObject("list", list).setViewName("mail/recieveMailDetailView");
+			} else {				// 안읽었던 메일
+				result = mService.updateReadDate(status);
+				//읽은 시간 먼저 업데이트
+				if(result > 0) {
+					Mail m = mService.selectRecieve(status);
+					ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+					mv.addObject("m", m).addObject("list", list).setViewName("mail/recieveMailDetailView");
+				} else {
+					mv.addObject("errorMsg", "받은메일 상세조회 실패").setViewName("common/errorPage");
+				}
+			}
+		}
+		return mv;
 	}
 	
 	@RequestMapping("tempList.ml")
