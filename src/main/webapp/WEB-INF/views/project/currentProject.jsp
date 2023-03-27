@@ -143,7 +143,7 @@
   .add-form input, .add-form textarea{width:80%; border:0.5px solid lightgray; border-radius:4px;}
   #dept-select, #dept-select2{width:20%;}
   #emp-select, #emp-select2{width:30%;}
-  #selected-area, #selected-area2, #selected-area3, #selected-area4{
+  .selected-area{
     width:80%;
     height:150px;
     border:0.5px solid lightgray;
@@ -699,7 +699,7 @@
                   <tr>
                     <th><input type="hidden" name="userNo" id="taskUserNo"></th>
                     <td>
-                      <div id="selected-area"></div>
+                      <div id="selected-area" class="selected-area"></div>
                       <div class="invalidMsg">이미 선택된 직원입니다.</div>
                     </td>
                   </tr>
@@ -773,7 +773,6 @@
 
         // 선택유저 삭제하기
         function deleteUser(e){
-          console.log(e);
           if($(e).find("input[name=selectUserAssign]").val() == "Y"){
             alert("현재 담당하는 작업이 있습니다. 담당자 설정 해제 후 다시 시도해주세요.");
           }else{
@@ -859,7 +858,7 @@
                   <tr>
                     <th><input type="hidden" name="userNo" id="taskUserNo"></th>
                     <td>
-                      <div id="selected-area2"></div>
+                      <div id="selected-area2" class="selected-area"></div>
                       <div class="invalidMsg">이미 선택된 직원입니다.</div>
                     </td>
                   </tr>
@@ -899,19 +898,19 @@
                             + "<input type='hidden' name='selectUserDept' value='" + ppList[i].departmentNo + "'>"
                             + "<input type='hidden' name='selectUserAssign' value='" + ppList[i].taskAssign + "'>"
                             + "</div>";
-                for(let j=0; j<ppList.length; j++){
-                  if(!projectUser.includes(ppList[j].userName) && ppList[j].pmStatus == "N"){
-                    projectUser += "<div class='select-user' onclick='deleteUser(this);'>" + ppList[j].userName + " " + ppList[j].positionName + "<img src='resources/icons/delete-red.png'>"
-                            + "<input type='hidden' name='selectUserNo' value='" + ppList[j].userNo + "'>"
-                            + "<input type='hidden' name='selectUserDept' value='" + ppList[j].departmentNo + "'>"
-                            + "</div>";
-                  }
+            }
+            for(let j=0; j<ppList.length; j++){
+              if(!projectUser.includes(ppList[j].userName) && ppList[j].pmStatus == "N"){
+                projectUser += "<div class='select-user' onclick='deleteUser(this);'>" + ppList[j].userName + " " + ppList[j].positionName + "<img src='resources/icons/delete-red.png'>"
+                        + "<input type='hidden' name='selectUserNo' value='" + ppList[j].userNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + ppList[j].departmentNo + "'>"
+                        + "</div>";
+              }else if(ppList[i].pmStatus == "Y"){
+                  pmDeptNo = ppList[i].departmentNo;
+                  pmNo = ppList[i].userNo;
+                  pmName = ppList[i].userName + " " + ppList[i].positionName;
+              }
 
-                }
-            }else if(ppList[i].pmStatus == "Y"){
-                pmDeptNo = ppList[i].departmentNo;
-                pmNo = ppList[i].userNo;
-                pmName = ppList[i].userName + " " + ppList[i].positionName;
             }
           }
           $("#selected-area2").append(projectUser);
@@ -1031,7 +1030,7 @@
                   <tr>
                     <th><input type="hidden" name="userNo" id="taskUserNo"></th>
                     <td>
-                      <div id="selected-area3"></div>
+                      <div id="selected-area3" class="selected-area"></div>
                       <div class="invalidMsg">이미 선택된 직원입니다.</div>
                     </td>
                   </tr>
@@ -1161,7 +1160,7 @@
                   <tr>
                     <th><input type="hidden" name="userNo" id="dTaskUserNo"></th>
                     <td>
-                      <div id="selected-area4"></div>
+                      <div id="selected-area4" class="selected-area"></div>
                       <div class="invalidMsg">이미 선택된 직원입니다.</div>
                     </td>
                   </tr>
