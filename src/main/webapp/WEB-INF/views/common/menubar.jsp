@@ -263,11 +263,10 @@
             
             /* 새로운 알림 클릭 */
             function alarmPopup(){
-            	if($("#alarm-popup").css("display") == "none"){
-            		$("#alarm-popup").css("display", "block");
-            	}else{
-            		$("#alarm-popup").css("display", "none");
-            	}
+           		$("#alarm-popup").toggle();
+           		if($("#chat").css("display") == "block"){
+           			$("#chat").css("display", "none");
+           		}
             }
             
             /* 채팅 아이콘 클릭 */
@@ -277,16 +276,16 @@
             		$("#member-btn").addClass("menuClicked");
                 	$("#chat-btn").removeClass("menuClicked");
             		$("#chat").css("display", "block");
-            		if(sockChat){
-                		onClose();
-                	}
+            		if($("#alarm-popup").css("display") == "block"){
+               			$("#alarm-popup").css("display", "none");
+               		}
             	}else{
             		$("#chat").css("display", "none");
             		$("#search-div").html("");
             		$("#chat-body").html("");
-            		if(sockChat){
-                		onClose();
-                	}
+            	}
+            	if(sockChat){
+            		onClose();
             	}
             }
         </script>
