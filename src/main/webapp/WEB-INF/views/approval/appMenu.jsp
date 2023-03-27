@@ -327,6 +327,32 @@
 		function endMin(){
 			$("#end").attr("min", $("#start").val());
 		}
+
+		// 관리버튼
+		$(function(){
+			$(".manage").hide();
+			
+			let authority = "${loginUser.authorityNo}";
+			if (authority.includes('0') || authority.includes('5')) {
+				$(".manage").show();
+			}
+		});
+
+		// search submit 조건
+		function submitForm(){
+			const userName = document.getElementById("userName").value; // 작성자
+			const form = document.getElementById("form").value; // 양식
+			const title = document.getElementById("title").value; // 제목
+			const agrUserName = document.getElementById("agrUserName").value; // 승인자
+			const refUserName = document.getElementById("refUserName").value; // 참조자
+			const completeNo = document.getElementById("completeNo").value; // 문서번호
+			if(userName == '' && form == '선택안함' && title == '' && agrUserName == '' && refUserName == '' && completeNo == ''){
+				alert("1개 이상의 조건을 작성하세요.");
+				return false;
+			}else{
+				return true;
+			}
+		}
 	</script>
 	
 	<div id="content">
@@ -355,8 +381,8 @@
 							<li><a href="list.ap?dpe=1" class="menu menu-2">&nbsp;완료</a></li>
 						</ul>
 					</li>
-					<li><a href="list.ap?a=1" class="menu menu-1">전체문서관리</a></li>
-					<li><a href="list.ap?d=1" class="menu menu-1">삭제문서관리</a></li>
+					<li><a href="list.ap?a=1" class="menu menu-1 manage">전체문서관리</a></li>
+					<li><a href="list.ap?d=1" class="menu menu-1 manage">삭제문서관리</a></li>
 				</ul>
 			</div>
 
@@ -374,7 +400,7 @@
 				<div class="btn-align" style="position:relative;">
 					<img src="resources/icons/search.png" class="search-btn" onclick="searchDiv();">
 					<div id="search-input" style="position:absolute; top:40px; left:-350px; display:none;">
-						<form action="search.ap">
+						<form action="search.ap" onsubmit="return submitForm();">
 							<span style="font-size: 20px; font-weight: 700;">검색</span>
 							<table style="width:100%;">
 								<colgroup>
@@ -384,12 +410,12 @@
 
 								<tr height="40px">
 									<td>작성자</td>
-									<td><input type="text" name="userName"></td>
+									<td><input type="text" name="userName" id="userName"></td>
 								</tr>
 								<tr height="40px">
 									<td>양식</td>
 									<td>
-										<select name="form" style="height:30px">
+										<select name="form" id="form" style="height:30px">
 											<option>선택안함</option>
 											<option>업무기안</option>
 											<option>인사발령품의서</option>
@@ -400,19 +426,19 @@
 								</tr>
 								<tr height="40px">
 									<td>제목</td>
-									<td><input type="text" name="title"></td>
+									<td><input type="text" name="title" id="title"></td>
 								</tr>
 								<tr height="40px">
 									<td>승인자</td>
-									<td><input type="text" name="agrUserName"></td>
+									<td><input type="text" name="agrUserName" id="agrUserName"></td>
 								</tr>
 								<tr height="40px">
 									<td>참조자</td>
-									<td><input type="text" name="refUserName"></td>
+									<td><input type="text" name="refUserName" id="refUserName"></td>
 								</tr>
 								<tr height="40px">
 									<td>문서번호</td>
-									<td><input type="text" name="completeNo"></td>
+									<td><input type="text" name="completeNo" id="completeNo"></td>
 								</tr>
 								<tr height="40px">
 									<td>기간</td>

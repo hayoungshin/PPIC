@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -221,6 +222,12 @@
 	#fdr, #ftr, #fco, #fca{
 		width: 100%;
 	}
+
+	/* 첨부파일 */
+    .insert {
+		border: 1px solid lightgray; 
+		padding: 20px;
+	}
 </style>
 </head>
 <body>
@@ -411,13 +418,13 @@
 				
                 <div class="first-1-2">
                    	
-					<c:if test="${ ad.app.userName eq loginUser.userName }"><!-- 관리자일경우 삭제? -->
+					<c:if test="${ ad.app.userName eq loginUser.userName }">
 						<c:if test="${ ad.app.approvalStatus ne '승인' and ad.app.approvalStatus ne '반려' }">
 							<div class="btn-align">
 					   			<div class="three-btn btnn-gr" onclick="return cancel();">상신취소</div>
 							</div>
 						</c:if>
-						<div class="btn-align">
+						<div class="btn-align" style="margin-left:5px;">
 				   			<div class="three-btn btnn-rd" onclick="return ajaxDel();">삭제</div>
 						</div>
 					</c:if>
@@ -537,7 +544,16 @@
 	                                            <td colspan="2">${ t.departmentName }부</td>
 	                                            <td>${ t.currentPosition }</td>
 	                                            <td>${ t.promotePosition }</td>
-	                                            <td>${ t.remark }</td>
+	                                            <td>
+													<c:choose>
+														<c:when test="${ t.remark eq null }">
+															-
+														</c:when>
+														<c:otherwise>
+															${ t.remark }
+														</c:otherwise>
+													</c:choose>
+												</td>
 	                                        </tr>
 	                                    </c:forEach>
                                     </table>
@@ -552,19 +568,21 @@
                                             <th style="width:12%">금액</th>
                                             <th style="width:17%">사유</th>
                                         </tr>
+										<c:set var="coPrice" value="0"/>
 										<c:forEach var="c" items="${ ad.consume }">
 	                                        <tr>
 	                                            <td>${ c.name }</td>
 	                                            <td>${ c.unit }</td>
-	                                            <td>${ c.count }</td>
-	                                            <td>${ c.price }</td>
-	                                            <td>${ c.count * c.price }</td>
+	                                            <td>${ c.count }개</td>
+	                                            <td><fmt:formatNumber value="${ c.price }" type="number"/>원</td>
+	                                            <td><fmt:formatNumber value="${ c.count * c.price }" type="number"/>원</td>
 	                                            <td>${ c.reason }</td>
 	                                        </tr>
+											<c:set var="coPrice" value="${ coPrice + c.count * c.price }"/>
 	                                    </c:forEach>
                                         <tr>
                                             <th>합계</th>
-                                            <td colspan="5">?</td>
+                                            <td colspan="5"><fmt:formatNumber value="${ coPrice }" type="number"/>원</td>
                                         </tr>
                                     </table>
 
@@ -575,24 +593,37 @@
                                             <th style="width:60%">사용내역</th>
                                             <th style="width:15%">금액</th>
                                         </tr>
-                                        <c:set var="total" value="0"/>
+                                        <c:set var="caPrice" value="0"/>
 										<c:forEach var="c" items="${ ad.cash }">
 	                                        <tr>
 	                                            <td>${ c.account }</td>
 	                                            <td>${ c.userHistory }</td>
-	                                            <td>${ c.price }</td>
+	                                            <td><fmt:formatNumber value="${ c.price }" type="number"/>원</td>
 	                                        </tr>
-	                                        <c:set var="total" value="${total + c.price }"/>
+	                                        <c:set var="caPrice" value="${ caPrice + c.price }"/>
 	                                    </c:forEach>
                                         <tr>
                                             <th colspan="2">부가가치세</th>
-                                            <td></td>
+                                            <td><fmt:formatNumber value="${ caPrice * 0.1 }" type="number"/>원</td>
                                         </tr>
                                         <tr>
                                             <th colspan="2">합계</th>
-                                            <td></td>
+                                            <td><fmt:formatNumber value="${ caPrice + (caPrice * 0.1) }" type="number"/>원</td>
                                         </tr>
                                     </table>
+
+									<div class="insert">
+										<c:choose>
+											<c:when test="${ad.att[0] ne null}">
+												<c:forEach var="at" items="${ad.att}">
+													<a href="${at.changeName}" download="${at.originName}">${at.originName}</a>
+												</c:forEach>
+											</c:when>
+											<c:otherwise>
+												<span style="color:gray; font-size:15px;">첨부파일 없음</span>
+											</c:otherwise>
+										</c:choose>
+									</div>
 
                                 </td>
                             </tr>
@@ -698,7 +729,7 @@
         </div>
         <br>
 
-        <button class="btnn-gr">목록</button>
+        <button class="btnn-gr" onclick="javascript:history.go(-1);">목록</button>
     </div>
 </body>
 </html>

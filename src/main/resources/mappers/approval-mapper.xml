@@ -200,8 +200,8 @@
 		     , approval_status
 		     , current_order
 		     , final_order
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , complete_no
 		     , bookmark
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
@@ -280,7 +280,7 @@
                    and rownum = 1
 		       ) origin_name
 		     , approval_status
-		     , create_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
 		  from approval a
 		  join member using(user_no)
 		 where user_no = #{userNo}
@@ -321,8 +321,8 @@
 		     , approval_status
 		     , current_order
 		     , final_order
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , complete_no
 		  from approval a
 		  join member m using(user_no)
@@ -341,7 +341,8 @@
 	</select>
 
 	<select id="selectSearchListCount" resultType="_int">
-		select count(*)
+		select distinct
+			   count(*)
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
 		  join member mp on (ap.user_no = mp.user_no)
@@ -408,8 +409,8 @@
 		     , approval_status
 		     , current_order
 		     , final_order
-		     , create_date
-		     , complete_date
+		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
+		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , complete_no
 		     , bookmark
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
@@ -469,7 +470,7 @@
 		    	by approval_no asc
 		    </when>
 		    <otherwise>
-		    	by complete_no desc
+		    	by complete_no desc nulls last
 		    </otherwise>
 		</choose>
 	</select>

@@ -15,7 +15,37 @@
 	<script>
 		window.onload = function(){
 			// 검색 count
-			document.getElementById("menu-area").innerHTML += "에 대한 검색 <span style='color:#fdbaba;'>${pi.listCount}</span>";
+			let condition = "<b>";
+			if('${a.userName}' != ''){
+				condition += "[작성자 : ${a.userName}] ";
+			}
+			if('${a.form}' != '선택안함'){
+				condition += "[양식 : ${a.form}] ";
+			}
+			if('${a.title}' != ''){
+				condition += "[제목 : ${a.title}] ";
+			}
+			if('${a.agrUserName}' != ''){
+				condition += "[승인자 : ${a.agrUserName}] ";
+			}
+			if('${a.refUserName}' != ''){
+				condition += "[참조자 : ${a.refUserName}] ";
+			}
+			if('${a.completeNo}' != ''){
+				condition += "[문서번호 : ${a.completeNo}] ";
+			}
+			switch('${a.period}'){
+				case 'all' : condition += "[기간 : 전체] "; break;
+				case 'week' : condition += "[기간 : 1주일] "; break;
+				case 'three-month' : condition += "[기간 : 3개월] "; break;
+				case 'myself' : condition += "[기간 : ${a.createDate} ~ ${a.completeDate}] "; break;
+			}
+			switch('${a.orderBy}'){
+				case 'desc' : condition += "[정렬 : 최신순] "; break;
+				case 'asc' : condition += "[정렬 : 오래된순] "; break;
+				case 'complete' : condition += "[정렬 : 기안완료순] "; break;
+			}
+			document.getElementById("menu-area").innerHTML += (condition + "</b>에 대한 검색 <span style='color:#fdbaba;'>${pi.listCount}</span>");
 			
 			// 각 행
 			const tr = document.getElementsByClassName("trOver");
@@ -118,25 +148,25 @@
 
         <div align="center">
         	<c:if test="${ pi.currentPage ne 1 }">
-            	<a href="list.ap?dpe=1&cpage=${ pi.currentPage - 1 }" class="btnn-pp">이전</a>
+            	<a href="search.ap?serName=${a.userName}&form=${a.form}&title=${a.title}&agrUserName=${a.agrUserName}&refUserName=${a.refUserName}&completeNo=${a.completeNo}&period=${a.period}&createDate=${a.createDate}&completeDate=${a.completeDate}&orderBy=${a.orderBy}&cpage=${ pi.currentPage - 1 }" class="btnn-pp">이전</a>
             </c:if>
             
 			<c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 				<c:choose>
 					<c:when test="${ p eq pi.currentPage }">
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
+						<a href="search.ap?serName=${a.userName}&form=${a.form}&title=${a.title}&agrUserName=${a.agrUserName}&refUserName=${a.refUserName}&completeNo=${a.completeNo}&period=${a.period}&createDate=${a.createDate}&completeDate=${a.completeDate}&orderBy=${a.orderBy}&cpage=${ p }" class="btnn-pp" style="background-color:#6F50F8; color:white;">${ p }</a>
 					</c:when>
 					<c:otherwise>
-						<a href="list.ap?a=1&cpage=${ p }" class="btnn-pp">${ p }</a>
+						<a href="search.ap?serName=${a.userName}&form=${a.form}&title=${a.title}&agrUserName=${a.agrUserName}&refUserName=${a.refUserName}&completeNo=${a.completeNo}&period=${a.period}&createDate=${a.createDate}&completeDate=${a.completeDate}&orderBy=${a.orderBy}&cpage=${ p }" class="btnn-pp">${ p }</a>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
 
 			<c:if test="${ pi.currentPage ne pi.maxPage and pi.maxPage ne 0 }">
-            	<a href="list.ap?dpe=1&cpage=${ pi.currentPage + 1 }" class="btnn-pp">다음</a>
+            	<a href="search.ap?serName=${a.userName}&form=${a.form}&title=${a.title}&agrUserName=${a.agrUserName}&refUserName=${a.refUserName}&completeNo=${a.completeNo}&period=${a.period}&createDate=${a.createDate}&completeDate=${a.completeDate}&orderBy=${a.orderBy}&cpage=${ pi.currentPage + 1 }" class="btnn-pp">다음</a>
             </c:if>
         </div>
     </div>
 </div> <!-- div 닫는 구문 하나 더 있음 -->
 </body>
-</html>
+</html>u

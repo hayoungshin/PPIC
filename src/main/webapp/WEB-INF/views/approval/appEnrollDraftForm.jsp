@@ -233,15 +233,27 @@
 					const input_deptName = this.previousSibling.previousSibling.value; // deptName
 					const userName = this.innerHTML; // userName
 					const checked_area = document.getElementById("a-checked"); // 선택된 user 공간
-					if(check_img.style.display == 'none'){ // 선택되지 않은 user를 클릭한 경우
-						check_img.style.display = 'block';
-						checked_area.innerHTML +=	"<tr class='a-checked-p'>"
-												+		"<td>"
-												+			"<input type='hidden' value='" + input_userNo + "'>"
-												+			"<input type='hidden' value='" + input_deptName + "'>"
-												+			"<span>" + userName + "</span>"
-												+		"</td>"
-												+	"</tr>";
+					if(check_img.style.display == 'none'){ // 승인자로 선택되지 않은 user를 클릭한 경우
+						const refUserNo = document.getElementsByName("refUserNo"); // 참조자들
+						
+						let cnt = 0;
+						for(let j=0; j<refUserNo.length; j++){
+							if(refUserNo[j].value == input_userNo){ // 선택한 사원이 참조자들 중에 있는지 확인
+								cnt++;
+							}
+						}
+						if(cnt == 0) {
+							check_img.style.display = 'block';
+							checked_area.innerHTML +=	"<tr class='a-checked-p'>"
+													+		"<td>"
+													+			"<input type='hidden' value='" + input_userNo + "'>"
+													+			"<input type='hidden' value='" + input_deptName + "'>"
+													+			"<span>" + userName + "</span>"
+													+		"</td>"
+													+	"</tr>";
+						} else {
+							alert("참조자로 선택된 사원입니다.");
+						}
 					} else if(check_img.style.display == 'block'){ // 선택된 user를 클릭한 경우
 						check_img.style.display = 'none';
 						const ptr = document.getElementsByClassName("a-checked-p");	// 선택된 user 공간의 각 행
@@ -265,15 +277,27 @@
 					const input_deptName = this.previousSibling.previousSibling.value; // deptName
 					const userName = this.innerHTML; // userName
 					const checked_area = document.getElementById("r-checked"); // 선택된 user 공간
-					if(check_img.style.display == 'none'){ // 선택되지 않은 user를 클릭한 경우
-						check_img.style.display = 'block';
-						checked_area.innerHTML +=   "<tr class='r-checked-p'>"
-												+		"<td>"
-												+			"<input type='hidden' value='" + input_userNo + "'>"
-												+			"<input type='hidden' value='" + input_deptName + "'>"
-												+			"<span>" + userName + "</span>"
-												+		"</td>"
-												+   "</tr>";
+					if(check_img.style.display == 'none'){ // 참조자로 선택되지 않은 user를 클릭한 경우
+						const agrUserNo = document.getElementsByName("agrUserNo"); // 승인자들
+
+						let cnt = 0;
+						for(let j=0; j<agrUserNo.length; j++){
+							if(agrUserNo[j].value == input_userNo){ // 선택한 사원이 승인자들 중에 있는지 확인
+								cnt++;
+							}
+						}
+						if(cnt == 0) {
+							check_img.style.display = 'block';
+							checked_area.innerHTML +=   "<tr class='r-checked-p'>"
+													+		"<td>"
+													+			"<input type='hidden' value='" + input_userNo + "'>"
+													+			"<input type='hidden' value='" + input_deptName + "'>"
+													+			"<span>" + userName + "</span>"
+													+		"</td>"
+													+   "</tr>";
+						} else {
+							alert("승인자로 선택된 사원입니다.");
+						}
 					} else if(check_img.style.display == 'block'){ // 선택된 user를 클릭한 경우
 						check_img.style.display = 'none';
 						const ptr = document.getElementsByClassName("r-checked-p");	// 선택된 user 공간의 각 행
@@ -305,7 +329,7 @@
 		               +	"<div class='level-person'>"
 		               +		"<span class='person-img'>🧑🏻‍💻</span> "
 		               +		"<input type='hidden' name='agrUserNo' value='" + userNo + "'>"
-					   +		deptName + "부 " + namePosition
+					   +		"<span class='userDept'>" + deptName + "</span>부 " + namePosition
 		               +	"</div>"
 		               + "</div>";
 			}
@@ -328,7 +352,7 @@
 		               +	"<div class='level-person'>"
 		               +		"<span class='person-img'>🙋🏻‍♂️</span> "
 		               +		"<input type='hidden' name='refUserNo' value='" + userNo + "'>"
-					   +		deptName + "부 " + namePosition
+					   +		"<span class='userDept'>" + deptName + "</span>부 " + namePosition
 		               +	"</div>"
 		               + "</div>";
 			}
@@ -404,10 +428,38 @@
 		function tem(){
 			document.getElementById("title-area-selop").innerHTML += "<input type='hidden' name='tem' value='임시저장'>";
 		}
+
+		// submit 조건
+		function submitForm(){
+			if(document.getElementById("ref-dept").value == '협조부서를 선택하세요'){ // 협조부서
+				alert("협조부서를 선택하세요.");
+				return false;
+			}else{
+				const userDept = document.getElementsByClassName("userDept"); // 승인ㆍ참조의 사원들 부서명
+
+				let cnt = 0;
+				for(let i=0; i<userDept.length; i++){
+					if(userDept[i].innerHTML == document.getElementById("ref-dept").value){ // 결재선에 협조부서의 사원 1명 이상 있는지 확인
+						cnt++;
+					}
+				}
+				if(cnt == 0){
+					alert("협조부서의 사원을 승인ㆍ참조에 적어도 1명 이상 추가하세요.");
+					return false;
+				}else{
+					//if(documnet.getElementsByClassName("agrUserName").length == 0){ // 승인자
+					//	alert("1명 이상의 승인자가 필요합니다.");
+					//	return false;
+					//}else{
+						return true;
+					//}
+				}
+			}
+		}
 	</script>
 	
 	<div id="content" align="center">
-		<form action="insert.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
+		<form action="insert.ap" method="post" enctype="multipart/form-data" onsubmit="return submitForm();">
 	        <div class="first">
 	            <div class="title-area"><h2><b>작성하기</b></h2></div>
 	            <div id="title-area-selop">
@@ -456,7 +508,7 @@
 			                    </c:forEach>
 	                            <tr>
 	                                <th>제목</th>
-	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요"></td>
+	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요" required></td>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
@@ -467,14 +519,13 @@
 	                                    <table id="tb" class="table-bordered">
 	                                        <tr>
 	                                            <th width="20%">시행일자</th>
-	                                            <td width="20%"><input type="date" id="start" name="effectiveDate" style="width:190px; height:35px;"></td>
+	                                            <td width="20%"><input type="date" id="start" name="effectiveDate" style="width:190px; height:35px;" required></td>
 	                                            <th width="20%">협조부서</th>
 	                                            <td width="40%">
-	                                            	<select name="departmentNo" style="width:380px; height:35px;">
+	                                            	<select id="ref-dept" name="departmentNo" style="width:380px; height:35px;">
 	                                            		<option>협조부서를 선택하세요</option>
 	                                            		<c:forEach var="d" items="${ dList }">
 		                                            		<option>${ d.departmentName }</option>
-		                                            		<!-- 셀렉옵션 부서장 (부서장이 결재자가 아닐경우 부서장에게 바로 참조걸기) -->
 	                                            		</c:forEach>
 	                                            	</select>
 	                                            </td>
@@ -483,7 +534,7 @@
 	                                            <th colspan="4">내용</th>
 	                                        </tr>
 	                                        <tr>
-	                                            <td colspan="4"><textarea name="content" id="summernote"></textarea></td>
+	                                            <td colspan="4"><textarea name="content" id="summernote" required></textarea></td>
 	                                        </tr>
 	                                    </table>
 	                                    
@@ -541,11 +592,6 @@
 	                                <!-- Modal body -->
 	                                <div class="modal-body">
 	                                    <div class="form">
-	                                    	<div class="header">
-	                                    		<input type="text" >
-	                                            <button class="btnn-sb">검색</button>
-	                                        </div>
-	                                        <br>
 	                                    	<div class="a-content-1">
 		                                        <table class="table table-hover">
 								                    <c:forEach var="d" items="${ dList }">
@@ -599,11 +645,6 @@
 	                                <!-- Modal body -->
 	                                <div class="modal-body">
 	                                    <div class="form">
-	                                    	<div class="header">
-	                                    		<input type="text" >
-	                                            <button class="btnn-sb">검색</button>
-	                                        </div>
-	                                        <br>
 	                                    	<div class="r-content-1">
 		                                        <table class="table table-hover">
 								                    <c:forEach var="d" items="${ dList }">
@@ -650,7 +691,7 @@
 	            
 	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
 	            <button type="submit" class="btnn-pk" onclick="tem();">임시저장</button>
-		        <button type="submit" class="btnn-pp" id="forAlarm">작성</button><!-- 작성완료시 상세로 -->
+		        <button type="submit" class="btnn-pp" id="forAlarm">작성</button>
 	        </div>
         </form>
     </div>

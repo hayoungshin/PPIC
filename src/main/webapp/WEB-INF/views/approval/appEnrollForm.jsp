@@ -8,6 +8,11 @@
 <title>PPIC</title>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <style>
+    /* 작성하기 */
+    .title-area{
+		float: left;
+	}
+    
     /* button */
     .btnn-gr{
         font-size: 14px; 
@@ -80,7 +85,7 @@
 		<div class="first">
             <div class="title-area"><h2><b>작성하기</b></h2></div>
         </div>
-        <br><br>
+        <br clear="both"><br>
         
     	<table>
     		<tr>
