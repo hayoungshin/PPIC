@@ -51,7 +51,7 @@ public class AlarmEchoHandler extends TextWebSocketHandler{
 			case "1": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 반려했어요."); break;
 			case "2": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"의 결재를 요청했어요."); break;
 			case "3": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"의 참조를 요청했어요."); break;
-			case "4": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 생성했어요."); break;
+			case "4": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\" 프로젝트를 생성했어요."); break;
 			case "5": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\" 업무를 추가했어요."); break;
 			case "6": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\" 예약을 완료했어요."); break;
 			case "7": tmpMsg = new TextMessage(sendName + "님이 \"" + title + "\"을(를) 지급했어요."); break;
