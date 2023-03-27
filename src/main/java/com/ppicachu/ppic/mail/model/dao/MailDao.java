@@ -36,21 +36,21 @@ public class MailDao {
 		if(!m.getRecipientArr()[0].equals("")) {
 			for(String s : m.getRecipientArr()) {
 				status.setRecipientMail(s);
-				status.setMailType("1");
+				status.setMailType(1);
 				result1 = sqlSession.insert("mailMapper.insertStatus", status);
 			}
 		}
 		if(!m.getRefArr()[0].equals("")) {
 			for(String s : m.getRefArr()) {
 				status.setRecipientMail(s);
-				status.setMailType("2");
+				status.setMailType(2);
 				result2 = sqlSession.insert("mailMapper.insertStatus", status);
 			}			
 		}
 		if(!m.getHidRefArr()[0].equals("")) {
 			for(String s : m.getHidRefArr()) {
 				status.setRecipientMail(s);
-				status.setMailType("3");
+				status.setMailType(3);
 				result3 = sqlSession.insert("mailMapper.insertStatus", status);
 			}			
 		}
@@ -111,6 +111,10 @@ public class MailDao {
 	}
 	public int updateImportantStatus(SqlSessionTemplate sqlSession, MailStatus status) {
 		return sqlSession.update("mailMapper.updateImportantStatus", status);
+	}
+	
+	public int deleteMail(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.update("mailMapper.deleteMail", status);
 	}
 	
 }

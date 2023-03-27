@@ -119,7 +119,7 @@
 					<div class="dropdown-menu" style="font-size:13px; padding:0; left:-120px;">
 						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='replyForm.ml?no=${m.mailNo}'">답장</span>
 						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='deliverForm.ml?no=${m.mailNo}'">전달</span>
-						<span class="dropdown-item" style="padding:5px 10px;" href="#">삭제</span>
+						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='delete.ml?no=${m.mailNo}&type=${m.mailType}'">삭제</span>
 						<span class="dropdown-item" style="padding:5px 10px;" href="#">안읽음으로표시</span>
 					</div>
 				</div>

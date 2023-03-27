@@ -40,14 +40,12 @@
 						</div>
 	
 						<span onclick="readMail();" style="margin:0px 48px;">읽음</span>
-						<span style="margin:0px 60px;">삭제</span>
+						<span onclick="deleteMail();" style="margin:0px 60px;">삭제</span>
 						<span style="margin:0px 60px; color:gray; cursor:default;">│</span>
 	
 						<div class="dropdown" style="display:inline-block;">
 							<a href="" style="margin:0px 30px 0px 60px;" class="dropdown-toggle" data-toggle="dropdown">이동</a>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">받은메일함</a>
-								<a class="dropdown-item" href="#">보낸메일함</a>
 								<a class="dropdown-item" href="#">중요메일함</a>
 								<a class="dropdown-item" href="#">휴지통</a>
 							</div>
@@ -172,6 +170,8 @@
 			})
 		</script>
 		
+		<!-- Alert -->
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<!-- 테이블 head 기능들 구현 : ajax -->
 		<script>
 			function readMail(){
@@ -194,7 +194,29 @@
 						console.log("읽음처리용 ajax 통신실패")
 					}
 				})
+			}
+			function deleteMail(){
+				var arr = [];
+				document.querySelectorAll('input[type=checkbox][name=mailNo]:checked').forEach(function(c){
+					arr.push(c.value);
+				})
 				
+				$.ajax({
+					url:"listDelete.ml",
+					data:{
+						mailNoArr:arr
+						},
+					type:"post",
+					success:function(result){	// boolean 타입
+						if(result){
+							swal('', "선택된 메일을 휴지통으로 이동하며 10일 보관 후 영구삭제됩니다.", 'success');
+						} else {
+							alert("삭제 실패");
+						}
+					}, error:function(){
+						console.log("메일삭제용 ajax 통신실패")
+					}
+				})
 			}
 		</script>
 		

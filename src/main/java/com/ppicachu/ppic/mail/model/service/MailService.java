@@ -34,4 +34,7 @@ public interface MailService {
 	// 7. 중요메일 해제,등록 서비스
 	int deleteImportantStatus(MailStatus status);
 	int updateImportantStatus(MailStatus status);
+	
+	// 8. 메일 삭제 서비스 : binStatus 업데이트, 삭제예정일 업데이트
+	int deleteMail(MailStatus status);
 }

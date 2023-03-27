@@ -300,4 +300,13 @@
 		    and important_status = 'N'
 	</update>
 	
+	<update id="deleteMail">
+		update
+		       mail_status
+		   set bin_status = 'Y',
+		       delete_date = sysdate + 10
+		 where recipient_mail = #{recipientMail}
+		   and mail_no = #{mailNo}
+	</update>
+	
 </mapper>

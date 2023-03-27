@@ -323,6 +323,41 @@ public class MailController {
 		return result == length;
 	}
 	
+	@RequestMapping("delete.ml")
+	public String deleteMail(int no, int type, HttpSession session, Model model) {
+		MailStatus status = new MailStatus();
+		status.setMailNo(no);
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setMailType(type);
+		
+		int result = mService.deleteMail(status);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "선택된 메일을 휴지통으로 이동하며 10일 보관 후 영구삭제됩니다.");
+			return "redirect:recieveList.ml";
+		} else {
+			model.addAttribute("errorMsg", "메일 삭제 실패");
+			return "common/errorPage";
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("listDelete.ml")
+	public boolean ajaxDeleteMail(MailStatus status, HttpSession session, Model model) {
+		
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.deleteMail(status);
+			result++;
+		}
+		return result == length;
+		
+	}
+	
 	
 	
 	//**************** 주소록 ****************
