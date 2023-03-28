@@ -1,5 +1,6 @@
 package com.ppicachu.ppic.approval.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,6 +25,7 @@ import com.ppicachu.ppic.approval.model.vo.FormConsume;
 import com.ppicachu.ppic.approval.model.vo.FormDraft;
 import com.ppicachu.ppic.approval.model.vo.FormTransfer;
 import com.ppicachu.ppic.approval.model.vo.MyDept;
+import com.ppicachu.ppic.approval.template.ProcessMaking;
 import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.common.template.FileUpload;
@@ -164,7 +166,7 @@ public class ApprovalController {
 	 */
 	@ResponseBody
 	@RequestMapping("removeApproval.ap")
-	public int AjaxRemoveApproval(String no, String form) {
+	public int AjaxRemoveApproval(String no, String form, HttpSession session) {
 		String[] noArr = {no};
 		if(no.contains(",")) {
 			noArr = no.split(",");
@@ -173,14 +175,27 @@ public class ApprovalController {
 		if(form.contains(",")) {
 			formArr = form.split(",");
 		}
+		ArrayList<Attachment> atList = new ArrayList<>();
 		ArrayList<Approval> aList = new ArrayList<>();
 		for(int i=0; i<noArr.length; i++) {
+			Attachment at = new Attachment();
+			at.setRefNo(Integer.parseInt(noArr[i]));
+			atList.add(at);
+			
 			Approval a = new Approval();
 			a.setApprovalNo(Integer.parseInt(noArr[i]));
 			a.setForm(formArr[i]);
 			aList.add(a);
 		}
-		int result = aService.removeApproval(aList);
+		ArrayList<Attachment> delList = aService.selectAttChangeName(noArr);
+		
+		int atta = aService.removeAppAttachment(atList);
+		if(atta > 0) {
+			for(int i=0; i<delList.size(); i++) {
+				new File(session.getServletContext().getRealPath(delList.get(i).getChangeName())).delete();
+			}
+		}
+		int result = aService.removeApproval(aList, "remove");
 		
 		return result;
 	}
@@ -309,39 +324,13 @@ public class ApprovalController {
 			, HttpSession session, Model m) {
 		
 		// AppProcess 생성
-		ArrayList<AppProcess> apList = new ArrayList<>();
-		AppProcess ap = new AppProcess(); // 기안자 등록
-		ap.setUserName(a.getUserNo() + "");
-		ap.setProcessOrder(0);
-		ap.setApprovalRole("결재");
-		ap.setStatus("승인");
-		apList.add(ap);
-		String[] agrNoArr = {agrUserNo}; // 결재자 등록
+		ArrayList<AppProcess> apList = ProcessMaking.makeProcess(a, agrUserNo, refUserNo);
+		
+		// finalOrder 추가
+		String[] agrNoArr = {agrUserNo};
 		if(agrUserNo.contains(",")) {
 			agrNoArr = agrUserNo.split(",");
 		}
-		for(int i=0; i<agrNoArr.length; i++) {
-			AppProcess ap1 = new AppProcess();
-			ap1.setUserName(agrNoArr[i]);
-			ap1.setProcessOrder(i + 1);
-			ap1.setApprovalRole("결재");
-			apList.add(ap1);
-		}
-		if(refUserNo != null) {
-			String[] refNoArr = {refUserNo}; // 참조자 등록
-			if(refUserNo.contains(",")) {
-				refNoArr = refUserNo.split(",");
-			}
-			for(int j=0; j<refNoArr.length; j++) {
-				AppProcess ap2 = new AppProcess();
-				ap2.setUserName(refNoArr[j]);
-				ap2.setProcessOrder(0);
-				ap2.setApprovalRole("참조");
-				apList.add(ap2);
-			}
-		}
-		
-		// Approval 추가
 		a.setFinalOrder(agrNoArr.length);
 						
 		// AppChange 생성
@@ -365,7 +354,7 @@ public class ApprovalController {
 		}
 		
 		// Approval insert
-		int result1 = aService.insertApproval(a, apList, ac, atList);
+		int result1 = aService.insertApproval(a, apList, ac, atList, "insert");
 		
 		// Form insert
 		int result2 = 0;
@@ -375,7 +364,8 @@ public class ApprovalController {
 			ArrayList<FormTransfer> ftrList = ftr.getFtrList();
 			for(int i=0; i<ftrList.size(); i++) {
 				ftrList.get(i).setEffectiveDate(ftr.getEffectiveDate());
-			}result2 = aService.insertTransfer(ftrList);
+			}
+			result2 = aService.insertTransfer(ftrList);
 			break;
 		case "비품신청서" : result2 = aService.insertConsume(fco.getFcoList()); break;
 		case "지출결의서" : result2 = aService.insertCash(fca.getFcaList()); break;
@@ -442,15 +432,99 @@ public class ApprovalController {
 			, HttpSession session, Model m) {
 
 		// delete
+		ArrayList<Attachment> delAtList = new ArrayList<>();
+		if(a.getDelAttNo() != null){
+			for(int i=0; i<a.getDelAttNo().length; i++){
+				Attachment at = new Attachment();
+				at.setAttachmentNo(a.getDelAttNo()[i]);
+				delAtList.add(at);
+
+				new File(session.getServletContext().getRealPath(a.getDelAttName()[i])).delete();
+			}
+			aService.removeAppAttachment(delAtList);
+		}
+		// finalOrder 추가
+		String[] agrNoArr = {agrUserNo};
+		if(agrUserNo.contains(",")) {
+			agrNoArr = agrUserNo.split(",");
+		}
+		a.setFinalOrder(agrNoArr.length);
+		
 		ArrayList<Approval> aList = new ArrayList<>();
 		aList.add(a);
-		int result = aService.removeApproval(aList);
-		// 사진 삭제
+
+		int result = aService.removeApproval(aList, "update");
+
+		// AppProcess 생성
+		ArrayList<AppProcess> apList = ProcessMaking.makeProcess(a, agrUserNo, refUserNo);
+						
+		// AppChange 생성
+		AppChange ac = new AppChange();
+		ac.setApprovalNo(a.getApprovalNo());
+		ac.setUserName(a.getUserNo() + "");
+		ac.setContent("님이 글을 작성했어요.");
+		ac.setRole("변경");
+
+		// Attachment 생성
+		ArrayList<Attachment> atList = new ArrayList<>();
+		if(!upfile[0].getOriginalFilename().equals("")) {
+			String[] saveFilePathArr = new String[upfile.length];
+			for(int i=0; i<upfile.length; i++) {
+				saveFilePathArr[i] = FileUpload.saveFile(upfile[i], session, "resources/uploadFiles/approvalFile/");
+			
+				Attachment at = new Attachment();
+				at.setRefNo(a.getApprovalNo());
+				at.setOriginName(upfile[i].getOriginalFilename());
+				at.setChangeName(saveFilePathArr[i]);
+				atList.add(at);
+			}
+		}
 		
 		// insert
-		String page = insertApproval(a, fdr, ftr, fco, fca, agrUserNo, refUserNo, upfile, session, m);
+		int result1 = aService.insertApproval(a, apList, ac, atList, "update");
 		
-		return page;
+		// Form insert
+		int result2 = 0;
+		switch(a.getForm()) {
+		case "업무기안" : 
+			fdr.setApprovalNo(a.getApprovalNo());
+			result2 = aService.insertDraft(fdr); 
+			break;
+		case "인사발령품의서" : 
+			ArrayList<FormTransfer> ftrList = ftr.getFtrList();
+			for(int i=0; i<ftrList.size(); i++) {
+				ftrList.get(i).setApprovalNo(a.getApprovalNo());
+				ftrList.get(i).setEffectiveDate(ftr.getEffectiveDate());
+			}
+			result2 = aService.insertTransfer(ftrList);
+			break;
+		case "비품신청서" : 
+			ArrayList<FormConsume> fcoList = fco.getFcoList();
+			for(int i=0; i<fcoList.size(); i++) {
+				fcoList.get(i).setApprovalNo(a.getApprovalNo());
+			}
+			result2 = aService.insertConsume(fcoList); 
+			break;
+		case "지출결의서" : 
+			ArrayList<FormCash> fcaList = fca.getFcaList();
+			for(int i=0; i<fcaList.size(); i++) {
+				fcaList.get(i).setApprovalNo(a.getApprovalNo());
+			}
+			result2 = aService.insertCash(fcaList); 
+			break;
+		}
+		
+		if(result1 * result2 > 0) {
+			if(a.getTem() != null) {
+				session.setAttribute("alertMsg", "성공적으로 기안이 임시저장되었습니다.");
+			} else {
+				session.setAttribute("alertMsg", "성공적으로 기안이 등록되었습니다.");
+			}
+			return "redirect:list.ap?myi=1";
+		} else {
+			m.addAttribute("errorMsg", "기안 등록 실패");
+			return "common/errorPage";
+		}
 	}
 	
 	/**
@@ -465,5 +539,16 @@ public class ApprovalController {
 		String page = updateForm(a.getApprovalNo(), a.getForm(), m);
 		
 		return page;
+	}
+	
+	/**
+	 * 변경사항 삭제 update
+	 */
+	@ResponseBody
+	@RequestMapping("deleteChange.ap")
+	public int AjaxDeleteChange(int changeNo) {
+		int result = aService.deleteChange(changeNo);
+		
+		return result;
 	}
 }

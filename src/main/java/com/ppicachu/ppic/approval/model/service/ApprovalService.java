@@ -23,7 +23,7 @@ public interface ApprovalService {
 	int insertChange(AppChange ac);
 	
 	// <작성,수정> Approval insert
-	int insertApproval(Approval a, ArrayList<AppProcess> apList, AppChange ac, ArrayList<Attachment> atList);
+	int insertApproval(Approval a, ArrayList<AppProcess> apList, AppChange ac, ArrayList<Attachment> atList, String what);
 	
 	// <작성,수정> FormDraft insert
 	int insertDraft(FormDraft fdr);
@@ -75,6 +75,9 @@ public interface ApprovalService {
 	// <작성,수정> 회원 리스트 select
 	ArrayList<Member> selectMemberList();
 	
+	// <삭제> 업로드 파일 삭제용 changeName select
+	ArrayList<Attachment> selectAttChangeName(String[] noArr);
+	
 	
 	
 	/* update */
@@ -95,20 +98,16 @@ public interface ApprovalService {
 	// <상세> 결재상태 update
 	int updateApprovalStatus(Approval a);
 	
+	// <상세> 변경사항 update
+	int deleteChange(int changeNo);
+	
 	
 	
 	/* delete */
 	
 	// <조회,수정> 영구삭제 delete (임시저장, 삭제관리)
-	int removeApproval(ArrayList<Approval> aList);
+	int removeApproval(ArrayList<Approval> aList, String what);
 	
-	
-	
-	
-	
-	
-	/*
-	// <상세> 변경사항 update
-	int updateAppChange(int changeNo);
-	*/
+	// <조회,수정> 첨부파일 delete
+	int removeAppAttachment(ArrayList<Attachment> atList);
 }

@@ -14,6 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FormCash {
+	private int approvalNo;
+	
 	private String account;
 	private String userHistory;
 	private int price;

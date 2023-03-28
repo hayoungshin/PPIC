@@ -249,7 +249,7 @@
 		    	by complete_no desc
 		    </when>
 		    <otherwise>
-		    	by approval_no desc
+		    	by create_date desc
 		    </otherwise>
 		</choose>
 	</select>
@@ -284,7 +284,7 @@
 		   and approval_status = '임시저장'
 		   and a.status = 'Y'
 		 order
-		    by approval_no desc
+		    by create_date desc
 	</select>
 	
 	<select id="selectMaListCount" resultType="_int">
@@ -335,7 +335,7 @@
 		</where>
 			and approval_status != '임시저장'
 		 order
-		    by approval_no desc
+		    by create_date desc
 	</select>
 
 	<select id="selectSearchListCount" resultType="_int">
@@ -460,10 +460,10 @@
 		 order
 		<choose>
 			<when test="orderBy == 'desc'">
-		    	by approval_no desc
+		    	by create_date desc
 		    </when>
 		    <when test="orderBy == 'asc'">
-		    	by approval_no asc
+		    	by create_date asc
 		    </when>
 		    <otherwise>
 		    	by complete_no desc nulls last
@@ -514,11 +514,29 @@
 		 where approval_no = #{approvalNo}
 	</delete>
 	
+	<select id="selectAttChangeName" resultMap="appAttachmentResult">
+		select
+			   change_name
+		  from attachment
+		 where category_no = 1
+		   and ref_no in
+			<foreach collection="array" item="no" separator="," open="(" close=")">
+            	#{no}
+			</foreach>
+	</select>
+	
 	<delete id="removeAppAttachment">
 		delete
 		  from attachment
-		 where ref_no = #{approvalNo}
-		   and category_no = 1
+		<where>
+			<if test="refNo != 0">
+				ref_no = #{refNo}
+			and category_no = 1
+			</if>
+			<if test="attachmentNo != 0">
+				attachment_no = #{attachmentNo}
+			</if>
+		</where>
 	</delete>
 	
 	<delete id="removeDraft">
@@ -544,6 +562,17 @@
 		  from form_cash
 		 where approval_no = #{approvalNo}
 	</delete>
+	
+ 	<update id="updateApproval">
+		update
+			   approval
+		   set title = #{title}
+		     , create_date = sysdate
+		     , current_order = 0
+		     , final_order = #{finalOrder}
+		     , approval_status = '대기'
+		 where approval_no = #{approvalNo}
+	</update>
 	
 	<update id="recoverApproval">
 		update
@@ -921,7 +950,14 @@
 		  )
 		  values
 		  (
-		    seq_apno.currval
+		<choose>
+			<when test="approvalNo == 0">
+				seq_apno.currval
+			</when>
+			<otherwise>
+				#{approvalNo}
+			</otherwise>
+		</choose>
 		  , #{userName}
 		  , #{processOrder}
 		  , #{approvalRole}
@@ -951,7 +987,14 @@
 		  , #{originName}
 		  , #{changeName}
 		  , 1
-		  , seq_apno.currval
+		<choose>
+			<when test="refNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{refNo}
+			</otherwise>
+		</choose>
 		  )
 	</insert>
 	
@@ -968,7 +1011,14 @@
 		  values
 		  (
 		    seq_fono.nextval
-		  , seq_apno.currval
+		<choose>
+			<when test="approvalNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{approvalNo}
+			</otherwise>
+		</choose>
 		  , #{effectiveDate}
 		  , (
 		  	  select department_no
@@ -995,7 +1045,14 @@
 		  values
 		  (
 		    seq_fono.nextval
-		  , seq_apno.currval
+		<choose>
+			<when test="approvalNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{approvalNo}
+			</otherwise>
+		</choose>
 		  , #{effectiveDate}
 		  , #{userName}
 		  , #{departmentName}
@@ -1020,7 +1077,14 @@
 		  values
 		  (
 		    seq_fono.nextval
-		  , seq_apno.currval
+		<choose>
+			<when test="approvalNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{approvalNo}
+			</otherwise>
+		</choose>
 		  , #{name}
 		  , #{reason}
 		  , #{unit}
@@ -1042,7 +1106,14 @@
 		  values
 		  (
 		    seq_fono.nextval
-		  , seq_apno.currval
+		<choose>
+			<when test="approvalNo == 0">
+				, seq_apno.currval
+			</when>
+			<otherwise>
+				, #{approvalNo}
+			</otherwise>
+		</choose>
 		  , #{account}
 		  , #{userHistory}
 		  , #{price}
@@ -1054,5 +1125,12 @@
 			   approval
 		   set approval_status = '임시저장'
 		 where approval_no = #{approvalNo}  
+	</update>
+	
+	<update id="deleteChange">
+		update
+			   app_change
+		   set status = 'N'
+		 where change_no = #{changeNo}
 	</update>
 </mapper>

@@ -96,6 +96,9 @@
 		text-align: left; 
 		padding-left: 40px;
 	}
+	.changeDel{
+		cursor: pointer;
+	}
 
     /* button */
     .btnn-pp{
@@ -326,7 +329,11 @@
 						} else {
 							value += "<tr>"
 								   +	"<th>" + list[i].userName + "</th>"
-								   +	"<td colspan='2'><span style='font-size:14px; color:gray;'>&nbsp;&nbsp;&nbsp;" + list[i].createDate + "</span></td>"
+								   +	"<td colspan='2'>"
+								   +		"<span style='font-size:14px; color:gray;'>&nbsp;&nbsp;&nbsp;" + list[i].createDate + "</span>&nbsp;&nbsp;&nbsp;"
+								   +		"<span class='changeDel' style='font-size:14px; color:red;'>삭제</span>"
+								   +		"<input type='hidden' value='" + list[i].changeNo + "'>"
+								   +	"</td>"
 								   + "</tr>"
 								   + "<tr height='35px;'>"
 								   +	"<td colspan='3'>&nbsp;" + list[i].content + "</td>"
@@ -339,6 +346,21 @@
 				}, error:function(){
 					console.log("변경사항용 ajax통신 실패");
 				}
+			});
+
+			// Ajax 변경사항 delete
+			$(document).on('click', '.changeDel', function(){
+				const changeNo = this.nextSibling.value;
+				$.ajax({
+					url:'deleteChange.ap?changeNo=' + changeNo,
+					success:function(result){
+						if(result > 0){
+							location.reload();
+						}
+					}, error:function(){
+						console.log("변경사항용 ajax통신 실패");
+					}
+				});
 			});
 		}
 		
@@ -617,7 +639,7 @@
 										<c:choose>
 											<c:when test="${ad.att[0] ne null}">
 												<c:forEach var="at" items="${ad.att}">
-													<a href="${at.changeName}" download="${at.originName}">${at.originName}</a>
+													<a href="${at.changeName}" download="${at.originName}">${at.originName}</a><br>
 												</c:forEach>
 											</c:when>
 											<c:otherwise>

@@ -14,6 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FormConsume {
+	private int approvalNo;
+	
 	private String name;
 	private String reason;
 	private String unit;

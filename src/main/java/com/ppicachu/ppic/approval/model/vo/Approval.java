@@ -36,4 +36,5 @@ public class Approval {
 	private String orderBy;
 	
 	private int[] delAttNo;
+	private String[] delAttName;
 }

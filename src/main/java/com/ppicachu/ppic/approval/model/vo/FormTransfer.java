@@ -14,6 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FormTransfer {
+	private int approvalNo;
+	
 	private String effectiveDate;
 	private String userName;
 	private String departmentName;

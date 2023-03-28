@@ -80,10 +80,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public int removeApproval(ArrayList<Approval> aList) {
+	public int removeApproval(ArrayList<Approval> aList, String what) {
 		aDao.removeProcess(sqlSession, aList);
 		aDao.removeChange(sqlSession, aList);
-		aDao.removeAppAttachment(sqlSession, aList);
 		for(int i=0; i<aList.size(); i++) {
 			switch(aList.get(i).getForm()) {
 			case "업무기안" : aDao.removeDraft(sqlSession, aList.get(i).getApprovalNo()); break;
@@ -92,10 +91,23 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case "지출결의서" : aDao.removeCash(sqlSession, aList.get(i).getApprovalNo()); break;
 			}
 		}
-		
-		int result = aDao.removeApproval(sqlSession, aList);
-		
+		int result = 0;
+		if(what.equals("remove")) {
+			result = aDao.removeApproval(sqlSession, aList);
+		} else if(what.equals("update")) {
+			result = aDao.updateApproval(sqlSession, aList.get(0));
+		}
 		return result;
+	}
+	
+	@Override
+	public ArrayList<Attachment> selectAttChangeName(String[] noArr){
+		return aDao.selectAttChangeName(sqlSession, noArr);
+	}
+	
+	@Override
+	public int removeAppAttachment(ArrayList<Attachment> atList) {
+		return aDao.removeAppAttachment(sqlSession, atList);
 	}
 
 	@Override
@@ -149,16 +161,18 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public int insertApproval(Approval a, ArrayList<AppProcess> apList, AppChange ac, ArrayList<Attachment> atList) {
-		int result1 = aDao.insertApproval(sqlSession, a);
-		int result2 = aDao.insertProcess(sqlSession, apList);
-		int result3 = aDao.insertChange(sqlSession, ac);
+	public int insertApproval(Approval a, ArrayList<AppProcess> apList, AppChange ac, ArrayList<Attachment> atList, String what) {
+		if(what.equals("insert")) {
+			aDao.insertApproval(sqlSession, a);
+		}
+		int result1 = aDao.insertProcess(sqlSession, apList);
+		int result2 = aDao.insertChange(sqlSession, ac);
 
 		if(!atList.isEmpty()) {
 			aDao.insertAppAttachment(sqlSession, atList);
 		}
 		
-		return result1 * result2 * result3;
+		return result1 * result2;
 	}
 
 	@Override
@@ -184,5 +198,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public int updateApprovalStatus(Approval a) {
 		return aDao.updateApprovalStatus(sqlSession, a);
+	}
+	
+	@Override
+	public int deleteChange(int changeNo) {
+		return aDao.deleteChange(sqlSession, changeNo);
 	}
 }

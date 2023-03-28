@@ -12,6 +12,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FormDraft {
+	private int approvalNo;
+	
 	private String effectiveDate;
 	private String departmentNo;
 	private String content;
