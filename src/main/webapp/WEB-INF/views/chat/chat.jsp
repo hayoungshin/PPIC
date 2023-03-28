@@ -1284,6 +1284,7 @@
      					let value = "<span id='roomName'>" + newRoomName + "</span>"
      								+ " <span id='groupCount'>" + $groupCount + "</span>"
      					$("#roomName-area").html(value);
+     					$roomName = newRoomName;
      				}
      			}
      		})
