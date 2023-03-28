@@ -110,9 +110,9 @@
 				<div class="dropdown" id="dropdown">
 					<img src="resources/icons/dots.png" style="width:18px; cursor:pointer; opacity:0.7;" class="dropdown-toggle" data-toggle="dropdown">
 					<div class="dropdown-menu" style="font-size:13px; padding:0; left:-120px;">
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">다시보내기</a>
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">전달</a>
-						<a class="dropdown-item" style="padding:5px 10px;" href="#">삭제</a>
+						<a class="dropdown-item" style="padding:5px 10px;" onclick="location.href='tempForm.ml?no=${m.mailNo}'">다시보내기</a>
+						<a class="dropdown-item" style="padding:5px 10px;" onclick="location.href='deliverForm.ml?no=${m.mailNo}'">전달</a>
+						<a class="dropdown-item" style="padding:5px 10px;" onclick="location.href='delete.ml?no=${m.mailNo}&type=4'">삭제</a>
 					</div>
 				</div>
 			</td>

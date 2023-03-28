@@ -231,7 +231,7 @@
 		<br>
 
 		
-				<div id="paging">
+		<div id="paging">
 	       	<ul>
           		<c:if test="${ pi.currentPage ne 1 }">
           			<c:choose>

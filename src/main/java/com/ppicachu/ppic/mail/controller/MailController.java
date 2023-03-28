@@ -268,8 +268,12 @@ public class MailController {
 	}
 	
 	@RequestMapping("tempForm.ml")
-	public String tempMailForm() {
-		return "mail/tempMailForm";
+	public ModelAndView tempMailForm(HttpSession session, int no, ModelAndView mv) {
+		
+		Mail m = mService.selectTemp(no);
+		
+		mv.addObject("m", m).setViewName("mail/tempMailForm");
+		return mv;
 	}
 	
 	@RequestMapping("binList.ml")

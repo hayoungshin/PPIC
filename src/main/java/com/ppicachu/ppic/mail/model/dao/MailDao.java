@@ -207,6 +207,9 @@ public class MailDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return (ArrayList)sqlSession.selectList("mailMapper.selectTempList", userMail, rowBounds);
 	}
+	public Mail selectTemp(SqlSessionTemplate sqlSession, int mailNo) {
+		return sqlSession.selectOne("mailMapper.selectTemp", mailNo);
+	}
 	
 	
 	
