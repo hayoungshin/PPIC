@@ -39,18 +39,10 @@
 							</div>
 						</div>
 	
-						<span onclick="readMail();" style="margin:0px 48px;">읽음</span>
+						<span id="read-status" onclick="readMail();" style="margin:0px 48px;">읽음</span>
 						<span onclick="deleteMail();" style="margin:0px 60px;">삭제</span>
 						<span style="margin:0px 60px; color:gray; cursor:default;">│</span>
-	
-						<div class="dropdown" style="display:inline-block;">
-							<a href="" style="margin:0px 30px 0px 60px;" class="dropdown-toggle" data-toggle="dropdown">이동</a>
-							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">중요메일함</a>
-								<a class="dropdown-item" href="#">휴지통</a>
-							</div>
-						</div>
-	
+						
 						<div class="dropdown" style="display:inline-block;">
 							<a href="" style="margin:0px 30px" class="dropdown-toggle" data-toggle="dropdown">필터</a>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
@@ -176,24 +168,48 @@
 		<script>
 			function readMail(){
 				var arr = [];
-				document.querySelectorAll('input[type=checkbox][name=mailNo]:checked').forEach(function(c){
+				let checked = document.querySelectorAll('input[type=checkbox][name=mailNo]:checked');
+				checked.forEach(function(c){
 					arr.push(c.value);
 				})
 				
-				$.ajax({
-					url:"read.ml",
-					data:{mailNoArr:arr},
-					type:"post",
-					success:function(result){	// boolean 타입
-						if(result){
-							location.reload() 
-						} else {
-							alert("읽음처리 실패");
+				if(document.getElementById("read-status").innerText == "읽음"){
+					$.ajax({
+						url:"read.ml",
+						data:{mailNoArr:arr},
+						type:"post",
+						success:function(result){	// boolean 타입
+							if(result){
+								checked.forEach(function(c){
+									c.parentNode.parentNode.childNodes[5].childNodes[3].src = "resources/icons/mail-opened.png";
+								})
+								document.getElementById("read-status").innerText = "안읽음";
+							} else {
+								alert("읽음처리 실패");
+							}
+						}, error:function(){
+							console.log("읽음처리용 ajax 통신실패")
 						}
-					}, error:function(){
-						console.log("읽음처리용 ajax 통신실패")
-					}
-				})
+					})
+				} else {
+					$.ajax({
+						url:"unread.ml",
+						data:{mailNoArr:arr},
+						type:"post",
+						success:function(result){	// boolean 타입
+							if(result){
+								checked.forEach(function(c){
+									c.parentNode.parentNode.childNodes[5].childNodes[3].src = "resources/icons/mail-c.png";
+								})
+								document.getElementById("read-status").innerText = "읽음";
+							} else {
+								alert("안읽음처리 실패");
+							}
+						}, error:function(){
+							console.log("안읽음처리용 ajax 통신실패")
+						}
+					})
+				}
 			}
 			function deleteMail(){
 				var arr = [];

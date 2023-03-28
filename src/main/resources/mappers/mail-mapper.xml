@@ -309,4 +309,12 @@
 		   and mail_no = #{mailNo}
 	</update>
 	
+	<update id="updateReadNull">
+		update
+			   mail_status
+		   set read_date = null
+		 where mail_no = #{mailNo}
+		   and recipient_mail = #{recipientMail}
+	</update>
+	
 </mapper>

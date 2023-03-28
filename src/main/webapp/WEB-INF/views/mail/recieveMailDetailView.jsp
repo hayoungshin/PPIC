@@ -120,7 +120,7 @@
 						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='replyForm.ml?no=${m.mailNo}'">답장</span>
 						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='deliverForm.ml?no=${m.mailNo}'">전달</span>
 						<span class="dropdown-item" style="padding:5px 10px;" onclick="location.href='delete.ml?no=${m.mailNo}&type=${m.mailType}'">삭제</span>
-						<span class="dropdown-item" style="padding:5px 10px;" href="#">안읽음으로표시</span>
+						<span class="dropdown-item" id="read-status" style="padding:5px 10px;">안읽음으로표시</span>
 					</div>
 				</div>
 			</td>
@@ -152,48 +152,59 @@
 	</div>
 	
 	<script>
-			function importantStatus(star){
-				
-				if(star.src.includes("star-y")){	// 중요메일이었을 때
-					$.ajax({
-						url:"deleteImportant.ml",
-						data:{
-							mailNo:${m.mailNo},
-							mailType:${m.mailType}
-						},
-						type:"post",
-						success:function(result){
-							if(result > 0){
-								star.src = "resources/icons/star.png";
-							} else {
-								alert("중요메일 해제 실패");
-							}
-						}, error:function(){
-							console.log("중요메일 해제용 ajax 통신실패")
+		function importantStatus(star){
+			
+			if(star.src.includes("star-y")){	// 중요메일이었을 때
+				$.ajax({
+					url:"deleteImportant.ml",
+					data:{
+						mailNo:${m.mailNo},
+						mailType:${m.mailType}
+					},
+					type:"post",
+					success:function(result){
+						if(result > 0){
+							star.src = "resources/icons/star.png";
+						} else {
+							alert("중요메일 해제 실패");
 						}
-					})
-				} else {	// 중요메일이 아니었을 때
-					$.ajax({
-						url:"updateImportant.ml",
-						data:{
-							mailNo:${m.mailNo},
-							mailType:${m.mailType}
-						},
-						type:"post",
-						success:function(result){
-							if(result > 0){
-								star.src = "resources/icons/star-y.png";
-							} else {
-								alert("중요메일 등록 실패");
-							}
-						}, error:function(){
-							console.log("중요메일 해제용 ajax 통신실패")
+					}, error:function(){
+						console.log("중요메일 해제용 ajax 통신실패")
+					}
+				})
+			} else {	// 중요메일이 아니었을 때
+				$.ajax({
+					url:"updateImportant.ml",
+					data:{
+						mailNo:${m.mailNo},
+						mailType:${m.mailType}
+					},
+					type:"post",
+					success:function(result){
+						if(result > 0){
+							star.src = "resources/icons/star-y.png";
+						} else {
+							alert("중요메일 등록 실패");
 						}
-					})
-				}
-				
+					}, error:function(){
+						console.log("중요메일 해제용 ajax 통신실패")
+					}
+				})
 			}
-		</script>
+		}
+		
+		document.getElementById("read-status").onclick = function(){
+			$.ajax({
+				url:"readNull.ml",
+				data:{mailNo:${m.mailNo}},
+				type:"post",
+				success:function(){},
+				error:function(){
+					console.log("안읽음으로표시용 ajax 통신 실패")
+				}
+			})
+		}
+	</script>
 	
 </body>
 </html>

@@ -105,5 +105,10 @@ public class MailServiceImpl implements MailService{
 		return mDao.deleteMail(sqlSession, status);
 	}
 
+	@Override
+	public int updateReadNull(MailStatus status) {
+		return mDao.updateReadNull(sqlSession, status);
+	}
+
 	
 }

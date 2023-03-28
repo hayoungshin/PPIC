@@ -311,7 +311,7 @@ public class MailController {
 	
 	@ResponseBody
 	@RequestMapping("read.ml")
-	public boolean readMail(MailStatus status, HttpSession session) {
+	public boolean ajaxreadMail(MailStatus status, HttpSession session) {
 		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
 		int length = status.getMailNoArr().length;
 		int result = 0;
@@ -322,7 +322,28 @@ public class MailController {
 		}
 		return result == length;
 	}
+	@ResponseBody
+	@RequestMapping("unread.ml")
+	public boolean ajaxUnreadMail(MailStatus status, HttpSession session) {
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.updateReadNull(status);
+			result++;
+		}
+		return result == length;
+	}
 	
+	/**
+	 * 상세페이지에서 삭제할 때 실행됨
+	 * @param no
+	 * @param type
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("delete.ml")
 	public String deleteMail(int no, int type, HttpSession session, Model model) {
 		MailStatus status = new MailStatus();
@@ -340,7 +361,13 @@ public class MailController {
 			return "common/errorPage";
 		}
 	}
-	
+	/**
+	 * 리스트에서 삭제할 때 실행되는 메소드
+	 * @param status mailNo배열 들어있음 (체크박스 체크된 값들)
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("listDelete.ml")
 	public boolean ajaxDeleteMail(MailStatus status, HttpSession session, Model model) {
@@ -355,8 +382,16 @@ public class MailController {
 			result++;
 		}
 		return result == length;
-		
 	}
+	
+	@RequestMapping("readNull.ml")
+	public int deleteReadStatus(MailStatus status, HttpSession session) {
+		status.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		return mService.updateReadToNull(status);
+	}
+	
+	
 	
 	
 	

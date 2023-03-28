@@ -117,4 +117,8 @@ public class MailDao {
 		return sqlSession.update("mailMapper.deleteMail", status);
 	}
 	
+	public int updateReadNull(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.update("mailMapper.updateReadNull", status);
+	}
+	
 }

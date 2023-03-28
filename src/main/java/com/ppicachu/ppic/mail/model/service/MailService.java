@@ -37,4 +37,7 @@ public interface MailService {
 	
 	// 8. 메일 삭제 서비스 : binStatus 업데이트, 삭제예정일 업데이트
 	int deleteMail(MailStatus status);
+	
+	// 9. 안읽음으로 표시 서비스
+	int updateReadNull(MailStatus status);
 }
