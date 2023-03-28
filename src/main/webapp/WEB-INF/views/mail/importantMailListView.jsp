@@ -45,8 +45,8 @@
 						<div class="dropdown" style="display:inline-block;">
 							<a href="" style="margin:0px 30px" class="dropdown-toggle" data-toggle="dropdown">정렬</a>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">최신 순</a>
-								<a class="dropdown-item" href="#">오래된 순</a>
+								<a class="dropdown-item" href="importantList.ml?cpage=1">최신 순</a>
+								<a class="dropdown-item" href="importantList.ml?cpage=1&sort=older">오래된 순</a>
 							</div>
 						</div>
 					</td>
@@ -202,7 +202,7 @@
 										}, error:function(){
 											console.log("메일삭제용 ajax 통신실패")
 										}
-									})						
+									})
 								}
 								if(recieveArr.length > 0){
 									$.ajax({

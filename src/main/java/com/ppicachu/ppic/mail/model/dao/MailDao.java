@@ -105,6 +105,12 @@ public class MailDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantList", userMail, rowBounds);
 	}
+	public ArrayList<MailStatus> selectImportantListOlder(SqlSessionTemplate sqlSession, PageInfo pi, String userMail){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
+		int limit = pi.getBoardLimit();	// 몇개 조회
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantListOlder", userMail, rowBounds);
+	}
 	
 	public int deleteImportantStatus(SqlSessionTemplate sqlSession, MailStatus status) {
 		return sqlSession.update("mailMapper.deleteImportantStatus", status);
@@ -183,11 +189,6 @@ public class MailDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.selectAtcSendList", userMail, rowBounds);
 	}
 	
-	
-	public int completeDeleteMail(SqlSessionTemplate sqlSession) {
-		return sqlSession.delete("mailMapper.completeDeleteMail");
-	}
-	
 	public int selectBinListCount(SqlSessionTemplate sqlSession, String userMail) {
 		return sqlSession.selectOne("mailMapper.selectBinListCount", userMail);
 	}
@@ -209,6 +210,15 @@ public class MailDao {
 	}
 	public Mail selectTemp(SqlSessionTemplate sqlSession, int mailNo) {
 		return sqlSession.selectOne("mailMapper.selectTemp", mailNo);
+	}
+	public int deleteTemp(SqlSessionTemplate sqlSession, MailStatus status) {
+		return sqlSession.delete("mailMapper.deleteTemp", status);
+	}
+	
+	
+	/* 스케줄링에 의함 */
+	public int completeDeleteMail(SqlSessionTemplate sqlSession) {
+		return sqlSession.delete("mailMapper.completeDeleteMail");
 	}
 	
 	
