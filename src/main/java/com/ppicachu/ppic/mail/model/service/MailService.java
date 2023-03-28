@@ -31,7 +31,11 @@ public interface MailService {
 	
 	// 4. 보낸메일 리스트 조회 서비스
 	int selectSendListCount(String userMail);
+	int selectImportantSendListCount(String userMail);
+	int selectAtcSendListCount(String userMail);
 	ArrayList<MailStatus> selectSendList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectImportantSendList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectAtcSendList(PageInfo pi, String userMail);
 	// 5. 보낸메일 상세 조회 서비스
 	Mail selectSend(int mailNo);
 	
@@ -49,10 +53,11 @@ public interface MailService {
 	// 9. 안읽음으로 표시 서비스
 	int updateReadNull(MailStatus status);
 	
-	// 10. 메일 영구삭제 서비스 (스케줄러)
-	int completeDeleteMail();
-	
-	// 11. 휴지통 리스트 조회 서비스
+	// 10. 휴지통 리스트 조회 서비스
 	int selectBinListCount(String userMail);
 	ArrayList<MailStatus> selectBinList(PageInfo pi, String userMail);
+
+	// 메일 영구삭제 서비스 (스케줄러)
+	int completeDeleteMail();
+
 }

@@ -308,6 +308,14 @@
 		 where recipient_mail = #{recipientMail}
 		   and mail_no = #{mailNo}
 	</update>
+	<update id="deleteSendMail">
+		update
+		       mail_status
+		   set bin_status = 'Y',
+		       delete_date = sysdate + 10
+		 where mail_type = 4
+		   and mail_no = #{mailNo}
+	</update>
 	
 	<update id="updateReadNull">
 		update
@@ -448,11 +456,72 @@
 		    by mail_no desc
 	</select>
 	
-	<delete id="completeDeleteMail">
-		delete
+	<select id="selectImportantSendListCount" resultType="_int">
+		select 
+			   count(*)
 		  from mail_status
-		 where delete_date - sysdate > 10
-	</delete>
+		 where sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+		   and important_status = 'Y'
+	</select>
+	<select id="selectImportantSendList" resultMap="mailStatusResult">
+		select s.mail_no
+		     , m.recipient_mail
+		     , mail_title
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+		   and important_status = 'Y'
+		 order
+		    by mail_no desc
+	</select>
+	<select id="selectAtcSendListCount" resultType="_int">
+		select 
+			   count(*)
+		  from mail_status s
+		 where sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+		   and (
+		        select count(*)
+		          from mail_attachment
+		         where s.mail_no = mail_no
+		       ) > 0
+	</select>
+	<select id="selectAtcSendList" resultMap="mailStatusResult">
+		select s.mail_no
+		     , m.recipient_mail
+		     , mail_title
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.sender_mail = #{userMail}
+		   and mail_type = 4
+		   and bin_status = 'N'
+		   and (
+		        select count(*)
+		          from mail_attachment
+		         where s.mail_no = mail_no
+		       ) > 0
+		 order
+		    by mail_no desc
+	</select>
 	
 	<select id="selectBinListCount" resultType="_int">
 		select 
@@ -485,5 +554,11 @@
 		 order
 		    by mail_no desc
 	</select>
+	
+	<delete id="completeDeleteMail">
+		delete
+		  from mail_status
+		 where delete_date - sysdate > 10
+	</delete>
 	
 </mapper>

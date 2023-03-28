@@ -114,14 +114,18 @@ public class MailDao {
 	}
 	
 	public int deleteMail(SqlSessionTemplate sqlSession, MailStatus status) {
-		return sqlSession.update("mailMapper.deleteMail", status);
+		if(status.getMailType() == 0) {
+			return sqlSession.update("mailMapper.deleteMail", status);			
+		} else {	// 보낸 메일
+			return sqlSession.update("mailMapper.deleteSendMail", status);
+		}
 	}
 	
 	public int updateReadNull(SqlSessionTemplate sqlSession, MailStatus status) {
 		return sqlSession.update("mailMapper.updateReadNull", status);
 	}
 	
-	/* 정렬 */
+	/* 받은메일 필터 */
 	public int selectUnreadRecieveListCount(SqlSessionTemplate sqlSession, String userMail) {
 		return sqlSession.selectOne("mailMapper.selectUnreadRecieveListCount", userMail);
 	}
@@ -159,6 +163,27 @@ public class MailDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.selectAtcRecieveList", userMail, rowBounds);
 	}
 	
+	/* 보낸메일 필터 */
+	public int selectImportantSendListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectImportantSendListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectImportantSendList(SqlSessionTemplate sqlSession, PageInfo pi, String userMail){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantSendList", userMail, rowBounds);
+	}
+	public int selectAtcSendListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectAtcSendListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectAtcSendList(SqlSessionTemplate sqlSession, PageInfo pi, String userMail){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectAtcSendList", userMail, rowBounds);
+	}
+	
+	
 	public int completeDeleteMail(SqlSessionTemplate sqlSession) {
 		return sqlSession.delete("mailMapper.completeDeleteMail");
 	}
@@ -172,5 +197,7 @@ public class MailDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return (ArrayList)sqlSession.selectList("mailMapper.selectBinList", userMail);
 	}
+	
+	
 	
 }

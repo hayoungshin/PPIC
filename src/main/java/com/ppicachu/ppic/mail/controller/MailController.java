@@ -153,19 +153,33 @@ public class MailController {
 	}
 	
 	@RequestMapping("sendList.ml")
-	public ModelAndView selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
-		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
-		int listCount = mService.selectSendListCount(userMail);	// 전체 보낸메일 개수
+	public ModelAndView selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, String filter, HttpSession session, ModelAndView mv) {
+		
 
-		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-		ArrayList<MailStatus> list = mService.selectSendList(pi, userMail);
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		
+		PageInfo pi;
+		ArrayList<MailStatus> list = new ArrayList<>();
+		int listCount = 0;
+		if(filter == null) {					// 전체 조회
+			listCount = mService.selectSendListCount(userMail);	// 전체 보낸메일 개수
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectSendList(pi, userMail);
+		} else if(filter.equals("important")) {	// 중요한 보낸메일
+			listCount = mService.selectImportantSendListCount(userMail);
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectImportantSendList(pi, userMail);
+		} else {								// 첨부파일 있는 보낸메일
+			listCount = mService.selectAtcSendListCount(userMail);
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectAtcSendList(pi, userMail);
+		}
 		
 		for(MailStatus m : list) {
 			m.setRecipientArr(m.getRecipientMail().split(","));
 		}
 		
-		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/sendMailListView");
-		
+		mv.addObject("pi", pi).addObject("list", list).addObject("filter", filter).setViewName("mail/sendMailListView");
 		return mv;
 	}
 	
@@ -267,6 +281,7 @@ public class MailController {
 		if(type == 4) {	// 보낸 메일일 때
 			// 메일기본정보
 			Mail m = mService.selectSend(no);
+			m.setMailType("4");
 			// 메일 첨부파일
 			ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
 			mv.addObject("m", m).addObject("list", list).setViewName("mail/binMailDetailView");
@@ -438,15 +453,16 @@ public class MailController {
 	@RequestMapping("listDelete.ml")
 	public boolean ajaxDeleteMail(MailStatus status, HttpSession session, Model model) {
 		
-		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
-		
 		int length = status.getMailNoArr().length;
 		int result = 0;
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		
 		for(int mailNo : status.getMailNoArr()) {
 			status.setMailNo(mailNo);
 			mService.deleteMail(status);
 			result++;
 		}
+		
 		return result == length;
 	}
 	
