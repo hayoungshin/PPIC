@@ -892,27 +892,24 @@
           $("#selected-area2").empty();
           projectUser = "";
           for(let i=0; i<ppList.length; i++){
-            if(ppList[i].taskAssign != null){
+            if(ppList[i].taskAssign != null && !projectUser.includes(ppList[i].userName)){
                 projectUser += "<div class='select-user' onclick='deleteUser(this);'>" + ppList[i].userName + " " + ppList[i].positionName + "<img src='resources/icons/delete-red.png'>"
                             + "<input type='hidden' name='selectUserNo' value='" + ppList[i].userNo + "'>"
                             + "<input type='hidden' name='selectUserDept' value='" + ppList[i].departmentNo + "'>"
                             + "<input type='hidden' name='selectUserAssign' value='" + ppList[i].taskAssign + "'>"
                             + "</div>";
-            }
-            for(let j=0; j<ppList.length; j++){
-              if(!projectUser.includes(ppList[j].userName) && ppList[j].pmStatus == "N"){
-                projectUser += "<div class='select-user' onclick='deleteUser(this);'>" + ppList[j].userName + " " + ppList[j].positionName + "<img src='resources/icons/delete-red.png'>"
-                        + "<input type='hidden' name='selectUserNo' value='" + ppList[j].userNo + "'>"
-                        + "<input type='hidden' name='selectUserDept' value='" + ppList[j].departmentNo + "'>"
+            }else if(!projectUser.includes(ppList[i].userName) && ppList[i].pmStatus == "N" && !projectUser.includes(ppList[i].userName)){
+                projectUser += "<div class='select-user' onclick='deleteUser(this);'>" + ppList[i].userName + " " + ppList[i].positionName + "<img src='resources/icons/delete-red.png'>"
+                        + "<input type='hidden' name='selectUserNo' value='" + ppList[i].userNo + "'>"
+                        + "<input type='hidden' name='selectUserDept' value='" + ppList[i].departmentNo + "'>"
                         + "</div>";
-              }else if(ppList[i].pmStatus == "Y"){
+            }
+            if(ppList[i].pmStatus == "Y"){
                   pmDeptNo = ppList[i].departmentNo;
                   pmNo = ppList[i].userNo;
                   pmName = ppList[i].userName + " " + ppList[i].positionName;
-              }
-
             }
-          }
+            }
           $("#selected-area2").append(projectUser);
         
           $("#currentPM").empty();
