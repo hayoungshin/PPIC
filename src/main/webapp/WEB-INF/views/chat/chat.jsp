@@ -1361,6 +1361,7 @@
 			let $chatAllDiv;
 			let $msg;
 			let $chatDiv;
+			let $sendDate;
 			if(msgArr[2] == "ENTER-CHAT"){
 				$(".notreadCount").each(function(){
 					$html = $(this).html();
@@ -1400,9 +1401,9 @@
 					$chatDiv.addClass("mine");
 					$chatAllDiv = $chatDiv;
 				}else{
-					$msg = "<div class='send-message'>" + msgArr[2] + "</div>"
+					$msg = "<div class='send-message'>" + msgArr[2] + "</div><span class='notreadCount'>"
 					if(msgArr[7] != 0){
-						$msg += "<span class='notreadCount' id='" + msgArr[8] + "'>" + msgArr[7] + "<br>"
+						$msg += msgArr[7] + "<br>"
 					}
 					$msg += msgArr[4].substring(14) + "</span>"
 					$chatDiv = $("<div class='chat-message'>").append($msg);
@@ -1420,6 +1421,8 @@
 					$chatAllDiv = $chatAllDiv.prepend($userSpan);
 				}
 				let $sendDateMsg = msgArr[4].substring(0,13)
+				console.log($(".sendDate").text().slice(-13))
+				console.log($sendDateMsg)
 				if($(".sendDate").text() == "" || $(".sendDate").text().slice(-13) != $sendDateMsg){
 					$sendDate = "<div class='sendDate'>💌 " + $sendDateMsg + "</div>"
 				}
