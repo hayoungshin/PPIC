@@ -58,6 +58,28 @@
 		  order
 		 	by department_no, position_no
 	</select>
+	<select id="selectListMemberY" resultMap="memberResult">
+		select
+		       user_no
+		     , user_name
+		     , phone
+		     , mail
+		     , to_char(hire_date, 'YYYY.MM.DD') as "HIRE_DATE"
+		     , to_char(resign_date, 'YYYY.MM.DD') as "resign_date"
+		     , employee_no
+		     , position_name as "POSITION"
+		     , department_name as "DEPARTMENT"
+		     , profile_img
+		     , status
+		     , department_no
+		  from member m
+		  join dept d on (m.department = d.department_no) 
+		  join position p on (m.position = p.position_no)
+		 where member_sign = 'Y'
+		   and m.status = 'Y'
+		  order
+		 	by department_no, position_no
+	</select>
 	
 	<select id="selectDeptList" resultMap="departmentResult">
 		select
@@ -311,4 +333,10 @@
 		   set member_sign = #{memberSign}
 		 where user_no = #{userNo}
 	</update>
+	
+	<delete id="newMemberDelete">
+		delete 
+		  from member 
+		 where user_no=#{userNo}
+	</delete>
 </mapper>

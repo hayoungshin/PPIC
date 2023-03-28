@@ -304,6 +304,7 @@ public class WorkController {
 		}
 	}
 	
+	/* fullcalendar 출퇴근 기록 조회하기 */
 	@ResponseBody
 	@RequestMapping(value="workCalendar.wo", produces="application/json; charset=utf-8")
 	public String ajaxWorkCalendar(int no, Model model) {

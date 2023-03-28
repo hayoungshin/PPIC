@@ -2,6 +2,7 @@ package com.ppicachu.ppic.member.model.service;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.SqlSessionManager;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,6 +124,16 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int newMemberApproval(Member m) {
 		return mDao.newMemberApproval(sqlSession, m);
+	}
+
+	@Override
+	public int newMemberDelete(Member m) {
+		return mDao.newMemberDelete(sqlSession, m);
+	}
+
+	@Override
+	public ArrayList<Member> selectListMemberY() {
+		return mDao.selectListMemberY(sqlSession);
 	}
 
 	

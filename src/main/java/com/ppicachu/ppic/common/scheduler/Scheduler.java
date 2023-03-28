@@ -44,7 +44,7 @@ public class Scheduler {
 	private WorkService wService;
 		
 	@Scheduled(cron="0 0 9 * * MON-FRI") // 월~금 (평일) 00시 정각마다
-	public void completeDeleteReply() {
+	public void MemberWorkInsert() {
 		// 평일 00시 정각마다 모든 회원의 출근 기록을 insert 하는 서비스..
 		int result = wService.completeWorkInsert();
 		//결과값 return x 

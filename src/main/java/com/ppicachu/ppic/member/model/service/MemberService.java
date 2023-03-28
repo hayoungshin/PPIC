@@ -10,6 +10,7 @@ public interface MemberService {
 	
 	// 1. 구성원 리스트 조회 서비스
 	ArrayList<Member> selectListMember();
+	ArrayList<Member> selectListMemberY();
 	
 	// 2. 조직도 목록 조회 서비스
 	ArrayList<Department> selectDeptList();
@@ -67,4 +68,6 @@ public interface MemberService {
 	// 17. 회원가입 회원 승인 서비스
 	int newMemberApproval (Member m);
 	
+	// 18. 회원가입 회원 삭제 서비스
+	int newMemberDelete (Member m);
 }
