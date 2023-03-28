@@ -19,7 +19,7 @@
 	 
 	 .workRecord{
 		position: absolute;
-        right:5px;
+        right:0px;
         top: 50px;
 	 }
 	 #workRecord {
@@ -76,7 +76,7 @@
 	
 	#noticeMainDiv{
 		position:absolute; 
-		right:5px; 
+		right:0px; 
 		top:350px;
 	}
 	#noticeMainDiv>span{
@@ -118,7 +118,7 @@
 <jsp:include page="../common/menubar.jsp" />
 	
 	<div class="outer">
-        <div id="content" >
+        <div id="content" style="margin-top:10px;">
         
         	<!-- 회사 일정 -->
 			<div class="schedule" >

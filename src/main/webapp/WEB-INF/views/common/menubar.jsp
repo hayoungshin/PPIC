@@ -151,8 +151,8 @@
 	#chat-count{
 		position:fixed;
         z-index:100;
-        top:68px;
-        left:195px;
+        top:74px;
+        left:210px;
         height:22px;
 		width:22px;
 		font-size:5px;
