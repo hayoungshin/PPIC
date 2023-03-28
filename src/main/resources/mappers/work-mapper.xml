@@ -359,8 +359,15 @@
 	
 	<select id="workCalendar" resultMap="workResult">
 		select
-		        work_date as "start"
+		        to_char(work_date, 'YYYY-MM-DD') as "start"
      			, to_char(work_in, 'hh24:MI') as "title"
+		  from work 
+		 where user_no=#{userNo}
+	</select>
+	<select id="workCalendarOut" resultMap="workResult">
+		select
+		        to_char(work_date, 'YYYY-MM-DD') as "start"
+     			, to_char(work_out, 'hh24:MI') as "title"
 		  from work 
 		 where user_no=#{userNo}
 	</select>

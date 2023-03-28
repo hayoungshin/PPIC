@@ -112,4 +112,8 @@ public class WorkDao {
 	public ArrayList<Member> selectTimeCountList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("workMapper.selectTimeCountList");
 	}
+	
+	public ArrayList<Work> workCalendarOut(SqlSessionTemplate sqlSession, int userNo){
+		return (ArrayList)sqlSession.selectList("workMapper.workCalendarOut", userNo);
+	}
 }

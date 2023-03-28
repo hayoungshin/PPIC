@@ -28,8 +28,8 @@ public class Work {
 	
 	// calendar 관련
 	private String title;
-	private Date start;
-	private Date end;
+	private String start;
+	private String end;
 	
 	
 	// 채팅관련

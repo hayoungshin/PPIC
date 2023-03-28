@@ -6,6 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>PPIC</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css">
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
 <style>
 
 	<!-- 카테고리 css -->
@@ -112,141 +119,34 @@
                 </a>
             </div>
 			
-			  <div class="holiinfo" style="float:left" align="center">
-               <table id="info" border="1" align="center">
-                    <tr align="center">
-                        <th colspan="2"></th>
-                        <th>1월</th>
-                        <th>2월</th>
-                        <th>3월</th>
-                        <th>4월</th>
-                        <th>5월</th>
-                        <th>6월</th>
-                        <th>7월</th>
-                        <th>8월</th>
-                        <th>9월</th>
-                        <th>10월</th>
-                        <th>11월</th>
-                        <th>12월</th>
-                        <th>합계</th>
-                    </tr>
-                    <tr align="center">
-                        <td width="50px" rowspan="4">근<br>태</td>
-                        <td  class="wtitle">지각</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr align="center">
-                        <td class="wtitle">조기퇴근</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr align="center">
-                        <td class="wtitle">결근</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr align="center">
-                        <td class="wtitle">휴가</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr align="center">
-                        <td rowspan="3">근<br>무<br>시<br>간</td>
-                        <td class="wtitle">실근무시간</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr align="center">
-                        <td class="wtitle">시간외근무</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr align="center">
-                        <td class="wtitle">총근무시간</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
+			<div class="holiinfo" style="float:left" align="center">
+            <script>
+           
 
-
-               </table>
+            document.addEventListener('DOMContentLoaded', function() {
+		    	
+            	var calendarEl = document.getElementById('calendar');
+		    	var calendar = new FullCalendar.Calendar(calendarEl, {
+		    		initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+		    		headerToolbar : { // 헤더에 표시할 툴 바
+		    			start : 'prev next today',
+		    			center : 'title',
+		    			end : 'dayGridMonth,dayGridWeek'
+		    		},
+		    		titleFormat : function(date) {
+		    			return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+		    		},
+		    		//initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
+		    		nowIndicator: true, // 현재 시간 마크
+		    		locale: 'ko', // 한국어 설정
+		    		textColor:'white'
+		    	});
+		    	calendar.render();
+   				
+		    	
+		    });
+            
+            </script>
             </div>
 			 
 			

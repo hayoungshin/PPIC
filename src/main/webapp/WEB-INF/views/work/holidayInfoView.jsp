@@ -110,13 +110,7 @@
 			<br>
 	
 			<div class="workyear" align="right">
-                <a>
-                	<img src="resources/icons/left-arrow.png" style="width:20px; margin:1px 3px 3px 3px;">
-                </a> 
-                2023년 
-                <a>
-                	<img src="resources/icons/right-arrow.png" style="width:20px; margin:1px 3px 3px 3px;">
-                </a>
+                
             </div>
 			
 			<div class="holiinfo" style="float:left" align="center">

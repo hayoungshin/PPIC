@@ -54,7 +54,7 @@ public class WorkController {
 	public String workList(int no, Model model) {
 		
 		ArrayList<Work> list = wService.workCalendar(no);
-	      model.addAttribute("list",list);
+	    model.addAttribute("list",list);
 		
 		return "work/workCalendarView";
 	}
@@ -307,11 +307,12 @@ public class WorkController {
 	@ResponseBody
 	@RequestMapping(value="workCalendar.wo", produces="application/json; charset=utf-8")
 	public String ajaxWorkCalendar(int no, Model model) {
-		ArrayList<Work> list = wService.workCalendar(no);
-	      
+		ArrayList<Work> list1 = wService.workCalendar(no);
+		ArrayList<Work> list2 = wService.workCalendarOut(no);
 	      
 	    HashMap<String,Object> map = new HashMap<String,Object>();
-	    map.put("list", list);
+	    map.put("list1", list1);
+	    map.put("list2", list2);
 	      
 	    return new Gson().toJson(map);
 	}

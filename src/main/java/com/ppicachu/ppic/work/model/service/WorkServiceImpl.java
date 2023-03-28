@@ -146,6 +146,11 @@ public class WorkServiceImpl implements WorkService {
 	public ArrayList<Member> selectTimeCountList() {
 		return wDao.selectTimeCountList(sqlSession);
 	}
+
+	@Override
+	public ArrayList<Work> workCalendarOut(int userNo) {
+		return wDao.workCalendarOut(sqlSession, userNo);
+	}
 	
 	
 	
