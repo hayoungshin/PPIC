@@ -89,6 +89,7 @@
 	    background-color:#6F50F8;
 	    border-radius:7px;
 	    text-align:center;
+	    width:
 	}
 	.nametag-name{
 	    color:white;
@@ -157,6 +158,26 @@
 		font-size:5px;
 		line-height:22px;
 	}
+	
+	#profileImg1{
+        width:50px;
+        height:50px;
+        background: rgb(111, 80, 248);
+        border-radius: 25%;
+    }
+    
+    .pro1{
+        width:50px;
+        height:50px;
+        background: rgb(111, 80, 248);
+        color: white;
+        border: none;
+        border-radius: 25%;
+        font-size:12px;
+        font-weight: bold;
+        padding-top:15px;
+        padding-left:7px
+    }
 </style>
 </head>
 <body>
@@ -215,10 +236,17 @@
         
         <div id="side-menubar">
             <div>
-                <table>
-                    <tr>
-                        <td class="nametag-background" style="width:35px; height:35px; cursor:pointer;" onclick="toMyPage();">
-                            <span class="nametag-name" style="font-size:12px;">이름</span>
+                <table >
+                    <tr >
+                        <td  style="width:35px; height:35px; cursor:pointer;" onclick="toMyPage();">
+                        		<c:choose>
+			                		<c:when test="${ empty loginUser.profileImg }">
+			                			<div class="pro1" style="float:left" >${ loginUser.userName }</div>
+			                    	</c:when>
+			                    	<c:otherwise>
+			                    		<img class="nametag-name" id="profileImg1" src="${ loginUser.profileImg }" >
+			                    	</c:otherwise>
+			                    </c:choose>
                         </td>
                         <td id="side-my-name" style="" onclick="toMyPage();">${loginUser.userName}</td>
                         <td style="cursor:pointer">
