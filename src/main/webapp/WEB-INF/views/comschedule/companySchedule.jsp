@@ -55,7 +55,7 @@
        border-radius: 5px;
        height:30px;
    }
-   input[name=schName], .date, input[name=schLocation]{width: 300px;}
+   input[name=schName], .sch-date, input[name=schLocation]{width: 300px;}
    input[type=time]{width:130px; margin-left:15px;}
    input[type=radio]{display:none;}
    input[type=radio]+label{
@@ -170,13 +170,13 @@
 	        			let value2 = "";
 	        			for(let i=0; i<list.length; i++){
 	    					value += "<tr>"
-	    							+	"<td class='date' width='400px'><b>" + list[i].schName + "</b><br>";
+	    							+	"<td class='sch-date' width='400px'><b>" + list[i].schName + "</b><br>";
 			    				    if(list[i].lunarSolar == 0){
 			    				    	value += "<span class='lunarSolar' style='background: rgb(241, 196, 15);'>양";
 			    				    } else if(list[i].lunarSolar == 1){
 			    				    	value += "<span class='lunarSolar' style='background: rgb(155, 89, 182);'>음";
 			    				    }
-			    			value += 		"</span><span class='date'>" + list[i].startDate.substring(5,7) + "월 " + list[i].startDate.substring(8) + "일";
+			    			value += 		"</span><span class='sch-date'>" + list[i].startDate.substring(5,7) + "월 " + list[i].startDate.substring(8) + "일";
 			    					if(list[i].startTime != null){
 			    						value += " " + list[i].startTime;
 			    					}
@@ -349,7 +349,7 @@
                                         <label for="period1">기간 입력</label>
                                         <!-- 기간 입력 미체크시 -->
                                         <div class="uncheckPeriod">
-                                            <input type="text" class="datepicker inpType date" name="startDate">
+                                            <input type="text" class="datepicker inpType date" name="startDate" style="width:300px">
                                         </div>
                                         <a href="#none" class="btncalendar dateclick"></a>
                                         <!-- 기간 입력 체크시 -->
@@ -488,7 +488,7 @@
                                         <label for="period2">기간 입력</label>
                                         <!-- 기간 입력 미체크시 -->
                                         <div class="uncheckPeriod">
-                                            <input type="text" class="datepicker inpType date" name="startDate">
+                                            <input type="text" class="datepicker inpType date" name="startDate" style="width:300px">
                                         </div>
                                         <a href="#none" class="btncalendar dateclick"></a>
                                         <!-- 기간 입력 체크시 -->
