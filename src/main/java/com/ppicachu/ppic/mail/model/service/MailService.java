@@ -62,6 +62,8 @@ public interface MailService {
 	// 11. 임시저장 리스트 조회 서비스
 	int selectTempListCount(String userMail);
 	ArrayList<Mail> selectTempList(PageInfo pi, String userMail);
+	// 12. 임시저장 상세 조회 서비스 : 작성 폼
+	Mail selectTemp(int mailNo);
 
 	// 메일 영구삭제 서비스 (스케줄러)
 	int completeDeleteMail();

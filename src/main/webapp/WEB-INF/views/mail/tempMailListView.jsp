@@ -93,8 +93,8 @@
 		</script>
 	
 		<script>
-			function toDetail(){
-				location.href = "tempForm.ml";
+			function toDetail(e){
+				location.href = "tempForm.ml?no=" + e.parentNode.childNodes[1].childNodes[1].value;;
 			}
 		</script>
 	

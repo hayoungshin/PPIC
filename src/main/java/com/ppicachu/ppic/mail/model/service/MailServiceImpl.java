@@ -185,6 +185,10 @@ public class MailServiceImpl implements MailService{
 	public ArrayList<Mail> selectTempList(PageInfo pi, String userMail) {
 		return mDao.selectTempList(sqlSession, pi, userMail);
 	}
+	@Override
+	public Mail selectTemp(int mailNo) {
+		return mDao.selectTemp(sqlSession, mailNo);
+	}
 	
 	@Override
 	public int completeDeleteMail() {
