@@ -110,7 +110,7 @@ public class MailServiceImpl implements MailService{
 		return mDao.updateReadNull(sqlSession, status);
 	}
 
-	/* 필터 */
+	/* 받은메일 필터 */
 	@Override
 	public int selectUnreadRecieveListCount(String userMail) {
 		return mDao.selectUnreadRecieveListCount(sqlSession, userMail);
@@ -143,11 +143,43 @@ public class MailServiceImpl implements MailService{
 	public ArrayList<MailStatus> selectAtcRecieveList(PageInfo pi, String userMail) {
 		return mDao.selectAtcRecieveList(sqlSession, userMail, pi);
 	}
+	
+	/* 보낸메일 필터 */
+	@Override
+	public int selectImportantSendListCount(String userMail) {
+		return mDao.selectImportantSendListCount(sqlSession, userMail);
+	}
+	@Override
+	public int selectAtcSendListCount(String userMail) {
+		return mDao.selectAtcSendListCount(sqlSession, userMail);
+	}
+	@Override
+	public ArrayList<MailStatus> selectImportantSendList(PageInfo pi, String userMail) {
+		return mDao.selectImportantSendList(sqlSession, pi, userMail);
+	}
+	@Override
+	public ArrayList<MailStatus> selectAtcSendList(PageInfo pi, String userMail) {
+		return mDao.selectAtcSendList(sqlSession, pi, userMail);
+	}
+
+	
 
 	@Override
-	public int completeDeleteMail() {
-		return mDao.completeDeleteMail();
+	public int selectBinListCount(String userMail) {
+		return mDao.selectBinListCount(sqlSession, userMail);
 	}
+
+	@Override
+	public ArrayList<MailStatus> selectBinList(PageInfo pi, String userMail) {
+		return mDao.selectBinList(sqlSession, pi, userMail);
+	}
+	
+	@Override
+	public int completeDeleteMail() {
+		return mDao.completeDeleteMail(sqlSession);
+	}
+
+	
 
 	
 }

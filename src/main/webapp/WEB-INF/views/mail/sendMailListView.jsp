@@ -7,6 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	#table-head span:hover{
+		cursor:pointer;
+		font-weight:600;
+	}
+</style>
 </head>
 <body>
 	<jsp:include page="mailMenubar.jsp" />
@@ -21,41 +27,28 @@
 				<tr id="table-head">
 					<td colspan="6" style="width:30px;">
 	
-						<input type="checkbox" name="" id="">
+						<input type="checkbox" id="check-all" onclick="checkAll(this);">
 	
 						<div class="dropdown" style="display:inline-block;">
 							<button style="margin:0px; padding:0; background:none;" class="dropdown-toggle" data-toggle="dropdown"></button>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">전체선택</a>
-								<a class="dropdown-item" href="#">읽은메일</a>
-								<a class="dropdown-item" href="#">읽지않은메일</a>
-								<a class="dropdown-item" href="#">중요메일</a>
-								<a class="dropdown-item" href="#">중요표시안한메일</a>
-								<a class="dropdown-item" href="#">선택해제</a>
+								<span class="dropdown-item select-checkbox" id="select-all">전체선택</span>
+								<span class="dropdown-item select-checkbox" id="select-important">중요메일</span>
+								<span class="dropdown-item select-checkbox" id="select-notimportant">중요표시안한메일</span>
 							</div>
 						</div>
 	
-						<a href="" style="margin:0px 48px;">삭제</a>
+						<span onclick="deleteMail();" style="margin:0px 60px;">삭제</span>
 						<a href="" style="margin:0px 60px;">다시보내기</a>
-						<span style="margin:0px 60px; color:gray;">│</span>
-	
-						<div class="dropdown" style="display:inline-block;">
-							<a href="" style="margin:0px 30px 0px 60px;" class="dropdown-toggle" data-toggle="dropdown">이동</a>
-							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">받은메일함</a>
-								<a class="dropdown-item" href="#">보낸메일함</a>
-								<a class="dropdown-item" href="#">중요메일함</a>
-								<a class="dropdown-item" href="#">휴지통</a>
-							</div>
-						</div>
+						<span style="margin:0px 60px; color:gray; cursor:default;">│</span>
+						
 	
 						<div class="dropdown" style="display:inline-block;">
 							<a href="" style="margin:0px 30px" class="dropdown-toggle" data-toggle="dropdown">필터</a>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">모든메일</a>
-								<a class="dropdown-item" href="#">안읽은메일</a>
-								<a class="dropdown-item" href="#">중요메일</a>
-								<a class="dropdown-item" href="#">첨부메일</a>
+								<a class="dropdown-item" href="sendList.ml">모든메일</a>
+								<a class="dropdown-item" href="sendList.ml?filter=important">중요메일</a>
+								<a class="dropdown-item" href="sendList.ml?filter=atc">첨부메일</a>
 							</div>
 						</div>
 					</td>
@@ -63,17 +56,18 @@
 			</thead>
 			<tbody>
 				<c:forEach var='m' items="${ list }">
+					<input type="hidden" id="mailType${ m.mailNo }" value="${ m.mailType }">
 					<tr>
 						<td style="width:30px;">
-							<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }">
+							<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }" onclick="boxchecked();">
 						</td>
 						<td style="width:50px;text-align:right;">
 							<c:choose>
 								<c:when test="${ m.importantStatus eq 'Y' }">
-									<img onclick="importantStatus(this);" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">								
+									<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">								
 								</c:when>
 								<c:otherwise>
-									<img onclick="importantStatus(this);" src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">								
+									<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">								
 								</c:otherwise>
 							</c:choose>
 						</td>
@@ -101,7 +95,62 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		
+		<!-- 체크박스 -->
+		<script>
+			function checkAll(all){
+				const list = document.getElementsByClassName("mailNo");
+				if(all.checked){
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = true;
+					})
+				} else {
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = false;
+					})
+				}
+			}
+			function boxchecked(){
+				let checkedCount = 0;
+				document.querySelectorAll(".mailNo").forEach(function(c){
+					if(c.checked == false){
+						checkedCount++;
+					}
+				});
+				if(checkedCount > 0){
+					document.getElementById("check-all").checked = false;
+				} else if(checkedCount == 0) {
+					document.getElementById("check-all").checked = true;
+				}
+			}
+			$(".select-checkbox").click(function(e){
+				document.getElementById("check-all").checked = false;
+				document.querySelectorAll(".mailNo").forEach(function(c){
+					c.checked = false;
+				})
+				const id = e.target.id;
+				if(id == "select-all"){
+					document.getElementById("check-all").checked = true;
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = true;
+					})
+				} else if(id == "select-important"){
+					document.querySelectorAll(".important-status").forEach(function(r){
+						if(r.src.includes("star-y")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				} else {
+					document.querySelectorAll(".important-status").forEach(function(r){
+						if(!r.src.includes("star-y")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				}
+			})
+		</script>
 
+		<!-- 중요표시 설정, 해제 -->
 		<script>
 			function importantStatus(star){
 				const no = star.parentNode.parentNode.childNodes[1].childNodes[1].value;
@@ -145,6 +194,32 @@
 				}
 				
 			}
+			
+			/* 메일 삭제 */
+			function deleteMail(){
+				var arr = [];
+				document.querySelectorAll('input[type=checkbox][name=mailNo]:checked').forEach(function(c){
+					arr.push(c.value);
+				})
+				
+				$.ajax({
+					url:"listDelete.ml",
+					data:{
+						mailNoArr:arr,
+						mailType:4
+						},
+					type:"post",
+					success:function(result){	// boolean 타입
+						if(result){
+							swal('', "선택된 메일을 휴지통으로 이동하며 10일 보관 후 영구삭제됩니다.", 'success');
+						} else {
+							alert("삭제 실패");
+						}
+					}, error:function(){
+						console.log("메일삭제용 ajax 통신실패")
+					}
+				})
+			}
 		</script>
 	
 		<script>
@@ -155,33 +230,39 @@
 	
 		<br>
 
-		<div id="paging">
+		
+				<div id="paging">
 	       	<ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="recieveList.ml?cpage=${ pi.currentPage - 1 } "><</a></li>
+          			<c:choose>
+	            		<c:when test="${ empty filter }">
+		            		<li><a href="sendList.ml?cpage=${ pi.currentPage - 1 } "><</a></li>
+		            	</c:when>
+		            	<c:otherwise>
+		            		<li><a href="sendList.ml?cpage=${ pi.currentPage - 1 }&filter=${filter}"><</a></li>
+		            	</c:otherwise>
+           			</c:choose>
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 	            	<c:choose>
 	            		<c:when test="${ pi.currentPage eq p }">
 	            			<c:choose>
-			            		<c:when test="${ empty condition }">
-				            		<li class="active"><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
+			            		<c:when test="${ empty filter }">
+				            		<li class="active"><a href="sendList.ml?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<!-- 수정할 것 -->
-				            		<li class="active"><a href="search.ml?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li class="active"><a href="sendList.ml?cpage=${ p }&filter=${filter}">${ p }</a></li>
 				            	</c:otherwise>
 	            			</c:choose>
 	            		</c:when>
 	            		<c:otherwise>
 	            			<c:choose>
-			            		<c:when test="${ empty condition }">
-				            		<li><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
+			            		<c:when test="${ empty filter }">
+				            		<li><a href="sendList.ml?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<!-- 수정할 것 -->
-				            		<li><a href="search.ml?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li><a href="sendList.ml?cpage=${ p }&filter=${filter}">${ p }</a></li>
 				            	</c:otherwise>
 			            	</c:choose>
 	            		</c:otherwise>
@@ -189,12 +270,18 @@
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage ne pi.maxPage }">
-	            	<li><a href="recieveList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+					<c:choose>
+	            		<c:when test="${ empty filter }">
+		            		<li><a href="sendList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+		            	</c:when>
+		            	<c:otherwise>
+		            		<li><a href="sendList.ml?cpage=${ pi.currentPage + 1 }&filter=${filter}">></a></li>
+		            	</c:otherwise>
+           			</c:choose>
 				</c:if>
            </ul>
         </div>
-	</div>
-    
+        
 
 </body>
 </html>

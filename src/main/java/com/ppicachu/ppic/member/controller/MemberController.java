@@ -55,7 +55,7 @@ public class MemberController {
 	/* 구성원_메인 */
 	@RequestMapping("memberMain.me")
 	public String memberMain(Model model) {
-		ArrayList<Member> list1 = mService.selectListMember();
+		ArrayList<Member> list1 = mService.selectListMemberY();
 		ArrayList<Department> list2 = mService.selectDeptList();
 		
 		model.addAttribute("list1", list1);
@@ -247,6 +247,21 @@ public class MemberController {
 		if(result >0) {
 		
 			session.setAttribute("alertMsg", "사용이 승인되었습니다.");
+			
+			return "redirect:memberList.me";
+		} else {
+			return "common/errorPage";
+		}
+	}
+	
+	@RequestMapping("newMemberDelete.me")
+	public String newMemberDelete(Member m, HttpSession session) {
+		
+		int result = mService.newMemberDelete(m);
+		
+		if(result >0) {
+		
+			session.setAttribute("alertMsg", "가입자 정보가 삭제되었습니다.");
 			
 			return "redirect:memberList.me";
 		} else {

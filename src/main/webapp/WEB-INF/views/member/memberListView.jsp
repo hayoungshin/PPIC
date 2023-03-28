@@ -223,7 +223,7 @@
 	                    			<td>${ m.position }</td>
 	                    			<td> 
 	                    				<button type="button" onclick="newMember(${ m.userNo},'Y');" class="btn-purple" style="float:none">승인</button> 
-	                    				<button type="button" onclick="newMember(${ m.userNo},'N');">거절</button> 
+	                    				<button type="button" onclick="newMemberdelete(${ m.userNo},'N');">거절</button> 
 	                    			</td>
 	                    		</tr>
 		                    		
@@ -355,6 +355,38 @@
            	</div>
        	</div>
    	</div>	
+   	
+   	<div class="modal" id="deleteForm" style="position: fixed; top: 300px; right: 600px; ">
+      		<div class="modal-dialog">
+          		<div class="modal-content">
+                
+                <!-- Modal Header -->
+                <div >
+	                <button type="button" class="close" data-dismiss="modal" style="padding:10px;">&times;</button>
+                </div>
+           		
+                <!-- Modal body -->
+                <div class="modal-body" align="center">
+                	
+	                    				
+						<b>
+				                        가입자 <span name="status"></span> 전입니다 <br>   
+				                        정말로 <span name="status"></span>하시겠습니까? <br><br>
+	                    </b>
+						<br>
+	                    <form action="newMemberDelete.me" method="post">
+	                        
+	                        <input type="hidden" name="userNo" value="">
+	                        <input type="hidden" name="memberSign" value="">
+							
+	                        <button type="submit" class="btn-purple" >확인</button>
+	                    </form>
+	                    	
+                </div>
+               
+           	</div>
+       	</div>
+   	</div>	
 	
 	<script>
 		function newMember(a,b){
@@ -376,6 +408,25 @@
 	  			$('span[name=status]').text('거절');
 	  		}
 	  		
+		}
+		
+		function newMemberdelete(a,b){
+			var a = a;
+			var b = b;
+			$('#deleteForm').show();
+			
+			$(document).on("click",".close",function(){ 
+				$('#deleteForm').hide();
+			});
+	  			
+	  		$('input[name=userNo]').attr('value',a);
+	  		$('input[name=memberSign]').attr('value',b);
+	  		
+	  		if(b=='Y'){
+	  			$('span[name=status]').text('승인');
+	  		}else {
+	  			$('span[name=status]').text('삭제');
+	  		}
 	  		
 		}
 	</script>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,9 +104,10 @@
 	                   <tr>
 	                    <td>
 	                    	${d.docName}
-	                    	<%-- <c:if test="${loginUser eq 관리자}" 로그인 구현 후 추가해야 함--%>
-	                    	<img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal${d.docNo}">
-                            <input type="hidden" name="editDocNo" id="editDocNo" value="${d.docNo}">
+	                    	<c:if test="${fn:contains(loginUser.authorityNo, '0') || fn:contains(loginUser.authorityNo, '6')}">
+	                    	    <img src="resources/icons/edit.png" width="20" class="edit-btn" data-toggle="modal" data-target="#editModal${d.docNo}">
+                                <input type="hidden" name="editDocNo" id="editDocNo" value="${d.docNo}">
+                            </c:if>
 	                    </td>
 	                    <c:choose>
 		                    <c:when test="${not empty d.originName}">

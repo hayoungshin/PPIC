@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.ppicachu.ppic.mail.model.service.MailService;
 import com.ppicachu.ppic.work.model.service.WorkService;
 
 @Component
@@ -42,12 +43,19 @@ public class Scheduler {
 	
 	@Autowired
 	private WorkService wService;
+	@Autowired
+	private MailService mService;
 		
 	@Scheduled(cron="0 0 9 * * MON-FRI") // 월~금 (평일) 00시 정각마다
-	public void completeDeleteReply() {
+	public void MemberWorkInsert() {
 		// 평일 00시 정각마다 모든 회원의 출근 기록을 insert 하는 서비스..
 		int result = wService.completeWorkInsert();
 		//결과값 return x 
-		
+	}
+	
+	@Scheduled(cron="0 0 0 * * *")
+	public void completeDeleteMail() {
+		int result = mService.completeDeleteMail();
+		System.out.println("메일 " + result + "개 영구삭제");
 	}
 }

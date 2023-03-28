@@ -325,6 +325,10 @@
         </div>
 
         <script>
+            let address = "${loginUser.address}";
+            let birthday = "${loginUser.birthday}";
+            let hireDate = "${loginUser.hireDate}";
+            let status = "${loginUser.status}";
             $(function(){
                 let today = new Date();   
                 let year = today.getFullYear(); // 년도
@@ -356,6 +360,11 @@
             // 재직증명서
             $("#employment-doc").click(function(){
 
+                if(address == "" || birthday == "" || hireDate == "" || status == "N"){
+                    alert("기본 인사정보가 모두 등록되어있지 않습니다. 확인 후 다시 시도해주세요.");
+                    return false;
+                }
+
                 // PDF 그리기
                 window.jsPDF = window.jspdf.jsPDF;
                 var doc = new jspdf.jsPDF("p", "mm", "a4");
@@ -384,6 +393,11 @@
 
             // 경력증명서
             $("#career-doc").click(function(){
+
+                if(address == "" || birthday == "" || hireDate == "" || status == "N"){
+                    alert("기본 인사정보가 모두 등록되어있지 않습니다. 확인 후 다시 시도해주세요.");
+                    return false;
+                }
 
                 // PDF 그리기
                 window.jsPDF = window.jspdf.jsPDF;
