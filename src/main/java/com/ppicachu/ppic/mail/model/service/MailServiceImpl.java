@@ -88,10 +88,12 @@ public class MailServiceImpl implements MailService{
 	public int selectImportantListCount(String userMail) {
 		return mDao.selectImportantListCount(sqlSession, userMail);
 	}
-
 	@Override
 	public ArrayList<MailStatus> selectImportantList(PageInfo pi, String userMail) {
 		return mDao.selectImportantList(sqlSession, pi, userMail);
+	}
+	public ArrayList<MailStatus> selectImportantListOlder(PageInfo pi, String userMail) {
+		return mDao.selectImportantListOlder(sqlSession, pi, userMail);
 	}
 
 	@Override
@@ -188,6 +190,10 @@ public class MailServiceImpl implements MailService{
 	@Override
 	public Mail selectTemp(int mailNo) {
 		return mDao.selectTemp(sqlSession, mailNo);
+	}
+	@Override
+	public int deleteTemp(MailStatus status) {
+		return mDao.deleteTemp(sqlSession, status);
 	}
 	
 	@Override

@@ -84,10 +84,10 @@
 								arr +=		"</td>"
 									+		"<td>" + map.agreeList[i].createDate + "</td>"
 									+		"<td>";
-								if(map.agreeList[i].bookmark != null){
-									arr +=		"<img src='resources/icons/star-y.png' height='20px'>";
+								if(map.agreeList[i].bookmark != 'N'){
+									arr +=		"<img src='resources/icons/star-y.png' height='20px' onclick='ajaxStar(1);'>";
 								}else{
-									arr +=		"<img src='resources/icons/star.png' height='20px'>";
+									arr +=		"<img src='resources/icons/star.png' height='20px' onclick='ajaxStar(0);'>";
 								}
 								arr +=		"</td>"
 									+	"</tr>";

@@ -108,7 +108,7 @@ public interface ApprovalService {
 	
 	
 	/*
-	// 13.상세_변경사항삭제 update
+	// <상세> 변경사항 update
 	int updateAppChange(int changeNo);
 	*/
 }

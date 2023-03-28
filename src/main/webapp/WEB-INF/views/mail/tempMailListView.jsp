@@ -7,6 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	#table-head span:hover{
+		cursor:pointer;
+		font-weight:600;
+	}
+</style>
 </head>
 <body>
 	<jsp:include page="mailMenubar.jsp" />
@@ -23,8 +29,8 @@
 	
 						<input type="checkbox" id="check-all" onclick="checkAll(this);">
 						
-						<a href="" style="margin:0px 60px;">영구삭제</a>
-						<span style="margin:0px 60px; color:gray;">│</span>
+						<span onclick="completelyDelete();" style="margin:0px 60px;">영구삭제</span>
+						<span style="margin:0px 60px; color:gray; cursor:default;">│</span>
 					</td>
 				</tr>
 			</thead>
@@ -91,7 +97,47 @@
 				}
 			}
 		</script>
-	
+		
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<script>
+			function completelyDelete(){
+				var arr = [];
+				document.querySelectorAll('input[type=checkbox][name=mailNo]:checked').forEach(function(c){
+					arr.push(c.value);
+				})
+				
+				swal({
+				  title: "정말 삭제하시겠습니까?",
+				  text: "영구삭제된 메일은 다시 복구할 수 없습니다.",
+				  icon: "warning",
+				  buttons: true,
+				  dangerMode: true,
+				})
+				.then((willDelete) => {
+				  if (willDelete) {
+					  $.ajax({
+							url:"tempDelete.ml",
+							data:{
+								mailNoArr:arr
+								},
+							type:"post",
+							success:function(result){	// boolean 타입
+								if(result){
+									location.reload();
+								} else {
+									swal("삭제 실패");
+								}
+							}, error:function(){
+								console.log("메일삭제용 ajax 통신실패")
+							}
+						})
+				  } else {
+				    swal("취소되었습니다.");
+				  }
+				});
+			}
+		</script>
+		
 		<script>
 			function toDetail(e){
 				location.href = "tempForm.ml?no=" + e.parentNode.childNodes[1].childNodes[1].value;;
@@ -101,16 +147,27 @@
 		<br>
 
 		<div id="paging">
-			<ul>
-				<li><a href="#"><</a></li>
-				<li><a href="#">1</a></li>
-				<li class="active"><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li><a href="#">></a></li>
-			</ul>
-		</div>
+	       	<ul>
+          		<c:if test="${ pi.currentPage ne 1 }">
+            		<li><a href="tempList.ml?cpage=${ pi.currentPage - 1 } "><</a></li>
+              	</c:if>
+	            
+	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
+		            <c:choose>
+	            		<c:when test="${ pi.currentPage eq p }">
+		            		<li class="active"><a href="tempList.ml?cpage=${ p }">${ p }</a></li>
+	            		</c:when>
+	            		<c:otherwise>
+		            		<li><a href="tempList.ml?cpage=${ p }">${ p }</a></li>
+	            		</c:otherwise>	            
+		            </c:choose>
+				</c:forEach>
+				
+				<c:if test="${ pi.currentPage ne pi.maxPage }">
+            		<li><a href="tempList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+				</c:if>
+           </ul>
+        </div>
 	</div>
 	
 

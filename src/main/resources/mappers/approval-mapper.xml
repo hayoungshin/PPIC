@@ -19,6 +19,12 @@
 		<result column="bookmark" property="bookmark"/>
 	</resultMap>
 	
+	<resultMap type="Attachment" id="appAttachmentResult">
+		<id column="attachment_no" property="attachmentNo"/>
+		<result column="at_origin_name" property="originName"/>
+		<result column="change_name" property="changeName"/>
+	</resultMap>
+	
 	<resultMap type="AppDetail" id="draftResult">
 		<id column="app_no" property="approvalNo"/>
 		<association property="app" resultMap="approvalResult"/>
@@ -39,11 +45,7 @@
 			<result column="approval_date" property="approvalDate"/>
 			<result column="pro_bookmark" property="bookmark"/>
 		</collection>
-		<collection property="att" ofType="Attachment">
-			<id column="attachment_no" property="attachmentNo"/>
-			<result column="at_origin_name" property="originName"/>
-			<result column="change_name" property="changeName"/>
-		</collection>
+		<collection property="att" resultMap="appAttachmentResult"/>
 	</resultMap>
 	
 	<resultMap type="AppDetail" id="transferResult">
@@ -69,11 +71,7 @@
 			<result column="approval_date" property="approvalDate"/>
 			<result column="pro_bookmark" property="bookmark"/>
 		</collection>
-		<collection property="att" ofType="Attachment">
-			<id column="attachment_no" property="attachmentNo"/>
-			<result column="at_origin_name" property="originName"/>
-			<result column="change_name" property="changeName"/>
-		</collection>
+		<collection property="att" resultMap="appAttachmentResult"/>
 	</resultMap>
 	
 	<resultMap type="AppDetail" id="consumeResult">
@@ -98,11 +96,7 @@
 			<result column="approval_date" property="approvalDate"/>
 			<result column="pro_bookmark" property="bookmark"/>
 		</collection>
-		<collection property="att" ofType="Attachment">
-			<id column="attachment_no" property="attachmentNo"/>
-			<result column="at_origin_name" property="originName"/>
-			<result column="change_name" property="changeName"/>
-		</collection>
+		<collection property="att" resultMap="appAttachmentResult"/>
 	</resultMap>
 	
 	<resultMap type="AppDetail" id="cashResult">
@@ -125,11 +119,7 @@
 			<result column="approval_date" property="approvalDate"/>
 			<result column="pro_bookmark" property="bookmark"/>
 		</collection>
-		<collection property="att" ofType="Attachment">
-			<id column="attachment_no" property="attachmentNo"/>
-			<result column="at_origin_name" property="originName"/>
-			<result column="change_name" property="changeName"/>
-		</collection>
+		<collection property="att" resultMap="appAttachmentResult"/>
 	</resultMap>
 	
 	<resultMap type="AppChange" id="appChangeResult">
@@ -143,7 +133,7 @@
 	</resultMap>
 	
 	<select id="selectListCount" resultType="_int">
-		select count(*)
+		select count(distinct approval_no)
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
 		<where>
@@ -189,7 +179,7 @@
 	</select>
 	
 	<select id="selectList" resultMap="approvalResult">
-		select
+		select distinct
 		       approval_no
 		     , user_name
 		     , form
@@ -207,7 +197,9 @@
 		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
 		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , complete_no
+			<if test="dpi == 0 and dpe == 0">
 		     , bookmark
+		    </if>
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
 		  join member m on (a.user_no = m.user_no)
@@ -263,7 +255,8 @@
 	</select>
 	
 	<select id="selectTemListCount" resultType="_int">
-		select count(*)
+		select
+			   count(*)
 		  from approval
 		 where user_no = #{userNo}
 		   and approval_status = '임시저장'
@@ -295,7 +288,8 @@
 	</select>
 	
 	<select id="selectMaListCount" resultType="_int">
-		select count(*)
+		select
+			   count(*)
 		  from approval
 		<where>
 			<if test="a != 0">
@@ -345,8 +339,7 @@
 	</select>
 
 	<select id="selectSearchListCount" resultType="_int">
-		select distinct
-			   count(*)
+		select count(distinct approval_no)
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
 		  join member mp on (ap.user_no = mp.user_no)
@@ -416,7 +409,6 @@
 		     , to_char(to_date(create_date, 'YY/MM/DD'), 'YYYY-MM-DD') create_date
 		     , to_char(to_date(complete_date, 'YY/MM/DD'), 'YYYY-MM-DD') complete_date
 		     , complete_no
-		     , bookmark
 		  from app_process ap <!-- app_process(결재선)이 기준 -->
 		  join approval a using(approval_no)
 		  join member mp on (ap.user_no = mp.user_no)
