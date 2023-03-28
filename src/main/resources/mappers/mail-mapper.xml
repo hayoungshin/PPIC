@@ -317,4 +317,135 @@
 		   and recipient_mail = #{recipientMail}
 	</update>
 	
+	<!-- 필터 -->
+	<select id="selectUnreadRecieveListCount" resultType="_int">
+		select count(*)
+		  from mail_status
+		 where recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and read_date is null
+	</select>
+	<select id="selectUnreadRecieveList" resultMap="mailStatusResult">
+		select s.mail_no
+		     , s.sender_mail
+		     , mail_title
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , read_date
+		     , mail_type
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and read_date is null
+		 order
+		    by mail_no desc
+	</select>
+	<select id="selectImportantRecieveListCount" resultType="_int">
+		select 
+		       count(*)
+		  from mail_status
+		 where recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and important_status = 'Y'
+	</select>
+	<select id="selectImportantRecieveList" resultMap="mailStatusResult">
+		select 
+		       s.mail_no
+		     , mail_type
+		     , read_date
+		     , s.sender_mail
+		     , m.mail_title
+		     , m.recipient_mail
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and important_status = 'Y'
+		 order
+		    by mail_no desc
+	</select>
+	<select id="selectToMeRecieveListCount" resultType="_int">
+		select 
+		       count(*)
+		  from mail_status
+		 where recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and mail_type = 1
+	</select>
+	<select id="selectToMeRecieveList" resultMap="mailStatusResult">
+		select 
+		       s.mail_no
+		     , mail_type
+		     , read_date
+		     , s.sender_mail
+		     , m.mail_title
+		     , m.recipient_mail
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and mail_type = 1
+		 order
+		    by mail_no desc
+	</select>
+	<select id="selectAtcRecieveListCount" resultType="_int">
+		select 
+		       count(*)
+		  from mail_status s
+		 where recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and (
+		        select count(*)
+		          from mail_attachment
+		         where s.mail_no = mail_no
+		       ) > 0
+	</select>
+	<select id="selectAtcRecieveList" resultMap="mailStatusResult">
+		select 
+		       s.mail_no
+		     , mail_type
+		     , read_date
+		     , s.sender_mail
+		     , m.mail_title
+		     , m.recipient_mail
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where s.recipient_mail = #{userMail}
+		   and bin_status = 'N'
+		   and (
+		        select count(*)
+		          from mail_attachment
+		         where s.mail_no = mail_no
+		       ) > 0
+		 order
+		    by mail_no desc
+	</select>
+	
 </mapper>

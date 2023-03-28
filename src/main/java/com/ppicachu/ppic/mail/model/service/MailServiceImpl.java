@@ -110,5 +110,44 @@ public class MailServiceImpl implements MailService{
 		return mDao.updateReadNull(sqlSession, status);
 	}
 
+	/* 필터 */
+	@Override
+	public int selectUnreadRecieveListCount(String userMail) {
+		return mDao.selectUnreadRecieveListCount(sqlSession, userMail);
+	}
+	@Override
+	public int selectImportantRecieveListCount(String userMail) {
+		return mDao.selectImportantRecieveListCount(sqlSession, userMail);
+	}
+	@Override
+	public int selectToMeRecieveListCount(String userMail) {
+		return mDao.selectToMeRecieveListCount(sqlSession, userMail);
+	}
+	@Override
+	public int selectAtcRecieveListCount(String userMail) {
+		return mDao.selectAtcRecieveListCount(sqlSession, userMail);
+	}
+	@Override
+	public ArrayList<MailStatus> selectUnreadRecieveList(PageInfo pi, String userMail) {
+		return mDao.selectUnreadRecieveList(sqlSession, userMail, pi);
+	}
+	@Override
+	public ArrayList<MailStatus> selectImportantRecieveList(PageInfo pi, String userMail) {
+		return mDao.selectImportantList(sqlSession, pi, userMail);
+	}
+	@Override
+	public ArrayList<MailStatus> selectToMeRecieveList(PageInfo pi, String userMail) {
+		return mDao.selectToMeRecieveList(sqlSession, userMail, pi);
+	}
+	@Override
+	public ArrayList<MailStatus> selectAtcRecieveList(PageInfo pi, String userMail) {
+		return mDao.selectAtcRecieveList(sqlSession, userMail, pi);
+	}
+
+	@Override
+	public int completeDeleteMail() {
+		return mDao.completeDeleteMail();
+	}
+
 	
 }

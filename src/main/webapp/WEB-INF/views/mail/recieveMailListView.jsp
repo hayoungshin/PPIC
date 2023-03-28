@@ -46,11 +46,11 @@
 						<div class="dropdown" style="display:inline-block;">
 							<a href="" style="margin:0px 30px" class="dropdown-toggle" data-toggle="dropdown">필터</a>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">모든메일</a>
-								<a class="dropdown-item" href="#">안읽은메일</a>
-								<a class="dropdown-item" href="#">중요메일</a>
-								<a class="dropdown-item" href="#">나에게온메일</a>
-								<a class="dropdown-item" href="#">첨부메일</a>
+								<a class="dropdown-item" href="recieveList.ml">모든메일</a>
+								<a class="dropdown-item" href="recieveList.ml?filter=unread">안읽은메일</a>
+								<a class="dropdown-item" href="recieveList.ml?filter=important">중요메일</a>
+								<a class="dropdown-item" href="recieveList.ml?filter=toMe">나에게온메일</a>
+								<a class="dropdown-item" href="recieveList.ml?filter=atc">첨부메일</a>
 							</div>
 						</div>
 					</td>
@@ -295,30 +295,35 @@
 		<div id="paging">
 	       	<ul>
           		<c:if test="${ pi.currentPage ne 1 }">
-              		<li><a href="recieveList.ml?cpage=${ pi.currentPage - 1 } "><</a></li>
+          			<c:choose>
+	            		<c:when test="${ empty filter }">
+		            		<li><a href="recieveList.ml?cpage=${ pi.currentPage - 1 } "><</a></li>
+		            	</c:when>
+		            	<c:otherwise>
+		            		<li><a href="recieveList.ml?cpage=${ pi.currentPage - 1 }&filter=${filter}"><</a></li>
+		            	</c:otherwise>
+           			</c:choose>
               	</c:if>
 	            
 	            <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }">
 	            	<c:choose>
 	            		<c:when test="${ pi.currentPage eq p }">
 	            			<c:choose>
-			            		<c:when test="${ empty condition }">
+			            		<c:when test="${ empty filter }">
 				            		<li class="active"><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<!-- 수정할 것 -->
-				            		<li class="active"><a href="search.ml?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li class="active"><a href="recieveList.ml?cpage=${ p }&filter=${filter}">${ p }</a></li>
 				            	</c:otherwise>
 	            			</c:choose>
 	            		</c:when>
 	            		<c:otherwise>
 	            			<c:choose>
-			            		<c:when test="${ empty condition }">
+			            		<c:when test="${ empty filter }">
 				            		<li><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
-				            		<!-- 수정할 것 -->
-				            		<li><a href="search.ml?cpage=${ p }&condition=${condition}&keyword=${keyword}">${ p }</a></li>
+				            		<li><a href="recieveList.ml?cpage=${ p }&filter=${filter}">${ p }</a></li>
 				            	</c:otherwise>
 			            	</c:choose>
 	            		</c:otherwise>
@@ -326,7 +331,14 @@
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage ne pi.maxPage }">
-	            	<li><a href="recieveList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+					<c:choose>
+	            		<c:when test="${ empty filter }">
+		            		<li><a href="recieveList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+		            	</c:when>
+		            	<c:otherwise>
+		            		<li><a href="recieveList.ml?cpage=${ pi.currentPage + 1 }&filter=${filter}">></a></li>
+		            	</c:otherwise>
+           			</c:choose>
 				</c:if>
            </ul>
         </div>

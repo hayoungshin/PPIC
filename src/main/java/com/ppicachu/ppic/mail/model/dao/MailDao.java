@@ -121,4 +121,43 @@ public class MailDao {
 		return sqlSession.update("mailMapper.updateReadNull", status);
 	}
 	
+	/* 정렬 */
+	public int selectUnreadRecieveListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectUnreadRecieveListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectUnreadRecieveList(SqlSessionTemplate sqlSession, String userMail, PageInfo pi){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectUnreadRecieveList", userMail, rowBounds);
+	}
+	public int selectImportantRecieveListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectImportantRecieveListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectImportantRecieveList(SqlSessionTemplate sqlSession, String userMail, PageInfo pi){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantRecieveList", userMail, rowBounds);
+	}
+	public int selectToMeRecieveListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectToMeRecieveListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectToMeRecieveList(SqlSessionTemplate sqlSession, String userMail, PageInfo pi){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectToMeRecieveList", userMail, rowBounds);
+	}
+	public int selectAtcRecieveListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectAtcRecieveListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectAtcRecieveList(SqlSessionTemplate sqlSession, String userMail, PageInfo pi){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectAtcRecieveList", userMail, rowBounds);
+	}
+	
+	
 }

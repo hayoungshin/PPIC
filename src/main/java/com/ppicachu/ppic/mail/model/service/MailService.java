@@ -14,7 +14,15 @@ public interface MailService {
 	
 	// 2. 받은메일 리스트 조회 서비스
 	int selectRecieveListCount(String userMail);
+	int selectUnreadRecieveListCount(String userMail);
+	int selectImportantRecieveListCount(String userMail);
+	int selectToMeRecieveListCount(String userMail);
+	int selectAtcRecieveListCount(String userMail);
 	ArrayList<MailStatus> selectRecieveList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectUnreadRecieveList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectImportantRecieveList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectToMeRecieveList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectAtcRecieveList(PageInfo pi, String userMail);
 	// 3. 받은메일 상세 조회 서비스
 	int selectReadStatus(MailStatus status);
 	int updateReadDate(MailStatus status);
@@ -40,4 +48,7 @@ public interface MailService {
 	
 	// 9. 안읽음으로 표시 서비스
 	int updateReadNull(MailStatus status);
+	
+	// 10. 메일 영구삭제 서비스 (스케줄러)
+	int completeDeleteMail();
 }

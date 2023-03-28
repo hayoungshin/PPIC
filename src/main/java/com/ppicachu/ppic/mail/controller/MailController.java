@@ -46,14 +46,36 @@ public class MailController {
 	 * @return 메일 메뉴 초기화면 : 받은 메일 목록
 	 */
 	@RequestMapping("recieveList.ml")
-	public ModelAndView selectRecieveList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
-		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
-		int listCount = mService.selectRecieveListCount(userMail);	// 전체 받은메일 개수
+	public ModelAndView selectRecieveList(@RequestParam(value="cpage", defaultValue="1")int currentPage, String filter, HttpSession session, ModelAndView mv) {
 
-		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-		ArrayList<MailStatus> list = mService.selectRecieveList(pi, userMail);
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
 		
-		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/recieveMailListView");
+		PageInfo pi;
+		ArrayList<MailStatus> list = new ArrayList<>();
+		int listCount = 0;
+		if(filter == null) {					// 전체 조회
+			listCount = mService.selectRecieveListCount(userMail);	// 전체 받은메일 개수
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectRecieveList(pi, userMail);
+		} else if(filter.equals("unread")) {	// 읽지 않은 받은 메일
+			listCount = mService.selectUnreadRecieveListCount(userMail);
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectUnreadRecieveList(pi, userMail);
+		} else if(filter.equals("important")) {	// 중요한 받은 메일
+			listCount = mService.selectImportantRecieveListCount(userMail);
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectImportantRecieveList(pi, userMail);
+		} else if(filter.equals("toMe")) {		// 나에게 온 받은 메일
+			listCount = mService.selectToMeRecieveListCount(userMail);
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectRecieveList(pi, userMail);
+		} else {								// 첨부파일 있는 받은 메일
+			listCount = mService.selectAtcRecieveListCount(userMail);
+			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+			list = mService.selectAtcRecieveList(pi, userMail);
+		}
+		
+		mv.addObject("pi", pi).addObject("list", list).addObject("filter", filter).setViewName("mail/recieveMailListView");
 		return mv;
 	}
 	
@@ -388,7 +410,7 @@ public class MailController {
 	public int deleteReadStatus(MailStatus status, HttpSession session) {
 		status.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
 		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
-		return mService.updateReadToNull(status);
+		return mService.updateReadNull(status);
 	}
 	
 	
