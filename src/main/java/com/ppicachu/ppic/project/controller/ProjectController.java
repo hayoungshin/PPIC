@@ -138,7 +138,8 @@ public class ProjectController {
 		
 	}
 	
-	@RequestMapping("updteProject.pr")
+	// 프로젝트 수정
+	@RequestMapping("updateProject.pr")
 	public String updateProject(Project p, String projectManagerDept,
 								String[] selectUserNo, String[] selectUserDept,
 								HttpSession session, Model model) {

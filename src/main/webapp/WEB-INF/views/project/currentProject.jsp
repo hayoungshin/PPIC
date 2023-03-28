@@ -804,7 +804,7 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
-            <form action="updteProject.pr" method="post">
+            <form action="updateProject.pr" method="post">
               <!-- Modal body -->
               <div class="modal-body">
                 <table class="add-form">
