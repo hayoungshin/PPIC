@@ -356,7 +356,7 @@
 	  values
 	  (
   	  <choose>
-	  	<when test='projectNo == 0'>
+	  	<when test='projectNo == null or projectNo == 0'>
 	  		seq_pjno.currval
 	  	</when>
 	  	<otherwise>

@@ -102,7 +102,6 @@ public class ProjectController {
 							 HttpSession session, Model model) {
 		// 프로젝트 추가
 		int result = pService.insertProject(p);
-		
 		// 참여자 추가
 		ArrayList<ProjectParticipant> ppList = new ArrayList<>();
 		for(int i=0; i<selectUserNo.length; i++) {
@@ -119,7 +118,6 @@ public class ProjectController {
 		pm.setDepartmentNo(projectManagerDept);
 		pm.setPmStatus("Y");
 		ppList.add(pm);
-		
 		
 		
 		int result2 = 0;
@@ -347,7 +345,6 @@ public class ProjectController {
 	public String deleteTask(int taskNo, Model model, HttpSession session) {
 		// 업무 삭제
 		int result = pService.deleteTask(taskNo);
-		
 		int result2 = 0;
 		if(result > 0) {
 			// 참조자 삭제
