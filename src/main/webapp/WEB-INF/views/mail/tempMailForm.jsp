@@ -927,14 +927,6 @@
 					swal('', "받는사람이 지정되지 않았습니다.\n받는 사람 주소를 입력해주세요.", 'error')
 				} else {
 					document.getElementById("sendMailForm").submit();
-					
-					// 알림 관련
-					let arrDup = [...new Set(arrAlarm)];
-					let mailTo = arrDup.join("/");
-					if(socket){
-						let socketMsg = "12,${loginUser.userNo},${loginUser.userName}," + mailTo + ",4, ";
-						socket.send(socketMsg);
-					}
 				}
 			}
 		</script>

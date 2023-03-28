@@ -63,11 +63,11 @@
                </select>
            </div>
            <div class="text">
-               <div id="search-text">
+               <div id="search-text" style="width:80%;">
                    <input type="text" name="keyword" value="${ keyword }" placeholder="&nbsp;검색어를 입력하세요">
                </div>
-               <div id="search-btn">
-                   <button type="submit"><img src="resources/icons/search.png" height="23px" width="23px"></button>
+               <div id="search-btn" style="width:20%;">
+                   <button type="submit"><img src="resources/icons/search.png" height="100%" width="100%"></button>
                </div>
            </div>
        </form>
