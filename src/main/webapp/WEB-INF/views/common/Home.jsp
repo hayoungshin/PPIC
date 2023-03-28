@@ -16,13 +16,7 @@
 <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>  
 <style>
 	 /* 출퇴근 기록 */
-	 #calendartitle{
-	 	position: absolute;
-        left:40px;
-        top: 40px;
-        font-size : 25px;
-        font-weight:bold;
-	 }
+	 
 	 .workRecord{
 		position: absolute;
         right:0px;
@@ -79,7 +73,14 @@
 		text-decoration:none;
 		color:black;
 	}
-	
+	#calendartitle{
+	 	position: absolute;
+        left:40px;
+        top: 40px;
+        font-size : 25px;
+        font-weight:bold;
+	 }
+	 
 </style>
 </head>	
 <body>

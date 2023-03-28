@@ -107,8 +107,7 @@
 		  from member
 		  join dept on (member.department = dept.department_no) 
 		  join position on (member.position = position.position_no)
-		 where status='Y'
-		   and member_sign='Y'
+		 where member_sign='Y'
 		   and user_no = #{userNo}
 	</select>
 	
