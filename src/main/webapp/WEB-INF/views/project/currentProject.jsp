@@ -314,6 +314,17 @@
           $("#task-list .col").empty();
           // 내 작업만 보기 체크 해제
           $("#filter-check").prop("checked", false);
+          $("#filter-check").change(function(){
+            if($(this).prop("checked")){
+              $(".task-box>input[name=assignUser]").each(function(){
+                if($(this).val() != "${loginUser.userNo}"){
+                  $(this).parent(".task-box").prop("style", "display:none");
+                }
+              })
+            }else{
+              $(".task-box").prop("style", "display:block");
+            }
+          })
 
             $.ajax({
               url:"detail.pr",
@@ -350,7 +361,6 @@
                   taskValue = "<div class='task-box' onclick='taskDetailLoad(this)'>"
                          + "<input type='hidden' name='taskNo' value='" + tList[i].taskNo + "'>"
                          + "<div class='task-title'>" + tList[i].taskName + "</div>"
-                         + "<input type='hidden' name='userNo' value='" + tList[i].userNo + "'>"
                          + "<input type='hidden' name='assignUser' value='" + tList[i].assignUser + "'>";
                   
                   if(tList[i].projectParticipants[0].profileImg == null) {
@@ -1229,7 +1239,9 @@
           // 참조자 셀렉트 만들기
           projectUser = noneOption;
           for(let i=0; i<ppList.length; i++){
-                projectUser += "<option value='" + ppList[i].userNo + "' value2='" + ppList[i].departmentNo + "' value3='" + ppList[i].positionName + "''>" + ppList[i].userName + "</option>"
+            if(ppList[i].taskAssign != null && !projectUser.includes(ppList[i].userName)){
+              projectUser += "<option value='" + ppList[i].userNo + "' value2='" + ppList[i].departmentNo + "' value3='" + ppList[i].positionName + "''>" + ppList[i].userName + "</option>"
+            }
           }
           $("#emp-select2").append(projectUser);
 
