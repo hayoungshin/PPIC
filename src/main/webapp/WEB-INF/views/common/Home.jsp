@@ -139,7 +139,7 @@
 				  	var date = new Date();
 				    var hours = date.getHours();
 				    
-					if(hours < 9 ) {
+					if(hours < 10 ) {
 						$.ajax({
 							url:"workIn.wo",
 							data:{no:${loginUser.userNo}},
@@ -175,7 +175,7 @@
 					var date = new Date();
 				    var hours = date.getHours();
 				    
-				    if(hours <18){
+				    if(hours <19){
 				    	$.ajax({
 							url:"workOutEarly.wo",
 							data:{no:${loginUser.userNo}},
