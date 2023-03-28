@@ -130,13 +130,7 @@
                     <a href="memberHoli.ho" style="color:black" >휴가보유현황</a>
                     <a href="memberHoliUse.ho">휴가사용내역</a>
                     
-                    <div style="float:right; margin-right:20px;">
-						<img src="resources/icons/up-down.png" style="width:25px; ">
-					</div>
-			
-					<div style="float:right; margin-right:10px;">
-						<img src="resources/icons/search.png" style="width:25px; ">
-					</div>
+                    
                 </div>
 
                 

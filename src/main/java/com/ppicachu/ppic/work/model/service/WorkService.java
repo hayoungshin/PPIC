@@ -68,6 +68,7 @@ public interface WorkService {
 
 	// 16. 캘린더 조회 서비스 
 		ArrayList<Work> workCalendar(int userNo);
+		ArrayList<Work> workCalendarOut(int userNo);
 	
 	// 17. 전사원 목록 조회 서비스 
 		ArrayList<Member> selectAllMember();
@@ -77,4 +78,6 @@ public interface WorkService {
 	
 	// 19. 전사원 연간 근무시간 조회 서비스 
 		ArrayList<Member> selectTimeCountList();
+	
+
 }
