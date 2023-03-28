@@ -2,7 +2,6 @@ package com.ppicachu.ppic.approval.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 

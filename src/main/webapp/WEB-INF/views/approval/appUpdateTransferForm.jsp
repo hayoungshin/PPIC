@@ -474,7 +474,10 @@
 				$(this).parent().remove();
 
 				let attachmentNo = $(this).parent().children()[0].value;
-				let input = "<input type='hidden' name='delAttNo[" + attNo + "]' value='" + attachmentNo + "'>";
+				let attachmentName = $(this).parent().children()[1].value;
+
+				let input = "<input type='hidden' name='delAttNo[" + attNo + "]' value='" + attachmentNo + "'>"
+						  + "<input type='hidden' name='delAttName[" + attNo + "]' value='" + attachmentName + "'>";
 				$("#title-area-selop").append(input);
 
 				attNo++;
@@ -741,6 +744,7 @@
 									<c:forEach var="at" items="${ad.att}">
 										<div class="filebox">
 											<input type="hidden" value="${at.attachmentNo}">
+											<input type="hidden" value="${at.changeName}">
 											<p>${at.originName}</p>
 											<a class="deleteDB"><i class="far fa-minus-square"></i></a>
 										</div>

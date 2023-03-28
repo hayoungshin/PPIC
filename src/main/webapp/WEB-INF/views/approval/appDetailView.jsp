@@ -730,7 +730,7 @@
         </div>
         <br>
 
-        <button class="btnn-gr" onclick="javascript:history.go(-1);">목록</button>
+        <button class="btnn-gr" onclick="location.href='list.ap?myi=1'">목록</button>
     </div>
 </body>
 </html>

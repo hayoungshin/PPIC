@@ -185,5 +185,4 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public int updateApprovalStatus(Approval a) {
 		return aDao.updateApprovalStatus(sqlSession, a);
 	}
-
 }
