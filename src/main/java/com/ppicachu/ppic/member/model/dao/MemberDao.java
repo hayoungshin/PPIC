@@ -16,6 +16,10 @@ public class MemberDao {
 		return (ArrayList)sqlSession.selectList("memberMapper.selectListMember");
 	}
 	
+	public ArrayList<Member> selectListMemberY(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("memberMapper.selectListMemberY");
+	}
+	
 	public ArrayList<Department> selectDeptList (SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("memberMapper.selectDeptList");
 	}
@@ -95,6 +99,10 @@ public class MemberDao {
 	
 	public int newMemberApproval(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.update("memberMapper.newMemberApproval", m);
+	}
+	
+	public int newMemberDelete(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.delete("memberMapper.newMemberDelete", m);
 	}
 
 }

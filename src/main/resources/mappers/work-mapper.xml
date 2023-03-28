@@ -142,6 +142,7 @@
 			 , '결근'
 		  from member m
 		 where m.status ='Y'
+		   and m.member_sign ='Y'
 	</insert>
 	
 	<select id="selectWorkRecor" resultMap="workResult">
