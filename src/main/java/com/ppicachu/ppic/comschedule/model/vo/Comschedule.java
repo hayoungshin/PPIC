@@ -25,4 +25,8 @@ public class Comschedule {
 	private String endTime;
 	private String allday;
 	private String legalholiday;
+	
+	private String title;
+	private String start;
+	private String end;
 }

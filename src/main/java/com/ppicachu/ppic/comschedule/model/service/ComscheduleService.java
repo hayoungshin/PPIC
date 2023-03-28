@@ -17,5 +17,7 @@ public interface ComscheduleService {
 	
 	// 4. 일정 수정
 	int updateSchedule(Comschedule cs);
-
+	
+	// 5. home 회사일정 리스트
+	ArrayList<Comschedule> scheduleCalendar();
 }

@@ -6,8 +6,23 @@
 <head>
 <meta charset="UTF-8">
 <title>PPIC</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css">
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
+<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>  
 <style>
 	 /* 출퇴근 기록 */
+	 #calendartitle{
+	 	position: absolute;
+        left:40px;
+        top: 40px;
+        font-size : 25px;
+        font-weight:bold;
+	 }
 	 .workRecord{
 		position: absolute;
         right:0px;
@@ -34,6 +49,37 @@
 		border-radius: 5px;
 		font-size: 15px;
 	 }
+	 
+	 /* 회사일정 */
+	 :root {
+	  --fc-color: black;
+	  --fc-daygrid-event-dot-width: 10px;
+	  --fc-neutral-text-color: black;
+	  --fc-more-link-text-color: #808080;
+	  --fc-button-bg-color: #6F50F8;
+  	  --fc-button-border-color: #6F50F8;
+  	  --fc-button-hover-bg-color: #6F50F8;
+  	  --fc-button-hover-border-color: #6F50F8;
+  	  --fc-button-active-bg-color: #6F50F8;
+  	  --fc-button-active-border-color: #6F50F8;
+	}
+	.fc-daygrid-day-number{
+		text-decoration:none;
+		color:black;
+	}
+	.fc-daygrid-day-number:hover{
+		text-decoration:none;
+		color:black;
+	}
+	.fc-col-header-cell-cushion{
+		text-decoration:none;
+		color:black;
+	}
+	.fc-col-header-cell-cushion:hover{
+		text-decoration:none;
+		color:black;
+	}
+	
 </style>
 </head>	
 <body>
@@ -43,6 +89,76 @@
 	<div class="outer">
         <div id="content" >
         
+        	<!-- 회사 일정 -->
+			<div class="schedule" >
+				<div id="calendartitle">회사일정</div>
+				<div id='calendar' style="float:left; width:70%; height:200px;"></div>
+			 
+			
+				<script>
+				    document.addEventListener('DOMContentLoaded', function() {
+				    	
+				    	$.ajax({
+		       				url: "scheduleCalendar.sch",
+		       				async: false, 
+		       				dataType:'JSON',
+		       				success: function(map) {
+		       					
+		       					var events = [];
+		       					var list = map.list
+		       					
+		       					for (i=0; i<list.length; i++){
+		       						if(list[i].schKind == 0){
+		       							events.push({
+				       						title:list[i].title,
+				       						start:list[i].start,
+				       						end:list[i].end,
+				       						color:'#F78181',
+				       						textColor:'#FFFFFF'
+				       					});
+		       						}else{
+		       							events.push({
+				       						title:list[i].title,
+				       						start:list[i].start,
+				       						end:list[i].end,
+				       						color:'#BE81F7'
+				       					});
+		       						}
+			       					
+		       					}
+		       					
+		       					
+		       					console.log(events);
+		       					
+		       					
+		       					var calendarEl = document.getElementById('calendar');
+		    			    	var calendar = new FullCalendar.Calendar(calendarEl, {
+		    			    		themeSystem: 'bootstrap5',
+		    			    		initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+		    			    		headerToolbar : { // 헤더에 표시할 툴 바
+		    			    			start : '',
+		    			    			center : 'title',
+		    			    			end : 'prev next'
+		    			    		},
+		    			    		titleFormat : function(date) {
+		    			    			return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+		    			    		},
+		    			    		//initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
+		    			    		nowIndicator: true, // 현재 시간 마크
+		    			    		locale: 'ko', // 한국어 설정
+		    			   			events:events,
+		    			   			eventTextColor :'#FFFFFF',
+		    			    		height: 670
+		    			    	});
+		    			    	calendar.render();
+		       				}
+	       				});
+				    	
+				    });
+	    		</script>  
+				
+			</div>
+        	
 			
             <!-- 출퇴근 기록 -->
 			<div class="workRecord" >

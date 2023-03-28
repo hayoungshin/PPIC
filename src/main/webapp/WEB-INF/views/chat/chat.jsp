@@ -277,7 +277,7 @@
    	}
    	#profile-area img{cursor:pointer;}
    	
-   	.exit, .date{
+   	.exit, .sendDate{
         text-align:center; 
         border-radius:5px;   
         background: rgb(240, 240, 240);
@@ -1107,7 +1107,7 @@
            					if(list[i].sendDate != undefined){
            						let $sendDate = list[i].sendDate.substring(0,13)
                					if(i == 0 || i > 0 && $sendDate != list[i-1].sendDate.substring(0,13) || list[i-1].exitDate != undefined || list[i-1].sendDateD <= list[i-1].exitDate){
-               						value1 += "<div class='date'>💌 " + $sendDate + "</div>"
+               						value1 += "<div class='sendDate'>💌 " + $sendDate + "</div>"
                					}
 								if(list[i].outMsg == 0){
 									if(list[i].sendNo != ${loginUser.userNo}){
@@ -1420,8 +1420,8 @@
 					$chatAllDiv = $chatAllDiv.prepend($userSpan);
 				}
 				let $sendDateMsg = msgArr[4].substring(0,13)
-				if($(".date").text() == "" || $(".date").text().slice(-13) != $sendDateMsg){
-					$sendDate = "<div class='date'>💌 " + $sendDateMsg + "</div>"
+				if($(".sendDate").text() == "" || $(".sendDate").text().slice(-13) != $sendDateMsg){
+					$sendDate = "<div class='sendDate'>💌 " + $sendDateMsg + "</div>"
 				}
 				$(".chat-area").append($sendDate).append($chatAllDiv);
 				$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);

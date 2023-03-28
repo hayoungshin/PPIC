@@ -17,6 +17,9 @@
 		<result column="end_time" property="endTime"/>
 		<result column="allday" property="allday"/>
 		<result column="legalholiday" property="legalholiday"/>
+		<result column="start" property="start" />
+		<result column="end" property="end" />
+		<result column="title" property="title" />
 	</resultMap>
 	
 	<select id="selectComscheduleList" resultMap="comscheduleResult">
@@ -120,4 +123,13 @@
 						</if>
 		 where sch_no = #{schNo}
 	</update>
+	
+	<select id="scheduleCalendar" resultMap="comscheduleResult">
+		select
+		       sch_name as "title"
+		     , start_date as "start"
+		     , end_date as "end"
+		     , sch_kind
+		  from company_sch
+	</select>
 </mapper>

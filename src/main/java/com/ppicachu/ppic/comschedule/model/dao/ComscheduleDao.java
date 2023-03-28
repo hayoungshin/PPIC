@@ -25,4 +25,8 @@ public class ComscheduleDao {
 	public int updateSchedule(SqlSessionTemplate sqlSession, Comschedule cs) {
 		return sqlSession.update("comscheduleMapper.updateSchedule", cs);
 	}
+	
+	public ArrayList<Comschedule> scheduleCalendar(SqlSessionTemplate sqlSession){
+		return (ArrayList)sqlSession.selectList("comscheduleMapper.scheduleCalendar");
+	}
 }
