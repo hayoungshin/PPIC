@@ -146,7 +146,7 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	public int completeDeleteMail() {
-		return mDao.completeDeleteMail();
+		return mDao.completeDeleteMail(sqlSession);
 	}
 
 	

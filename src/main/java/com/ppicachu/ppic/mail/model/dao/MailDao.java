@@ -159,5 +159,8 @@ public class MailDao {
 		return (ArrayList)sqlSession.selectList("mailMapper.selectAtcRecieveList", userMail, rowBounds);
 	}
 	
+	public int completeDeleteMail(SqlSessionTemplate sqlSession) {
+		return sqlSession.delete("mailMapper.completeDeleteMail");
+	}
 	
 }

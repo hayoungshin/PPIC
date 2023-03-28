@@ -448,4 +448,10 @@
 		    by mail_no desc
 	</select>
 	
+	<delete id="completeDeleteMail">
+		delete
+		  from mail_status
+		 where delete_date - sysdate > 10
+	</delete>
+	
 </mapper>
