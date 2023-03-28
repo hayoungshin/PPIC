@@ -620,6 +620,25 @@
 		 where mail_no = #{mailNo}
 	</delete>
 	
+	<update id="recoverMail">
+		update
+		       mail_status
+		   set bin_status = 'N',
+		       delete_date = null
+		 where recipient_mail = #{recipientMail}
+		   and mail_no = #{mailNo}
+	</update>
+	<update id="recoverSendMail">
+		update
+		       mail_status
+		   set bin_status = 'N',
+		       delete_date = null
+		 where mail_type = 4
+		   and mail_no = #{mailNo}
+	</update>
+	
+	
+	
 	<delete id="completeDeleteMail">
 		delete
 		  from mail_status
