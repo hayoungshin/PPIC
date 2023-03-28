@@ -244,4 +244,16 @@
 		 where ref_no = #{refNo}
 	</delete>
 	
+	<select id="selectNoticeMain" resultMap="noticeResult">
+		select
+		       notice_no
+		     , notice_title
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		     , important
+		  from notice
+		 where status = 'Y'
+		 order
+		    by important desc, notice_no desc
+	</select>
+	
 </mapper>

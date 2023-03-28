@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
 import com.ppicachu.ppic.common.model.vo.Attachment;
 import com.ppicachu.ppic.common.model.vo.PageInfo;
 import com.ppicachu.ppic.common.template.FileUpload;
@@ -166,6 +168,11 @@ public class NoticeController {
 		}
 	}
 	
-	
+	@ResponseBody
+	@RequestMapping(value="notice.main", produces="application/json; charset=UTF-8")
+	public String selectNoticeMain() {
+		ArrayList<Notice> list = nService.selectNoticeMain();
+		return new Gson().toJson(list);
+	}
 	
 }

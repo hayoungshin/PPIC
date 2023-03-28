@@ -82,6 +82,11 @@ public class NoticeServiceImpl implements NoticeService{
 		return nDao.selectSearchList(sqlSession, map, pi);
 	}
 
+	@Override
+	public ArrayList<Notice> selectNoticeMain() {
+		return nDao.selectNoticeMain(sqlSession);
+	}
+
 	
 
 	

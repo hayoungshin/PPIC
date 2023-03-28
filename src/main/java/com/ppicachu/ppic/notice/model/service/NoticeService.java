@@ -31,5 +31,6 @@ public interface NoticeService {
 	int selectSearchCount(HashMap<String, String> map);
 	ArrayList<Notice> selectSearchList(HashMap<String, String> map, PageInfo pi);
 	
-
+	// 7. 메인 화면용 조회
+	ArrayList<Notice> selectNoticeMain();
 }

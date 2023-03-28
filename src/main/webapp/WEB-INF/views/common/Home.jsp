@@ -25,7 +25,7 @@
 	 }
 	 .workRecord{
 		position: absolute;
-        right:0px;
+        right:5px;
         top: 50px;
 	 }
 	 #workRecord {
@@ -80,6 +80,35 @@
 		color:black;
 	}
 	
+	#noticeMainDiv{
+		position:absolute; 
+		right:5px; 
+		top:350px;
+	}
+	#noticeMainDiv>span{
+		float:right;
+		font-size:12px;
+		line-height:35px;
+		cursor:pointer;
+	}
+	#noticeMainDiv>div{
+		background:rgb(236, 236, 236); 
+		 height:300px; 
+		 width:400px; 
+		 border-radius: 10px; 
+		 font-size:13px; 
+		 margin-top:5px;
+		 padding-top:17px;
+	}
+	#noticeMain{
+		width:100%;
+		height:80%;
+	}
+	#noticeMain tr:hover{background:rgb(230,230,230);}
+	#noticeMain td{
+		padding:5px 15px;
+		cursor:pointer;
+	}
 </style>
 </head>	
 <body>
@@ -321,12 +350,57 @@
 				}
 				
 			</script>
-
+			<div id="noticeMainDiv">
+				<b style="font-size:24px;">공지사항</b>
+				<span onclick="location.href='list.no'">전체보기</span><br>
+				<div>
+					<table id="noticeMain">
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
         </div>
     </div>
 
-    
-
+	<script>
+		$(function(){
+			$.ajax({
+				url:"notice.main",
+				success:function(list){
+					let value = "";
+					for(let i=0; i<list.length; i++){
+						value += "<tr id='" + list[i].noticeNo + "'>"
+								+ "<td>"
+								if(list[i].important == 'Y'){
+									value += "📢 "
+									  		+ "<b>"
+									if(list[i].noticeTitle.length <= 16){
+										value += list[i].noticeTitle
+									}else{
+										value += list[i].noticeTitle.substring(0, 16) + "..."
+									} 
+									value += "</b>"
+								}else{
+									if(list[i].noticeTitle.length <= 16){
+										value += list[i].noticeTitle
+									}else{
+										value += list[i].noticeTitle.substring(0, 16) + "..."
+									} 
+								}
+								value += "</td>"
+								+ "<td style='text-align:right'>" + list[i].createDate + "</td>"
+								+ "</tr>"
+					}
+					console.log(value)
+					$("#noticeMain tbody").html(value)
+				}
+			})
+		})
+		
+		$(document).on("click", "#noticeMain tr", function(){
+			location.href = "detail.no?no=" + $(this).attr("id");
+		})
+	</script>
 </body>
 </html>
 

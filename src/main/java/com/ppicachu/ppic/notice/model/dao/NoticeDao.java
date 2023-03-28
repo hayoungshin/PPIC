@@ -72,5 +72,12 @@ public class NoticeDao {
 	public int deleteAttachment(SqlSessionTemplate sqlSession, int refNo) {
 		return sqlSession.delete("noticeMapper.deleteAttachment", refNo);
 	}
+	
+public ArrayList<Notice> selectNoticeMain(SqlSessionTemplate sqlSession){
+		
+		RowBounds rowBounds = new RowBounds(0, 9);
+		
+		return (ArrayList)sqlSession.selectList("noticeMapper.selectNoticeMain",null,rowBounds);
+	}
 
 }
