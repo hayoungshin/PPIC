@@ -171,7 +171,46 @@
 	<div class="outer">
 
         <div id="header">
+        	<div id='clockmain' align="center" style="color:white; font-size:18px; font-weight:600; margin-top:2px;"></div>
+			<script>
+				$(function(){
+					initMain();
+					
+				});
+				
+				function getClockMain() {
+					
+				    var date = new Date();
 
+				    var year = date.getFullYear();
+				    var month = date.getMonth();
+				    var day = date.getDate();
+				    var hours = date.getHours();
+				    var minutes  = date.getMinutes();
+				    var seconds  = date.getSeconds();
+				    
+				    
+				    if (("" + hours).length == 1) {
+				    	hours = "0" + hours;
+				    }
+				    if (("" + minutes).length == 1) {
+				    	minutes = "0" + minutes;
+				    }
+				    
+				    if (("" + seconds).length == 1) {
+				    	seconds = "0" + seconds;
+				    }
+				    
+				    document.getElementById("clockmain").innerHTML =year + "년" +month + "월" +day + "일&nbsp;&nbsp;" + hours + ":" + minutes + ":" + seconds;
+				    //return hours + ":" + minutes + ":" + seconds;
+				    
+				}
+				
+				function initMain() {
+					getClockMain();
+				    setInterval(getClockMain, 1000); //1초
+				}					
+			</script>
         </div>
         
         <div id="side-menubar">
