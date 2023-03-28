@@ -215,6 +215,14 @@ public class MailDao {
 		return sqlSession.delete("mailMapper.deleteTemp", status);
 	}
 	
+	public int recoverMail(SqlSessionTemplate sqlSession, MailStatus status) {
+		if(status.getMailType() == 4) {	// 보낸 메일
+			return sqlSession.update("mailMapper.recoverSendMail", status);
+		} else {
+			return sqlSession.update("mailMapper.recoverMail", status);		
+		}
+	}
+	
 	
 	/* 스케줄링에 의함 */
 	public int completeDeleteMail(SqlSessionTemplate sqlSession) {

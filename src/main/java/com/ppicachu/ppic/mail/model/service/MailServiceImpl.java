@@ -197,6 +197,13 @@ public class MailServiceImpl implements MailService{
 	}
 	
 	@Override
+	public int recoverMail(MailStatus status) {
+		return mDao.recoverMail(sqlSession, status);
+	}
+	
+	
+	
+	@Override
 	public int completeDeleteMail() {
 		return mDao.completeDeleteMail(sqlSession);
 	}

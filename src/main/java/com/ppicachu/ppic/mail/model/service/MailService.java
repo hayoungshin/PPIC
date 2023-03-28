@@ -67,6 +67,9 @@ public interface MailService {
 	Mail selectTemp(int mailNo);
 	// 13. 임시저장 삭제 서비스
 	int deleteTemp(MailStatus status);
+	
+	// 14. 메일 복구 서비스
+	int recoverMail(MailStatus status);
 
 	// 메일 영구삭제 서비스 (스케줄러)
 	int completeDeleteMail();

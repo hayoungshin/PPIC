@@ -533,6 +533,22 @@ public class MailController {
 		return result == length;
 	}
 	
+	@ResponseBody
+	@RequestMapping("recover.ml")
+	public boolean recoverSendMail(MailStatus status, HttpSession session) {
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.recoverMail(status);
+			result++;
+		}
+		
+		return result == length;
+	}
+	
 	
 	
 	
