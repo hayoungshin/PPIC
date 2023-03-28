@@ -138,15 +138,13 @@
                     </tr>
                    
                     <c:forEach var="h" items= "${ list }" >
-	                    <tr height="50px" align="center">
+                   		<tr height="50px" align="center">
 	                        <td>${h.type }</td>
 	                        <td>${h.start }</td>
 	                        <td>${h.finish }</td>
 	                        <td>${h.status }</td>
                     	</tr>
-			         </c:forEach>
-                   
-                    
+					</c:forEach>
                 </table>
             </div>
 			

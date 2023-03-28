@@ -1,6 +1,7 @@
 package com.ppicachu.ppic.comschedule.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -66,5 +67,17 @@ public class ComscheduleController {
 			m.addAttribute("errorMsg", "일정 수정 실패");
 			return "common/errorPage";
 		}
+	}
+	
+	/* fullcalendar 회사일정 조회하기 */
+	@ResponseBody
+	@RequestMapping(value="scheduleCalendar.sch", produces="application/json; charset=utf-8")
+	public String ajaxWorkCalendar(Model model) {
+		ArrayList<Comschedule> list = cService.scheduleCalendar();
+	      
+	    HashMap<String,Object> map = new HashMap<String,Object>();
+	    map.put("list", list);
+	      
+	    return new Gson().toJson(map);
 	}
 }

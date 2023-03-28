@@ -252,6 +252,7 @@
 					
 					if(type=="연차"){
 						console.log("연차");
+						location.reload();
 						show.innerHTML ='<input type="text" title="텍스트입력" />';
 					}else if(type=="반차") {
 						console.log("반차");

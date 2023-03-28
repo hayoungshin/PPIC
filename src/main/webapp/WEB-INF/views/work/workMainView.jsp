@@ -164,7 +164,7 @@
                     <tr style="font-size: 20px;" >
                         <th height="50px" width="440px" >월근태현황</th>
                         <th width="445px">휴가현황</th>
-                        <th width="300px">출퇴근기록</th>
+                        <th width="300px">근무체크</th>
                     </tr>
                </table>
 
@@ -360,7 +360,7 @@
             </div>
             <br>
 
-            <div class="wotitle" style="float:left;"> 출퇴근기록</div>
+            <div class="wotitle" style="float:left; width:100%;"> 출퇴근기록</div>
 			
 			<c:forEach var="list1" items="${ list1 }" end="4">
 	            <div class="day"  align="center" style="float:left">
