@@ -114,10 +114,10 @@ public class MailDao {
 	}
 	
 	public int deleteMail(SqlSessionTemplate sqlSession, MailStatus status) {
-		if(status.getMailType() == 0) {
-			return sqlSession.update("mailMapper.deleteMail", status);			
-		} else {	// 보낸 메일
+		if(status.getMailType() == 4) {	// 보낸 메일
 			return sqlSession.update("mailMapper.deleteSendMail", status);
+		} else {
+			return sqlSession.update("mailMapper.deleteMail", status);		
 		}
 	}
 	

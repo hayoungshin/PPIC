@@ -490,7 +490,6 @@ public class MailController {
 	@ResponseBody
 	@RequestMapping("listDelete.ml")
 	public boolean ajaxDeleteMail(MailStatus status, HttpSession session, Model model) {
-		
 		int length = status.getMailNoArr().length;
 		int result = 0;
 		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());

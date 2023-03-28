@@ -7,6 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	#table-head span:hover{
+		cursor:pointer;
+		font-weight:600;
+	}
+</style>
 </head>
 <body>
 	<jsp:include page="mailMenubar.jsp" />
@@ -21,20 +27,19 @@
 				<tr id="table-head">
 					<td colspan="6" style="width:30px;">
 	
-						<input type="checkbox" name="" id="">
+						<input type="checkbox" id="check-all" onclick="checkAll(this);">
 	
 						<div class="dropdown" style="display:inline-block;">
 							<button style="margin:0px; padding:0; background:none;" class="dropdown-toggle" data-toggle="dropdown"></button>
 							<div class="dropdown-menu" style="font-size:13px; padding:0;">
-								<a class="dropdown-item" href="#">전체선택</a>
-								<a class="dropdown-item" href="#">읽은메일</a>
-								<a class="dropdown-item" href="#">읽지않은메일</a>
-								<a class="dropdown-item" href="#">선택해제</a>
+								<span class="dropdown-item select-checkbox" id="select-all">전체선택</span>
+								<span class="dropdown-item select-checkbox" id="select-read">읽은메일</span>
+								<span class="dropdown-item select-checkbox" id="select-notread">읽지않은메일</span>
 							</div>
 						</div>
 	
-						<a href="" style="margin:0px 48px;">읽음</a>
-						<a href="" style="margin:0px 60px;">삭제</a>
+						<span id="read-status" onclick="readMail();" style="margin:0px 48px;">읽음</span>
+						<span onclick="deleteMail();" style="margin:0px 60px;">삭제</span>
 						<span style="margin:0px 60px; color:gray;">│</span>
 	
 						<div class="dropdown" style="display:inline-block;">
@@ -52,7 +57,7 @@
 					<input type="hidden" id="mailType${ m.mailNo }" value="${ m.mailType }">
 					<tr>
 						<td style="width:30px;">
-							<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }">
+							<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }" onclick="boxchecked();">
 						</td>
 						<td style="width:50px;text-align:right;">
 							<img onclick="importantStatus(this);" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
@@ -60,10 +65,10 @@
 						<td style="width:70px; text-align:left;" onclick="toDetail(this);">
 							<c:choose>
 								<c:when test="${ not empty m.readDate || m.mailType eq 4 }">	<!-- 읽음 -->
-									<img src="resources/icons/mail-opened.png" style="width:20px;">
+									<img class="read-status" src="resources/icons/mail-opened.png" style="width:20px;">
 								</c:when>
 								<c:otherwise>	<!-- 안읽음 -->
-									<img src="resources/icons/mail-c.png" style="width:20px;">
+									<img class="read-status" src="resources/icons/mail-c.png" style="width:20px;">
 								</c:otherwise>
 							</c:choose>
 						</td>
@@ -102,7 +107,186 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		
+		
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<script>
+			/* 체크박스 */
+			function checkAll(all){
+				const list = document.getElementsByClassName("mailNo");
+				if(all.checked){
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = true;
+					})
+				} else {
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = false;
+					})
+				}
+			}
+			function boxchecked(){
+				let checkedCount = 0;
+				document.querySelectorAll(".mailNo").forEach(function(c){
+					if(c.checked == false){
+						checkedCount++;
+					}
+				});
+				if(checkedCount > 0){
+					document.getElementById("check-all").checked = false;
+				} else if(checkedCount == 0) {
+					document.getElementById("check-all").checked = true;
+				}
+			}
+			$(".select-checkbox").click(function(e){
+				document.getElementById("check-all").checked = false;
+				document.querySelectorAll(".mailNo").forEach(function(c){
+					c.checked = false;
+				})
+				const id = e.target.id;
+				if(id == "select-all"){
+					document.getElementById("check-all").checked = true;
+					document.querySelectorAll(".mailNo").forEach(function(c){
+						c.checked = true;
+					})
+				} else if(id == "select-read"){
+					document.querySelectorAll(".read-status").forEach(function(r){
+						if(r.src.includes("mail-opened")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				} else if(id == "select-notread"){
+					document.querySelectorAll(".read-status").forEach(function(r){
+						if(r.src.includes("mail-c")){
+							r.parentNode.parentNode.childNodes[1].childNodes[1].checked = true;							
+						}
+					})
+				}
+			})
+			
+			/* 삭제 */
+			function deleteMail(){
+				var sendArr = [];
+				var recieveArr = [];
+				document.querySelectorAll('input[type=checkbox][name=mailNo]:checked').forEach(function(c){
+					if(document.getElementById("mailType" + c.value).value == 4){
+						sendArr.push(c.value)
+					} else {
+						recieveArr.push(c.value)
+					}
+				})
+				
+				if(sendArr.length > 0 || recieveArr.length > 0){
+					swal({
+						  title: "정말 삭제하시겠습니까?",
+						  text: "메일을 휴지통으로 이동하며 10일 보관 후 영구삭제됩니다.",
+						  icon: "warning",
+						  buttons: true,
+						  dangerMode: true,
+						})
+						.then((willDelete) => {
+						  if (willDelete) {
+							  if(sendArr.length > 0){
+									$.ajax({
+										url:"listDelete.ml",
+										data:{
+											mailNoArr:sendArr,
+											mailType:4
+											},
+										type:"post",
+										success:function(result){	// boolean 타입
+											if(result){
+												location.reload();
+											} else {
+												swal("삭제 실패");
+											}
+										}, error:function(){
+											console.log("메일삭제용 ajax 통신실패")
+										}
+									})						
+								}
+								if(recieveArr.length > 0){
+									$.ajax({
+										url:"listDelete.ml",
+										data:{
+											mailNoArr:recieveArr
+											},
+										type:"post",
+										success:function(result){	// boolean 타입
+											if(result){
+												location.reload();
+											} else {
+												swal("삭제 실패");
+											}
+										}, error:function(){
+											console.log("메일삭제용 ajax 통신실패")
+										}
+									})
+								}
+						  } else {
+						    swal("취소되었습니다.");
+						  }
+						});
+				} else {
+					swal("메일을 선택해주세요");
+					
+				}
+			}
+			
+			/* 읽음안읽음 */
+			function readMail(){
+				var arr = [];
+				let checked = document.querySelectorAll('input[type=checkbox][name=mailNo]:checked');
+				checked.forEach(function(c){
+					if(document.getElementById("mailType" + c.value).value != 4){
+						arr.push(c.value);
+					}
+				})
+				
+				if(document.getElementById("read-status").innerText == "읽음"){
+					$.ajax({
+						url:"read.ml",
+						data:{mailNoArr:arr},
+						type:"post",
+						success:function(result){	// boolean 타입
+							if(result){
+								checked.forEach(function(c){
+									c.parentNode.parentNode.childNodes[5].childNodes[3].src = "resources/icons/mail-opened.png";
+								})
+								document.getElementById("read-status").innerText = "안읽음";
+							} else {
+								alert("읽음처리 실패");
+							}
+						}, error:function(){
+							console.log("읽음처리용 ajax 통신실패")
+						}
+					})
+				} else {
+					$.ajax({
+						url:"unread.ml",
+						data:{mailNoArr:arr},
+						type:"post",
+						success:function(result){	// boolean 타입
+							if(result){
+								checked.forEach(function(c){
+									if(document.getElementById("mailType" + c.value).value != 4){
+										c.parentNode.parentNode.childNodes[5].childNodes[3].src = "resources/icons/mail-c.png";
+									}
+								})
+								document.getElementById("read-status").innerText = "읽음";
+							} else {
+								alert("안읽음처리 실패");
+							}
+						}, error:function(){
+							console.log("안읽음처리용 ajax 통신실패")
+						}
+					})
+				}
+			}
+		</script>
+		
+		
 
+		<!-- 별표 -> 중요메일 설정,해제 -->
 		<script>
 			function importantStatus(star){
 				const no = star.parentNode.parentNode.childNodes[1].childNodes[1].value;
