@@ -182,7 +182,7 @@
 		display: inline-block; 
 		margin-bottom: 3px;
 	}
-	.insert .file-list .filebox .delete i{
+	.insert .file-list .filebox .delete i, .deleteDB i{
 		color: rgb(255, 100, 100); 
 		margin-left: 5px;
 	}
@@ -237,7 +237,29 @@
 					}
 				});
 			}
-			
+
+			// 기존 값
+			let originAgr = document.getElementsByName("agrUserNo"); // 기존 승인자
+			for(let j=0; j<originAgr.length; j++){
+				for(let i=0; i<a_tr.length; i++){
+					const input_userNo = a_tr[i].childNodes[1].value; // userNo
+					if(input_userNo == originAgr[j].value){ // 기존 승인자를 승인자 모달 리스트에서 찾는 구문
+					const check_img = a_tr[i].childNodes[7].childNodes[0]; // 화살표 이미지
+					const input_deptName = a_tr[i].childNodes[3].value; // deptName
+					const userName = a_tr[i].childNodes[5].innerHTML; // userName
+					const checked_area = document.getElementById("a-checked"); // 선택된 user 공간
+					check_img.style.display = 'block';
+					checked_area.innerHTML +=	"<tr class='a-checked-p'>"
+											+		"<td>"
+											+			"<input type='hidden' value='" + input_userNo + "'>"
+											+			"<input type='hidden' value='" + input_deptName + "'>"
+											+			"<span>" + userName + "</span>"
+											+		"</td>"
+											+	"</tr>";
+					}
+				}
+			}
+
 			// 참조자 모달 각 행
 			const r_tr = document.getElementsByClassName("r-trOver");
 			for(let i=0; i<r_tr.length; i++){
@@ -268,6 +290,28 @@
 						}
 					}
 				});
+			}
+
+			// 기존 값
+			let originRef = document.getElementsByName("refUserNo"); // 기존 참조자
+			for(let j=0; j<originRef.length; j++){
+				for(let i=0; i<r_tr.length; i++){
+					const input_userNo = r_tr[i].childNodes[1].value; // userNo
+					if(input_userNo == originRef[j].value){ // 기존 참조자를 참조자 모달 리스트에서 찾는 구문
+					const check_img = r_tr[i].childNodes[7].childNodes[0]; // 화살표 이미지
+					const input_deptName = r_tr[i].childNodes[3].value; // deptName
+					const userName = r_tr[i].childNodes[5].innerHTML; // userName
+					const checked_area = document.getElementById("r-checked"); // 선택된 user 공간
+					check_img.style.display = 'block';
+					checked_area.innerHTML +=	"<tr class='r-checked-p'>"
+											+		"<td>"
+											+			"<input type='hidden' value='" + input_userNo + "'>"
+											+			"<input type='hidden' value='" + input_deptName + "'>"
+											+			"<span>" + userName + "</span>"
+											+		"</td>"
+											+	"</tr>";
+					}
+				}
 			}
 		}
 		
@@ -325,12 +369,12 @@
 			let value = "<tr>"
 				  	  +		"<td align='right'>"
 				  	  +			"<a class='deleteTr'><i class='far fa-minus-square'></i></a>"
-				  	  +			"<input type='text' name='fcaList[" + trNo + "].account' style='width:208px; height:35px;'>"
+				  	  +			"<input type='text' name='fcaList[" + trNo + "].account' style='width:208px; height:35px;' required>"
 				  	  +		"</td>"
-				  	  +		"<td><input type='text' name='fcaList[" + trNo + "].userHistory' style='width:572px; height:35px;'></td>"
-				  	  +		"<td><input type='number' name='fcaList[" + trNo + "].price' style='width:138px; height:35px;'></td>"
+				  	  +		"<td><input type='text' name='fcaList[" + trNo + "].userHistory' style='width:572px; height:35px;' required></td>"
+				  	  +		"<td><input type='number' name='fcaList[" + trNo + "].price' style='width:138px; height:35px;' required></td>"
 				  	  + "</tr>";
-			tr_content.innerHTML += value;
+			$("#tr-content").append(value);
 			trNo++;
 		}
 		
@@ -381,6 +425,20 @@
 	            $("#file")[0].files = dataTransfer.files;
 		    }
 		}
+
+		// 기존 첨부파일 삭제 click 이벤트
+		let attNo = 0;
+		$(function(){
+			$(document).on("click", ".deleteDB", function(){
+				$(this).parent().remove();
+
+				let attachmentNo = $(this).parent().children()[0].value;
+				let input = "<input type='hidden' name='delAttNo[" + attNo + "]' value='" + attachmentNo + "'>";
+				$("#title-area-selop").append(input);
+
+				attNo++;
+			})
+		});
 		
 		// 첨부파일 삭제 click 이벤트
 		$(function(){
@@ -421,10 +479,25 @@
 		function tem(){
 			document.getElementById("title-area-selop").innerHTML += "<input type='hidden' name='tem' value='임시저장'>";
 		}
+
+		// submit 조건
+		function submitForm(){
+			if(document.getElementById("tr-content").childNodes.length == 0){ // 행추가
+				alert("1행 이상의 행추가가 필요합니다.");
+				return false;
+			}else{
+				if(document.getElementById("a-person-content").childNodes.length == 0){ // 승인자
+					alert("1명 이상의 승인자가 필요합니다.");
+					return false;
+				}else{
+					return true;
+				}
+			}
+		}
 	</script>
 	
 	<div id="content" align="center">
-        <form action="update.ap" method="post" enctype="multipart/form-data"  onsubmit="submitForm();">
+        <form action="update.ap" method="post" enctype="multipart/form-data"  onsubmit="return submitForm();">
 	        <div class="first">
 	            <div class="title-area"><h2><b>수정하기</b></h2></div>
 	            <div id="title-area-selop">
@@ -465,7 +538,7 @@
 			                    </c:forEach>
 	                            <tr>
 	                                <th>제목</th>
-	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요" value="${ ad.app.title }"></td>
+	                                <td colspan="5"><input type="text" id="title" name="title" style="width:835px; height:35px;" placeholder="제목을 입력하세요" value="${ ad.app.title }" required></td>
 	                            </tr>
 	                        </thead>
 	                        <tbody>
@@ -495,10 +568,10 @@
 													<tr>
 														<td align='right'>
 														<a class='deleteTr'><i class='far fa-minus-square'> <!-- 공백 안생기게 하기 위함 -->
-														</i></a><input type='text' name='fcaList[${ status.index }].account' style='width:208px; height:35px;' value='${ c.account }'>
+														</i></a><input type='text' name='fcaList[${ status.index }].account' style='width:208px; height:35px;' value='${ c.account }' required>
 														</td>
-														<td><input type='text' name='fcaList[${ status.index }].userHistory' style='width:572px; height:35px;' value='${ c.userHistory }'></td>
-														<td><input type='number' name='fcaList[${ status.index }].price' style='width:138px; height:35px;' value='${ c.price }'></td>
+														<td><input type='text' name='fcaList[${ status.index }].userHistory' style='width:572px; height:35px;' value='${ c.userHistory }' required></td>
+														<td><input type='number' name='fcaList[${ status.index }].price' style='width:138px; height:35px;' value='${ c.price }' required></td>
 													</tr>
 												</c:forEach>
 	                                        </tbody>
@@ -506,11 +579,11 @@
 	                                        <tfoot>
 		                                        <tr>
 		                                            <th>부가가치세</th>
-		                                            <td colspan="2"></td>
+		                                            <td colspan="2"><span style="color:#6F50F8;">작성시 자동생성</span></td>
 		                                        </tr>
 		                                        <tr>
 		                                            <th>합계</th>
-		                                            <td colspan="2"></td>
+		                                            <td colspan="2"><span style="color:#6F50F8;">작성시 자동생성</span></td>
 		                                        </tr>
 		                                    </tfoot>
 	                                    </table>
@@ -523,7 +596,17 @@
 	                    <div class="custom-file insert">
 	                    	<input type="file" class="custom-file-input" id="file" name="upfile" onchange="addFile(this);" multiple>
 		                    <label class="custom-file-label" for="file">Choose file</label>
-		                    <div class="file-list"></div>
+		                    <div class="file-list">
+								<c:if test="${ad.att[0] ne null}">
+									<c:forEach var="at" items="${ad.att}">
+										<div class="filebox">
+											<input type="hidden" value="${at.attachmentNo}">
+											<p>${at.originName}</p>
+											<a class="deleteDB"><i class="far fa-minus-square"></i></a>
+										</div>
+									</c:forEach>
+								</c:if>
+							</div>
 		                    <span>※ 첨부파일은 5개까지 첨부 가능합니다.</span>
 	                    </div>
 
@@ -552,6 +635,7 @@
 					                            </div>
 					                            <div class="level-person">
 					                                <span class="person-img">🧑🏻‍💻</span>
+													<input type="hidden" name="agrUserNo" value="${ p.userNo }">
 					                                ${ p.departmentName }부 <span id="nm">${ p.userName }</span> ${ p.positionName }
 					                            </div>
 					                    	</div>
@@ -569,7 +653,8 @@
 			                            	<div class="level-area-pk">
 			                            		<div class="level-person">
 						                            <span class="person-img">🙋🏻‍♂️</span>
-						                            ${ p.departmentName }부 ${ p.userName } ${ p.positionName }
+						                            <input type="hidden" name="refUserNo" value="${ p.userNo }">
+					                                ${ p.departmentName }부 ${ p.userName } ${ p.positionName }
 						                        </div>
 						                    </div>
 						                </c:if>
@@ -594,11 +679,6 @@
 	                                <!-- Modal body -->
 	                                <div class="modal-body">
 	                                    <div class="form">
-	                                    	<div class="header">
-	                                    		<input type="text" >
-	                                            <button class="btnn-sb">검색</button>
-	                                        </div>
-	                                        <br>
 	                                    	<div class="a-content-1">
 		                                        <table class="table table-hover">
 								                    <c:forEach var="d" items="${ dList }">
@@ -652,11 +732,6 @@
 	                                <!-- Modal body -->
 	                                <div class="modal-body">
 	                                    <div class="form">
-	                                    	<div class="header">
-	                                    		<input type="text" >
-	                                            <button class="btnn-sb">검색</button>
-	                                        </div>
-	                                        <br>
 	                                    	<div class="r-content-1">
 		                                        <table class="table table-hover">
 								                    <c:forEach var="d" items="${ dList }">
@@ -701,9 +776,9 @@
 	
 	            <br clear="both">
 	            
-	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myi=1';">취소</button>
+	            <button type="button" class="btnn-gr" onclick="location.href='list.ap?myt=1';">취소</button>
 		        <button type="submit" class="btnn-pk" onclick="tem();">임시저장</button>
-		        <button type="submit" class="btnn-pp">작성</button><!-- 작성완료시 상세로 -->
+		        <button type="submit" class="btnn-pp">작성</button>
 	        </div>
 	    </form>
     </div>

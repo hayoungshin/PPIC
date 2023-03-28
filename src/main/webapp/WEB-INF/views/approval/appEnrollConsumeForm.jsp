@@ -464,12 +464,12 @@
 				alert("1행 이상의 행추가가 필요합니다.");
 				return false;
 			}else{
-				//if(documnet.getElementById("a-person-content").childNodes.length == 0){ // 승인자
-				//	alert("1명 이상의 승인자가 필요합니다.");
-				//	return false;
-				//}else{
+				if(document.getElementById("a-person-content").childNodes.length == 0){ // 승인자
+					alert("1명 이상의 승인자가 필요합니다.");
+					return false;
+				}else{
 					return true;
-				//}
+				}
 			}
 		}
 	</script>

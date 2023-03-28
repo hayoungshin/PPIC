@@ -13,6 +13,7 @@ import lombok.ToString;
 @ToString
 public class AppProcess {
 	private int approvalNo;
+	private int userNo;
 	private String userName;
 	private String departmentName;
 	private String positionName;

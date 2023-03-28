@@ -224,8 +224,9 @@
 	}
 
 	/* 첨부파일 */
-    .insert {
+    .file-list {
 		border: 1px solid lightgray; 
+		font-size: 14px; 
 		padding: 20px;
 	}
 </style>
@@ -612,7 +613,7 @@
                                         </tr>
                                     </table>
 
-									<div class="insert">
+									<div class="file-list">
 										<c:choose>
 											<c:when test="${ad.att[0] ne null}">
 												<c:forEach var="at" items="${ad.att}">
@@ -620,7 +621,7 @@
 												</c:forEach>
 											</c:when>
 											<c:otherwise>
-												<span style="color:gray; font-size:15px;">첨부파일 없음</span>
+												<span style="color:gray;">첨부파일 없음</span>
 											</c:otherwise>
 										</c:choose>
 									</div>

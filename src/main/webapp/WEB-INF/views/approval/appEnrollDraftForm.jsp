@@ -435,24 +435,24 @@
 				alert("협조부서를 선택하세요.");
 				return false;
 			}else{
-				const userDept = document.getElementsByClassName("userDept"); // 승인ㆍ참조의 사원들 부서명
-
-				let cnt = 0;
-				for(let i=0; i<userDept.length; i++){
-					if(userDept[i].innerHTML == document.getElementById("ref-dept").value){ // 결재선에 협조부서의 사원 1명 이상 있는지 확인
-						cnt++;
-					}
-				}
-				if(cnt == 0){
-					alert("협조부서의 사원을 승인ㆍ참조에 적어도 1명 이상 추가하세요.");
+				if(document.getElementById("a-person-content").childNodes.length == 0){ // 승인자
+					alert("1명 이상의 승인자가 필요합니다.");
 					return false;
 				}else{
-					//if(documnet.getElementsByClassName("agrUserName").length == 0){ // 승인자
-					//	alert("1명 이상의 승인자가 필요합니다.");
-					//	return false;
-					//}else{
+					const userDept = document.getElementsByClassName("userDept"); // 승인ㆍ참조의 사원들 부서명
+
+					let cnt = 0;
+					for(let i=0; i<userDept.length; i++){
+						if(userDept[i].innerHTML == document.getElementById("ref-dept").value){ // 결재선에 협조부서의 사원 1명 이상 있는지 확인
+							cnt++;
+						}
+					}
+					if(cnt == 0){
+						alert("협조부서의 사원을 승인ㆍ참조에 적어도 1명 이상 추가하세요.");
+						return false;
+					}else{
 						return true;
-					//}
+					}
 				}
 			}
 		}

@@ -29,6 +29,7 @@
 			<result column="content" property="content"/>
 		</association>
 		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_no" property="userNo"/>
 			<result column="pro_user_name" property="userName"/>
 			<result column="pro_department_name" property="departmentName"/>
 			<result column="pro_position_name" property="positionName"/>
@@ -58,6 +59,7 @@
 			<result column="remark" property="remark"/>
 		</collection>
 		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_no" property="userNo"/>
 			<result column="pro_user_name" property="userName"/>
 			<result column="pro_department_name" property="departmentName"/>
 			<result column="pro_position_name" property="positionName"/>
@@ -86,6 +88,7 @@
 			<result column="price" property="price"/>
 		</collection>
 		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_no" property="userNo"/>
 			<result column="pro_user_name" property="userName"/>
 			<result column="pro_department_name" property="departmentName"/>
 			<result column="pro_position_name" property="positionName"/>
@@ -112,6 +115,7 @@
 			<result column="price" property="price"/>
 		</collection>
 		<collection property="process" ofType="AppProcess">
+			<result column="pro_user_no" property="userNo"/>
 			<result column="pro_user_name" property="userName"/>
 			<result column="pro_department_name" property="departmentName"/>
 			<result column="pro_position_name" property="positionName"/>
@@ -580,6 +584,7 @@
 		     , fd.department_name form_dep_name
 		     , content
 		     
+		     , pm.user_no pro_user_no
 		     , pm.user_name pro_user_name
 		     , pd.department_name pro_department_name
              , pp.position_name pro_position_name
@@ -640,6 +645,7 @@
 		     , promote_position
 		     , remark
 		     
+		     , pm.user_no pro_user_no
 		     , pm.user_name pro_user_name
 		     , pd.department_name pro_department_name
              , pp.position_name pro_position_name
@@ -699,6 +705,7 @@
 		     , count
 		     , price
 		     
+		     , pm.user_no pro_user_no
 		     , pm.user_name pro_user_name
              , pd.department_name pro_department_name
              , pp.position_name pro_position_name
@@ -756,6 +763,7 @@
 		     , user_history
 		     , price
 		     
+		     , pm.user_no pro_user_no
 		     , pm.user_name pro_user_name
      		 , pd.department_name pro_department_name
      		 , pp.position_name pro_position_name
