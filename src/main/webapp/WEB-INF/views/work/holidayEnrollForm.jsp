@@ -295,7 +295,7 @@
     
     	<!-- 알림 관련 -->
     	<script>
-    		let receiveList = "";
+    		let holidayAlarm = "";
     		$(function(){
     			$.ajax({
     				url:"authorityMemList.me",
@@ -303,8 +303,9 @@
     					authoNo:2
     				},success:function(list){
     					for(let i=0; i<list.length; i++){
-    						receiveList += list[i].userNo + "/"
+    						holidayAlarm += "/" + list[i].userNo
     					}
+    					holidayAlarm = holidayAlarm.substring(1)
     				},error:function(){
     					console.log("알림 권한자 리스트 조회용 ajax통신 실패")
     				}
@@ -312,7 +313,7 @@
     		})
     		$("#holiday-btn").click(function(){
     			if(socket){
-					let socketMsg = "11,${loginUser.userNo},${loginUser.userName}," + receiveList + ",3," + $("select[name=type]").val();
+					let socketMsg = "11,${loginUser.userNo},${loginUser.userName}," + holidayAlarm + ",3," + $("select[name=type]").val();
 					socket.send(socketMsg);
 				}
     		})

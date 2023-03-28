@@ -120,7 +120,7 @@
         </script>
         
         <div align="center" style="width:1200px;">
-            <a class="btn" id="list-btn" onclick="history.back();">목록</a>
+            <a class="btn" id="list-btn" onclick="location.href='list.no'">목록</a>
             <c:if test="${ loginUser.userNo eq n.noticeWriter }">
 	            <a class="btn" id="update-btn" onclick="postFormSubmit(1)">수정</a>
 	            <a class="btn" id="modal-btn" data-toggle="modal" data-target="#deleteModal">삭제</a>

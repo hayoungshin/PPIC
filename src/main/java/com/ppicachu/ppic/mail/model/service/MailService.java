@@ -44,6 +44,7 @@ public interface MailService {
 	// 6. 중요메일 리스트 조회 서비스
 	int selectImportantListCount(String userMail);
 	ArrayList<MailStatus> selectImportantList(PageInfo pi, String userMail);
+	ArrayList<MailStatus> selectImportantListOlder(PageInfo pi, String userMail);
 	
 	// 7. 중요메일 해제,등록 서비스
 	int deleteImportantStatus(MailStatus status);
@@ -64,6 +65,11 @@ public interface MailService {
 	ArrayList<Mail> selectTempList(PageInfo pi, String userMail);
 	// 12. 임시저장 상세 조회 서비스 : 작성 폼
 	Mail selectTemp(int mailNo);
+	// 13. 임시저장 삭제 서비스
+	int deleteTemp(MailStatus status);
+	
+	// 14. 메일 복구 서비스
+	int recoverMail(MailStatus status);
 
 	// 메일 영구삭제 서비스 (스케줄러)
 	int completeDeleteMail();

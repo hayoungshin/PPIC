@@ -204,7 +204,7 @@
         </script>
         <br>
         <div align="center" style="width:1200px;">
-            <button class="btn" id="list-btn" onclick="history.back();">목록</button>
+            <button class="btn" id="list-btn" onclick="location.href='list.bo'">목록</button>
             <c:if test="${ b.reportCount ne 1 }"> <!-- 신고 중복 방지 -->
             	<button class="btn" id="modal-btn" data-toggle="modal" data-target="#reportModal">신고</button>
             </c:if>

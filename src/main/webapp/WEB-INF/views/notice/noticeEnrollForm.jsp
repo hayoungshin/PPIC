@@ -116,7 +116,7 @@
                 </tr>
             </table>
             <div align="center">
-                <button type="button" class="btn" id="cancel-btn">취소</button>
+                <button type="button" class="btn" id="cancel-btn" onclick="location.href='list.no'">취소</button>
                 <button type="submit" class="btn" id="enroll-btn">작성</button>
             </div>
         </form>

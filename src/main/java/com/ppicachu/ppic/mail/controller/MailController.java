@@ -195,12 +195,17 @@ public class MailController {
 	}
 	
 	@RequestMapping("importantList.ml")
-	public ModelAndView selectImportantList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
+	public ModelAndView selectImportantList(@RequestParam(value="cpage", defaultValue="1")int currentPage, String sort, HttpSession session, ModelAndView mv) {
 		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
 		int listCount = mService.selectImportantListCount(userMail);	// 전체 중요메일 개수
-
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-		ArrayList<MailStatus> list = mService.selectImportantList(pi, userMail);
+		
+		ArrayList<MailStatus> list = new ArrayList<>();
+		if(sort == null) {
+			list = mService.selectImportantList(pi, userMail);			
+		} else {
+			list = mService.selectImportantListOlder(pi, userMail);
+		}
 		
 		for(MailStatus m : list) {
 			m.setRecipientArr(m.getRecipientMail().split(","));
@@ -490,7 +495,6 @@ public class MailController {
 	@ResponseBody
 	@RequestMapping("listDelete.ml")
 	public boolean ajaxDeleteMail(MailStatus status, HttpSession session, Model model) {
-		
 		int length = status.getMailNoArr().length;
 		int result = 0;
 		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
@@ -511,6 +515,39 @@ public class MailController {
 		return mService.updateReadNull(status);
 	}
 	
+	/**
+	 * 임시저장메일 영구삭제
+	 * @param status
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("tempDelete.ml")
+	public boolean ajaxDeleteTemp(MailStatus status) {
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.deleteTemp(status);
+			result++;
+		}
+		return result == length;
+	}
+	
+	@ResponseBody
+	@RequestMapping("recover.ml")
+	public boolean recoverSendMail(MailStatus status, HttpSession session) {
+		int length = status.getMailNoArr().length;
+		int result = 0;
+		status.setRecipientMail(((Member)session.getAttribute("loginUser")).getMail());
+		
+		for(int mailNo : status.getMailNoArr()) {
+			status.setMailNo(mailNo);
+			mService.recoverMail(status);
+			result++;
+		}
+		
+		return result == length;
+	}
 	
 	
 	

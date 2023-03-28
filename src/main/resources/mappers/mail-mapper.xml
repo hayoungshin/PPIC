@@ -282,6 +282,30 @@
 		 order
 		    by mail_no desc
 	</select>
+	<select id="selectImportantListOlder" resultMap="mailStatusResult">
+		select 
+		       s.mail_no
+		     , mail_type
+		     , read_date
+		     , s.sender_mail
+		     , m.mail_title
+		     , m.recipient_mail
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where (s.sender_mail = #{userMail} and mail_type = 4
+		    or s.recipient_mail = #{userMail})
+		   and bin_status = 'N'
+		   and important_status = 'Y'
+		 order
+		    by mail_no
+	</select>
 	
 	<update id="deleteImportantStatus">
 		update
@@ -590,6 +614,30 @@
 		  from mail
 		 where mail_no = #{mailNo}
 	</select>
+	<delete id="deleteTemp">
+		delete
+		  from mail
+		 where mail_no = #{mailNo}
+	</delete>
+	
+	<update id="recoverMail">
+		update
+		       mail_status
+		   set bin_status = 'N',
+		       delete_date = null
+		 where recipient_mail = #{recipientMail}
+		   and mail_no = #{mailNo}
+	</update>
+	<update id="recoverSendMail">
+		update
+		       mail_status
+		   set bin_status = 'N',
+		       delete_date = null
+		 where mail_type = 4
+		   and mail_no = #{mailNo}
+	</update>
+	
+	
 	
 	<delete id="completeDeleteMail">
 		delete
