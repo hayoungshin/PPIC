@@ -149,5 +149,15 @@ public class MailServiceImpl implements MailService{
 		return mDao.completeDeleteMail(sqlSession);
 	}
 
+	@Override
+	public int selectBinListCount(String userMail) {
+		return mDao.selectBinListCount(sqlSession, userMail);
+	}
+
+	@Override
+	public ArrayList<MailStatus> selectBinList(PageInfo pi, String userMail) {
+		return mDao.selectBinList(sqlSession, pi, userMail);
+	}
+
 	
 }

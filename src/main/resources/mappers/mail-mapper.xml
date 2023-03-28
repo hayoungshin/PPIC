@@ -454,4 +454,36 @@
 		 where delete_date - sysdate > 10
 	</delete>
 	
+	<select id="selectBinListCount" resultType="_int">
+		select 
+		       count(*)
+		  from mail_status
+		 where (sender_mail = #{userMail} and mail_type = 4
+		    or recipient_mail = #{userMail})
+		   and bin_status = 'Y'
+	</select>
+	<select id="selectBinList" resultMap="mailStatusResult">
+		select 
+		       s.mail_no
+		     , mail_type
+		     , read_date
+		     , s.sender_mail
+		     , m.mail_title
+		     , m.recipient_mail
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		     , important_status
+		     , (
+		        select count(*)
+		          from mail_attachment 
+		         where s.mail_no = mail_no
+		        ) attachment_status
+		  from mail_status s
+		  join mail m on (m.mail_no = s.mail_no)
+		 where (s.sender_mail = #{userMail} and mail_type = 4
+		    or s.recipient_mail = #{userMail})
+		   and bin_status = 'Y'
+		 order
+		    by mail_no desc
+	</select>
+	
 </mapper>

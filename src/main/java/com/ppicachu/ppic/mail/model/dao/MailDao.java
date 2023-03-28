@@ -163,4 +163,14 @@ public class MailDao {
 		return sqlSession.delete("mailMapper.completeDeleteMail");
 	}
 	
+	public int selectBinListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectBinListCount", userMail);
+	}
+	public ArrayList<MailStatus> selectBinList(SqlSessionTemplate sqlSession, PageInfo pi, String userMail){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
+		int limit = pi.getBoardLimit();	// 몇개 조회
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectBinList", userMail);
+	}
+	
 }

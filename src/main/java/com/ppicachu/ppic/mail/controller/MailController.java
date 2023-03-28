@@ -184,7 +184,7 @@ public class MailController {
 	@RequestMapping("importantList.ml")
 	public ModelAndView selectImportantList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
 		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
-		int listCount = mService.selectImportantListCount(userMail);	// 전체 보낸메일 개수
+		int listCount = mService.selectImportantListCount(userMail);	// 전체 중요메일 개수
 
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		ArrayList<MailStatus> list = mService.selectImportantList(pi, userMail);
@@ -194,7 +194,6 @@ public class MailController {
 		}
 		
 		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/importantMailListView");
-		System.out.println(list);
 		return mv;
 	}
 	
@@ -248,13 +247,58 @@ public class MailController {
 	}
 	
 	@RequestMapping("binList.ml")
-	public String selectBinList() {
-		return "mail/binMailListView";
+	public ModelAndView selectBinList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		int listCount = mService.selectBinListCount(userMail);	// 전체 휴지통 메일 개수
+
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<MailStatus> list = mService.selectBinList(pi, userMail);
+		
+		for(MailStatus m : list) {
+			m.setRecipientArr(m.getRecipientMail().split(","));
+		}
+		
+		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/binMailListView");
+		return mv;
 	}
 	
 	@RequestMapping("binDetail.ml")
-	public String selectBinMail() {
-		return "mail/binMailDetailView";
+	public ModelAndView selectBinMail(int no, int type, HttpSession session, ModelAndView mv) {
+		if(type == 4) {	// 보낸 메일일 때
+			// 메일기본정보
+			Mail m = mService.selectSend(no);
+			// 메일 첨부파일
+			ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+			mv.addObject("m", m).addObject("list", list).setViewName("mail/binMailDetailView");
+		} else {
+			
+			String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+			
+			MailStatus status = new MailStatus();
+			status.setMailNo(no);
+			status.setRecipientMail(userMail);
+			
+			int readStatus = mService.selectReadStatus(status);	// 1읽음|0안읽음
+			int result = 0;
+			if(readStatus == 1) {	// 읽었던 메일
+				// 메일기본정보
+				Mail m = mService.selectRecieve(status);
+				// 메일 첨부파일
+				ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+				mv.addObject("m", m).addObject("list", list).setViewName("mail/binMailDetailView");
+			} else {				// 안읽었던 메일
+				result = mService.updateReadDate(status);
+				//읽은 시간 먼저 업데이트
+				if(result > 0) {
+					Mail m = mService.selectRecieve(status);
+					ArrayList<MailAttachment> list = mService.selectAttachmentList(no);
+					mv.addObject("m", m).addObject("list", list).setViewName("mail/binMailDetailView");
+				} else {
+					mv.addObject("errorMsg", "받은메일 상세조회 실패").setViewName("common/errorPage");
+				}
+			}
+		}
+		return mv;
 	}
 	
 	@RequestMapping("send.ml")																				// 중요메일일 경우 "on"

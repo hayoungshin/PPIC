@@ -51,4 +51,8 @@ public interface MailService {
 	
 	// 10. 메일 영구삭제 서비스 (스케줄러)
 	int completeDeleteMail();
+	
+	// 11. 휴지통 리스트 조회 서비스
+	int selectBinListCount(String userMail);
+	ArrayList<MailStatus> selectBinList(PageInfo pi, String userMail);
 }
