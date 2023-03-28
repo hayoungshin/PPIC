@@ -174,7 +174,7 @@
 			<input type='hidden' name="hidRefNo" id="hidRefNo" value="">
 			
 			<button type="button" class="btn-purple" style="font-size:13px; padding:3px 10px; margin:0 5px;" onclick="submitForm();">보내기</button>
-			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
+			<button type="button" onclick="tempSave();" style="font-size:13px; padding:3px 10px;  margin:0 5px;">임시저장</button>
 			<button type="button" style="font-size:13px; padding:3px 10px;  margin:0 5px;">미리보기</button>
 
 			<table style="margin:20px 0; font-size:14px;" id="mail-send-form">
@@ -871,6 +871,12 @@
 						socket.send(socketMsg);
 					}
 				}
+			}
+		</script>
+		<script>
+			function tempSave(){
+				document.getElementById("sendMailForm").action = "tempSave.ml";
+				document.getElementById("sendMailForm").submit();
 			}
 		</script>
 

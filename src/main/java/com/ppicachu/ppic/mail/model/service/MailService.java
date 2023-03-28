@@ -11,6 +11,8 @@ public interface MailService {
 	
 	// 1. 메일 보내기 서비스
 	int sendMail(Mail m, ArrayList<MailAttachment> list, MailStatus status);
+	// 1-1. 임시저장 서비스
+	int tempSaveMail(Mail m);
 	
 	// 2. 받은메일 리스트 조회 서비스
 	int selectRecieveListCount(String userMail);
@@ -56,6 +58,10 @@ public interface MailService {
 	// 10. 휴지통 리스트 조회 서비스
 	int selectBinListCount(String userMail);
 	ArrayList<MailStatus> selectBinList(PageInfo pi, String userMail);
+	
+	// 11. 임시저장 리스트 조회 서비스
+	int selectTempListCount(String userMail);
+	ArrayList<Mail> selectTempList(PageInfo pi, String userMail);
 
 	// 메일 영구삭제 서비스 (스케줄러)
 	int completeDeleteMail();

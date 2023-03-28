@@ -34,6 +34,10 @@ public class MailServiceImpl implements MailService{
 		
 		return result1 * result2 * result3 * result4;
 	}
+	@Override
+	public int tempSaveMail(Mail m) {
+		return mDao.sendMail(sqlSession, m);
+	}
 
 	@Override
 	public int selectRecieveListCount(String userMail) {
@@ -168,16 +172,26 @@ public class MailServiceImpl implements MailService{
 	public int selectBinListCount(String userMail) {
 		return mDao.selectBinListCount(sqlSession, userMail);
 	}
-
 	@Override
 	public ArrayList<MailStatus> selectBinList(PageInfo pi, String userMail) {
 		return mDao.selectBinList(sqlSession, pi, userMail);
 	}
 	
 	@Override
+	public int selectTempListCount(String userMail) {
+		return mDao.selectTempListCount(sqlSession, userMail);
+	}
+	@Override
+	public ArrayList<Mail> selectTempList(PageInfo pi, String userMail) {
+		return mDao.selectTempList(sqlSession, pi, userMail);
+	}
+	
+	@Override
 	public int completeDeleteMail() {
 		return mDao.completeDeleteMail(sqlSession);
 	}
+
+	
 
 	
 

@@ -155,7 +155,6 @@ public class MailController {
 	@RequestMapping("sendList.ml")
 	public ModelAndView selectSendList(@RequestParam(value="cpage", defaultValue="1")int currentPage, String filter, HttpSession session, ModelAndView mv) {
 		
-
 		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
 		
 		PageInfo pi;
@@ -251,8 +250,21 @@ public class MailController {
 	}
 	
 	@RequestMapping("tempList.ml")
-	public String selectTempList() {
-		return "mail/tempMailListView";
+	public ModelAndView selectTempList(@RequestParam(value="cpage", defaultValue="1")int currentPage, HttpSession session, ModelAndView mv) {
+		String userMail = ((Member)session.getAttribute("loginUser")).getMail();
+		int listCount = mService.selectTempListCount(userMail);	// 전체 휴지통 메일 개수
+
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
+		ArrayList<Mail> list = mService.selectTempList(pi, userMail);
+		
+		for(Mail m : list) {
+			if(m.getRecipientMail() != null) {
+				m.setRecipientArr(m.getRecipientMail().split(","));				
+			}
+		}
+		
+		mv.addObject("pi", pi).addObject("list", list).setViewName("mail/tempMailListView");
+		return mv;
 	}
 	
 	@RequestMapping("tempForm.ml")
@@ -323,6 +335,7 @@ public class MailController {
 		// 내 정보 Mail에
 		m.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
 		m.setSender(((Member)session.getAttribute("loginUser")).getUserNo());
+		m.setTempStatus("N");
 		
 		// 중요표시 했는지 MailStatus에
 		MailStatus status = new MailStatus();
@@ -358,9 +371,30 @@ public class MailController {
 		
 		if(result > 0) {
 			session.setAttribute("alertMsg", "성공적으로 메일이 전송되었습니다.");
-			return "redirect:recieveList.ml";
+			return "redirect:sendList.ml";
 		} else {
 			model.addAttribute("errorMsg", "메일 전송 실패");
+			return "common/errorPage";
+		}
+		
+	}
+	
+	@RequestMapping("tempSave.ml")																				// 중요메일일 경우 "on"
+	public String tempSaveMail(Mail m,@RequestParam(value="recipientMail", defaultValue="(받는이없음)") String recipientMail, @RequestParam(value="mailTitle", defaultValue="(제목없음)") String mailTitle, String important, HttpSession session, Model model) {
+		
+		m.setMailTitle(mailTitle);
+		// 내 정보 Mail에
+		m.setSenderMail(((Member)session.getAttribute("loginUser")).getMail());
+		m.setSender(((Member)session.getAttribute("loginUser")).getUserNo());
+		m.setTempStatus("Y");
+		
+		int result = mService.tempSaveMail(m);
+		
+		if(result > 0) {
+			session.setAttribute("alertMsg", "성공적으로 메일이 임시저장되었습니다.");
+			return "redirect:recieveList.ml";
+		} else {
+			model.addAttribute("errorMsg", "메일 임시저장 실패");
 			return "common/errorPage";
 		}
 		

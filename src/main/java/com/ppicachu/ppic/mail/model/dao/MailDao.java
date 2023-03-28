@@ -90,7 +90,7 @@ public class MailDao {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
 		int limit = pi.getBoardLimit();	// 몇개 조회
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return (ArrayList)sqlSession.selectList("mailMapper.selectSendList", userMail);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectSendList", userMail, rowBounds);
 	}
 	public Mail selectSend(SqlSessionTemplate sqlSession, int mailNo) {
 		return sqlSession.selectOne("mailMapper.selectSend", mailNo);
@@ -103,7 +103,7 @@ public class MailDao {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
 		int limit = pi.getBoardLimit();	// 몇개 조회
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantList", userMail);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectImportantList", userMail, rowBounds);
 	}
 	
 	public int deleteImportantStatus(SqlSessionTemplate sqlSession, MailStatus status) {
@@ -195,7 +195,17 @@ public class MailDao {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
 		int limit = pi.getBoardLimit();	// 몇개 조회
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return (ArrayList)sqlSession.selectList("mailMapper.selectBinList", userMail);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectBinList", userMail, rowBounds);
+	}
+	
+	public int selectTempListCount(SqlSessionTemplate sqlSession, String userMail) {
+		return sqlSession.selectOne("mailMapper.selectTempListCount", userMail);
+	}
+	public ArrayList<Mail> selectTempList(SqlSessionTemplate sqlSession, PageInfo pi, String userMail){
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();	// 몇개를 건너띄고
+		int limit = pi.getBoardLimit();	// 몇개 조회
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return (ArrayList)sqlSession.selectList("mailMapper.selectTempList", userMail, rowBounds);
 	}
 	
 	

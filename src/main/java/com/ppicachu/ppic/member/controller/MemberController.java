@@ -358,7 +358,7 @@ public class MemberController {
 	@PostMapping("sendMsg.me")
     public int ajaxSendMessage(String phone, Model model) {
 		int ranNum = (int)(Math.random() * 900000 + 100000);
-		/*
+		
         Message message = new Message();
 
         message.setFrom("01043775019");
@@ -367,7 +367,7 @@ public class MemberController {
 
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         System.out.println(response);
-		*/
+		
 		return ranNum;
     }
 	@RequestMapping("resetPwdForm.me")

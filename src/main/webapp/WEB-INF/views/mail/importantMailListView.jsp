@@ -169,7 +169,7 @@
 	            		<c:when test="${ pi.currentPage eq p }">
 	            			<c:choose>
 			            		<c:when test="${ empty condition }">
-				            		<li class="active"><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
+				            		<li class="active"><a href="importantList.ml?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
 				            		<!-- 수정할 것 -->
@@ -180,7 +180,7 @@
 	            		<c:otherwise>
 	            			<c:choose>
 			            		<c:when test="${ empty condition }">
-				            		<li><a href="recieveList.ml?cpage=${ p }">${ p }</a></li>
+				            		<li><a href="importantList.ml?cpage=${ p }">${ p }</a></li>
 				            	</c:when>
 				            	<c:otherwise>
 				            		<!-- 수정할 것 -->
@@ -192,7 +192,7 @@
 				</c:forEach>
 				
 				<c:if test="${ pi.currentPage ne pi.maxPage }">
-	            	<li><a href="recieveList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
+	            	<li><a href="importantList.ml?cpage=${ pi.currentPage + 1 }">></a></li>
 				</c:if>
            </ul>
         </div>

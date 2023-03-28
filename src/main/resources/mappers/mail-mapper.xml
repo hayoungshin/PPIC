@@ -54,6 +54,7 @@
 		  , hid_ref_mail
 		  , mail_title
 		  , mail_content
+		  , temp_status
 		  )
 		  values
 		  (
@@ -65,6 +66,7 @@
 		  , #{hidRefMail}
 		  , #{mailTitle}
 		  , #{mailContent}
+		  , #{tempStatus}
 		  )
 	</insert>
 	
@@ -147,6 +149,7 @@
 		  join mail m on (m.mail_no = s.mail_no)
 		 where s.recipient_mail = #{userMail}
 		   and bin_status = 'N'
+		   and m.temp_status = 'N'
 		 order
 		    by mail_no desc
 	</select>
@@ -222,6 +225,7 @@
 		 where s.sender_mail = #{userMail}
 		   and mail_type = 4
 		   and bin_status = 'N'
+		   and m.temp_status = 'N'
 		 order
 		    by mail_no desc
 	</select>
@@ -551,6 +555,27 @@
 		 where (s.sender_mail = #{userMail} and mail_type = 4
 		    or s.recipient_mail = #{userMail})
 		   and bin_status = 'Y'
+		 order
+		    by mail_no desc
+	</select>
+	
+	<select id="selectTempListCount" resultType="_int">
+		select 
+		       count(*)
+		  from mail
+		 where sender_mail = #{userMail}
+		   and temp_status = 'Y'
+	</select>
+	<select id="selectTempList" resultMap="mailResult">
+		select 
+		       mail_no
+		     , sender_mail
+		     , mail_title
+		     , recipient_mail
+		     , to_char(sent_date, 'yyyy.mm.dd hh24:mi') sent_date
+		  from mail
+		 where sender_mail = #{userMail}
+		   and temp_status = 'Y'
 		 order
 		    by mail_no desc
 	</select>

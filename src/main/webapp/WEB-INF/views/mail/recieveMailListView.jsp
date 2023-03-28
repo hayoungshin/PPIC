@@ -57,42 +57,42 @@
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="m" items="${ list }">
-				<input type="hidden" id="mailType${ m.mailNo }" value="${ m.mailType }">
-				<tr>
-					<td style="width:30px;">
-						<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }" onclick="boxchecked();">
-					</td>
-					<td style="width:50px;text-align:right;">
-						<c:choose>
-							<c:when test="${ m.importantStatus eq 'Y' }">	<!-- 중요표시 O -->
-								<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
-							</c:when>
-							<c:otherwise>	<!-- 중요표시 X -->
-								<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
-							</c:otherwise>
-						</c:choose>
-					</td>
-					<td style="width:70px; text-align:left;" onclick="toDetail();">
-						<c:choose>
-							<c:when test="${ not empty m.readDate }">	<!-- 읽음 -->
-								<img class="read-status" src="resources/icons/mail-opened.png" style="width:20px;">
-							</c:when>
-							<c:otherwise>	<!-- 안읽음 -->
-								<img class="read-status" src="resources/icons/mail-c.png" style="width:20px;">
-							</c:otherwise>
-						</c:choose>
-					</td>
-					<td style="width:200px" onclick="toDetail(this);">${ m.senderMail }</td>
-					<td style="width:750px" onclick="toDetail(this);">
-						${ m.mailTitle }
-						<c:if test="${ m.attachmentStatus ne '0' }">
-							<img src="resources/icons/clip.png" style="width:18px; margin:0px 5px;">
-						</c:if>
-					</td>
-					<td style="width:150px; text-align:right;" onclick="toDetail(this);">${ m.sentDate }</td>
-				</tr>
-			</c:forEach>
+				<c:forEach var="m" items="${ list }">
+					<input type="hidden" id="mailType${ m.mailNo }" value="${ m.mailType }">
+					<tr>
+						<td style="width:30px;">
+							<input type="checkbox" class="mailNo" name="mailNo" value="${ m.mailNo }" onclick="boxchecked();">
+						</td>
+						<td style="width:50px;text-align:right;">
+							<c:choose>
+								<c:when test="${ m.importantStatus eq 'Y' }">	<!-- 중요표시 O -->
+									<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star-y.png" style="width:18px; margin-bottom:3px;">
+								</c:when>
+								<c:otherwise>	<!-- 중요표시 X -->
+									<img onclick="importantStatus(this);" class="important-status" src="resources/icons/star.png" style="width:18px; margin-bottom:3px;">
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td style="width:70px; text-align:left;" onclick="toDetail();">
+							<c:choose>
+								<c:when test="${ not empty m.readDate }">	<!-- 읽음 -->
+									<img class="read-status" src="resources/icons/mail-opened.png" style="width:20px;">
+								</c:when>
+								<c:otherwise>	<!-- 안읽음 -->
+									<img class="read-status" src="resources/icons/mail-c.png" style="width:20px;">
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td style="width:200px" onclick="toDetail(this);">${ m.senderMail }</td>
+						<td style="width:750px" onclick="toDetail(this);">
+							${ m.mailTitle }
+							<c:if test="${ m.attachmentStatus ne '0' }">
+								<img src="resources/icons/clip.png" style="width:18px; margin:0px 5px;">
+							</c:if>
+						</td>
+						<td style="width:150px; text-align:right;" onclick="toDetail(this);">${ m.sentDate }</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 
