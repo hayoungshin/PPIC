@@ -296,7 +296,8 @@
           $(e).siblings().removeClass("active");
           
           projectNo = $(e).find("input[name=projectNo]").val();
-          
+          console.log(projectNo);
+          $("#deleteProjForm input[name=projectNo]").val(projectNo);
           projectName = $(e).find(".project-title").text();
           $("#p-title").html("<b>" + projectName + "</b>");
 
@@ -425,7 +426,7 @@
 
       <script>
         $(function(){
-          $("#deleteProjForm input[name=projectNo]").val(projectNo);
+          
         })
       </script>
 
