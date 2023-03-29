@@ -65,10 +65,11 @@ public class MailController {
 			listCount = mService.selectImportantRecieveListCount(userMail);
 			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 			list = mService.selectImportantRecieveList(pi, userMail);
-		} else if(filter.equals("toMe")) {		// 나에게 온 받은 메일
+		} else if(filter.equals("toMe")) {		// 나에게 온 받은 메일기본정보
+			System.out.println(filter);
 			listCount = mService.selectToMeRecieveListCount(userMail);
 			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
-			list = mService.selectRecieveList(pi, userMail);
+			list = mService.selectToMeRecieveList(pi, userMail);
 		} else {								// 첨부파일 있는 받은 메일
 			listCount = mService.selectAtcRecieveListCount(userMail);
 			pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
