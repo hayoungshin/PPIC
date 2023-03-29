@@ -2,9 +2,11 @@ package com.ppicachu.ppic.project.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -101,7 +103,7 @@ public class ProjectController {
 							 String[] selectUserNo, String[] selectUserDept,
 							 HttpSession session, Model model) {
 		// 프로젝트 추가
-		int result = pService.insertProject(p);
+		int projectCurrval = pService.insertProject(p);
 		// 참여자 추가
 		ArrayList<ProjectParticipant> ppList = new ArrayList<>();
 		for(int i=0; i<selectUserNo.length; i++) {
@@ -109,6 +111,7 @@ public class ProjectController {
 			pp.setUserNo(selectUserNo[i]);
 			pp.setDepartmentNo(selectUserDept[i]);
 			pp.setPmStatus("N");
+			pp.setProjectNo(projectCurrval);
 			ppList.add(pp);
 		}
 		
@@ -117,15 +120,13 @@ public class ProjectController {
 		pm.setUserNo(p.getProjectManager());
 		pm.setDepartmentNo(projectManagerDept);
 		pm.setPmStatus("Y");
+		pm.setProjectNo(projectCurrval);
 		ppList.add(pm);
 		
 		
-		int result2 = 0;
-		if(result > 0) {
-			result2 = pService.insertProjectParticipants(ppList);
-		}
+		int result = pService.insertProjectParticipants(ppList);
 		
-		if(result*result2 > 0) {
+		if(result > 0) {
 			session.setAttribute("alertMsg", "프로젝트가 생성되었습니다.");
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {
@@ -138,27 +139,34 @@ public class ProjectController {
 	
 	// 프로젝트 수정
 	@RequestMapping("updateProject.pr")
-	public String updateProject(Project p, String projectManagerDept,
-								String[] selectUserNo, String[] selectUserDept,
+	public String updateProject(Project p, @RequestParam(name="projectManagerDept")int projectManagerDept,
+								@RequestParam(name="selectUserNo")String[] selectUserNo,
+								@RequestParam(name="selectUserDept")String[] selectUserDept,
 								HttpSession session, Model model) {
 		// 프로젝트 업데이트
 		int result = pService.updateProject(p);
-		
+		System.out.println("프젝정보: " + p);
+		System.out.println("선택유저" +Arrays.toString(selectUserNo));
+		System.out.println("선택부서:"+Arrays.toString(selectUserDept));
+		System.out.println(projectManagerDept);
 		
 		int result2 = 0;
 		int result3 = 0;
 		int result4 = 0;
-		if(result > 0) {
 			// 현재 task 참조자 조회(작업 담당자 제외)
 			ArrayList<ProjectParticipant> currentTaskRefUser = pService.selectTaskRefUser(p.getProjectNo());
 			ArrayList<ProjectParticipant> updateTaskRefUser = new ArrayList<>();
 			// 업데이트된 유저중 기존에 참조하고 있던 작업이 있는지 확인
-			for(String no : selectUserNo) {
-			    for(ProjectParticipant tp : currentTaskRefUser) {
-			        if(tp.getUserNo().equals(no)) {
-			        	updateTaskRefUser.add(tp);
-			        }
-			    }
+			for(int i=0; i<selectUserNo.length; i++) {
+				for(int j=0; j<currentTaskRefUser.size(); j++) {
+					if(currentTaskRefUser.get(j).getUserNo().equals(selectUserNo[i])) {
+						ProjectParticipant tp = new ProjectParticipant();
+						tp.setUserNo(selectUserNo[i]);
+						tp.setDepartmentNo(selectUserDept[j]);
+						tp.setProjectNo(p.getProjectNo());
+						updateTaskRefUser.add(tp);
+					}
+				}
 			}
 			// 기존 참여자 정보 삭제(작업 담당자 제외)
 			result2 = pService.deleteProjectParticipants(p.getProjectNo());
@@ -180,12 +188,11 @@ public class ProjectController {
 			ProjectParticipant pm = new ProjectParticipant();
 			pm.setProjectNo(p.getProjectNo());
 			pm.setUserNo(p.getProjectManager());
-			pm.setDepartmentNo(projectManagerDept);
+			pm.setDepartmentNo(String.valueOf(projectManagerDept));
 			pm.setPmStatus("Y");
 			ppList.add(pm);
+			System.out.println(ppList);
 			result4 = pService.insertProjectParticipants(ppList);
-		}
-		
 		
 		if(result*result4 > 0) {
 			session.setAttribute("alertMsg", "프로젝트가 수정되었습니다.");
@@ -243,7 +250,7 @@ public class ProjectController {
 			t.setOriginName(upfile.getOriginalFilename());
 		}
 		// task insert
-		int result1 = pService.insertTask(t);
+		int tkCurrval = pService.insertTask(t);
 		
 		// 참조자 추가
 		ArrayList<ProjectParticipant> taskRefUser =  new ArrayList<>();
@@ -253,6 +260,7 @@ public class ProjectController {
 				pp.setDepartmentNo(selectUserDept[i]);
 				pp.setProjectNo(t.getProjectNo());
 				pp.setTaskAssign("N");
+				pp.setTaskNo(tkCurrval);
 				taskRefUser.add(pp);
 			}
 		// task 담당자 추가
@@ -261,10 +269,11 @@ public class ProjectController {
 		assign.setUserNo(t.getAssignUser());
 		assign.setDepartmentNo(assignUserDept);
 		assign.setTaskAssign("Y");
+		assign.setTaskNo(tkCurrval);
 		taskRefUser.add(assign);
 		
-		int result2 = pService.insertTaskParticipants(taskRefUser);
-		if(result1*result2 > 0) {
+		int result = pService.insertTaskParticipants(taskRefUser);
+		if(result > 0) {
 			session.setAttribute("alertMsg", "업무가 추가되었습니다.");
 			return "redirect:list.pr?no=" + ((Member)session.getAttribute("loginUser")).getUserNo();
 		}else {

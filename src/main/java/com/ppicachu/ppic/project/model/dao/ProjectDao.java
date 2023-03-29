@@ -50,7 +50,8 @@ public class ProjectDao {
 	}
 	
 	public int insertTask(SqlSessionTemplate sqlSession, Task t) {
-		return sqlSession.insert("projectMapper.insertTask", t);
+		int result = sqlSession.insert("projectMapper.insertTask", t);
+		return sqlSession.selectOne("projectMapper.tknoCurrval");
 	}
 	
 	public int insertTaskParticipants(SqlSessionTemplate sqlSession, ArrayList<ProjectParticipant> taskRefUser) {
@@ -86,7 +87,8 @@ public class ProjectDao {
 	}
 	
 	public int insertProject(SqlSessionTemplate sqlSession, Project p) {
-		return sqlSession.insert("projectMapper.insertProject", p);
+		int result = sqlSession.insert("projectMapper.insertProject", p);
+		return sqlSession.selectOne("projectMapper.pjnoCurrval");
 	}
 	
 	public int insertProjectParticipants(SqlSessionTemplate sqlSession, ArrayList<ProjectParticipant> ppList) {

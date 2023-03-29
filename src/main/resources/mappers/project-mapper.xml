@@ -215,6 +215,11 @@
 	  )
 </insert>
 
+<select id="tknoCurrval" resultType="_int">
+	select
+		   seq_tkno.currval
+	  from dual
+</select>
 
 <insert id="insertTaskParticipants">
   insert
@@ -228,14 +233,7 @@
   	)
   	values
   	(
-    <choose>
-	  	<when test='taskNo == 0'>
-	  		seq_tkno.currval
-	  	</when>
-	  	<otherwise>
-	  		#{taskNo}
-	  	</otherwise>
-	  </choose>
+	  	#{taskNo}
 	  , #{projectNo}
 	  , #{departmentNo}
 	  , #{userNo}
@@ -344,7 +342,13 @@
 	  )
 </insert>
 
-<insert id="insertProjectParticipants">
+<select id="pjnoCurrval" resultType="_int">
+	select
+		   seq_pjno.currval
+	  from dual
+</select>
+
+<insert id="insertProjectParticipants" parameterType="ProjectParticipant">
 	insert
 	  into p_participant
 	  (
@@ -355,14 +359,7 @@
 	  )
 	  values
 	  (
-  	  <choose>
-	  	<when test='projectNo == null or projectNo == 0'>
-	  		seq_pjno.currval
-	  	</when>
-	  	<otherwise>
-	  		#{projectNo}
-	  	</otherwise>
-	  </choose>
+	  	#{projectNo}
 	  , #{departmentNo}
 	  , #{userNo}
 	  <choose>
@@ -404,8 +401,8 @@
 	delete
 	  from p_participant
 	 where project_no = #{projectNo}
-	   and task_assign = 'N'
-	    or task_assign is null
+	   and (task_assign = 'N'
+	    or task_assign is null)
 </delete>
 
 <update id="deleteProject">

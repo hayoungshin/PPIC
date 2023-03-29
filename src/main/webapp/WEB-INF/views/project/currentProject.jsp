@@ -866,7 +866,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <th><input type="hidden" name="userNo" id="taskUserNo"></th>
+                    <th></th>
                     <td>
                       <div id="selected-area2" class="selected-area"></div>
                       <div class="invalidMsg">이미 선택된 직원입니다.</div>
