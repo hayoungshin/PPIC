@@ -147,8 +147,7 @@ public class DocumentController {
 	public ModelAndView selectMyDocs(@RequestParam(value="cpage", defaultValue="1") int currentPage,
 									 HttpSession session, ModelAndView mv) {
 		// 로그인 구현 이후 수정
-		// String createUser = String.valueOf(((Member)session.getAttribute("loginUser")).getUserNo());
-		String createUser = "1";
+		String createUser = String.valueOf(((Member)session.getAttribute("loginUser")).getUserNo());
 		int listCount = dService.selectMyDocsCount(createUser);
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		ArrayList<Document> list = dService.selectMyDocs(createUser, pi);
