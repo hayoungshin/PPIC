@@ -493,6 +493,13 @@
 	     			}
 	     		})
 	     	}
+	     	
+	     	function alarmCategory(dcatNo, receiveNo, catNo, title){
+	     		if(socket){
+					let socketMsg = dcatNo + ",${loginUser.userNo},${loginUser.userName}," + receiveNo + "," + catNo + "," + title;
+					socket.send(socketMsg);
+				}
+	     	}
         </script>
 		
 </body>

@@ -714,20 +714,15 @@
     <script>
     	document.getElementById("forAlarm").onclick = function(){
 			let agrUserNo = document.getElementsByName("agrUserNo")[0].value;
-			if(socket){
-				let socketMsg1 = "2,${loginUser.userNo},${loginUser.userName}," + agrUserNo + ",0," + document.getElementById("title").value;
-				socket.send(socketMsg1);
-			}
+			alarmCategory(2, agrUserNo, 0, document.getElementById("title").value);
+			
 			if(document.getElementsByName("refUserNo").length > 0){
 				let refUserNo = "";
 				for(let i=0; i<document.getElementsByName("refUserNo").length; i++){
 					refUserNo += "/" + document.getElementsByName("refUserNo")[i].value;
 				}
 				refUserNo = refUserNo.substring(1);
-				if(socket){
-					let socketMsg2 = "3,${loginUser.userNo},${loginUser.userName}," + refUserNo + ",0," + document.getElementById("title").value;
-					socket.send(socketMsg2);
-				}
+				alarmCategory(3, refUserNo, 0, document.getElementById("title").value);
 			}
 		}
     </script>

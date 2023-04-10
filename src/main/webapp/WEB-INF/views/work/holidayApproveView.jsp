@@ -277,15 +277,10 @@
 			<!-- 알림 관련 -->
 			<script>
 				$(".btn-holi").click(function(){
-					
-					if(socket){
-						if($("select[name=status]").val() == '승인'){
-							let socketMsg = "9,${loginUser.userNo},${loginUser.userName}," + $("#uNo").val() + ",3," + $("#type").val();
-							socket.send(socketMsg);
-						}else{
-							let socketMsg = "10,${loginUser.userNo},${loginUser.userName}," + $("#uNo").val() + ",3," + $("#type").val();
-							socket.send(socketMsg);
-						}
+					if($("select[name=status]").val() == '승인'){
+						alarmCategory(9,  $("#uNo").val(), 3, $("#type").val());
+					}else{
+						alarmCategory(10,  $("#uNo").val(), 3, $("#type").val());
 					}
 				})
 			</script>

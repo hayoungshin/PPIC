@@ -1169,7 +1169,8 @@
                    			+ "<textarea class='form-control' rows='3' id='message' style='resize:none; width:220px;' onKeyPress='check_enter();'></textarea>"
                     		+ "<button type='button' id='send-btn' onclick='sendMessage(" + no + "," + list[0].groupCount + ");'>전송</button>"
                 			+ "</div></div>";
-                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(1, " + no + ");'><img src='resources/icons/setting.png' onclick='updateRoomName(" + no + ");'></span><input type='hidden' id='roomNo' value='" + no + "'</div>"
+                	value2 += "<span><img src='resources/icons/dots.png' onclick='partiList(1, " + no + ");'><img src='resources/icons/setting.png' onclick='updateRoomName(" + no + ");'></span>"
+                			+ "<input type='hidden' id='roomNo' value='" + no + "'</div>"
                 	$("#chat-body").html(value1);
            			$('.chat-area').scrollTop($('.chat-area')[0].scrollHeight);
            			$("#search-div").html(value2);
@@ -1330,6 +1331,7 @@
      	// 웹소켓
      	let sockChat = null;
      	
+     	// 웹소켓 연결
      	function connectChat(no){
      		const sock2 = new SockJS("${pageContext.request.contextPath}/chat"); 
 			sockChat = sock2;
@@ -1357,6 +1359,7 @@
      		}
 	 	}
 	 	
+     	// 메시지 수신
 		function onMessage(evt){
 			let msgArr = evt.data.split(",");
 			let $chatAllDiv;
@@ -1379,7 +1382,8 @@
 							if((Number($html.substring(90,$html.indexOf("<"))) - 1) == 0){
 								$(this).html($html.substring($html.indexOf("<")));
 							}else{
-								$(this).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + (Number($html.substring(90,$html.indexOf("<"))) - 1) + $html.substring($html.indexOf("<")));
+								$(this).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" 
+								+ (Number($html.substring(90,$html.indexOf("<"))) - 1) + $html.substring($html.indexOf("<")));
 							}
 						}
 					}
@@ -1422,8 +1426,6 @@
 					$chatAllDiv = $chatAllDiv.prepend($userSpan);
 				}
 				let $sendDateMsg = msgArr[4].substring(0,13)
-				console.log($(".sendDate").text().slice(-13))
-				console.log($sendDateMsg)
 				if($(".sendDate").text() == "" || $(".sendDate").text().slice(-13) != $sendDateMsg){
 					$sendDate = "<div class='sendDate'>💌 " + $sendDateMsg + "</div>"
 				}

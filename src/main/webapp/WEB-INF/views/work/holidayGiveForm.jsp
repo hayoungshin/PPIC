@@ -265,18 +265,12 @@
 	<script>
 		// 휴가 지급 버튼클릭
 		$("#holidaygive-btn").click(function(){
-			if(socket){
-				let socketMsg = "7,${loginUser.userNo},${loginUser.userName}," + $(".holi-give select[name=userNo]").val() + ",3," + $(".holi-give select[name=cause]>option:selected").text(); 
-				socket.send(socketMsg);
-			}
+			alarmCategory(7, $(".holi-give select[name=userNo]").val(), 3, $(".holi-give select[name=cause]>option:selected").text());
 		})
 		
 		// 휴가 회수 버튼클릭
 		$("#holidaywithdraw-btn").click(function(){
-			if(socket){
-				let socketMsg = "8,${loginUser.userNo},${loginUser.userName}," + $(".holi-out select[name=userNo]").val() + ",3," + $(".holi-out select[name=cause]>option:selected").text(); 
-				socket.send(socketMsg);
-			}
+			alarmCategory(8, $(".holi-out select[name=userNo]").val(), 3, $(".holi-give select[name=cause]>option:selected").text());
 		})
 	</script>
 </body>

@@ -312,10 +312,7 @@
     			})
     		})
     		$("#holiday-btn").click(function(){
-    			if(socket){
-					let socketMsg = "11,${loginUser.userNo},${loginUser.userName}," + holidayAlarm + ",3," + $("select[name=type]").val();
-					socket.send(socketMsg);
-				}
+    			alarmCategory(11, holidayAlarm, 3, $("select[name=type]").val());
     		})
     	</script>
 

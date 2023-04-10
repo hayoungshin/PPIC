@@ -408,14 +408,10 @@
 				success:function(result){
 					if(result > 0){
 						location.reload();
-						if(socket){
-							if(app == 'Y'){
-								let socketMsg = "0,${loginUser.userNo},${loginUser.userName},${ad.app.userNo},0,${ ad.app.title }";
-								socket.send(socketMsg);
-							}else{
-								let socketMsg = "1,${loginUser.userNo},${loginUser.userName},${ad.app.userNo},0,${ ad.app.title }";
-								socket.send(socketMsg);
-							}
+						if(app == 'Y'){ // 승인
+							alarmCategory(0, "${ad.app.userNo}", 0, "${ ad.app.title }");
+						}else{ // 반려
+							alarmCategory(1, "${ad.app.userNo}", 0, "${ ad.app.title }");
 						}
 					}
 				},error:function(){

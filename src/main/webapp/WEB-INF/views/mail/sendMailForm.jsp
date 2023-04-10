@@ -866,10 +866,7 @@
 					// 알림 관련
 					let arrDup = [...new Set(arrAlarm)];
 					let mailTo = arrDup.join("/");
-					if(socket){
-						let socketMsg = "12,${loginUser.userNo},${loginUser.userName}," + mailTo + ",4, ";
-						socket.send(socketMsg);
-					}
+					alarmCategory(12, mailTo, 4, " ");
 				}
 			}
 		</script>

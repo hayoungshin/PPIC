@@ -1342,20 +1342,14 @@
     			taskAlarm += "/" + $("#add-task-modal input[name=selectUserNo]").eq(i).val();
     		}
     		taskAlarm = taskAlarm.substring(1);
-    		if(socket){
-	          let socketMsg = "5,${loginUser.userNo},${loginUser.userName}," + taskAlarm + ",1," + document.getElementsByName("taskName")[0].value;
-	          socket.send(socketMsg);
-		  	}
+    		alarmCategory(5, taskAlarm, 1, document.getElementsByName("taskName")[0].value);
     	}
     	document.getElementById("project-add-btn").onclick = function(){
     		let projectAlarm = $("select[name=projectManager]").val();
     		for(let i = 0; i<$("#add-project-modal input[name=selectUserNo]").length; i++){
     			projectAlarm += "/" + $("#add-project-modal input[name=selectUserNo]").eq(i).val()
     		}
-    		if(socket){
-	          let socketMsg = "4,${loginUser.userNo},${loginUser.userName}," + projectAlarm + ",1," + document.getElementsByName("projectName")[0].value;
-	          socket.send(socketMsg);
-		  	}
+    		alarmCategory(4, projectAlarm, 1, document.getElementsByName("projectName")[0].value);
     	}
     </script>
 
